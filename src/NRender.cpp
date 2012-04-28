@@ -1,0 +1,69 @@
+#include "NEngine.hpp"
+
+bool NRender::LoadShaders()
+{
+	NShader* Shader = new NShader("flat");
+	if (Shader->Load("data/shaders/flat.vert","data/shaders/flat.frag") != Fail)
+	{
+		Shaders.push_back(Shader);
+	} else {
+		delete Shader;
+	}
+}
+
+NRender::NRender()
+{
+	glViewport(0,0,GetGame()->GetWindowWidth(),GetGame()->GetWindowHeight());
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	glOrtho(0,GetGame()->GetWindowWidth(),0,GetGame()->GetWindowHeight(),0,1);
+	glMatrixMode(GL_MODELVIEW);
+	LoadShaders();
+	Camera = NULL;
+}
+
+NRender::~NRender()
+{
+	for (unsigned int i=0;i<Shaders.size();i++)
+	{
+		delete Shaders[i];
+	}
+}
+
+NShader* NRender::GetShader(std::string Name)
+{
+	for (unsigned int i=0;i<Shaders.size();i++)
+	{
+		if (!Shaders[i]->GetName().compare(Name))
+		{
+			return Shaders[i];
+		}
+	}
+	std::cout << "RENDER WARN: Attempted to use unknown shader " << Name << "!\n";
+	return NULL;
+}
+
+NCamera* NRender::GetCamera()
+{
+	return Camera;
+}
+
+void NRender::SetCamera(NCamera* i_Camera)
+{
+	Camera = i_Camera;
+}
+
+void NRender::Draw()
+{
+	glClearColor(0.435294118,0.309803922,0.439215686,1.f);
+	glClear(GL_COLOR_BUFFER_BIT);
+	
+	if (Camera)
+	{
+		GetGame()->GetScene()->Draw(Camera->GetViewMatrix());
+	} else {
+		GetGame()->GetScene()->Draw(glm::mat4(1.f));
+	}
+	
+	glfwSwapBuffers();
+}

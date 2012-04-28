@@ -1,0 +1,239 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.8	//
+AddNode	NScene.hpp	/^	void AddNode(NNode*); \/\/Node$/;"	p	class:NScene	access:public	signature:(NNode*)
+Camera	NRender.hpp	/^	NCamera* Camera;$/;"	m	class:NRender	access:private
+CurTime	NEngine.cpp	/^double CurTime()$/;"	f	signature:()
+CurTime	NEngine.hpp	/^double CurTime();$/;"	p	signature:()
+Draw	NNode.cpp	/^void NNode::Draw(glm::mat4 View) {}$/;"	f	class:NNode	signature:(glm::mat4 View)
+Draw	NNode.hpp	/^	virtual void Draw(glm::mat4);$/;"	p	class:NNode	access:public	signature:(glm::mat4)
+Draw	NRender.cpp	/^void NRender::Draw()$/;"	f	class:NRender	signature:()
+Draw	NRender.hpp	/^	void Draw();$/;"	p	class:NRender	access:public	signature:()
+Draw	NScene.cpp	/^		Nodes[i].Draw(View);$/;"	p	file:	signature:(View)
+Draw	NScene.cpp	/^void NScene::Draw(glm::mat4 View)$/;"	f	class:NScene	signature:(glm::mat4 View)
+Draw	NScene.hpp	/^	void Draw(glm::mat4);$/;"	p	class:NScene	access:public	signature:(glm::mat4)
+Fail	NEngine.hpp	10;"	d
+FragmentFilePath	NShader.cpp	/^		std::cout << "SHADER ERROR: Failed to compile " << FragmentFilePath << "\\n";$/;"	l
+FragmentFilePath	NShader.cpp	/^		std::cout << "SHADER ERROR: Failed to load " << FragmentFilePath << "!\\n";$/;"	l
+FragmentFilePath	NShader.cpp	/^	std::cout << "Compiling shader: " << FragmentFilePath << "\\n";$/;"	l
+FragmentShaderCode	NShader.cpp	/^	std::string FragmentShaderCode;$/;"	l
+FragmentShaderErrorMessage	NShader.cpp	/^	std::vector<char> FragmentShaderErrorMessage(InfoLogLength);$/;"	p	file:	signature:(InfoLogLength)
+FragmentShaderStream	NShader.cpp	/^	std::ifstream FragmentShaderStream(FragmentFilePath, std::ios::in);$/;"	p	file:	signature:(FragmentFilePath, std::ios::in)
+Game	NEngine.hpp	/^static NGame Game = new NGame();$/;"	v
+GetCamera	NRender.cpp	/^NCamera* NRender::GetCamera()$/;"	f	class:NRender	signature:()
+GetCamera	NRender.hpp	/^	NCamera* GetCamera();$/;"	p	class:NRender	access:public	signature:()
+GetGame	NEngine.cpp	/^NGame* GetGame()$/;"	f	signature:()
+GetGame	NEngine.hpp	/^NGame* GetGame();$/;"	p	signature:()
+GetID	NShader.cpp	/^NShader::GetID()$/;"	f	class:NShader	signature:()
+GetID	NShader.hpp	/^	GLuint GetID();$/;"	p	class:NShader	access:public	signature:()
+GetInput	NGame.cpp	/^NInput* NGame::GetInput()$/;"	f	class:NGame	signature:()
+GetInput	NGame.hpp	/^	NInput* GetInput();$/;"	p	class:NGame	access:public	signature:()
+GetKey	NInput.cpp	/^int NInput::GetKey(int Key)$/;"	f	class:NInput	signature:(int Key)
+GetKey	NInput.hpp	/^	int GetKey(int); \/\/Key$/;"	p	class:NInput	access:public	signature:(int)
+GetModelMatrix	NNode.cpp	/^glm::mat4 NNode::GetModelMatrix()$/;"	f	class:NNode	signature:()
+GetModelMatrix	NNode.hpp	/^	virtual glm::mat4 GetModelMatrix();$/;"	p	class:NNode	access:public	signature:()
+GetMouseX	NInput.cpp	/^int NInput::GetMouseX()$/;"	f	class:NInput	signature:()
+GetMouseX	NInput.hpp	/^	int GetMouseX();$/;"	p	class:NInput	access:public	signature:()
+GetMouseY	NInput.cpp	/^int NInput::GetMouseY()$/;"	f	class:NInput	signature:()
+GetMouseY	NInput.hpp	/^	int GetMouseY();$/;"	p	class:NInput	access:public	signature:()
+GetName	NShader.hpp	/^	std::string GetName();$/;"	p	class:NShader	access:public	signature:()
+GetPos	NNode.cpp	/^glm::vec2 NNode::GetPos()$/;"	f	class:NNode	signature:()
+GetPos	NNode.hpp	/^	virtual glm::vec2 GetPos();$/;"	p	class:NNode	access:public	signature:()
+GetRender	NGame.cpp	/^NRender* NGame::GetRender()$/;"	f	class:NGame	signature:()
+GetRender	NGame.hpp	/^	NRender* GetRender();$/;"	p	class:NGame	access:public	signature:()
+GetScene	NGame.cpp	/^NScene* NGame::GetScene()$/;"	f	class:NGame	signature:()
+GetScene	NGame.hpp	/^	NScene* GetScene();$/;"	p	class:NGame	access:public	signature:()
+GetShader	NRender.cpp	/^NShader* NRender::GetShader(std::string Name)$/;"	f	class:NRender	signature:(std::string Name)
+GetShader	NRender.hpp	/^	NShader* GetShader(std::string); \/\/Name$/;"	p	class:NRender	access:public	signature:(std::string)
+GetViewMatrix	NCamera.cpp	/^glm::mat4 NCamera::GetViewMatrix()$/;"	f	class:NCamera	signature:()
+GetViewMatrix	NCamera.hpp	/^	glm::mat4 GetViewMatrix();$/;"	p	class:NCamera	access:public	signature:()
+GetZoom	NCamera.cpp	/^float NCamera::GetZoom()$/;"	f	class:NCamera	signature:()
+GetZoom	NCamera.hpp	/^	float GetZoom();$/;"	p	class:NCamera	access:public	signature:()
+InfoLogLength	NShader.cpp	/^	int InfoLogLength;$/;"	l
+Init	NGame.cpp	/^bool NGame::Init(int Width, int Height, std::string Title)$/;"	f	class:NGame	signature:(int Width, int Height, std::string Title)
+Init	NGame.hpp	/^	bool Init(int,int,std::string); \/\/Width Height Title$/;"	p	class:NGame	access:public	signature:(int,int,std::string)
+Input	NGame.hpp	/^	NInput* Input;$/;"	m	class:NGame	access:private
+Line	NShader.cpp	/^	std::string Line;$/;"	l
+Load	NShader.cpp	/^bool NShader::Load(std::string VertexFilePath, std::string FragmentFilePath)$/;"	f	class:NShader	signature:(std::string VertexFilePath, std::string FragmentFilePath)
+Load	NShader.hpp	/^	bool Load(std::string,std::string); \/\/VertexShaderPath, FragmentShaderPath$/;"	p	class:NShader	access:public	signature:(std::string,std::string)
+LoadShaders	NRender.cpp	/^bool NRender::LoadShaders()$/;"	f	class:NRender	signature:()
+LoadShaders	NRender.hpp	/^	bool LoadShaders();$/;"	p	class:NRender	access:public	signature:()
+Model	NNode.cpp	/^	glm::mat4 Model = glm::translate(glm::mat4(1.f),GetPos());$/;"	l
+MouseX	NInput.hpp	/^	int MouseX;$/;"	m	class:NInput	access:private
+MouseY	NInput.hpp	/^	int MouseY;$/;"	m	class:NInput	access:private
+NAELSTROF_CAMERA	NCamera.hpp	2;"	d
+NAELSTROF_ENGINE	NEngine.hpp	2;"	d
+NAELSTROF_GAME	NGame.hpp	2;"	d
+NAELSTROF_INPUT	NInput.hpp	2;"	d
+NAELSTROF_NODE	NNode.hpp	2;"	d
+NAELSTROF_RENDER	NRender.hpp	2;"	d
+NAELSTROF_SCENE	NScene.hpp	2;"	d
+NAELSTROF_SHADER	NShader.hpp	2;"	d
+NCamera	NCamera.hpp	/^	NCamera();$/;"	p	class:NCamera	access:public	signature:()
+NCamera	NCamera.hpp	/^class NCamera : public NNode$/;"	c	inherits:NNode
+NCamera.cpp	NCamera.cpp	1;"	F
+NCamera.hpp	NCamera.hpp	1;"	F
+NCamera::GetViewMatrix	NCamera.cpp	/^glm::mat4 NCamera::GetViewMatrix()$/;"	f	class:NCamera	signature:()
+NCamera::GetViewMatrix	NCamera.hpp	/^	glm::mat4 GetViewMatrix();$/;"	p	class:NCamera	access:public	signature:()
+NCamera::GetZoom	NCamera.cpp	/^float NCamera::GetZoom()$/;"	f	class:NCamera	signature:()
+NCamera::GetZoom	NCamera.hpp	/^	float GetZoom();$/;"	p	class:NCamera	access:public	signature:()
+NCamera::NCamera	NCamera.hpp	/^	NCamera();$/;"	p	class:NCamera	access:public	signature:()
+NCamera::SetZoom	NCamera.cpp	/^void NCamera::SetZoom(float i_Zoom)$/;"	f	class:NCamera	signature:(float i_Zoom)
+NCamera::SetZoom	NCamera.hpp	/^	void SetZoom(float); \/\/Zoom$/;"	p	class:NCamera	access:public	signature:(float)
+NCamera::Zoom	NCamera.hpp	/^	float Zoom;$/;"	m	class:NCamera	access:private
+NEngine.cpp	NEngine.cpp	1;"	F
+NEngine.hpp	NEngine.hpp	1;"	F
+NGame	NGame.cpp	/^NGame::NGame()$/;"	f	class:NGame	signature:()
+NGame	NGame.hpp	/^	NGame();$/;"	p	class:NGame	access:public	signature:()
+NGame	NGame.hpp	/^class NGame$/;"	c
+NGame.cpp	NGame.cpp	1;"	F
+NGame.hpp	NGame.hpp	1;"	F
+NGame::GetInput	NGame.cpp	/^NInput* NGame::GetInput()$/;"	f	class:NGame	signature:()
+NGame::GetInput	NGame.hpp	/^	NInput* GetInput();$/;"	p	class:NGame	access:public	signature:()
+NGame::GetRender	NGame.cpp	/^NRender* NGame::GetRender()$/;"	f	class:NGame	signature:()
+NGame::GetRender	NGame.hpp	/^	NRender* GetRender();$/;"	p	class:NGame	access:public	signature:()
+NGame::GetScene	NGame.cpp	/^NScene* NGame::GetScene()$/;"	f	class:NGame	signature:()
+NGame::GetScene	NGame.hpp	/^	NScene* GetScene();$/;"	p	class:NGame	access:public	signature:()
+NGame::Init	NGame.cpp	/^bool NGame::Init(int Width, int Height, std::string Title)$/;"	f	class:NGame	signature:(int Width, int Height, std::string Title)
+NGame::Init	NGame.hpp	/^	bool Init(int,int,std::string); \/\/Width Height Title$/;"	p	class:NGame	access:public	signature:(int,int,std::string)
+NGame::Input	NGame.hpp	/^	NInput* Input;$/;"	m	class:NGame	access:private
+NGame::NGame	NGame.cpp	/^NGame::NGame()$/;"	f	class:NGame	signature:()
+NGame::NGame	NGame.hpp	/^	NGame();$/;"	p	class:NGame	access:public	signature:()
+NGame::Render	NGame.hpp	/^	NRender* Render;$/;"	m	class:NGame	access:private
+NGame::Scene	NGame.hpp	/^	NScene* Scene;$/;"	m	class:NGame	access:private
+NGame::~NGame	NGame.cpp	/^NGame::~NGame()$/;"	f	class:NGame	signature:()
+NGame::~NGame	NGame.hpp	/^	~NGame();$/;"	p	class:NGame	access:public	signature:()
+NInput	NInput.hpp	/^class NInput$/;"	c
+NInput.cpp	NInput.cpp	1;"	F
+NInput.hpp	NInput.hpp	1;"	F
+NInput::GetKey	NInput.cpp	/^int NInput::GetKey(int Key)$/;"	f	class:NInput	signature:(int Key)
+NInput::GetKey	NInput.hpp	/^	int GetKey(int); \/\/Key$/;"	p	class:NInput	access:public	signature:(int)
+NInput::GetMouseX	NInput.cpp	/^int NInput::GetMouseX()$/;"	f	class:NInput	signature:()
+NInput::GetMouseX	NInput.hpp	/^	int GetMouseX();$/;"	p	class:NInput	access:public	signature:()
+NInput::GetMouseY	NInput.cpp	/^int NInput::GetMouseY()$/;"	f	class:NInput	signature:()
+NInput::GetMouseY	NInput.hpp	/^	int GetMouseY();$/;"	p	class:NInput	access:public	signature:()
+NInput::MouseX	NInput.hpp	/^	int MouseX;$/;"	m	class:NInput	access:private
+NInput::MouseY	NInput.hpp	/^	int MouseY;$/;"	m	class:NInput	access:private
+NInput::Poll	NInput.cpp	/^void NInput::Poll()$/;"	f	class:NInput	signature:()
+NInput::Poll	NInput.hpp	/^	void Poll();$/;"	p	class:NInput	access:public	signature:()
+NNode	NCamera.cpp	/^NCamera::NCamera:NNode()$/;"	f	signature:()
+NNode	NNode.cpp	/^NNode::NNode()$/;"	f	class:NNode	signature:()
+NNode	NNode.hpp	/^	NNode();$/;"	p	class:NNode	access:public	signature:()
+NNode	NNode.hpp	/^class NNode$/;"	c
+NNode.cpp	NNode.cpp	1;"	F
+NNode.hpp	NNode.hpp	1;"	F
+NNode::Draw	NNode.cpp	/^void NNode::Draw(glm::mat4 View) {}$/;"	f	class:NNode	signature:(glm::mat4 View)
+NNode::Draw	NNode.hpp	/^	virtual void Draw(glm::mat4);$/;"	p	class:NNode	access:public	signature:(glm::mat4)
+NNode::GetModelMatrix	NNode.cpp	/^glm::mat4 NNode::GetModelMatrix()$/;"	f	class:NNode	signature:()
+NNode::GetModelMatrix	NNode.hpp	/^	virtual glm::mat4 GetModelMatrix();$/;"	p	class:NNode	access:public	signature:()
+NNode::GetPos	NNode.cpp	/^glm::vec2 NNode::GetPos()$/;"	f	class:NNode	signature:()
+NNode::GetPos	NNode.hpp	/^	virtual glm::vec2 GetPos();$/;"	p	class:NNode	access:public	signature:()
+NNode::NNode	NNode.cpp	/^NNode::NNode()$/;"	f	class:NNode	signature:()
+NNode::NNode	NNode.hpp	/^	NNode();$/;"	p	class:NNode	access:public	signature:()
+NNode::Position	NNode.hpp	/^	glm::vec2 Position;$/;"	m	class:NNode	access:private
+NNode::SetPos	NNode.cpp	/^void NNode::SetPos(float X, float Y)$/;"	f	class:NNode	signature:(float X, float Y)
+NNode::SetPos	NNode.cpp	/^void NNode::SetPos(glm::vec2 i_Position)$/;"	f	class:NNode	signature:(glm::vec2 i_Position)
+NNode::SetPos	NNode.hpp	/^	virtual void SetPos(float,float); \/\/X, Y$/;"	p	class:NNode	access:public	signature:(float,float)
+NNode::SetPos	NNode.hpp	/^	virtual void SetPos(glm::vec2); \/\/Pos$/;"	p	class:NNode	access:public	signature:(glm::vec2)
+NNode::Tick	NNode.cpp	/^void NNode::Tick() {}$/;"	f	class:NNode	signature:()
+NNode::Tick	NNode.hpp	/^	virtual void Tick();$/;"	p	class:NNode	access:public	signature:()
+NNode::~NNode	NNode.hpp	/^	~NNode();$/;"	p	class:NNode	access:public	signature:()
+NRender	NRender.cpp	/^NRender::NRender()$/;"	f	class:NRender	signature:()
+NRender	NRender.hpp	/^	NRender();$/;"	p	class:NRender	access:public	signature:()
+NRender	NRender.hpp	/^class NRender$/;"	c
+NRender.cpp	NRender.cpp	1;"	F
+NRender.hpp	NRender.hpp	1;"	F
+NRender::Camera	NRender.hpp	/^	NCamera* Camera;$/;"	m	class:NRender	access:private
+NRender::Draw	NRender.cpp	/^void NRender::Draw()$/;"	f	class:NRender	signature:()
+NRender::Draw	NRender.hpp	/^	void Draw();$/;"	p	class:NRender	access:public	signature:()
+NRender::GetCamera	NRender.cpp	/^NCamera* NRender::GetCamera()$/;"	f	class:NRender	signature:()
+NRender::GetCamera	NRender.hpp	/^	NCamera* GetCamera();$/;"	p	class:NRender	access:public	signature:()
+NRender::GetShader	NRender.cpp	/^NShader* NRender::GetShader(std::string Name)$/;"	f	class:NRender	signature:(std::string Name)
+NRender::GetShader	NRender.hpp	/^	NShader* GetShader(std::string); \/\/Name$/;"	p	class:NRender	access:public	signature:(std::string)
+NRender::LoadShaders	NRender.cpp	/^bool NRender::LoadShaders()$/;"	f	class:NRender	signature:()
+NRender::LoadShaders	NRender.hpp	/^	bool LoadShaders();$/;"	p	class:NRender	access:public	signature:()
+NRender::NRender	NRender.cpp	/^NRender::NRender()$/;"	f	class:NRender	signature:()
+NRender::NRender	NRender.hpp	/^	NRender();$/;"	p	class:NRender	access:public	signature:()
+NRender::SetCamera	NRender.cpp	/^void NRender::SetCamera(NCamera* i_Camera)$/;"	f	class:NRender	signature:(NCamera* i_Camera)
+NRender::SetCamera	NRender.hpp	/^	void SetCamera(NCamera*); \/\/Camera$/;"	p	class:NRender	access:public	signature:(NCamera*)
+NRender::Shaders	NRender.hpp	/^	std::vector<NShader*> Shaders;$/;"	m	class:NRender	access:private
+NRender::~NRender	NRender.hpp	/^	~NRender();$/;"	p	class:NRender	access:public	signature:()
+NScene	NScene.hpp	/^class NScene$/;"	c
+NScene.cpp	NScene.cpp	1;"	F
+NScene.hpp	NScene.hpp	1;"	F
+NScene::AddNode	NScene.hpp	/^	void AddNode(NNode*); \/\/Node$/;"	p	class:NScene	access:public	signature:(NNode*)
+NScene::Draw	NScene.cpp	/^void NScene::Draw(glm::mat4 View)$/;"	f	class:NScene	signature:(glm::mat4 View)
+NScene::Draw	NScene.hpp	/^	void Draw(glm::mat4);$/;"	p	class:NScene	access:public	signature:(glm::mat4)
+NScene::Nodes	NScene.hpp	/^	std::vector<NNode*> Nodes;$/;"	m	class:NScene	access:private
+NScene::Tick	NScene.cpp	/^void NScene::Tick()$/;"	f	class:NScene	signature:()
+NScene::Tick	NScene.hpp	/^	void Tick();$/;"	p	class:NScene	access:public	signature:()
+NShader	NShader.cpp	/^NShader::NShader(std::string i_Name)$/;"	f	class:NShader	signature:(std::string i_Name)
+NShader	NShader.hpp	/^	NShader(std::string); \/\/Name$/;"	p	class:NShader	access:public	signature:(std::string)
+NShader	NShader.hpp	/^class NShader$/;"	c
+NShader.cpp	NShader.cpp	1;"	F
+NShader.hpp	NShader.hpp	1;"	F
+NShader::GetID	NShader.cpp	/^NShader::GetID()$/;"	f	class:NShader	signature:()
+NShader::GetID	NShader.hpp	/^	GLuint GetID();$/;"	p	class:NShader	access:public	signature:()
+NShader::GetName	NShader.hpp	/^	std::string GetName();$/;"	p	class:NShader	access:public	signature:()
+NShader::Load	NShader.cpp	/^bool NShader::Load(std::string VertexFilePath, std::string FragmentFilePath)$/;"	f	class:NShader	signature:(std::string VertexFilePath, std::string FragmentFilePath)
+NShader::Load	NShader.hpp	/^	bool Load(std::string,std::string); \/\/VertexShaderPath, FragmentShaderPath$/;"	p	class:NShader	access:public	signature:(std::string,std::string)
+NShader::NShader	NShader.cpp	/^NShader::NShader(std::string i_Name)$/;"	f	class:NShader	signature:(std::string i_Name)
+NShader::NShader	NShader.hpp	/^	NShader(std::string); \/\/Name$/;"	p	class:NShader	access:public	signature:(std::string)
+NShader::Name	NShader.hpp	/^	std::string Name;$/;"	m	class:NShader	access:private
+NShader::ProgramID	NShader.hpp	/^	GLuint ProgramID;$/;"	m	class:NShader	access:private
+NShader::~NShader	NShader.cpp	/^NShader::~NShader()$/;"	f	class:NShader	signature:()
+NShader::~NShader	NShader.hpp	/^	~NShader();$/;"	p	class:NShader	access:public	signature:()
+Name	NRender.cpp	/^	std::cout << "RENDER WARNING: Attempted to use unknown shader " << Name << "!\\n";$/;"	l
+Name	NShader.hpp	/^	std::string Name;$/;"	m	class:NShader	access:private
+Nodes	NScene.hpp	/^	std::vector<NNode*> Nodes;$/;"	m	class:NScene	access:private
+Poll	NInput.cpp	/^void NInput::Poll()$/;"	f	class:NInput	signature:()
+Poll	NInput.hpp	/^	void Poll();$/;"	p	class:NInput	access:public	signature:()
+Position	NNode.hpp	/^	glm::vec2 Position;$/;"	m	class:NNode	access:private
+ProgramID	NShader.hpp	/^	GLuint ProgramID;$/;"	m	class:NShader	access:private
+Render	NGame.hpp	/^	NRender* Render;$/;"	m	class:NGame	access:private
+Result	NShader.cpp	/^	GLint Result;$/;"	l
+Scene	NGame.hpp	/^	NScene* Scene;$/;"	m	class:NGame	access:private
+SetCamera	NRender.cpp	/^void NRender::SetCamera(NCamera* i_Camera)$/;"	f	class:NRender	signature:(NCamera* i_Camera)
+SetCamera	NRender.hpp	/^	void SetCamera(NCamera*); \/\/Camera$/;"	p	class:NRender	access:public	signature:(NCamera*)
+SetPos	NNode.cpp	/^void NNode::SetPos(float X, float Y)$/;"	f	class:NNode	signature:(float X, float Y)
+SetPos	NNode.cpp	/^void NNode::SetPos(glm::vec2 i_Position)$/;"	f	class:NNode	signature:(glm::vec2 i_Position)
+SetPos	NNode.hpp	/^	virtual void SetPos(float,float); \/\/X, Y$/;"	p	class:NNode	access:public	signature:(float,float)
+SetPos	NNode.hpp	/^	virtual void SetPos(glm::vec2); \/\/Pos$/;"	p	class:NNode	access:public	signature:(glm::vec2)
+SetZoom	NCamera.cpp	/^void NCamera::SetZoom(float i_Zoom)$/;"	f	class:NCamera	signature:(float i_Zoom)
+SetZoom	NCamera.hpp	/^	void SetZoom(float); \/\/Zoom$/;"	p	class:NCamera	access:public	signature:(float)
+Shader	NRender.cpp	/^	NShader* Shader = new NShader("flat");$/;"	l
+Shaders	NRender.hpp	/^	std::vector<NShader*> Shaders;$/;"	m	class:NRender	access:private
+Success	NEngine.hpp	11;"	d
+Tick	NNode.cpp	/^void NNode::Tick() {}$/;"	f	class:NNode	signature:()
+Tick	NNode.hpp	/^	virtual void Tick();$/;"	p	class:NNode	access:public	signature:()
+Tick	NScene.cpp	/^		Nodes[i].Tick();$/;"	p	file:	signature:()
+Tick	NScene.cpp	/^void NScene::Tick()$/;"	f	class:NScene	signature:()
+Tick	NScene.hpp	/^	void Tick();$/;"	p	class:NScene	access:public	signature:()
+VertexFilePath	NShader.cpp	/^		std::cout << "SHADER ERROR: Failed to compile " << VertexFilePath << "\\n";$/;"	l
+VertexFilePath	NShader.cpp	/^		std::cout << "SHADER ERROR: Failed to load " << VertexFilePath << "!\\n";$/;"	l
+VertexFilePath	NShader.cpp	/^	std::cout << "Compiling shader: " << VertexFilePath << "\\n";$/;"	l
+VertexShaderCode	NShader.cpp	/^	std::string VertexShaderCode;$/;"	l
+VertexShaderErrorMessage	NShader.cpp	/^	std::vector<char> VertexShaderErrorMessage(InfoLogLength);$/;"	p	file:	signature:(InfoLogLength)
+VertexShaderStream	NShader.cpp	/^	std::ifstream VertexShaderStream(VertexFilePath, std::ios::in);$/;"	p	file:	signature:(VertexFilePath, std::ios::in)
+View	NCamera.cpp	/^	glm::mat4 View = glm::translate(glm::mat4(1.f),GetPos());$/;"	l
+Zoom	NCamera.hpp	/^	float Zoom;$/;"	m	class:NCamera	access:private
+close	NShader.cpp	/^	FragmentShaderStream.close();$/;"	p	file:	signature:()
+close	NShader.cpp	/^	VertexShaderStream.close();$/;"	p	file:	signature:()
+cout	NGame.cpp	/^		std::cout << "ENGINE ERROR: GLFW failed to initialize!\\n";$/;"	m	class:std	file:
+cout	NGame.cpp	/^		std::cout << "ENGINE ERROR: GLFW failed to open a window!\\n";$/;"	m	class:std	file:
+cout	main.cpp	/^		std::cout << "GAME ERROR: Failed to initialize the game!\\n";$/;"	m	class:std	file:
+main	main.cpp	/^int main(int argc, char** argv)$/;"	f	signature:(int argc, char** argv)
+main.cpp	main.cpp	1;"	F
+push_back	NRender.cpp	/^		Shaders.push_back(Shader);$/;"	p	file:	signature:(Shader)
+std::cout	NGame.cpp	/^		std::cout << "ENGINE ERROR: GLFW failed to initialize!\\n";$/;"	m	class:std	file:
+std::cout	NGame.cpp	/^		std::cout << "ENGINE ERROR: GLFW failed to open a window!\\n";$/;"	m	class:std	file:
+std::cout	main.cpp	/^		std::cout << "GAME ERROR: Failed to initialize the game!\\n";$/;"	m	class:std	file:
+~NGame	NGame.cpp	/^NGame::~NGame()$/;"	f	class:NGame	signature:()
+~NGame	NGame.hpp	/^	~NGame();$/;"	p	class:NGame	access:public	signature:()
+~NNode	NNode.hpp	/^	~NNode();$/;"	p	class:NNode	access:public	signature:()
+~NRender	NRender.hpp	/^	~NRender();$/;"	p	class:NRender	access:public	signature:()
+~NShader	NShader.cpp	/^NShader::~NShader()$/;"	f	class:NShader	signature:()
+~NShader	NShader.hpp	/^	~NShader();$/;"	p	class:NShader	access:public	signature:()
