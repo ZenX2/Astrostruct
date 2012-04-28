@@ -12,8 +12,8 @@ exec_prefix    	= ${prefix}
 bindir         	= ${exec_prefix}/bin
 
 # VPATH-related substitution variables
-srcdir			= .
-
+srcdir			= ../../src
+VPATH			= ../../src
 
 # Build-related substitution variables
 objects			= NGame.o NColor.o NEngine.o NInput.o NCamera.o NNode.o NScene.o NRender.o NShader.o
@@ -32,7 +32,7 @@ main: main.o $(objects)
 	$(CXX) $(CXXFLAGS) $(DEFS) main.o $(objects) -o main $(LIBS)
 
 clean:
-	rm -f main *.o
+	rm -f client server mapmaker *.o
 
 #Autotools mumbo jumbo
 

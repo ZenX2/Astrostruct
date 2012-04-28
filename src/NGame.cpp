@@ -25,19 +25,28 @@ bool NGame::Init(int i_Width, int i_Height, std::string Title)
 	Height = i_Height;
 	if (!glfwInit())
 	{
-		std::cout << "ENGINE ERROR: GLFW failed to initialize!\n";
+		SetColor(Red);
+		std::cout << "ENGINE ERROR: ";
+		ClearColor();
+		std::cout << "GLFW failed to initialize!\n";
 		return Fail;
 	}
 	if (!glfwOpenWindow(Width,Height,0,0,0,0,0,0,GLFW_WINDOW))
 	{
-		std::cout << "ENGINE ERROR: GLFW failed to open a window!\n";
+		SetColor(Red);
+		std::cout << "ENGINE ERROR: ";
+		ClearColor();
+		std::cout << "GLFW failed to open a window!\n";
 		glfwTerminate();
 		return Fail;
 	}
 	glfwSetWindowTitle(Title.c_str());
 	if (glewInit() != GLEW_OK)
 	{
-		std::cout << "ENGINE ERROR: GLEW failed to initialize!\n";
+		SetColor(Red);
+		std::cout << "ENGINE ERROR: ";
+		ClearColor();
+		std::cout << "GLEW failed to initialize!\n";
 		glfwTerminate();
 		return Fail;
 	}
@@ -87,7 +96,10 @@ void NGame::Poll()
 {
 	if (!glfwGetWindowParam(GLFW_OPENED))
 	{
-		std::cout << "ENGINE INFO: Game window was closed, exiting...\n" << std::flush;
+		SetColor(Blue);
+		std::cout << "ENGINE INFO: ";
+		ClearColor();
+		std::cout << "Game window was closed, exiting...\n" << std::flush;
 		Close();
 		return;
 	}

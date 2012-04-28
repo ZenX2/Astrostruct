@@ -13,6 +13,8 @@
 #define Fail false
 #define Success true
 
+#include "config.h"
+#include "NColor.hpp"
 #include "NInput.hpp"
 #include "NNode.hpp"
 #include "NScene.hpp"

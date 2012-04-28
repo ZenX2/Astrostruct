@@ -27,10 +27,13 @@ bool NShader::Load(std::string VertexFilePath, std::string FragmentFilePath)
 	GLuint FragmentShaderID = glCreateShader(GL_FRAGMENT_SHADER);
 	//Read the Vertex shader into memory from the file
 	std::string VertexShaderCode;
-	std::ifstream VertexShaderStream(VertexFilePath, std::ios::in);
+	std::ifstream VertexShaderStream(VertexFilePath.c_str(), std::ios::in);
 	if (!VertexShaderStream.good())
 	{
-		std::cout << "SHADER WARN: Failed to load " << VertexFilePath << "!\n";
+		SetColor(Yellow);
+		std::cout << "SHADER WARN: ";
+		ClearColor();
+		std::cout << "Failed to load " << VertexFilePath << "!\n";
 		glDeleteShader(VertexShaderID);
 		glDeleteShader(FragmentShaderID);
 		return Fail;
@@ -44,10 +47,13 @@ bool NShader::Load(std::string VertexFilePath, std::string FragmentFilePath)
 
 	//Now do the same with the fragment shader
 	std::string FragmentShaderCode;
-	std::ifstream FragmentShaderStream(FragmentFilePath, std::ios::in);
+	std::ifstream FragmentShaderStream(FragmentFilePath.c_str(), std::ios::in);
 	if (!FragmentShaderStream.good())
 	{
-		std::cout << "SHADER WARN: Failed to load " << FragmentFilePath << "!\n";
+		SetColor(Yellow);
+		std::cout << "SHADER WARN: " ;
+		ClearColor();
+		std::cout << "Failed to load " << FragmentFilePath << "!\n";
 		glDeleteShader(VertexShaderID);
 		glDeleteShader(FragmentShaderID);
 		return Fail;
@@ -59,7 +65,10 @@ bool NShader::Load(std::string VertexFilePath, std::string FragmentFilePath)
 	FragmentShaderStream.close();
 
 	//Now compile the vertex shader
-	std::cout << "Compiling shader: " << VertexFilePath << "\n";
+	SetColor(Blue);
+	std::cout << "SHADER INFO: ";
+	ClearColor();
+	std::cout << "Compiling shader " << VertexFilePath << "\n";
 	const char* Code = VertexShaderCode.c_str();
 	glShaderSource(VertexShaderID, 1, &Code, NULL);
 	glCompileShader(VertexShaderID);
@@ -71,17 +80,30 @@ bool NShader::Load(std::string VertexFilePath, std::string FragmentFilePath)
 	glGetShaderiv(VertexShaderID, GL_INFO_LOG_LENGTH, &InfoLogLength);
 	std::vector<char> VertexShaderErrorMessage(InfoLogLength);
 	glGetShaderInfoLog(VertexShaderID, InfoLogLength, NULL, &VertexShaderErrorMessage[0]);
-	std::cout << (char*)&VertexShaderErrorMessage[0] << "\n";
 	if (Result == GL_FALSE)
 	{
-		std::cout << "SHADER WARN: Failed to compile " << VertexFilePath << "\n";
+		if (VertexShaderErrorMessage.size()-2>=0)
+		{
+			VertexShaderErrorMessage[VertexShaderErrorMessage.size()-2] = '\0';
+		}
+		SetColor(Blue);
+		std::cout << "SHADER INFO: ";
+		ClearColor();
+		std::cout << (char*)&VertexShaderErrorMessage[0] << "\n";
+		SetColor(Yellow);
+		std::cout << "SHADER WARN: ";
+		ClearColor();
+		std::cout << "Failed to compile " << VertexFilePath << "\n";
 		glDeleteShader(VertexShaderID);
 		glDeleteShader(FragmentShaderID);
 		return Fail;
 	}
 
 	//Same for the fragment shader
-	std::cout << "Compiling shader: " << FragmentFilePath << "\n";
+	SetColor(Blue);
+	std::cout << "SHADER INFO: ";
+	ClearColor();
+	std::cout << "Compiling shader " << FragmentFilePath << "\n";
 	Code = FragmentShaderCode.c_str();
 	glShaderSource(FragmentShaderID, 1, &Code, NULL);
 	glCompileShader(FragmentShaderID);
@@ -90,17 +112,30 @@ bool NShader::Load(std::string VertexFilePath, std::string FragmentFilePath)
 	glGetShaderiv(FragmentShaderID, GL_INFO_LOG_LENGTH, &InfoLogLength);
 	std::vector<char> FragmentShaderErrorMessage(InfoLogLength);
 	glGetShaderInfoLog(FragmentShaderID, InfoLogLength, NULL, &FragmentShaderErrorMessage[0]);
-	std::cout << (char*)&FragmentShaderErrorMessage[0] << "\n";
 	if (Result == GL_FALSE)
 	{
-		std::cout << "SHADER WARN: Failed to compile " << FragmentFilePath << "\n";
+		if (FragmentShaderErrorMessage.size()-2>=0)
+		{
+			FragmentShaderErrorMessage[FragmentShaderErrorMessage.size()-2] = '\0';
+		}
+		SetColor(Blue);
+		std::cout << "SHADER INFO: ";
+		ClearColor();
+		std::cout << (char*)&FragmentShaderErrorMessage[0] << "\n";
+		SetColor(Yellow);
+		std::cout << "SHADER WARN: ";
+		ClearColor();
+		std::cout << "Failed to compile " << FragmentFilePath << "\n";
 		glDeleteShader(VertexShaderID);
 		glDeleteShader(FragmentShaderID);
 		return Fail;
 	}
 
 	//Then create and link the program
-	std::cout << "Linking program...\n";
+	SetColor(Blue);
+	std::cout << "SHADER INFO: ";
+	ClearColor();
+	std::cout << "Linking program \"" << Name << "\"\n";
 	glAttachShader(ProgramID, VertexShaderID);
 	glAttachShader(ProgramID, FragmentShaderID);
 	glLinkProgram(ProgramID);
@@ -110,10 +145,17 @@ bool NShader::Load(std::string VertexFilePath, std::string FragmentFilePath)
 	glGetProgramiv(ProgramID, GL_INFO_LOG_LENGTH, &InfoLogLength);
 	std::vector<char> ProgramErrorMessage(InfoLogLength);
 	glGetProgramInfoLog(ProgramID, InfoLogLength, NULL, &ProgramErrorMessage[0]);
-	std::cout << &ProgramErrorMessage[0] << "\n";
 	if (Result == GL_FALSE)
 	{
-		std::cout << "SHADER WARN: Failed to link program!\n";
+		if (ProgramErrorMessage.size()-2>=0)
+		{
+			ProgramErrorMessage[ProgramErrorMessage.size()-2] = '\0';
+		}
+		std::cout << &ProgramErrorMessage[0] << "\n";
+		SetColor(Yellow);
+		std::cout << "SHADER WARN: ";
+		ClearColor();
+		std::cout << "Failed to link program!\n";
 		glDeleteShader(VertexShaderID);
 		glDeleteShader(FragmentShaderID);
 		return Fail;
