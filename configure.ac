@@ -8,6 +8,7 @@ AC_CONFIG_HEADERS([src/config.h])
 
 # Checks for programs.
 AC_PROG_CXX
+AC_PROG_CC
 AC_PROG_INSTALL
 AC_LANG([C++])
 
@@ -33,6 +34,15 @@ AC_SEARCH_LIBS([FT_Init_FreeType],[freetype],[],[
 		AC_MSG_ERROR(["Couldn't find freetype libraries!"])
 	])
 ])
+
+# Checks for header files.
+CXXFLAGS="$CXXFLAGS -I/usr/include/freetype2"
+AC_CHECKING([for freetype headers])
+AC_COMPILE_IFELSE([AC_LANG_SOURCE([
+#include <ft2build.h>
+#include FT_FREETYPE_H
+])],[AC_MSG_RESULT([found])], [AC_MSG_ERROR([Failed to find freetype headers!
+Try adding CXXFLAGS="-I/usr/include/freetype2" to the command line!])])
 
 # Checks for typedefs, structures, and compiler characteristics.
 AC_HEADER_STDBOOL

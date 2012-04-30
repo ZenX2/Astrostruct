@@ -15,6 +15,12 @@ int main(int argc, char** argv)
 		return 1;
 	}
 	//Initialize game stuff here
+	Text* MyText = GetGame()->GetTextSystem()->AddText("opensans", "Dang");
+	MyText->SetMode(1);
+	MyText->SetPos(GetGame()->GetWindowSize()/2.f);
+	Text* MyText2 = GetGame()->GetTextSystem()->AddText("opensans", "owned");
+	MyText2->SetPos(50,0);
+	MyText2->SetParent(MyText);
 	while(GetGame()->Running())
 	{
 		GetGame()->GetInput()->Poll();

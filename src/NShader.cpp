@@ -160,8 +160,7 @@ bool NShader::Load(std::string VertexFilePath, std::string FragmentFilePath)
 		glDeleteShader(FragmentShaderID);
 		return Fail;
 	}
-
-	//Everything checked out ok! delete the shader objects and return a program id
+	//Clean up
 	glDeleteShader(VertexShaderID);
 	glDeleteShader(FragmentShaderID);
 }

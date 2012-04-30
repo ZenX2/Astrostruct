@@ -13,13 +13,10 @@ bool NRender::LoadShaders()
 
 NRender::NRender()
 {
-	glViewport(0,0,GetGame()->GetWindowWidth(),GetGame()->GetWindowHeight());
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	glOrtho(0,GetGame()->GetWindowWidth(),0,GetGame()->GetWindowHeight(),0,1);
-	glMatrixMode(GL_MODELVIEW);
 	LoadShaders();
 	Camera = NULL;
+	MaxFPS = 60;
+	LastTime= CurTime();
 }
 
 NRender::~NRender()
@@ -55,6 +52,13 @@ void NRender::SetCamera(NCamera* i_Camera)
 
 void NRender::Draw()
 {
+	double TimeDiff = CurTime()-LastTime;
+	double WantedTime = 1.f/MaxFPS;
+	if (TimeDiff<WantedTime)
+	{
+		glfwSleep(WantedTime-TimeDiff);
+	}
+	LastTime = CurTime();
 	glClearColor(0.435294118,0.309803922,0.439215686,1.f);
 	glClear(GL_COLOR_BUFFER_BIT);
 	
@@ -62,7 +66,7 @@ void NRender::Draw()
 	{
 		GetGame()->GetScene()->Draw(Camera->GetViewMatrix());
 	} else {
-		GetGame()->GetScene()->Draw(glm::mat4(1.f));
+		GetGame()->GetScene()->Draw(glm::mat4());
 	}
 	
 	glfwSwapBuffers();

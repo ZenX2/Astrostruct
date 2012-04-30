@@ -8,6 +8,7 @@ public:
 	int GetKey(int); //Key
 	int GetMouseX();
 	int GetMouseY();
+	glm::vec2 GetMouse();
 private:
 	int MouseX;
 	int MouseY;

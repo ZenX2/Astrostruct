@@ -16,9 +16,9 @@ srcdir			= .
 
 
 # Build-related substitution variables
-objects			= NGame.o NColor.o NEngine.o NInput.o NCamera.o NNode.o NScene.o NRender.o NShader.o
+objects			= NGame.o NColor.o NEngine.o NInput.o NCamera.o NNode.o NScene.o NRender.o NShader.o NText.o
 CXX				= g++
-CXXFLAGS		= -g -O2
+CXXFLAGS		= -g -O2 -I/usr/include/freetype2
 LIBS			= -lfreetype -lglfw -lGLEW -lGL 
 DEFS			= -DHAVE_CONFIG_H
 

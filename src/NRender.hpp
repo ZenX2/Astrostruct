@@ -12,6 +12,9 @@ public:
 	void SetCamera(NCamera*); //Camera
 	NCamera* GetCamera();
 private:
+	float MaxFPS;
+	double LastTime;
+	unsigned int FPS;
 	std::vector<NShader*> Shaders;
 	NCamera* Camera;
 };

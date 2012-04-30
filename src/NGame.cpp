@@ -15,6 +15,7 @@ NGame::~NGame()
 		delete Input;
 		delete Scene;
 		delete Render;
+		delete TextSystem;
 		glfwTerminate();
 	}
 }
@@ -50,9 +51,12 @@ bool NGame::Init(int i_Width, int i_Height, std::string Title)
 		glfwTerminate();
 		return Fail;
 	}
+	glfwSetWindowSizeCallback(&ResizeWindow);
 	Input = new NInput();
 	Scene = new NScene();
 	Render = new NRender();
+	TextSystem = new NTextSystem();
+	TextSystem->LoadFaces();
 	Valid = true;
 	return Success;
 }
@@ -70,6 +74,11 @@ NScene* NGame::GetScene()
 NRender* NGame::GetRender()
 {
 	return Render;
+}
+
+NTextSystem* NGame::GetTextSystem()
+{
+	return TextSystem;
 }
 
 bool NGame::Running()
@@ -92,6 +101,11 @@ int NGame::GetWindowHeight()
 	return Height;
 }
 
+glm::vec2 NGame::GetWindowSize()
+{
+	return glm::vec2(Width,Height);
+}
+
 void NGame::Poll()
 {
 	if (!glfwGetWindowParam(GLFW_OPENED))
@@ -103,4 +117,29 @@ void NGame::Poll()
 		Close();
 		return;
 	}
+	if (Width != NewWidth || Height != NewHeight)
+	{
+		Width = NewWidth;
+		Height = NewHeight;
+		glViewport(0,0,Width,Height);
+		WindowChanged = true;
+	} else {
+		WindowChanged = false;
+	}
+}
+
+void ResizeWindow(int X, int Y)
+{
+	GetGame()->NewWidth = X;
+	GetGame()->NewHeight = Y;
+}
+
+void NGame::SetWindowChanged(bool Changed)
+{
+	WindowChanged = Changed;
+}
+
+bool NGame::GetWindowChanged()
+{
+	return WindowChanged;
 }
