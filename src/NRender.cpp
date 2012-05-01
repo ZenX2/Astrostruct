@@ -36,7 +36,10 @@ NShader* NRender::GetShader(std::string Name)
 			return Shaders[i];
 		}
 	}
-	std::cout << "RENDER WARN: Attempted to use unknown shader " << Name << "!\n";
+	SetColor(Yellow);
+	std::cout << "RENDER WARN: ";
+	ClearColor();
+	std::cout << "Attempted to use unknown shader " << Name << "!\n";
 	return NULL;
 }
 

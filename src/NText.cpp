@@ -175,6 +175,8 @@ NTextureAtlas::NTextureAtlas(FT_Face Face, unsigned int i_Size)
 	glBindTexture(GL_TEXTURE_2D, Texture);
 	glPixelStorei(GL_UNPACK_ALIGNMENT,1);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_ALPHA, Width, Height, 0, GL_ALPHA, GL_UNSIGNED_BYTE, 0);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 }
 
 NTextureAtlas::~NTextureAtlas()
