@@ -29,7 +29,9 @@ public:
 	NGlyph* GetGlyph(FT_Face, unsigned int);
 	unsigned int GetSize();
 	GLuint GetTexture();
+	void UpdateMipmaps();
 private:
+	bool Changed;
 	int Size;
 	int Width, Height;
 	GLuint Texture;
@@ -45,6 +47,7 @@ public:
 	NGlyph* GetGlyph(unsigned int, unsigned int);
 	bool Load(FT_Library, std::string);
 	std::string GetName();
+	void UpdateMipmaps();
 private:
 	std::string Name;
 	FT_Face Face;
@@ -82,6 +85,7 @@ public:
 	void LoadFaces();
 	NFace* GetFace(std::string);
 	Text* AddText(std::string,std::string);
+	void UpdateMipmaps();
 private:
 	FT_Library FTLib;
 	std::vector<NFace*> Faces;

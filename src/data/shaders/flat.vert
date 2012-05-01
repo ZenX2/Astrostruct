@@ -11,7 +11,7 @@ out vec2 UVCoords;
 void main()
 {
 	UVCoords = UVPosition;
-	vec4 TransformVertex = ModelView*vec4(VertexPosition/(Screen/2.f),0.f,1.f);
-	vec4 TranslateVertex = vec4(TransformVertex.x-1.f,TransformVertex.y-1.f,TransformVertex.z,TransformVertex.w);
-	gl_Position = TranslateVertex;
+	vec4 TransformVertex = ModelView*vec4(VertexPosition,0.f,1.f);
+	vec4 ScreenVertex = vec4(TransformVertex.x/Screen.x-1.f,TransformVertex.y/Screen.y-1.f,TransformVertex.z,TransformVertex.w);
+	gl_Position = ScreenVertex;
 }

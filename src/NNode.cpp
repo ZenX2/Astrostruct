@@ -15,7 +15,7 @@ NNode::~NNode()
 
 void NNode::SetPos(float X, float Y)
 {
-	Position = glm::vec2(X/(GetGame()->GetWindowWidth()/2.f),Y/(GetGame()->GetWindowHeight()/2.f));
+	Position = glm::vec2(X,Y);
 	UpdateMatrix();
 	for (unsigned int i=0;i<Children.size();i++)
 	{
@@ -30,7 +30,7 @@ NNode* NNode::GetParent()
 
 void NNode::SetPos(glm::vec2 i_Position)
 {
-	Position = i_Position/(GetGame()->GetWindowSize()/2.f);
+	Position = i_Position;
 	UpdateMatrix();
 	for (unsigned int i=0;i<Children.size();i++)
 	{

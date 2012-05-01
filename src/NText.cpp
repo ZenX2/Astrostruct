@@ -36,6 +36,26 @@ void NTextSystem::LoadFaces()
 	}
 }
 
+void NTextSystem::UpdateMipmaps()
+{
+	for (unsigned int i=0;i<Faces.size();i++)
+	{
+		Faces[i]->UpdateMipmaps();
+	}
+}
+
+void NFace::UpdateMipmaps()
+{
+	for (unsigned int i=0;i<Textures.size();i++)
+	{
+		if (Textures[i] == NULL)
+		{
+			continue;
+		}
+		Textures[i]->UpdateMipmaps();
+	}
+}
+
 Text* NTextSystem::AddText(std::string Font, std::string Data)
 {
 	Text* NewText = new Text(Font,Data);
@@ -121,6 +141,7 @@ void NGlyph::SetAtlas(float Width, float Height)
 NTextureAtlas::NTextureAtlas(FT_Face Face, unsigned int i_Size)
 {
 	//Get Width and Height of desired textureatlas
+	Changed = true;
 	Width = 0;
 	Height = 0;
 	Size = i_Size;
@@ -154,7 +175,6 @@ NTextureAtlas::NTextureAtlas(FT_Face Face, unsigned int i_Size)
 	glBindTexture(GL_TEXTURE_2D, Texture);
 	glPixelStorei(GL_UNPACK_ALIGNMENT,1);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_ALPHA, Width, Height, 0, GL_ALPHA, GL_UNSIGNED_BYTE, 0);
-	glGenerateMipmap(GL_TEXTURE_2D);
 }
 
 NTextureAtlas::~NTextureAtlas()
@@ -187,8 +207,20 @@ NGlyph* NTextureAtlas::GetGlyph(FT_Face Face, unsigned int ID)
 		glBindTexture(GL_TEXTURE_2D, Texture);
 		glTexSubImage2D(GL_TEXTURE_2D, 0, Glyphs[ID]->X, 0, Glyph->bitmap.width, Glyph->bitmap.rows, GL_ALPHA, GL_UNSIGNED_BYTE, Glyph->bitmap.buffer);
 		Glyphs[ID]->Rendered = true;
+		Changed = true;
 	}
 	return Glyphs[ID];
+}
+
+void NTextureAtlas::UpdateMipmaps()
+{
+	if (!Changed)
+	{
+		return;
+	}
+	glBindTexture(GL_TEXTURE_2D, Texture);
+	glGenerateMipmap(GL_TEXTURE_2D);
+	Changed = false;
 }
 
 GLuint NTextureAtlas::GetTexture()
@@ -317,7 +349,7 @@ void Text::Draw(glm::mat4 View)
 	glUniform1i(Sampler,0);
 	glm::mat4 ModelView = GetModelMatrix()*View;
 	glUniformMatrix4fv(glGetUniformLocation(Shader->GetID(), "ModelView"),1,GL_FALSE,&ModelView[0][0]);
-	glUniform2f(glGetUniformLocation(Shader->GetID(), "Screen"),GetGame()->GetWindowWidth(),GetGame()->GetWindowHeight());
+	glUniform2f(glGetUniformLocation(Shader->GetID(), "Screen"),GetGame()->GetWindowWidth()/2.f,GetGame()->GetWindowHeight()/2.f);
 	glEnableVertexAttribArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER,Buffers[0]);
 	glVertexAttribPointer(0,2,GL_FLOAT,GL_FALSE,0,NULL);

@@ -12,6 +12,7 @@ int main(int argc, char** argv)
 		std::cout << "ENGINE ERROR: ";
 		ClearColor();
 		std::cout << "Failed to initialize the game!\n";
+		CleanUp();
 		return 1;
 	}
 	//Initialize game stuff here

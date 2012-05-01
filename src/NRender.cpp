@@ -62,6 +62,7 @@ void NRender::Draw()
 	glClearColor(0.435294118,0.309803922,0.439215686,1.f);
 	glClear(GL_COLOR_BUFFER_BIT);
 	
+	GetGame()->GetTextSystem()->UpdateMipmaps();
 	if (Camera)
 	{
 		GetGame()->GetScene()->Draw(Camera->GetViewMatrix());
