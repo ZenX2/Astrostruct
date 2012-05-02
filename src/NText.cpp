@@ -171,12 +171,12 @@ NTextureAtlas::NTextureAtlas(FT_Face Face, unsigned int i_Size)
 	}
 	//Now tell opengl to actually create the texture
 	glActiveTexture(GL_TEXTURE0);
-	glGenTextures(1, &Texture);
-	glBindTexture(GL_TEXTURE_2D, Texture);
+	GLuint Tex;
+	glGenTextures(1, &Tex);
+	glBindTexture(GL_TEXTURE_2D, Tex);
 	glPixelStorei(GL_UNPACK_ALIGNMENT,1);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_ALPHA, Width, Height, 0, GL_ALPHA, GL_UNSIGNED_BYTE, 0);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	Texture = new NTexture(Tex);
 }
 
 NTextureAtlas::~NTextureAtlas()
@@ -185,7 +185,7 @@ NTextureAtlas::~NTextureAtlas()
 	{
 		delete Glyphs[i];
 	}
-	glDeleteTextures(1, &Texture);
+	delete Texture;
 }
 
 unsigned int NTextureAtlas::GetSize()
@@ -206,7 +206,7 @@ NGlyph* NTextureAtlas::GetGlyph(FT_Face Face, unsigned int ID)
 		{
 			return NULL;
 		}
-		glBindTexture(GL_TEXTURE_2D, Texture);
+		glBindTexture(GL_TEXTURE_2D, Texture->GetID());
 		glTexSubImage2D(GL_TEXTURE_2D, 0, Glyphs[ID]->X, 0, Glyph->bitmap.width, Glyph->bitmap.rows, GL_ALPHA, GL_UNSIGNED_BYTE, Glyph->bitmap.buffer);
 		Glyphs[ID]->Rendered = true;
 		Changed = true;
@@ -220,14 +220,14 @@ void NTextureAtlas::UpdateMipmaps()
 	{
 		return;
 	}
-	glBindTexture(GL_TEXTURE_2D, Texture);
+	glBindTexture(GL_TEXTURE_2D, Texture->GetID());
 	glGenerateMipmap(GL_TEXTURE_2D);
 	Changed = false;
 }
 
 GLuint NTextureAtlas::GetTexture()
 {
-	return Texture;
+	return Texture->GetID();
 }
 
 NGlyph* NFace::GetGlyph(unsigned int ID, unsigned int Size)
@@ -383,11 +383,12 @@ NGlyph::~NGlyph()
 
 void Text::Tick(double DT)
 {
-	if (!GetParent())
-	{
-		SetPos(GetGame()->GetInput()->GetMouse());
-		SetAng(GetAng()+DT*30);
-	} else {
-		SetAng(GetAng()-DT*60);
-	}
+	SetPos(GetGame()->GetInput()->GetMouse());
+	SetAng(GetAng()+30*DT);
+}
+
+void Text::SetText(std::string i_Data)
+{
+	Data = i_Data;
+	Changed = true;
 }

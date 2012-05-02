@@ -8,10 +8,12 @@ public:
 	int GetKey(int); //Key
 	int GetMouseX();
 	int GetMouseY();
+	bool KeyChanged(int); //Key
 	glm::vec2 GetMouse();
 private:
 	int MouseX;
 	int MouseY;
+	int Keys[128];
 };
 
 #endif

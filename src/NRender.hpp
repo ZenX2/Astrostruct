@@ -11,11 +11,17 @@ public:
 	void Draw();
 	void SetCamera(NCamera*); //Camera
 	NCamera* GetCamera();
+	void SetTextureFilter(GLuint);
+	void AddTexture(NTexture*);
+	void RemoveTexture(NTexture*);
+	GLuint GetTextureFilter();
 private:
+	GLuint TextureFilter;
 	float MaxFPS;
 	double LastTime;
 	unsigned int FPS;
 	std::vector<NShader*> Shaders;
+	std::vector<NTexture*> Textures;
 	NCamera* Camera;
 };
 

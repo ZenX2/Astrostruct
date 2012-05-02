@@ -17,6 +17,7 @@ NRender::NRender()
 	Camera = NULL;
 	MaxFPS = 60;
 	LastTime= CurTime();
+	TextureFilter = GL_LINEAR;
 }
 
 NRender::~NRender()
@@ -74,4 +75,40 @@ void NRender::Draw()
 	}
 	
 	glfwSwapBuffers();
+}
+
+void NRender::AddTexture(NTexture* Texture)
+{
+	Texture->SetFilter(TextureFilter);
+	Textures.push_back(Texture);
+}
+
+void NRender::RemoveTexture(NTexture* Texture)
+{
+	for (unsigned int i=0;i<Textures.size();i++)
+	{
+		if (Texture == Textures[i])
+		{
+			Textures.erase(Textures.begin()+i);
+			return;
+		}
+	}
+}
+
+void NRender::SetTextureFilter(GLuint Filter)
+{
+	if (Filter != GL_NEAREST && Filter != GL_LINEAR)
+	{
+		return;
+	}
+	TextureFilter = Filter;
+	for (unsigned int i=0;i<Textures.size();i++)
+	{
+		Textures[i]->SetFilter(TextureFilter);
+	}
+}
+
+GLuint NRender::GetTextureFilter()
+{
+	return TextureFilter;
 }

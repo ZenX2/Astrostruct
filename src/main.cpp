@@ -16,15 +16,22 @@ int main(int argc, char** argv)
 		return 1;
 	}
 	//Initialize game stuff here
-	Text* MyText = GetGame()->GetTextSystem()->AddText("opensans", "Dang");
-	MyText->SetMode(1);
-	MyText->SetPos(GetGame()->GetWindowSize()/2.f);
-	Text* MyText2 = GetGame()->GetTextSystem()->AddText("opensans", "owned");
-	MyText2->SetPos(50,0);
-	MyText2->SetParent(MyText);
+	Text* InfoText = GetGame()->GetTextSystem()->AddText("opensans", "Texture filter: GL_LINEAR");
+	InfoText->SetMode(1);
 	while(GetGame()->Running())
 	{
 		GetGame()->GetInput()->Poll();
+		if (GetGame()->GetInput()->KeyChanged('T') && GetGame()->GetInput()->GetKey('T'))
+		{
+			if (GetGame()->GetRender()->GetTextureFilter() == GL_NEAREST)
+			{
+				GetGame()->GetRender()->SetTextureFilter(GL_LINEAR);
+				InfoText->SetText("Texture filter: GL_LINEAR");
+			} else {
+				GetGame()->GetRender()->SetTextureFilter(GL_NEAREST);
+				InfoText->SetText("Texture filter: GL_NEAREST");
+			}
+		}
 		GetGame()->GetScene()->Tick();
 		GetGame()->GetRender()->Draw();
 		GetGame()->Poll();

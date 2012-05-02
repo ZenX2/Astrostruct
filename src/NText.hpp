@@ -34,7 +34,7 @@ private:
 	bool Changed;
 	int Size;
 	int Width, Height;
-	GLuint Texture;
+	NTexture* Texture;
 	std::vector<NGlyph*> Glyphs;
 };
 
@@ -62,6 +62,7 @@ public:
 	float GetWidth();
 	void Tick(double);
 	void SetMode(int);
+	void SetText(std::string);
 	~Text();
 private:
 	int Mode;

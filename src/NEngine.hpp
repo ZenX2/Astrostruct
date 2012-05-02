@@ -19,6 +19,7 @@
 #include "NColor.hpp"
 #include "NInput.hpp"
 #include "NNode.hpp"
+#include "NTexture.hpp"
 #include "NShader.hpp"
 #include "NText.hpp"
 #include "NScene.hpp"
