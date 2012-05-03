@@ -21,7 +21,7 @@
  * @section intro Introduction
  * @subsection what What is this?
  * astrostruct is an open-source, multi-platform, multi-player, highly-modifiable, space-like, rogue-like game!
- * It's obviously in extreme development; right now all I have is an engine code-base and text rendering, but I have high hopes for it.
+ * It's obviously in very early development; right now all I have is an engine code-base and text rendering, but I have high hopes for it.
  * @subsection install How do I get it?
  * Currently the whole thing is stored on github <a href="https://github.com/naelstrof/Astrostruct">here.</a> But you won't find any binaries there; you'll have to compile it yourself by using autotools.
  * @subsection help Can I help with development?
@@ -38,7 +38,6 @@
 
 #ifndef NAELSTROF_ENGINE
 #define NAELSTROF_ENGINE
-
 #include <GL/glew.h>
 #include <GL/glfw.h>
 #include <iostream>
@@ -49,12 +48,20 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <ft2build.h>
 #include FT_FREETYPE_H
+#define LUA_COMPAT_MODULE
+extern "C"
+{
+	#include "lua.h"
+	#include "lualib.h"
+	#include "lauxlib.h"
+}
 
 #define Fail false
 #define Success true
 
 #include "config.h"
 #include "NColor.hpp"
+#include "NLua.hpp"
 #include "NInput.hpp"
 #include "NNode.hpp"
 #include "NTexture.hpp"

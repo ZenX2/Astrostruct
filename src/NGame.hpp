@@ -1,3 +1,5 @@
+#ifndef NAELSTROF_GAME
+#define NAELSTROF_GAME
 /**
 * @file NGame.hpp
 * @brief Wraps together all the other interfaces so they can interact with eachother.
@@ -5,9 +7,6 @@
 * @version 1.0
 * @date 2012-05-02
 */
-#ifndef NAELSTROF_GAME
-#define NAELSTROF_GAME
-
 /**
 * @brief This call is used as a glfw hook for window resize events, but I guess you can use it to change the window size too. Try to use NGame's interface to change the window size though.
 *
@@ -106,6 +105,12 @@ public:
 	* @return True if the window changed, false if it hasn't.
 	*/
 	bool GetWindowChanged();
+	/**
+	* @brief Grabs the lua interface.
+	*
+	* @return A pointer to the lua interface.
+	*/
+	NLua* GetLua();
 private:
 	bool WindowChanged;
 	/**
@@ -115,6 +120,7 @@ private:
 	NInput* Input;
 	NScene* Scene;
 	NRender* Render;
+	NLua* Lua;
 	NTextSystem* TextSystem;
 	bool Valid;
 };

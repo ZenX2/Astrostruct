@@ -344,6 +344,32 @@ void NText::SetMode(int i_Mode)
 void NText::Draw(glm::mat4 View)
 {
 	GenerateBuffers();
+	if (Shader == NULL)
+	{
+		glEnableClientState(GL_VERTEX_ARRAY);
+		glBindBuffer(GL_ARRAY_BUFFER,Buffers[0]);
+		glVertexPointer(2,GL_FLOAT,0,NULL);
+
+		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+		glBindBuffer(GL_ARRAY_BUFFER,Buffers[1]);
+		glTexCoordPointer(2,GL_FLOAT,0,NULL);
+
+		glEnable(GL_TEXTURE_2D);
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glBindTexture(GL_TEXTURE_2D,Face->GetTexture(Size));
+		glPushMatrix();
+		glTranslatef(GetPos().x,GetPos().y,0);
+		glRotatef(GetAng(),0,0,1);
+		glDrawArrays(GL_TRIANGLES,0,Verts.size());
+		glPopMatrix();
+		glDisable(GL_TEXTURE_2D);
+		glDisable(GL_BLEND);
+
+		glDisableClientState(GL_VERTEX_ARRAY);
+		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+		return;
+	}
 	glUseProgram(Shader->GetID());
 	GLuint Sampler = glGetUniformLocation(Shader->GetID(), "Texture");
 	glActiveTexture(GL_TEXTURE0);

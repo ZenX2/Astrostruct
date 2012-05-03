@@ -51,7 +51,13 @@ bool NGame::Init(int i_Width, int i_Height, std::string Title)
 		glfwTerminate();
 		return Fail;
 	}
+	glViewport(0,0,Width,Height);
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	glOrtho(0, Width, 0, Height, 0, 1);
+	glMatrixMode(GL_MODELVIEW);
 	glfwSetWindowSizeCallback(&ResizeWindow);
+	Lua = new NLua();
 	Input = new NInput();
 	Scene = new NScene();
 	Render = new NRender();
@@ -121,8 +127,12 @@ void NGame::Poll()
 	{
 		Width = NewWidth;
 		Height = NewHeight;
-		glViewport(0,0,Width,Height);
 		WindowChanged = true;
+		glViewport(0,0,Width,Height);
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		glOrtho(0, Width, 0, Height, 0, 1);
+		glMatrixMode(GL_MODELVIEW);
 	} else {
 		WindowChanged = false;
 	}
