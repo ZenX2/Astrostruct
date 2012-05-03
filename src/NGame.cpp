@@ -128,10 +128,10 @@ void NGame::Poll()
 	}
 }
 
-void ResizeWindow(int X, int Y)
+void ResizeWindow(int W, int H)
 {
-	GetGame()->NewWidth = X;
-	GetGame()->NewHeight = Y;
+	GetGame()->NewWidth = W;
+	GetGame()->NewHeight = H;
 }
 
 void NGame::SetWindowChanged(bool Changed)

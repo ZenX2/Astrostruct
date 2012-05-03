@@ -56,9 +56,9 @@ void NFace::UpdateMipmaps()
 	}
 }
 
-Text* NTextSystem::AddText(std::string Font, std::string Data)
+NText* NTextSystem::AddText(std::string Font, std::string Data)
 {
-	Text* NewText = new Text(Font,Data);
+	NText* NewText = new NText(Font,Data);
 	Texts.push_back(NewText);
 	return NewText;
 }
@@ -248,7 +248,7 @@ GLuint NFace::GetTexture(unsigned int Size)
 	return Textures[Size]->GetTexture();
 }
 
-Text::Text(std::string Font, std::string i_Data) : NNode()
+NText::NText(std::string Font, std::string i_Data) : NNode()
 {
 	Face = GetGame()->GetTextSystem()->GetFace(Font);
 	Shader = GetGame()->GetRender()->GetShader("flat");
@@ -261,12 +261,12 @@ Text::Text(std::string Font, std::string i_Data) : NNode()
 	Mode = 0;
 }
 
-float Text::GetWidth()
+float NText::GetWidth()
 {
 	return Width;
 }
 
-void Text::GenerateBuffers()
+void NText::GenerateBuffers()
 {
 	if (!Changed && !GetGame()->GetWindowChanged())
 	{
@@ -335,13 +335,13 @@ void Text::GenerateBuffers()
 	glBufferData(GL_ARRAY_BUFFER,UVs.size()*sizeof(glm::vec2),&UVs[0],GL_STATIC_DRAW);
 }
 
-void Text::SetMode(int i_Mode)
+void NText::SetMode(int i_Mode)
 {
 	Mode = i_Mode;
 	Changed = true;
 }
 
-void Text::Draw(glm::mat4 View)
+void NText::Draw(glm::mat4 View)
 {
 	GenerateBuffers();
 	glUseProgram(Shader->GetID());
@@ -371,7 +371,7 @@ void Text::Draw(glm::mat4 View)
 	glUseProgram(0);
 }
 
-Text::~Text()
+NText::~NText()
 {
 	glDeleteBuffers(2,Buffers);
 	delete[] Buffers;
@@ -381,13 +381,13 @@ NGlyph::~NGlyph()
 {
 }
 
-void Text::Tick(double DT)
+void NText::Tick(double DT)
 {
 	SetPos(GetGame()->GetInput()->GetMouse());
 	SetAng(GetAng()+30*DT);
 }
 
-void Text::SetText(std::string i_Data)
+void NText::SetText(std::string i_Data)
 {
 	Data = i_Data;
 	Changed = true;

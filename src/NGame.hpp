@@ -1,32 +1,116 @@
+/**
+* @file NGame.hpp
+* @brief Wraps together all the other interfaces so they can interact with eachother.
+* @author Dalton Nell
+* @version 1.0
+* @date 2012-05-02
+*/
 #ifndef NAELSTROF_GAME
 #define NAELSTROF_GAME
 
-void ResizeWindow(int, int);
+/**
+* @brief This call is used as a glfw hook for window resize events, but I guess you can use it to change the window size too. Try to use NGame's interface to change the window size though.
+*
+* @param W Desired width.
+* @param H Desired height.
+*/
+void ResizeWindow(int W, int H);
 
+/**
+* @brief Wraps together all the other interfaces so they can interact with eachother.
+*/
 class NGame
 {
 public:
 	NGame();
 	~NGame();
-	bool Init(int,int,std::string); //Width Height Title
+	/**
+	* @brief Creates a glfw window, and initializes all necessary parts of the engine. (freetype, glew, glfw, opengl, etc)
+	*
+	* @param Width Desired width of the window.
+	* @param Height Desired height of the window.
+	* @param Title Desired title of the window.
+	*
+	* @return True on success, false on failure.
+	*/
+	bool Init(int Width,int Height,std::string Title);
+	/**
+	* @brief Grabs the input interface for other parts of the engine to use.
+	*
+	* @return A pointer to the input interface.
+	*/
 	NInput* GetInput();
+	/**
+	* @brief Grabs the rendering interface for other parts of the engine to use.
+	*
+	* @return A pointer to the render interface.
+	*/
 	NRender* GetRender();
+	/**
+	* @brief Grabs the scene for other parts of the engine to use.
+	*
+	* @return A pointer to the scene.
+	*/
 	NScene* GetScene();
+	/**
+	* @brief Grabs the text interface for other parts of the engine to use.
+	*
+	* @return A pointer to the text interface.
+	*/
 	NTextSystem* GetTextSystem();
+	/**
+	* @brief Checks if the game is still running.
+	*
+	* @return True if it's running, false if it's not.
+	*/
 	bool Running();
+	/**
+	* @brief Gets the window width.
+	*
+	* @return The window width.
+	*/
 	int GetWindowWidth();
+	/**
+	* @brief Gets the window height.
+	*
+	* @return The window height.
+	*/
 	int GetWindowHeight();
+	/**
+	* @brief Gets the window's dimensions.
+	*
+	* @return A glm::vec2 containing the width and height of the window.
+	*/
 	glm::vec2 GetWindowSize();
+	/**
+	* @brief Closes the game window and makes Running() return false. 
+	*/
 	void Close();
+	/**
+	* @brief Checks if the game window needs to be resized or closed, and acts upon it.
+	*/
 	void Poll();
 	int Width;
 	int Height;
 	int NewWidth;
 	int NewHeight;
-	void SetWindowChanged(bool);
+	/**
+	* @brief Tells the game that the window size has been changed.
+	*
+	* @param Changed If you want the window to be changed(true) or not(false).
+	*/
+	void SetWindowChanged(bool Changed);
+	/**
+	* @brief Returns if the window size has been changed recently, this is useful for rendering objects that depend on the window size and need to be regenerated everytime the window changes.
+	*
+	* @return True if the window changed, false if it hasn't.
+	*/
 	bool GetWindowChanged();
 private:
 	bool WindowChanged;
+	/**
+	* @brief If the game is running or not.
+	*/
 	bool Run;
 	NInput* Input;
 	NScene* Scene;

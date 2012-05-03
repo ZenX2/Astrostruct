@@ -15,15 +15,15 @@ NTexture::~NTexture()
 	GetGame()->GetRender()->RemoveTexture(this);
 }
 
-void NTexture::SetFilter(GLuint Param)
+void NTexture::SetFilter(GLuint Filter)
 {
-	if (Param != GL_NEAREST && Param != GL_LINEAR)
+	if (Filter != GL_NEAREST && Filter != GL_LINEAR)
 	{
 		return;
 	}
 	glBindTexture(GL_TEXTURE_2D,TextureID);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, Param);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, Param);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, Filter);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, Filter);
 }
 
 GLuint NTexture::GetID()

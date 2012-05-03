@@ -1,5 +1,10 @@
 #include "NEngine.hpp"
 
+/**
+* @brief Statically loads shaders into memory for other objects to use.
+*
+* @return Nothing.
+*/
 bool NRender::LoadShaders()
 {
 	NShader* Shader = new NShader("flat");
@@ -11,6 +16,9 @@ bool NRender::LoadShaders()
 	}
 }
 
+/**
+* @brief Creates the render system and initializes it.
+*/
 NRender::NRender()
 {
 	LoadShaders();
@@ -20,6 +28,9 @@ NRender::NRender()
 	TextureFilter = GL_LINEAR;
 }
 
+/**
+* @brief Deletes the render system and unloads all shaders from memory.
+*/
 NRender::~NRender()
 {
 	for (unsigned int i=0;i<Shaders.size();i++)
@@ -28,6 +39,13 @@ NRender::~NRender()
 	}
 }
 
+/**
+* @brief Returns a pointer to the specified shader object.
+*
+* @param Name The name of the shader.
+*
+* @return The pointer to the specifed shader object or null if it isn't found.
+*/
 NShader* NRender::GetShader(std::string Name)
 {
 	for (unsigned int i=0;i<Shaders.size();i++)
