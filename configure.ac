@@ -34,6 +34,11 @@ AC_SEARCH_LIBS([FT_Init_FreeType],[freetype],[],[
 		AC_MSG_ERROR(["Couldn't find freetype libraries!"])
 	])
 ])
+AC_SEARCH_LIBS([luaL_register],[lua],[],[
+	AC_CHECK_LIB([lua],[main],[LIBS="$LIBS -llua"],[
+		AC_MSG_ERROR(["Couldn't find lua libraries!"])
+	])
+])
 
 # Checks for header files.
 CXXFLAGS="$CXXFLAGS -I/usr/include/freetype2"
