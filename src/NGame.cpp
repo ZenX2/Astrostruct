@@ -22,6 +22,7 @@ NGame::~NGame()
 
 bool NGame::Init(int i_Width, int i_Height, std::string Title)
 {
+	//Initialize everything we can
 	Width = i_Width;
 	Height = i_Height;
 	if (!glfwInit())
@@ -58,12 +59,25 @@ bool NGame::Init(int i_Width, int i_Height, std::string Title)
 	glMatrixMode(GL_MODELVIEW);
 	glfwSetWindowSizeCallback(&ResizeWindow);
 	Lua = new NLua();
+	Config = new NConfig("data/config/init.lua");
 	Input = new NInput();
 	Scene = new NScene();
 	Render = new NRender();
 	TextSystem = new NTextSystem();
 	TextSystem->LoadFaces();
 	Valid = true;
+	//Now lets load some data from our config interface
+	NewWidth = Config->GetFloat("Width");
+	NewHeight = Config->GetFloat("Height");
+	if (NewWidth == 0)
+	{
+		NewWidth = Width;
+	}
+	if (NewHeight == 0)
+	{
+		NewHeight = Height;
+	}
+	SetWindowSize(NewWidth,NewHeight);
 	return Success;
 }
 
@@ -114,6 +128,7 @@ glm::vec2 NGame::GetWindowSize()
 
 void NGame::Poll()
 {
+	//If the window closes, end the game!
 	if (!glfwGetWindowParam(GLFW_OPENED))
 	{
 		SetColor(Blue);
@@ -123,6 +138,7 @@ void NGame::Poll()
 		Close();
 		return;
 	}
+	//If the window has changed, reset our opengl view matrix and context size.
 	if (Width != NewWidth || Height != NewHeight)
 	{
 		Width = NewWidth;
@@ -152,4 +168,21 @@ void NGame::SetWindowChanged(bool Changed)
 bool NGame::GetWindowChanged()
 {
 	return WindowChanged;
+}
+
+NLua* NGame::GetLua()
+{
+	return Lua;
+}
+
+NConfig* NGame::GetConfig()
+{
+	return Config;
+}
+
+void NGame::SetWindowSize(int W, int H)
+{
+	glfwSetWindowSize(W,H);
+	NewWidth = W;
+	NewHeight = H;
 }

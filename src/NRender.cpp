@@ -24,7 +24,11 @@ NRender::NRender()
 	LoadShaders();
 	Camera = NULL;
 	VSync = false;
-	MaxFPS = 60;
+	if (GetGame()->GetConfig()->GetBool("VerticalSync"))
+	{
+		SetVSync(true);
+	}
+	MaxFPS = GetGame()->GetConfig()->GetFloat("MaxFPS");
 	LastTime= CurTime();
 	TextureFilter = GL_LINEAR;
 }
@@ -75,11 +79,14 @@ void NRender::SetCamera(NCamera* i_Camera)
 
 void NRender::Draw()
 {
-	double TimeDiff = CurTime()-LastTime;
-	double WantedTime = 1.f/MaxFPS;
-	if (TimeDiff<WantedTime)
+	if (MaxFPS != 0)
 	{
-		glfwSleep(WantedTime-TimeDiff);
+		double TimeDiff = CurTime()-LastTime;
+		double WantedTime = 1.f/MaxFPS;
+		if (TimeDiff<WantedTime)
+		{
+			glfwSleep(WantedTime-TimeDiff);
+		}
 	}
 	LastTime = CurTime();
 	glClearColor(0.435294118,0.309803922,0.439215686,1.f);

@@ -111,6 +111,19 @@ public:
 	* @return A pointer to the lua interface.
 	*/
 	NLua* GetLua();
+	/**
+	* @brief Grabs the configure interface.
+	*
+	* @return A pointer to the lua interface.
+	*/
+	NConfig* GetConfig();
+	/**
+	* @brief Sets the window's size
+	*
+	* @param W Desired width of the window.
+	* @param H Desired height of the window.
+	*/
+	void SetWindowSize(int W,int H);
 private:
 	bool WindowChanged;
 	/**
@@ -121,6 +134,7 @@ private:
 	NScene* Scene;
 	NRender* Render;
 	NLua* Lua;
+	NConfig* Config;
 	NTextSystem* TextSystem;
 	bool Valid;
 };

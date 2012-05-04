@@ -16,7 +16,6 @@ int main(int argc, char** argv)
 		return 1;
 	}
 	//Initialize game stuff here
-	GetGame()->GetRender()->SetVSync(true);
 	NText* InfoText = GetGame()->GetTextSystem()->AddText("opensans", "(Press T) Texture filter: GL_LINEAR");
 	InfoText->SetMode(1);
 	//
