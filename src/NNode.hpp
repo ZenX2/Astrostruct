@@ -94,9 +94,71 @@ public:
 	* @return A pointer to the parent.
 	*/
 	virtual NNode* GetParent();
+	/**
+	* @brief Sets the scale of the object.
+	*
+	* @param W The desired width scale factor.
+	* @param H The desired height scale factor.
+	*/
+	virtual void SetScale(float W, float H);
+	/**
+	* @brief Returns the current scale of the object.
+	*
+	* @return The current scale of the object.
+	*/
+	virtual glm::vec2 GetScale();
+	/**
+	* @brief Sets the scale of the object.
+	*
+	* @param i_Scale The desired scale factors.
+	*/
+	virtual void SetScale(glm::vec2 i_Scale);
+	/**
+	* @brief Sets the scale of the object.
+	*
+	* @param i_Scale The desired scale factor.
+	*/
+	virtual void SetScale(float i_Scale);
+	/**
+	* @brief Sets the color of the object.
+	*
+	* @param R Desired red component of the color (0-1).
+	* @param G Desired green component of the color (0-1).
+	* @param B Desired blue component of the color (0-1).
+	* @param A Desired alpha component of the color (0-1).
+	*/
+	virtual void SetColor(float R, float G, float B, float A);
+	/**
+	* @brief Sets the color of the object.
+	*
+	* @param R Desired red component of the color (0-1).
+	* @param G Desired green component of the color (0-1).
+	* @param B Desired blue component of the color (0-1).
+	*/
+	virtual void SetColor(float R, float G, float B);
+	/**
+	* @brief Sets the color of the object.
+	*
+	* @param i_Color The desired color.
+	*/
+	virtual void SetColor(glm::vec4 i_Color);
+	/**
+	* @brief Sets the color of the object.
+	*
+	* @param i_Color The desired color.
+	*/
+	virtual void SetColor(glm::vec3 i_Color);
+	/**
+	* @brief Gets the current color of the object.
+	*
+	* @return The current color of the object.
+	*/
+	virtual glm::vec4 GetColor();
 private:
 	float Angle;
+	glm::vec4 Color;
 	glm::vec2 Position;
+	glm::vec2 Scale;
 	glm::mat4 Matrix;
 	NNode* Parent;
 	std::vector<NNode*> Children;

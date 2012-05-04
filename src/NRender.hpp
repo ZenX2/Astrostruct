@@ -70,7 +70,20 @@ public:
 	* @return Either GL_LINEAR or GL_NEAREST.
 	*/
 	GLuint GetTextureFilter();
+	/**
+	* @brief Enables or disables VSync.
+	*
+	* @param i_VSync true for enable, false for disable.
+	*/
+	void SetVSync(bool i_VSync);
+	/**
+	* @brief Returns if VSync is enabled or not.
+	*
+	* @return true if enabled, false if it's disabled.
+	*/
+	bool GetVSync();
 private:
+	bool VSync;
 	GLuint TextureFilter;
 	float MaxFPS;
 	double LastTime;

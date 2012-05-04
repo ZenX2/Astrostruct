@@ -7,8 +7,8 @@
 */
 bool NRender::LoadShaders()
 {
-	NShader* Shader = new NShader("flat");
-	if (Shader->Load("data/shaders/flat.vert","data/shaders/flat.frag") != Fail)
+	NShader* Shader = new NShader("text");
+	if (Shader->Load("data/shaders/text.vert","data/shaders/text.frag") != Fail)
 	{
 		Shaders.push_back(Shader);
 	} else {
@@ -23,6 +23,7 @@ NRender::NRender()
 {
 	LoadShaders();
 	Camera = NULL;
+	VSync = false;
 	MaxFPS = 60;
 	LastTime= CurTime();
 	TextureFilter = GL_LINEAR;
@@ -129,4 +130,20 @@ void NRender::SetTextureFilter(GLuint Filter)
 GLuint NRender::GetTextureFilter()
 {
 	return TextureFilter;
+}
+
+void NRender::SetVSync(bool i_VSync)
+{
+	VSync = i_VSync;
+	if (VSync)
+	{
+		glfwSwapInterval(1);
+		return;
+	}
+	glfwSwapInterval(0);
+}
+
+bool NRender::GetVSync()
+{
+	return VSync;
 }

@@ -251,7 +251,7 @@ GLuint NFace::GetTexture(unsigned int Size)
 NText::NText(std::string Font, std::string i_Data) : NNode()
 {
 	Face = GetGame()->GetTextSystem()->GetFace(Font);
-	Shader = GetGame()->GetRender()->GetShader("flat");
+	Shader = GetGame()->GetRender()->GetShader("text");
 	Data = i_Data;
 	Changed = true;
 	Buffers = new GLuint[2];
@@ -359,8 +359,10 @@ void NText::Draw(glm::mat4 View)
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		glBindTexture(GL_TEXTURE_2D,Face->GetTexture(Size));
 		glPushMatrix();
+		glColor4fv(&(GetColor()[0]));
 		glTranslatef(GetPos().x,GetPos().y,0);
 		glRotatef(GetAng(),0,0,1);
+		glScalef(GetScale().x,GetScale().y,0);
 		glDrawArrays(GL_TRIANGLES,0,Verts.size());
 		glPopMatrix();
 		glDisable(GL_TEXTURE_2D);
@@ -378,6 +380,7 @@ void NText::Draw(glm::mat4 View)
 	glm::mat4 ModelView = GetModelMatrix()*View;
 	glUniformMatrix4fv(glGetUniformLocation(Shader->GetID(), "ModelView"),1,GL_FALSE,&ModelView[0][0]);
 	glUniform2f(glGetUniformLocation(Shader->GetID(), "Screen"),GetGame()->GetWindowWidth()/2.f,GetGame()->GetWindowHeight()/2.f);
+	glUniform4fv(glGetUniformLocation(Shader->GetID(), "Color"),1,&(GetColor()[0]));
 	glEnableVertexAttribArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER,Buffers[0]);
 	glVertexAttribPointer(0,2,GL_FLOAT,GL_FALSE,0,NULL);
