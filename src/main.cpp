@@ -34,7 +34,7 @@ int main(int argc, char** argv)
 			}
 		}
 		//
-		InfoText->SetScale(glm::vec2(1.f)+GetGame()->GetInput()->GetMouse()/GetGame()->GetWindowSize());
+		InfoText->SetScale(glm::vec2(1.f)+GetGame()->GetInput()->GetMouse()/GetGame()->GetWindowSize()*2.f);
 		InfoText->SetColor(glm::vec4(0,GetGame()->GetInput()->GetMouse()/GetGame()->GetWindowSize(),fmod(CurTime()/2.f,1)));
 		GetGame()->GetInput()->Poll();
 		GetGame()->GetScene()->Tick();
