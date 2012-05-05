@@ -10,6 +10,8 @@ AddChild	NNode.cpp	/^void NNode::AddChild(NNode* Node)$/;"	f	class:NNode	signatu
 AddChild	NNode.hpp	/^	virtual void AddChild(NNode*);$/;"	p	class:NNode	access:public	signature:(NNode*)
 AddNode	NScene.cpp	/^void NScene::AddNode(NNode* Node)$/;"	f	class:NScene	signature:(NNode* Node)
 AddNode	NScene.hpp	/^	void AddNode(NNode* Node);$/;"	p	class:NScene	access:public	signature:(NNode* Node)
+AddText	NScene.cpp	/^NText* NScene::AddText(std::string Font, std::string Data)$/;"	f	class:NScene	signature:(std::string Font, std::string Data)
+AddText	NScene.hpp	/^	NText* AddText(std::string Font, std::string Data);$/;"	p	class:NScene	access:public	signature:(std::string Font, std::string Data)
 AddText	NText.cpp	/^NText* NTextSystem::AddText(std::string Font, std::string Data)$/;"	f	class:NTextSystem	signature:(std::string Font, std::string Data)
 AddText	NText.hpp	/^	NText* AddText(std::string Font,std::string Data);$/;"	p	class:NTextSystem	access:public	signature:(std::string Font,std::string Data)
 AddTexture	NRender.cpp	/^void NRender::AddTexture(NTexture* Texture)$/;"	f	class:NRender	signature:(NTexture* Texture)
@@ -33,8 +35,8 @@ Camera	NRender.hpp	/^	NCamera* Camera;$/;"	m	class:NRender	access:private
 Changed	NText.hpp	/^	bool Changed;$/;"	m	class:NText	access:private
 Changed	NText.hpp	/^	bool Changed;$/;"	m	class:NTextureAtlas	access:private
 Children	NNode.hpp	/^	std::vector<NNode*> Children;$/;"	m	class:NNode	access:private
-CleanUp	NEngine.cpp	/^void CleanUp()$/;"	f	signature:()
-CleanUp	NEngine.hpp	/^void CleanUp();$/;"	p	signature:()
+CleanUp	NGame.cpp	/^void NGame::CleanUp()$/;"	f	class:NGame	signature:()
+CleanUp	NGame.hpp	/^	void CleanUp();$/;"	p	class:NGame	access:public	signature:()
 ClearColor	NColor.cpp	/^void ClearColor()$/;"	f	signature:()
 ClearColor	NColor.cpp	/^void ClearColor(){}$/;"	f	signature:()
 ClearColor	NColor.hpp	/^void ClearColor();$/;"	p	signature:()
@@ -49,6 +51,7 @@ CurTime	NEngine.hpp	/^double CurTime();$/;"	p	signature:()
 DEFS	Makefile	/^DEFS			= -DHAVE_CONFIG_H$/;"	m
 DT	NScene.cpp	/^	double DT = CurTime()-LastTick;$/;"	l
 Data	NText.hpp	/^	std::string Data;$/;"	m	class:NText	access:private
+DesiredShader	NRender.cpp	/^	std::string DesiredShader = GetGame()->GetConfig()->GetString("TextureFilter");$/;"	l
 DoFile	NLua.cpp	/^bool NLua::DoFile(std::string File)$/;"	f	class:NLua	signature:(std::string File)
 DoFile	NLua.hpp	/^	bool DoFile(std::string File);$/;"	p	class:NLua	access:public	signature:(std::string File)
 Draw	NNode.cpp	/^void NNode::Draw(glm::mat4 View) {}$/;"	f	class:NNode	signature:(glm::mat4 View)
@@ -147,7 +150,6 @@ GetSize	NText.cpp	/^unsigned int NTextureAtlas::GetSize()$/;"	f	class:NTextureAt
 GetSize	NText.hpp	/^	unsigned int GetSize();$/;"	p	class:NTextureAtlas	access:public	signature:()
 GetString	NConfig.cpp	/^std::string NConfig::GetString(std::string Name)$/;"	f	class:NConfig	signature:(std::string Name)
 GetString	NConfig.hpp	/^	std::string GetString(std::string Name);$/;"	p	class:NConfig	access:public	signature:(std::string Name)
-GetTextSystem	NGame.cpp	/^NTextSystem* NGame::GetTextSystem()$/;"	f	class:NGame	signature:()
 GetTextSystem	NGame.hpp	/^	NTextSystem* GetTextSystem();$/;"	p	class:NGame	access:public	signature:()
 GetTexture	NText.cpp	/^GLuint NFace::GetTexture(unsigned int Size)$/;"	f	class:NFace	signature:(unsigned int Size)
 GetTexture	NText.cpp	/^GLuint NTextureAtlas::GetTexture()$/;"	f	class:NTextureAtlas	signature:()
@@ -196,7 +198,7 @@ INSTALL_DATA	Makefile	/^INSTALL_DATA	= ${INSTALL} -m 644$/;"	m
 Include	NLua.cpp	/^int Include(lua_State* L)$/;"	f	signature:(lua_State* L)
 Include	NLua.hpp	/^int Include(lua_State* L);$/;"	p	signature:(lua_State* L)
 InfoLogLength	NShader.cpp	/^	int InfoLogLength;$/;"	l
-InfoText	main.cpp	/^	NText* InfoText = GetGame()->GetTextSystem()->AddText("opensans", "(Press T) Texture filter: GL_LINEAR");$/;"	l
+InfoText	main.cpp	/^	NText* InfoText = GetGame()->GetScene()->AddText("opensans", "Text objects!");$/;"	l
 Init	NGame.cpp	/^bool NGame::Init(int i_Width, int i_Height, std::string Title)$/;"	f	class:NGame	signature:(int i_Width, int i_Height, std::string Title)
 Init	NGame.hpp	/^	bool Init(int Width,int Height,std::string Title);$/;"	p	class:NGame	access:public	signature:(int Width,int Height,std::string Title)
 Input	NGame.hpp	/^	NInput* Input;$/;"	m	class:NGame	access:private
@@ -214,7 +216,7 @@ Load	NShader.cpp	/^bool NShader::Load(std::string VertexFilePath, std::string Fr
 Load	NShader.hpp	/^	bool Load(std::string VertexShaderPath,std::string FragmentShaderPath);$/;"	p	class:NShader	access:public	signature:(std::string VertexShaderPath,std::string FragmentShaderPath)
 Load	NText.cpp	/^bool NFace::Load(FT_Library FTLib, std::string File)$/;"	f	class:NFace	signature:(FT_Library FTLib, std::string File)
 Load	NText.hpp	/^	bool Load(FT_Library FTLib, std::string File);$/;"	p	class:NFace	access:public	signature:(FT_Library FTLib, std::string File)
-LoadFaces	NGame.cpp	/^	TextSystem->LoadFaces();$/;"	p	file:	signature:()
+LoadFaces	NScene.cpp	/^	TextSystem->LoadFaces();$/;"	p	file:	signature:()
 LoadFaces	NText.cpp	/^void NTextSystem::LoadFaces()$/;"	f	class:NTextSystem	signature:()
 LoadFaces	NText.hpp	/^	void LoadFaces();$/;"	p	class:NTextSystem	access:public	signature:()
 LoadShaders	NRender.cpp	/^bool NRender::LoadShaders()$/;"	f	class:NRender	signature:()
@@ -270,6 +272,7 @@ NConfig::GetString	NConfig.cpp	/^std::string NConfig::GetString(std::string Name
 NConfig::GetString	NConfig.hpp	/^	std::string GetString(std::string Name);$/;"	p	class:NConfig	access:public	signature:(std::string Name)
 NConfig::NConfig	NConfig.cpp	/^NConfig::NConfig(std::string i_File)$/;"	f	class:NConfig	signature:(std::string i_File)
 NConfig::NConfig	NConfig.hpp	/^	NConfig(std::string i_File);$/;"	p	class:NConfig	access:public	signature:(std::string i_File)
+NConfig::~NConfig	NConfig.cpp	/^NConfig::~NConfig()$/;"	f	class:NConfig	signature:()
 NConfig::~NConfig	NConfig.hpp	/^	~NConfig();$/;"	p	class:NConfig	access:public	signature:()
 NEngine.cpp	NEngine.cpp	1;"	F
 NEngine.hpp	NEngine.hpp	1;"	F
@@ -298,6 +301,8 @@ NGame	NGame.hpp	/^	NGame();$/;"	p	class:NGame	access:public	signature:()
 NGame	NGame.hpp	/^class NGame$/;"	c
 NGame.cpp	NGame.cpp	1;"	F
 NGame.hpp	NGame.hpp	1;"	F
+NGame::CleanUp	NGame.cpp	/^void NGame::CleanUp()$/;"	f	class:NGame	signature:()
+NGame::CleanUp	NGame.hpp	/^	void CleanUp();$/;"	p	class:NGame	access:public	signature:()
 NGame::Close	NGame.cpp	/^void NGame::Close()$/;"	f	class:NGame	signature:()
 NGame::Close	NGame.hpp	/^	void Close();$/;"	p	class:NGame	access:public	signature:()
 NGame::Config	NGame.hpp	/^	NConfig* Config;$/;"	m	class:NGame	access:private
@@ -311,7 +316,6 @@ NGame::GetRender	NGame.cpp	/^NRender* NGame::GetRender()$/;"	f	class:NGame	signa
 NGame::GetRender	NGame.hpp	/^	NRender* GetRender();$/;"	p	class:NGame	access:public	signature:()
 NGame::GetScene	NGame.cpp	/^NScene* NGame::GetScene()$/;"	f	class:NGame	signature:()
 NGame::GetScene	NGame.hpp	/^	NScene* GetScene();$/;"	p	class:NGame	access:public	signature:()
-NGame::GetTextSystem	NGame.cpp	/^NTextSystem* NGame::GetTextSystem()$/;"	f	class:NGame	signature:()
 NGame::GetTextSystem	NGame.hpp	/^	NTextSystem* GetTextSystem();$/;"	p	class:NGame	access:public	signature:()
 NGame::GetWindowChanged	NGame.cpp	/^bool NGame::GetWindowChanged()$/;"	f	class:NGame	signature:()
 NGame::GetWindowChanged	NGame.hpp	/^	bool GetWindowChanged();$/;"	p	class:NGame	access:public	signature:()
@@ -506,12 +510,15 @@ NScene.cpp	NScene.cpp	1;"	F
 NScene.hpp	NScene.hpp	1;"	F
 NScene::AddNode	NScene.cpp	/^void NScene::AddNode(NNode* Node)$/;"	f	class:NScene	signature:(NNode* Node)
 NScene::AddNode	NScene.hpp	/^	void AddNode(NNode* Node);$/;"	p	class:NScene	access:public	signature:(NNode* Node)
+NScene::AddText	NScene.cpp	/^NText* NScene::AddText(std::string Font, std::string Data)$/;"	f	class:NScene	signature:(std::string Font, std::string Data)
+NScene::AddText	NScene.hpp	/^	NText* AddText(std::string Font, std::string Data);$/;"	p	class:NScene	access:public	signature:(std::string Font, std::string Data)
 NScene::Draw	NScene.cpp	/^void NScene::Draw(glm::mat4 View)$/;"	f	class:NScene	signature:(glm::mat4 View)
 NScene::Draw	NScene.hpp	/^	void Draw(glm::mat4 View);$/;"	p	class:NScene	access:public	signature:(glm::mat4 View)
 NScene::LastTick	NScene.hpp	/^	double LastTick;$/;"	m	class:NScene	access:private
 NScene::NScene	NScene.cpp	/^NScene::NScene()$/;"	f	class:NScene	signature:()
 NScene::NScene	NScene.hpp	/^	NScene();$/;"	p	class:NScene	access:public	signature:()
 NScene::Nodes	NScene.hpp	/^	std::vector<NNode*> Nodes;$/;"	m	class:NScene	access:private
+NScene::TextSystem	NScene.hpp	/^	NTextSystem* TextSystem;$/;"	m	class:NScene	access:private
 NScene::Tick	NScene.cpp	/^void NScene::Tick()$/;"	f	class:NScene	signature:()
 NScene::Tick	NScene.hpp	/^	void Tick();$/;"	p	class:NScene	access:public	signature:()
 NScene::~NScene	NScene.cpp	/^NScene::~NScene()$/;"	f	class:NScene	signature:()
@@ -533,8 +540,8 @@ NShader::Name	NShader.hpp	/^	std::string Name;$/;"	m	class:NShader	access:privat
 NShader::ProgramID	NShader.hpp	/^	GLuint ProgramID;$/;"	m	class:NShader	access:private
 NShader::~NShader	NShader.cpp	/^NShader::~NShader()$/;"	f	class:NShader	signature:()
 NShader::~NShader	NShader.hpp	/^	~NShader();$/;"	p	class:NShader	access:public	signature:()
-NText	NText.cpp	/^NText::NText(std::string Font, std::string i_Data) : NNode()$/;"	f	class:NText	signature:(std::string Font, std::string i_Data)
-NText	NText.hpp	/^	NText(std::string Font,std::string i_Data);$/;"	p	class:NText	access:public	signature:(std::string Font,std::string i_Data)
+NText	NText.cpp	/^NText::NText(NFace* i_Face, std::string i_Data) : NNode()$/;"	f	class:NText	signature:(NFace* i_Face, std::string i_Data)
+NText	NText.hpp	/^	NText(NFace* i_Face,std::string i_Data);$/;"	p	class:NText	access:public	signature:(NFace* i_Face,std::string i_Data)
 NText	NText.hpp	/^class NText : public NNode$/;"	c	inherits:NNode
 NText.cpp	NText.cpp	1;"	F
 NText.hpp	NText.hpp	1;"	F
@@ -549,8 +556,8 @@ NText::GenerateBuffers	NText.hpp	/^	void GenerateBuffers();$/;"	p	class:NText	ac
 NText::GetWidth	NText.cpp	/^float NText::GetWidth()$/;"	f	class:NText	signature:()
 NText::GetWidth	NText.hpp	/^	float GetWidth();$/;"	p	class:NText	access:public	signature:()
 NText::Mode	NText.hpp	/^	int Mode;$/;"	m	class:NText	access:private
-NText::NText	NText.cpp	/^NText::NText(std::string Font, std::string i_Data) : NNode()$/;"	f	class:NText	signature:(std::string Font, std::string i_Data)
-NText::NText	NText.hpp	/^	NText(std::string Font,std::string i_Data);$/;"	p	class:NText	access:public	signature:(std::string Font,std::string i_Data)
+NText::NText	NText.cpp	/^NText::NText(NFace* i_Face, std::string i_Data) : NNode()$/;"	f	class:NText	signature:(NFace* i_Face, std::string i_Data)
+NText::NText	NText.hpp	/^	NText(NFace* i_Face,std::string i_Data);$/;"	p	class:NText	access:public	signature:(NFace* i_Face,std::string i_Data)
 NText::SetMode	NText.cpp	/^void NText::SetMode(int i_Mode)$/;"	f	class:NText	signature:(int i_Mode)
 NText::SetMode	NText.hpp	/^	void SetMode(int i_Mode);$/;"	p	class:NText	access:public	signature:(int i_Mode)
 NText::SetText	NText.cpp	/^void NText::SetText(std::string i_Data)$/;"	f	class:NText	signature:(std::string i_Data)
@@ -578,8 +585,6 @@ NTextSystem::LoadFaces	NText.hpp	/^	void LoadFaces();$/;"	p	class:NTextSystem	ac
 NTextSystem::NTextSystem	NText.cpp	/^NTextSystem::NTextSystem()$/;"	f	class:NTextSystem	signature:()
 NTextSystem::NTextSystem	NText.hpp	/^	NTextSystem();$/;"	p	class:NTextSystem	access:public	signature:()
 NTextSystem::Texts	NText.hpp	/^	std::vector<NText*> Texts;$/;"	m	class:NTextSystem	access:private
-NTextSystem::UpdateMipmaps	NText.cpp	/^void NTextSystem::UpdateMipmaps()$/;"	f	class:NTextSystem	signature:()
-NTextSystem::UpdateMipmaps	NText.hpp	/^	void UpdateMipmaps();$/;"	p	class:NTextSystem	access:public	signature:()
 NTextSystem::~NTextSystem	NText.cpp	/^NTextSystem::~NTextSystem()$/;"	f	class:NTextSystem	signature:()
 NTextSystem::~NTextSystem	NText.hpp	/^	~NTextSystem();$/;"	p	class:NTextSystem	access:public	signature:()
 NTexture	NTexture.cpp	/^NTexture::NTexture(GLuint i_TextureID)$/;"	f	class:NTexture	signature:(GLuint i_TextureID)
@@ -623,7 +628,7 @@ Name	NShader.hpp	/^	std::string Name;$/;"	m	class:NShader	access:private
 Name	NText.hpp	/^	std::string Name;$/;"	m	class:NFace	access:private
 NewGlyph	NText.cpp	/^		NGlyph* NewGlyph = new NGlyph(Face,Width);$/;"	l
 NewHeight	NGame.hpp	/^	int NewHeight;$/;"	m	class:NGame	access:public
-NewText	NText.cpp	/^	NText* NewText = new NText(Font,Data);$/;"	l
+NewText	NText.cpp	/^	NText* NewText = new NText(GetFace(Font),Data);$/;"	l
 NewWidth	NGame.hpp	/^	int NewWidth;$/;"	m	class:NGame	access:public
 Nodes	NScene.hpp	/^	std::vector<NNode*> Nodes;$/;"	m	class:NScene	access:private
 Number	NConfig.cpp	/^	float Number = lua_tonumber(L,-1);$/;"	l
@@ -725,6 +730,7 @@ Success	NEngine.hpp	61;"	d
 Tex	NText.cpp	/^	GLuint Tex;$/;"	l
 Text	NConfig.cpp	/^	const char* Text = lua_tostring(L,-1);$/;"	l
 TextSystem	NGame.hpp	/^	NTextSystem* TextSystem;$/;"	m	class:NGame	access:private
+TextSystem	NScene.hpp	/^	NTextSystem* TextSystem;$/;"	m	class:NScene	access:private
 Texts	NText.hpp	/^	std::vector<NText*> Texts;$/;"	m	class:NTextSystem	access:private
 Texture	NText.hpp	/^	NTexture* Texture;$/;"	m	class:NTextureAtlas	access:private
 TextureFilter	NRender.hpp	/^	GLuint TextureFilter;$/;"	m	class:NRender	access:private
@@ -738,7 +744,7 @@ Tick	NScene.cpp	/^void NScene::Tick()$/;"	f	class:NScene	signature:()
 Tick	NScene.hpp	/^	void Tick();$/;"	p	class:NScene	access:public	signature:()
 Tick	NText.cpp	/^void NText::Tick(double DT)$/;"	f	class:NText	signature:(double DT)
 Tick	NText.hpp	/^	void Tick(double DT);$/;"	p	class:NText	access:public	signature:(double DT)
-TimeDiff	NRender.cpp	/^	double TimeDiff = CurTime()-LastTime;$/;"	l
+TimeDiff	NRender.cpp	/^		double TimeDiff = CurTime()-LastTime;$/;"	l
 UV	NText.cpp	/^		float UV = Glyph->GetUV();$/;"	l
 UV2	NText.cpp	/^		float UV2 = UV+Glyph->BitmapWidth\/Glyph->AtlasWidth;$/;"	l
 UV3	NText.cpp	/^		float UV3 = Glyph->BitmapHeight\/Glyph->AtlasHeight;$/;"	l
@@ -747,13 +753,11 @@ UpdateMatrix	NNode.cpp	/^			Children[i]->UpdateMatrix();$/;"	p	file:	signature:(
 UpdateMatrix	NNode.cpp	/^		Children[i]->UpdateMatrix();$/;"	p	file:	signature:()
 UpdateMatrix	NNode.cpp	/^void NNode::UpdateMatrix()$/;"	f	class:NNode	signature:()
 UpdateMatrix	NNode.hpp	/^	virtual void UpdateMatrix();$/;"	p	class:NNode	access:public	signature:()
-UpdateMipmaps	NText.cpp	/^		Faces[i]->UpdateMipmaps();$/;"	p	file:	signature:()
 UpdateMipmaps	NText.cpp	/^		Textures[i]->UpdateMipmaps();$/;"	p	file:	signature:()
+UpdateMipmaps	NText.cpp	/^	Face->UpdateMipmaps();$/;"	p	file:	signature:()
 UpdateMipmaps	NText.cpp	/^void NFace::UpdateMipmaps()$/;"	f	class:NFace	signature:()
-UpdateMipmaps	NText.cpp	/^void NTextSystem::UpdateMipmaps()$/;"	f	class:NTextSystem	signature:()
 UpdateMipmaps	NText.cpp	/^void NTextureAtlas::UpdateMipmaps()$/;"	f	class:NTextureAtlas	signature:()
 UpdateMipmaps	NText.hpp	/^	void UpdateMipmaps();$/;"	p	class:NFace	access:public	signature:()
-UpdateMipmaps	NText.hpp	/^	void UpdateMipmaps();$/;"	p	class:NTextSystem	access:public	signature:()
 UpdateMipmaps	NText.hpp	/^	void UpdateMipmaps();$/;"	p	class:NTextureAtlas	access:public	signature:()
 VSync	NRender.hpp	/^	bool VSync;$/;"	m	class:NRender	access:private
 Valid	NGame.hpp	/^	bool Valid;$/;"	m	class:NGame	access:private
@@ -766,7 +770,7 @@ VertexShaderID	NShader.cpp	/^	GLuint VertexShaderID = glCreateShader(GL_VERTEX_S
 VertexShaderStream	NShader.cpp	/^	std::ifstream VertexShaderStream(VertexFilePath.c_str(), std::ios::in);$/;"	p	file:	signature:(VertexFilePath.c_str(), std::ios::in)
 Verts	NText.hpp	/^	std::vector<glm::vec2> Verts;$/;"	m	class:NText	access:private
 View	NCamera.cpp	/^	glm::mat4 View = glm::translate(glm::mat4(1.f),glm::vec3(GetPos(),0));$/;"	l
-WantedTime	NRender.cpp	/^	double WantedTime = 1.f\/MaxFPS;$/;"	l
+WantedTime	NRender.cpp	/^		double WantedTime = 1.f\/MaxFPS;$/;"	l
 Width	NGame.hpp	/^	int Width;$/;"	m	class:NGame	access:public
 Width	NText.hpp	/^	float Width;$/;"	m	class:NText	access:private
 Width	NText.hpp	/^	int Width, Height;$/;"	m	class:NTextureAtlas	access:private
@@ -863,6 +867,7 @@ vec2	NText.cpp	/^		UVs.push_back(glm::vec2(UV,UV3));$/;"	p	file:	signature:(UV,U
 vec2	NText.cpp	/^		UVs.push_back(glm::vec2(UV2,0));$/;"	p	file:	signature:(UV2,0)
 vec2	NText.cpp	/^		UVs.push_back(glm::vec2(UV2,UV3));$/;"	p	file:	signature:(UV2,UV3)
 version	Makefile	/^version        	= 1.0$/;"	m
+~NConfig	NConfig.cpp	/^NConfig::~NConfig()$/;"	f	class:NConfig	signature:()
 ~NConfig	NConfig.hpp	/^	~NConfig();$/;"	p	class:NConfig	access:public	signature:()
 ~NFace	NText.cpp	/^NFace::~NFace()$/;"	f	class:NFace	signature:()
 ~NFace	NText.hpp	/^	~NFace();$/;"	p	class:NFace	access:public	signature:()

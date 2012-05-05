@@ -87,10 +87,15 @@ NGame* GetGame();
 *
 * @return The current time in a double. 
 */
-void CleanUp();
-/**
-* @brief Deletes the global game object and all of it's children.
-*/
 double CurTime();
+/**
+* @brief Returns a random float between the two limits.
+*
+* @param Min The minimum desired float.
+* @param Max The maximum desired float.
+*
+* @return A random float between the two limits.
+*/
+float Rand(float Min, float Max);
 
 #endif

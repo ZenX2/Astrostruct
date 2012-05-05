@@ -8,6 +8,10 @@ NConfig::NConfig(std::string i_File)
 	GetGame()->GetLua()->DoFile(File);
 }
 
+NConfig::~NConfig()
+{
+}
+
 float NConfig::GetFloat(std::string Name)
 {
 	lua_State* L = GetGame()->GetLua()->GetL();

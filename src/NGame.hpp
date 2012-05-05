@@ -124,6 +124,10 @@ public:
 	* @param H Desired height of the window.
 	*/
 	void SetWindowSize(int W,int H);
+	/**
+	* @brief Deletes this and all of it's children.
+	*/
+	void CleanUp();
 private:
 	bool WindowChanged;
 	/**

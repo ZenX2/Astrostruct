@@ -203,6 +203,7 @@ public:
 	void SetText(std::string i_Data);
 	~NText();
 private:
+	glm::vec2 Velocity;
 	int Mode;
 	float Width;
 	float Size;

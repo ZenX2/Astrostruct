@@ -251,6 +251,7 @@ NText::NText(NFace* i_Face, std::string i_Data) : NNode()
 	Size = 32;
 	Width = 0;
 	Mode = 0;
+	Velocity = glm::vec2(Rand(-10,10),Rand(-10,10));
 }
 
 float NText::GetWidth()
@@ -401,10 +402,31 @@ NGlyph::~NGlyph()
 
 void NText::Tick(double DT)
 {
-	SetPos(GetGame()->GetInput()->GetMouse());
+	SetPos(GetPos()+Velocity);
+	Velocity.y-=DT*4.f;
+	if (GetPos().y<0)
+	{
+		Velocity.y *= -0.9;
+		SetPos(GetPos().x,0);
+	}
+	if (GetPos().y>GetGame()->GetWindowHeight())
+	{
+		Velocity.y *= -0.9;
+		SetPos(GetPos().x,GetGame()->GetWindowHeight());
+	}
+	if (GetPos().x<0)
+	{
+		Velocity.x *= -0.9;
+		SetPos(0,GetPos().y);
+	}
+	if (GetPos().x>GetGame()->GetWindowWidth())
+	{
+		Velocity.x *= -0.9;
+		SetPos(GetGame()->GetWindowWidth(),GetPos().y);
+	}
 	SetAng(GetAng()+30*DT);
-	SetScale(glm::vec2(1.f)+GetGame()->GetInput()->GetMouse()/GetGame()->GetWindowSize()*2.f);
-	SetColor(glm::vec4(0,GetGame()->GetInput()->GetMouse()/GetGame()->GetWindowSize(),fmod(CurTime()/2.f,1)));
+	SetScale(glm::vec2(1.f)+GetPos()/GetGame()->GetWindowSize()*2.f);
+	SetColor(glm::vec4(0,GetPos()/GetGame()->GetWindowSize(),1));
 }
 
 void NText::SetText(std::string i_Data)

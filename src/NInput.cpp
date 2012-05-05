@@ -43,3 +43,8 @@ glm::vec2 NInput::GetMouse()
 {
 	return glm::vec2(MouseX,MouseY);
 }
+
+int NInput::GetMouseKey(int Key)
+{
+	return glfwGetMouseButton(Key);
+}

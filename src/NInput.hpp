@@ -53,6 +53,14 @@ public:
 	* @return The mouse position as a glm::vec2.
 	*/
 	glm::vec2 GetMouse();
+	/**
+	* @brief Returns the state of a mouse key.
+	*
+	* @param Key The keycode of the key. Example: 0 would return the first mouse button.
+	*
+	* @return The state of the desired mouse key.
+	*/
+	int GetMouseKey(int Key);
 private:
 	int MouseX;
 	int MouseY;

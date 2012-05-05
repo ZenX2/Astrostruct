@@ -10,7 +10,9 @@ double CurTime()
 	return glfwGetTime();
 }
 
-void CleanUp()
+float Rand(float Min, float Max)
 {
-	delete Game;
+	float Difference = Max-Min;
+	float X = (float(rand())/float(RAND_MAX))*Difference;
+	return Min+X;
 }

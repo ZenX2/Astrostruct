@@ -12,20 +12,22 @@ int main(int argc, char** argv)
 		std::cout << "ENGINE ERROR: ";
 		ClearColor();
 		std::cout << "Failed to initialize the game!\n";
-		CleanUp();
+		GetGame()->CleanUp();
 		return 1;
 	}
-	//Initialize game stuff here
-	NText* InfoText = GetGame()->GetScene()->AddText("opensans", "Text objects!");
-	InfoText->SetMode(1);
-	//
 	while(GetGame()->Running())
 	{
 		GetGame()->GetInput()->Poll();
+		if (GetGame()->GetInput()->GetMouseKey(0))
+		{
+			NText* InfoText = GetGame()->GetScene()->AddText("opensans", "Text objects!");
+			InfoText->SetMode(1);
+			InfoText->SetPos(GetGame()->GetInput()->GetMouse());
+		}
 		GetGame()->GetScene()->Tick();
 		GetGame()->GetRender()->Draw();
 		GetGame()->Poll();
 	}
-	CleanUp();
+	GetGame()->CleanUp();
 	return 0;
 }

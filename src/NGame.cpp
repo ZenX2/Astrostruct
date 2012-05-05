@@ -15,6 +15,8 @@ NGame::~NGame()
 		delete Input;
 		delete Scene;
 		delete Render;
+		delete Config;
+		delete Lua;
 		glfwTerminate();
 	}
 }
@@ -177,4 +179,9 @@ void NGame::SetWindowSize(int W, int H)
 	glfwSetWindowSize(W,H);
 	NewWidth = W;
 	NewHeight = H;
+}
+
+void NGame::CleanUp()
+{
+	delete this;
 }
