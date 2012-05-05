@@ -21,6 +21,36 @@ std::string NShader::GetName()
 	return Name;
 }
 
+GLuint NShader::GetUniformLocation(std::string i_Name)
+{
+	for (unsigned int i=0;i<Uniforms.size();i++)
+	{
+		if (!Uniforms[i]->GetName().compare(i_Name))
+		{
+			return Uniforms[i]->GetUniformLocation();
+		}
+	}
+	NUniform* NewUniform = new NUniform(GetID(), i_Name);
+	Uniforms.push_back(NewUniform);
+	return NewUniform->GetUniformLocation();
+}
+
+NUniform::NUniform(GLuint ProgramID, std::string i_Name)
+{
+	Name = i_Name;
+	UniLoc = glGetUniformLocation(ProgramID,Name.c_str());
+}
+
+GLuint NUniform::GetUniformLocation()
+{
+	return UniLoc;
+}
+
+std::string NUniform::GetName()
+{
+	return Name;
+}
+
 bool NShader::Load(std::string VertexFilePath, std::string FragmentFilePath)
 {
 	GLuint VertexShaderID = glCreateShader(GL_VERTEX_SHADER);

@@ -9,6 +9,37 @@
 #define NAELSTROF_SHADER
 
 /**
+* @brief Caches uniform locations in shaders to avoid having drivers recompile shaders every time a uniform is set on some systems.
+*/
+class NUniform
+{
+public:
+	/**
+	* @brief Grabs a uniform location and stores it.
+	*
+	* @param ProgramID The program to grab the uniform location from.
+	* @param Name The name of the uniform.
+	*/
+	NUniform(GLuint ProgramID,std::string Name);
+	~NUniform();
+	/**
+	* @brief Grab and return the cached uniform location.
+	*
+	* @return The uniform location.
+	*/
+	GLuint GetUniformLocation();
+	/**
+	* @brief Get the name of the uniform that we tried to grab.
+	*
+	* @return The name of the uniform.
+	*/
+	std::string GetName();
+private:
+	std::string Name;
+	GLuint UniLoc;
+};
+
+/**
 * @brief Abstracts OpenGL shader loading, compiling, and access.
 */
 class NShader
@@ -42,9 +73,18 @@ public:
 	* @return The name given to the program.
 	*/
 	std::string GetName();
+	/**
+	* @brief Grabs a uniform location within this shader, or creates it if it doesn't exist.
+	*
+	* @param i_Name The name of the desired uniform.
+	*
+	* @return An OpenGL uniform location ID.
+	*/
+	GLuint GetUniformLocation(std::string i_Name);
 private:
 	GLuint ProgramID;
 	std::string Name;
+	std::vector<NUniform*> Uniforms;
 };
 
 #endif

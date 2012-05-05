@@ -252,6 +252,10 @@ NText::NText(NFace* i_Face, std::string i_Data) : NNode()
 	Width = 0;
 	Mode = 0;
 	Velocity = glm::vec2(Rand(-10,10),Rand(-10,10));
+	TextureLoc = Shader->GetUniformLocation("Texture");
+	MatrixLoc = Shader->GetUniformLocation("ModelView");
+	ScreenLoc = Shader->GetUniformLocation("Screen");
+	ColorLoc = Shader->GetUniformLocation("Color");
 }
 
 float NText::GetWidth()
@@ -363,14 +367,13 @@ void NText::Draw(glm::mat4 View)
 		return;
 	}
 	glUseProgram(Shader->GetID());
-	GLuint Sampler = glGetUniformLocation(Shader->GetID(), "Texture");
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D,Face->GetTexture(Size));
-	glUniform1i(Sampler,0);
+	glUniform1i(TextureLoc,0);
 	glm::mat4 ModelView = GetModelMatrix()*View;
-	glUniformMatrix4fv(glGetUniformLocation(Shader->GetID(), "ModelView"),1,GL_FALSE,&ModelView[0][0]);
-	glUniform2f(glGetUniformLocation(Shader->GetID(), "Screen"),GetGame()->GetWindowWidth()/2.f,GetGame()->GetWindowHeight()/2.f);
-	glUniform4fv(glGetUniformLocation(Shader->GetID(), "Color"),1,&(GetColor()[0]));
+	glUniformMatrix4fv(MatrixLoc,1,GL_FALSE,&ModelView[0][0]);
+	glUniform2f(ScreenLoc,GetGame()->GetWindowWidth()/2.f,GetGame()->GetWindowHeight()/2.f);
+	glUniform4fv(ColorLoc,1,&(GetColor()[0]));
 	glEnableVertexAttribArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER,Buffers[0]);
 	glVertexAttribPointer(0,2,GL_FLOAT,GL_FALSE,0,NULL);

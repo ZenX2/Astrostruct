@@ -218,6 +218,7 @@ private:
 	std::vector<glm::vec2> UVs;
 	bool Changed;
 	GLuint* Buffers;
+	GLuint ColorLoc,TextureLoc,MatrixLoc,ScreenLoc;
 };
 
 /**
