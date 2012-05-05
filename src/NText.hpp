@@ -167,10 +167,10 @@ public:
 	/**
 	* @brief Grabs the specified font in preparation to render the text given.
 	*
-	* @param Font The name of the font that we want to render.
+	* @param i_Face The font that we want to render.
 	* @param i_Data The string of text we want to render.
 	*/
-	NText(std::string Font,std::string i_Data);
+	NText(NFace* i_Face,std::string i_Data);
 	/**
 	* @brief Generates a vertex and UV array if the string it needs to render has changed or doesn't exist, then draws it to screen.
 	*
@@ -248,10 +248,6 @@ public:
 	* @return A pointer to the new text object.
 	*/
 	NText* AddText(std::string Font,std::string Data);
-	/**
-	* @brief Updates the mipmaps of all children, but only if we need to! (You can call it as much as you like.)
-	*/
-	void UpdateMipmaps();
 private:
 	FT_Library FTLib;
 	std::vector<NFace*> Faces;

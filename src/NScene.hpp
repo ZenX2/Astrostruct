@@ -32,7 +32,9 @@ public:
 	* @param Node The desired object to be added.
 	*/
 	void AddNode(NNode* Node);
+	NText* AddText(std::string Font, std::string Data);
 private:
+	NTextSystem* TextSystem;
 	double LastTick;
 	std::vector<NNode*> Nodes;
 };

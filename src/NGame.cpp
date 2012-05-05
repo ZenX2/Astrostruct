@@ -15,7 +15,6 @@ NGame::~NGame()
 		delete Input;
 		delete Scene;
 		delete Render;
-		delete TextSystem;
 		glfwTerminate();
 	}
 }
@@ -63,8 +62,6 @@ bool NGame::Init(int i_Width, int i_Height, std::string Title)
 	Input = new NInput();
 	Scene = new NScene();
 	Render = new NRender();
-	TextSystem = new NTextSystem();
-	TextSystem->LoadFaces();
 	Valid = true;
 	//Now lets load some data from our config interface
 	NewWidth = Config->GetFloat("Width");
@@ -94,11 +91,6 @@ NScene* NGame::GetScene()
 NRender* NGame::GetRender()
 {
 	return Render;
-}
-
-NTextSystem* NGame::GetTextSystem()
-{
-	return TextSystem;
 }
 
 bool NGame::Running()

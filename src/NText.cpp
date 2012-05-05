@@ -36,14 +36,6 @@ void NTextSystem::LoadFaces()
 	}
 }
 
-void NTextSystem::UpdateMipmaps()
-{
-	for (unsigned int i=0;i<Faces.size();i++)
-	{
-		Faces[i]->UpdateMipmaps();
-	}
-}
-
 void NFace::UpdateMipmaps()
 {
 	for (unsigned int i=0;i<Textures.size();i++)
@@ -58,7 +50,7 @@ void NFace::UpdateMipmaps()
 
 NText* NTextSystem::AddText(std::string Font, std::string Data)
 {
-	NText* NewText = new NText(Font,Data);
+	NText* NewText = new NText(GetFace(Font),Data);
 	Texts.push_back(NewText);
 	return NewText;
 }
@@ -248,9 +240,9 @@ GLuint NFace::GetTexture(unsigned int Size)
 	return Textures[Size]->GetTexture();
 }
 
-NText::NText(std::string Font, std::string i_Data) : NNode()
+NText::NText(NFace* i_Face, std::string i_Data) : NNode()
 {
-	Face = GetGame()->GetTextSystem()->GetFace(Font);
+	Face = i_Face;
 	Shader = GetGame()->GetRender()->GetShader("text");
 	Data = i_Data;
 	Changed = true;
@@ -329,6 +321,7 @@ void NText::GenerateBuffers()
 	glBufferData(GL_ARRAY_BUFFER,Verts.size()*sizeof(glm::vec2),&Verts[0],GL_STATIC_DRAW);
 	glBindBuffer(GL_ARRAY_BUFFER,Buffers[1]);
 	glBufferData(GL_ARRAY_BUFFER,UVs.size()*sizeof(glm::vec2),&UVs[0],GL_STATIC_DRAW);
+	Face->UpdateMipmaps();
 }
 
 void NText::SetMode(int i_Mode)
@@ -410,6 +403,8 @@ void NText::Tick(double DT)
 {
 	SetPos(GetGame()->GetInput()->GetMouse());
 	SetAng(GetAng()+30*DT);
+	SetScale(glm::vec2(1.f)+GetGame()->GetInput()->GetMouse()/GetGame()->GetWindowSize()*2.f);
+	SetColor(glm::vec4(0,GetGame()->GetInput()->GetMouse()/GetGame()->GetWindowSize(),fmod(CurTime()/2.f,1)));
 }
 
 void NText::SetText(std::string i_Data)
