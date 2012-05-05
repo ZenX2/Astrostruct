@@ -26,6 +26,11 @@
  * Currently the whole thing is stored on github <a href="https://github.com/naelstrof/Astrostruct">here.</a> But you won't find any binaries there; you'll have to compile it yourself by using autotools.
  * @subsection help Can I help with development?
  * Of course! Add me on steam (Naelstrof) or contact me through email (naelstrof@gmail.com) so we can talk.
+ * @subsection howdoi I'm looking at your code and I don't even...
+ * This is a rough drawing of how the engine works.
+ * <img src="http://farmpolice.com/content/images/0Vi0rsUkohfWQZL3.png" alt="Some oogly boogly chart" />
+ * Game is a global that any part of the engine can access at any time, this means if Lua is a child of Game: you'll have access to lua in every part of the engine through a simple call of GetGame()->GetLua()!<br>
+ * I think it's a really elegant design for a game engine, but I have yet to have someone more expiranced prove me wrong.
  */
 
 /**
