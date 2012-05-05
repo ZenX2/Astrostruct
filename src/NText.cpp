@@ -308,9 +308,7 @@ void NText::GenerateBuffers()
 		Verts.push_back(glm::vec2(XOff+PenX,YOff));
 		Verts.push_back(glm::vec2(XOff+PenX+X,YOff));
 		Verts.push_back(glm::vec2(XOff+PenX+X,Y+YOff));
-		Verts.push_back(glm::vec2(XOff+PenX,YOff));
 		Verts.push_back(glm::vec2(XOff+PenX,Y+YOff));
-		Verts.push_back(glm::vec2(XOff+PenX+X,Y+YOff));
 
 		float UV = Glyph->GetUV();
 		float UV2 = UV+Glyph->BitmapWidth/Glyph->AtlasWidth;
@@ -318,9 +316,7 @@ void NText::GenerateBuffers()
 		UVs.push_back(glm::vec2(UV,UV3));
 		UVs.push_back(glm::vec2(UV2,UV3));
 		UVs.push_back(glm::vec2(UV2,0));
-		UVs.push_back(glm::vec2(UV,UV3));
 		UVs.push_back(glm::vec2(UV,0));
-		UVs.push_back(glm::vec2(UV2,0));
 		PenX += Glyph->AdvanceX;
 	}
 	Changed = false;
@@ -363,7 +359,7 @@ void NText::Draw(glm::mat4 View)
 		glTranslatef(GetPos().x,GetPos().y,0);
 		glRotatef(GetAng(),0,0,1);
 		glScalef(GetScale().x,GetScale().y,0);
-		glDrawArrays(GL_TRIANGLES,0,Verts.size());
+		glDrawArrays(GL_QUADS,0,Verts.size());
 		glPopMatrix();
 		glDisable(GL_TEXTURE_2D);
 		glDisable(GL_BLEND);
@@ -391,7 +387,7 @@ void NText::Draw(glm::mat4 View)
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glEnable(GL_TEXTURE_2D);
-	glDrawArrays(GL_TRIANGLES,0,Verts.size());
+	glDrawArrays(GL_QUADS,0,Verts.size());
 	glDisable(GL_TEXTURE_2D);
 	glDisable(GL_BLEND);
 

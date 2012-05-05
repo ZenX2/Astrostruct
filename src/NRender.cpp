@@ -31,6 +31,14 @@ NRender::NRender()
 	MaxFPS = GetGame()->GetConfig()->GetFloat("MaxFPS");
 	LastTime= CurTime();
 	TextureFilter = GL_LINEAR;
+	std::string DesiredShader = GetGame()->GetConfig()->GetString("TextureFilter");
+	if (DesiredShader == "GL_LINEAR")
+	{
+		TextureFilter = GL_LINEAR;
+	} else if (DesiredShader == "GL_NEAREST")
+	{
+		TextureFilter = GL_NEAREST;
+	}
 }
 
 /**
