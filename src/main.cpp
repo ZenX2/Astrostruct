@@ -27,6 +27,10 @@ int main(int argc, char** argv)
 		GetGame()->GetScene()->Tick();
 		GetGame()->GetRender()->Draw();
 		GetGame()->Poll();
+		if (GetGame()->GetInput()->GetKey(GLFW_KEY_ESC))
+		{
+			GetGame()->Close();
+		}
 	}
 	GetGame()->CleanUp();
 	return 0;

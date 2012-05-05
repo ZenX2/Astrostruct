@@ -34,7 +34,27 @@ bool NGame::Init(int i_Width, int i_Height, std::string Title)
 		std::cout << "GLFW failed to initialize!\n";
 		return Fail;
 	}
-	if (!glfwOpenWindow(Width,Height,0,0,0,0,0,0,GLFW_WINDOW))
+	Lua = new NLua();
+	Config = new NConfig("data/config/init.lua");
+	//Now lets load some data from our config interface
+	NewWidth = Config->GetFloat("Width");
+	NewHeight = Config->GetFloat("Height");
+	if (NewWidth != 0)
+	{
+		Width = NewWidth;
+	}
+	if (NewHeight != 0)
+	{
+		Height = NewHeight;
+	}
+	int Check = 0;
+	if (Config->GetBool("Fullscreen"))
+	{
+		Check = glfwOpenWindow(Width,Height,0,0,0,0,0,0,GLFW_FULLSCREEN);
+	} else {
+		Check = glfwOpenWindow(Width,Height,0,0,0,0,0,0,GLFW_WINDOW);
+	}
+	if (!Check)
 	{
 		SetColor(Red);
 		std::cout << "ENGINE ERROR: ";
@@ -59,24 +79,10 @@ bool NGame::Init(int i_Width, int i_Height, std::string Title)
 	glOrtho(0, Width, 0, Height, 0, 1);
 	glMatrixMode(GL_MODELVIEW);
 	glfwSetWindowSizeCallback(&ResizeWindow);
-	Lua = new NLua();
-	Config = new NConfig("data/config/init.lua");
 	Input = new NInput();
 	Scene = new NScene();
 	Render = new NRender();
 	Valid = true;
-	//Now lets load some data from our config interface
-	NewWidth = Config->GetFloat("Width");
-	NewHeight = Config->GetFloat("Height");
-	if (NewWidth == 0)
-	{
-		NewWidth = Width;
-	}
-	if (NewHeight == 0)
-	{
-		NewHeight = Height;
-	}
-	SetWindowSize(NewWidth,NewHeight);
 	return Success;
 }
 
