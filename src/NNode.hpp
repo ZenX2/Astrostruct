@@ -154,6 +154,11 @@ public:
 	* @return The current color of the object.
 	*/
 	virtual glm::vec4 GetColor();
+	/**
+	* @brief Swaps this depth with the desired depth.
+	*
+	* @param Depth The desired depth we want to be rendered at.
+	*/
 	virtual void SwapDepth(unsigned int Depth);
 private:
 	float Angle;

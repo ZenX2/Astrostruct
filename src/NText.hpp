@@ -17,6 +17,13 @@
 /** @addtogroup TextSystem
  * @{*/
 
+/**
+* @brief Lua function that loads font faces into memory.
+*
+* @param L The lua state
+*
+* @return Number of things added to the lua stack.
+*/
 int LoadFace(lua_State* L);
 
 /**
@@ -264,8 +271,18 @@ public:
 	* @return A pointer to the new text object.
 	*/
 	NText* AddText(std::string Font,std::string Data);
+	/**
+	* @brief Returns the freetype library for lua.
+	*
+	* @return The freetype library.
+	*/
 	FT_Library GetFreeTypeLib();
-	void AddFace(NFace*);
+	/**
+	* @brief Adds a face to cache.
+	*
+	* @param Face The face we want to cache.
+	*/
+	void AddFace(NFace* Face);
 private:
 	FT_Library FTLib;
 	std::vector<NFace*> Faces;
