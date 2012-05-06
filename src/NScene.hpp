@@ -33,6 +33,8 @@ public:
 	*/
 	void AddNode(NNode* Node);
 	NText* AddText(std::string Font, std::string Data);
+	void SwapDepth(NNode* Node, unsigned int Depth);
+	unsigned int GetTopDepth();
 private:
 	NTextSystem* TextSystem;
 	double LastTick;

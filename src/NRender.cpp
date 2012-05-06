@@ -21,6 +21,7 @@ bool NRender::LoadShaders()
 */
 NRender::NRender()
 {
+	FrameTime = 0;
 	LoadShaders();
 	Camera = NULL;
 	VSync = false;
@@ -87,9 +88,10 @@ void NRender::SetCamera(NCamera* i_Camera)
 
 void NRender::Draw()
 {
+	double TimeDiff = CurTime()-LastTime;
+	FrameTime = TimeDiff;
 	if (MaxFPS != 0)
 	{
-		double TimeDiff = CurTime()-LastTime;
 		double WantedTime = 1.f/MaxFPS;
 		if (TimeDiff<WantedTime)
 		{
@@ -160,4 +162,9 @@ void NRender::SetVSync(bool i_VSync)
 bool NRender::GetVSync()
 {
 	return VSync;
+}
+
+double NRender::GetFrameTime()
+{
+	return FrameTime;
 }

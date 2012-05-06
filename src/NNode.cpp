@@ -9,6 +9,7 @@ NNode::NNode()
 	Parent = NULL;
 	Matrix = glm::mat4();
 	GetGame()->GetScene()->AddNode(this);
+	Depth = 0;
 }
 
 NNode::~NNode()
@@ -150,4 +151,8 @@ void NNode::SetColor(glm::vec4 i_Color)
 glm::vec4 NNode::GetColor()
 {
 	return Color;
+}
+void NNode::SwapDepth(unsigned int Depth)
+{
+	GetGame()->GetScene()->SwapDepth(this, Depth);
 }

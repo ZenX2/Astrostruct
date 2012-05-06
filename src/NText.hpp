@@ -178,9 +178,9 @@ public:
 	*/
 	void Draw(glm::mat4 View);
 	/**
-	* @brief Grabs the width of the rendered text, returns 0 if it hasn't been rendered yet!
+	* @brief Grabs the width of the text.
 	*
-	* @return The width of the rendered text.
+	* @return The width of the text.
 	*/
 	float GetWidth();
 	/**
@@ -201,6 +201,18 @@ public:
 	* @param i_Data The desired string of text to be rendered.
 	*/
 	void SetText(std::string i_Data);
+	/**
+	* @brief Returns the size of the rendered glyphs, the actual size depends on the font!
+	*
+	* @return The approximate size of the rendered glyphs.
+	*/
+	float GetSize();
+	/**
+	* @brief Sets the size to the closest approximate rendersize available from the float.
+	*
+	* @param i_Size The desired text render size.
+	*/
+	void SetSize(float i_Size);
 	~NText();
 private:
 	glm::vec2 Velocity;

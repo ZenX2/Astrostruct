@@ -82,7 +82,14 @@ public:
 	* @return true if enabled, false if it's disabled.
 	*/
 	bool GetVSync();
+	/**
+	* @brief Returns the amount of time in seconds it took to render the last frame.
+	*
+	* @return The amount of time in seconds it took to render the last frame.
+	*/
+	double GetFrameTime();
 private:
+	double FrameTime;
 	bool VSync;
 	GLuint TextureFilter;
 	float MaxFPS;

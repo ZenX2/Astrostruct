@@ -187,11 +187,23 @@ unsigned int NTextureAtlas::GetSize()
 
 NGlyph* NTextureAtlas::GetGlyph(FT_Face Face, unsigned int ID)
 {
+	if (ID > Glyphs.size())
+	{
+		return NULL;
+	}
 	if (Glyphs[ID] == NULL)
 	{
 		return NULL;
 	}
+	FT_Set_Pixel_Sizes(Face,0,Size);
 	FT_GlyphSlot Glyph = Face->glyph;
+	if (Glyph == NULL)
+	{
+		SetColor(Yellow);
+		std::cout << "FREETYPE WARN: ";
+		ClearColor();
+		std::cout << "Failed to load glyph for " << (char)ID << "!\n";
+	}
 	if (!Glyphs[ID]->Rendered)
 	{
 		if (FT_Load_Char(Face,ID,FT_LOAD_RENDER))
@@ -224,7 +236,7 @@ GLuint NTextureAtlas::GetTexture()
 
 NGlyph* NFace::GetGlyph(unsigned int ID, unsigned int Size)
 {
-	if (Textures.size()<Size)
+	if (Textures.size()<=Size)
 	{
 		Textures.resize(Size+1,NULL);
 	}
@@ -260,6 +272,18 @@ NText::NText(NFace* i_Face, std::string i_Data) : NNode()
 
 float NText::GetWidth()
 {
+	if (Width == 0 && Data.size() > 0)
+	{
+		for (unsigned int i=0;i<Data.size();i++)
+		{
+			NGlyph* Glyph = Face->GetGlyph(Data[i],Size);
+			if (Glyph == NULL)
+			{
+				continue;
+			}
+			Width += Glyph->AdvanceX;
+		}
+	}
 	return Width;
 }
 
@@ -275,6 +299,10 @@ void NText::GenerateBuffers()
 	for (unsigned int i=0;i<Data.size();i++)
 	{
 		NGlyph* Glyph = Face->GetGlyph(Data[i],Size);
+		if (Glyph == NULL)
+		{
+			continue;
+		}
 		if (!Glyph->BitmapWidth || !Glyph->BitmapHeight)
 		{
 			PenX += Glyph->AdvanceX;
@@ -405,7 +433,7 @@ NGlyph::~NGlyph()
 
 void NText::Tick(double DT)
 {
-	SetPos(GetPos()+Velocity);
+	/*SetPos(GetPos()+Velocity);
 	Velocity.y-=DT*4.f;
 	if (GetPos().y<0)
 	{
@@ -429,11 +457,30 @@ void NText::Tick(double DT)
 	}
 	SetAng(GetAng()+30*DT);
 	SetScale(glm::vec2(1.f)+GetPos()/GetGame()->GetWindowSize()*2.f);
-	SetColor(glm::vec4(0,GetPos()/GetGame()->GetWindowSize(),1));
+	SetColor(glm::vec4(0,GetPos()/GetGame()->GetWindowSize(),1));*/
 }
 
 void NText::SetText(std::string i_Data)
 {
+	if (!Data.compare(i_Data))
+	{
+		return;
+	}
 	Data = i_Data;
+	Changed = true;
+}
+
+float NText::GetSize()
+{
+	return Size;
+}
+
+void NText::SetSize(float i_Size)
+{
+	if (Size == i_Size)
+	{
+		return;
+	}
+	Size = i_Size;
 	Changed = true;
 }
