@@ -27,7 +27,7 @@ NScene::NScene()
 {
 	LastTick = CurTime();
 	TextSystem = new NTextSystem();
-	TextSystem->LoadFaces();
+	LoadedText = false;
 }
 
 NScene::~NScene()
@@ -37,7 +37,16 @@ NScene::~NScene()
 
 NText* NScene::AddText(std::string Font, std::string Data)
 {
+	if (!LoadedText)
+	{
+		TextSystem->LoadFaces();
+	}
 	return TextSystem->AddText(Font,Data);
+}
+
+NTextSystem* NScene::GetTextSystem()
+{
+	return TextSystem;
 }
 
 void NScene::SwapDepth(NNode* Node, unsigned int Depth)

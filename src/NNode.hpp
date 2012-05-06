@@ -156,7 +156,6 @@ public:
 	virtual glm::vec4 GetColor();
 	virtual void SwapDepth(unsigned int Depth);
 private:
-	unsigned int Depth;
 	float Angle;
 	glm::vec4 Color;
 	glm::vec2 Position;

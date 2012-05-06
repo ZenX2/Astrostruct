@@ -9,7 +9,6 @@ NNode::NNode()
 	Parent = NULL;
 	Matrix = glm::mat4();
 	GetGame()->GetScene()->AddNode(this);
-	Depth = 0;
 }
 
 NNode::~NNode()

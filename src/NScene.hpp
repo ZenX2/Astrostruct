@@ -35,7 +35,9 @@ public:
 	NText* AddText(std::string Font, std::string Data);
 	void SwapDepth(NNode* Node, unsigned int Depth);
 	unsigned int GetTopDepth();
+	NTextSystem* GetTextSystem();
 private:
+	bool LoadedText;
 	NTextSystem* TextSystem;
 	double LastTick;
 	std::vector<NNode*> Nodes;

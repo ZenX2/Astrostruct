@@ -47,6 +47,7 @@
 #include <GL/glfw.h>
 #include <iostream>
 #include <fstream>
+#include <cctype>
 #include <string>
 #include <sstream>
 #include <vector>

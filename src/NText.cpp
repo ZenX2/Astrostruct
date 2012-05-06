@@ -1,5 +1,19 @@
 #include "NEngine.hpp"
 
+int LoadFace(lua_State* L)
+{
+	const char* Name = luaL_checkstring(L,1);
+	const char* Data = luaL_checkstring(L,2);
+	NFace* FontFace = new NFace(Name);
+	if (FontFace->Load(GetGame()->GetScene()->GetTextSystem()->GetFreeTypeLib(),Data))
+	{
+		GetGame()->GetScene()->GetTextSystem()->AddFace(FontFace);
+	} else {
+		delete FontFace;
+	}
+	return 0;
+}
+
 NTextSystem::NTextSystem()
 {
 	if (FT_Init_FreeType(&FTLib))
@@ -27,13 +41,16 @@ NTextSystem::~NTextSystem()
 
 void NTextSystem::LoadFaces()
 {
-	NFace* FontFace = new NFace("opensans");
-	if (FontFace->Load(FTLib,"data/fonts/OpenSans.ttf"))
+	lua_State* L = GetGame()->GetLua()->GetL();
+	static const luaL_Reg FontFunctions[] =
 	{
-		Faces.push_back(FontFace);
-	} else {
-		delete FontFace;
-	}
+		{"LoadFontFace",LoadFace},
+		{NULL,NULL}
+	};
+	lua_getglobal(L,"_G");
+	luaL_register(L,NULL,FontFunctions);
+	lua_pop(L,1);
+	GetGame()->GetLua()->DoFile("data/fonts/init.lua");
 }
 
 void NFace::UpdateMipmaps()
@@ -308,21 +325,21 @@ void NText::GenerateBuffers()
 			PenX += Glyph->AdvanceX;
 			continue;
 		}
-		float X = Glyph->BitmapWidth+Glyph->BitmapLeft;
+		float X = Glyph->BitmapWidth;
 		float Y = Glyph->BitmapHeight;
 		float YOff = -Glyph->BitmapHeight+Glyph->BitmapTop-Size/2.f;
-		float XOff = 0;
+		float XOff = Glyph->BitmapLeft;
 		switch (Mode)
 		{
 			case 0: { break; }
 			case 1:
 			{
-				XOff = -Width/2.f;
+				XOff += -Width/2.f;
 				break;
 			}
 			case 2:
 			{
-				XOff = -Width;
+				XOff += -Width;
 				break;
 			}
 			default:
@@ -483,4 +500,14 @@ void NText::SetSize(float i_Size)
 	}
 	Size = i_Size;
 	Changed = true;
+}
+
+FT_Library NTextSystem::GetFreeTypeLib()
+{
+	return FTLib;
+}
+
+void NTextSystem::AddFace(NFace* Face)
+{
+	Faces.push_back(Face);
 }

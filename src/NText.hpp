@@ -17,6 +17,8 @@
 /** @addtogroup TextSystem
  * @{*/
 
+int LoadFace(lua_State* L);
+
 /**
 * @brief Caches data about a glyph.
 */
@@ -262,6 +264,8 @@ public:
 	* @return A pointer to the new text object.
 	*/
 	NText* AddText(std::string Font,std::string Data);
+	FT_Library GetFreeTypeLib();
+	void AddFace(NFace*);
 private:
 	FT_Library FTLib;
 	std::vector<NFace*> Faces;

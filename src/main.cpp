@@ -15,9 +15,13 @@ int main(int argc, char** argv)
 		GetGame()->CleanUp();
 		return 1;
 	}
-	NText* FPSText = GetGame()->GetScene()->AddText("opensans", "FPS: 0");
+	NText* FPSText = GetGame()->GetScene()->AddText("cousine", "FPS: 0");
 	FPSText->SetPos(0,FPSText->GetSize()/2.f);
 	FPSText->SetColor(0,0,0,1);
+	NText* CountText = GetGame()->GetScene()->AddText("didactgothic", "Glyphs Rendered: 0");
+	CountText->SetPos(0,FPSText->GetPos().y+CountText->GetSize()/2.f+10);
+	CountText->SetColor(0,0,0,1);
+	unsigned int TextCount = 30;
 	while(GetGame()->Running())
 	{
 		GetGame()->GetInput()->Poll();
@@ -27,19 +31,28 @@ int main(int argc, char** argv)
 			for (unsigned int i=0;i<30;i++)
 			{
 				char MyChar = 32+rand()%128;
+				if (!isprint(MyChar))
+				{
+					i--;
+					continue;
+				}
 				Text += MyChar;
 			}
-			NText* YayText = GetGame()->GetScene()->AddText("opensans",Text);
+			NText* YayText = GetGame()->GetScene()->AddText("gtw",Text);
 			YayText->SetPos(GetGame()->GetInput()->GetMouse());
 			YayText->SetAng(Rand(0,360));
 			YayText->SetSize(Rand(8,72));
 			YayText->SetColor(Rand(0,1),Rand(0,1),Rand(0,1),Rand(0,1));
+			TextCount += 30;
 		}
 		std::stringstream NewText(std::stringstream::in | std::stringstream::out);
 		NewText << "FPS: " << 1/GetGame()->GetRender()->GetFrameTime() << '\0';
-		std::string FinalText = NewText.str();
-		FPSText->SetText(FinalText);
+		FPSText->SetText(NewText.str());
 		FPSText->SwapDepth(GetGame()->GetScene()->GetTopDepth());
+		std::stringstream NewText2(std::stringstream::in | std::stringstream::out);
+		NewText2 << "Glyphs Rendered: " << TextCount << '\0';
+		CountText->SetText(NewText2.str());
+		CountText->SwapDepth(GetGame()->GetScene()->GetTopDepth());
 		GetGame()->GetScene()->Tick();
 		GetGame()->GetRender()->Draw();
 		GetGame()->Poll();
