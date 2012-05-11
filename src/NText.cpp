@@ -279,10 +279,13 @@ NText::NText(NFace* i_Face, std::string i_Data) : NNode()
 	Width = 0;
 	Mode = 0;
 	Velocity = glm::vec2(Rand(-10,10),Rand(-10,10));
-	TextureLoc = Shader->GetUniformLocation("Texture");
-	MatrixLoc = Shader->GetUniformLocation("ModelView");
-	ScreenLoc = Shader->GetUniformLocation("Screen");
-	ColorLoc = Shader->GetUniformLocation("Color");
+	if (Shader != NULL)
+	{
+		TextureLoc = Shader->GetUniformLocation("Texture");
+		MatrixLoc = Shader->GetUniformLocation("ModelView");
+		ScreenLoc = Shader->GetUniformLocation("Screen");
+		ColorLoc = Shader->GetUniformLocation("Color");
+	}
 }
 
 float NText::GetWidth()
