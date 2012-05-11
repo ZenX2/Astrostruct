@@ -224,5 +224,9 @@ NTexture* NRender::GetTexture(std::string Name)
 			return NewTexture;
 		}
 	}
+	SetColor(Yellow);
+	std::cout << "RENDER WARN: ";
+	ClearColor();
+	std::cout << "An unkown texture was attempted to be loaded: " << Name << "\n";
 	return NULL;
 }

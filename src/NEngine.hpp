@@ -56,6 +56,8 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <ft2build.h>
 #include <math.h>
+#include <dirent.h>
+#include <sys/stat.h>
 #include FT_FREETYPE_H
 #define LUA_COMPAT_MODULE
 extern "C"

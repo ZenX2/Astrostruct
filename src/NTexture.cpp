@@ -26,7 +26,7 @@ void LoadTextures()
 	lua_pushstring(L,"Animation");
 	lua_setfield(L,-2,"__type");
 	lua_pop(L,1);
-	GetGame()->GetLua()->DoFile("data/textures/runner/runner.lua");
+	GetGame()->GetLua()->DoFolder("data/textures");
 }
 
 NAnimation* lua_toAnimation(lua_State* L, int index)

@@ -38,6 +38,7 @@ public:
 	* @return False on failure, true on success.
 	*/
 	bool DoFile(std::string File);
+	bool DoFolder(std::string Folder);
 private:
 	lua_State* L;
 };

@@ -50,7 +50,7 @@ void NTextSystem::LoadFaces()
 	lua_getglobal(L,"_G");
 	luaL_register(L,NULL,FontFunctions);
 	lua_pop(L,1);
-	GetGame()->GetLua()->DoFile("data/fonts/init.lua");
+	GetGame()->GetLua()->DoFolder("data/fonts");
 }
 
 void NFace::UpdateMipmaps()

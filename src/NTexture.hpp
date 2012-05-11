@@ -8,8 +8,29 @@
 #ifndef NAELSTROF_TEXTURE
 #define NAELSTROF_TEXTURE
 
+/**
+* @brief Lua function to load textures into memory.
+*
+* @param L The lua state.
+*
+* @return 1
+*/
 int CreateAnimation(lua_State* L);
+/**
+* @brief AnimationBase __index function for lua.
+*
+* @param L The lua state.
+*
+* @return 1
+*/
 int Animation__index(lua_State* L);
+/**
+* @brief AnimationBase __newindex function for lua.
+*
+* @param L The lua state.
+*
+* @return 0
+*/
 int Animation__newindex(lua_State* L);
 int LoadTexture(lua_State* L);
 void LoadTextures();

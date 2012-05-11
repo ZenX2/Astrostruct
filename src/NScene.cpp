@@ -40,6 +40,7 @@ NText* NScene::AddText(std::string Font, std::string Data)
 	if (!LoadedText)
 	{
 		TextSystem->LoadFaces();
+		LoadedText = true;
 	}
 	return TextSystem->AddText(Font,Data);
 }
