@@ -8,10 +8,24 @@
 #ifndef NAELSTROF_RENDER
 #define NAELSTROF_RENDER
 
+/**
+* @brief Stores texture id's and associates them with a file path, useful for caching textures.
+*/
 class NCachedTexture
 {
 public:
+	/**
+	* @brief Sets the OpenGL texture filter of the stored texture id.
+	*
+	* @param GLuint
+	*/
 	void SetFilter(GLuint);
+	/**
+	* @brief Saves the OpenGL id and associates it with a name for later retreival.
+	*
+	* @param i_Name The name of the texture id (normally the filepath).
+	* @param i_ID The texture id we want to cache.
+	*/
 	NCachedTexture(std::string i_Name, GLuint i_ID);
 	~NCachedTexture();
 	GLuint ID;
