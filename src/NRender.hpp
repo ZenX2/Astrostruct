@@ -85,9 +85,33 @@ public:
 	* @return The amount of time in seconds it took to render the last frame.
 	*/
 	double GetFrameTime();
+	/**
+	* @brief Attempts to grab a texture already in memory and return an ID for it, if it doesn't exist it uses SOIL to load one into memory and returns that ID.
+	*
+	* @param Name The file path to the image/texture.
+	*
+	* @return A texture ID for the already loaded image.
+	*/
 	GLuint GetCachedTexture(std::string Name);
+	/**
+	* @brief Returns a Texture object from memory.
+	*
+	* @param Name The name of the texture object.
+	*
+	* @return A newly allocated unique texture object. It allocates a new texture to keep unique time locations in each texture for animations.
+	*/
 	NTexture* GetTexture(std::string Name);
+	/**
+	* @brief Adds a texture object into memory.
+	*
+	* @param Texture The desired texture.
+	*/
 	void AddTexture(NTexture* Texture);
+	/**
+	* @brief Adds a texture ID into memory, this is so global texture filters can be applied to dynamically created textures.
+	*
+	* @param ID The OpenGL texture ID.
+	*/
 	void AddCachedTexture(GLuint ID);
 private:
 	double FrameTime;
