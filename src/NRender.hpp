@@ -8,6 +8,15 @@
 #ifndef NAELSTROF_RENDER
 #define NAELSTROF_RENDER
 
+class NCachedTexture
+{
+public:
+	void SetFilter(GLuint);
+	NCachedTexture(std::string i_Name, GLuint i_ID);
+	~NCachedTexture();
+	GLuint ID;
+	std::string Name;
+};
 /**
 * @brief Handles most rendering calls, and exposes them to the rest of the engine.
 */
@@ -53,18 +62,6 @@ public:
 	*/
 	void SetTextureFilter(GLuint Param);
 	/**
-	* @brief Adds a texture into memory, used to globally set texture filters.
-	*
-	* @param Texture The desired texture we want the engine to handle.
-	*/
-	void AddTexture(NTexture* Texture);
-	/**
-	* @brief Removes a texture from memory, but doesn't delete it!
-	*
-	* @param Texture The desired texture we want to remove.
-	*/
-	void RemoveTexture(NTexture* Texture);
-	/**
 	* @brief Returns what texture filter we're currently using.
 	*
 	* @return Either GL_LINEAR or GL_NEAREST.
@@ -88,6 +85,10 @@ public:
 	* @return The amount of time in seconds it took to render the last frame.
 	*/
 	double GetFrameTime();
+	GLuint GetCachedTexture(std::string Name);
+	NTexture* GetTexture(std::string Name);
+	void AddTexture(NTexture* Texture);
+	void AddCachedTexture(GLuint ID);
 private:
 	double FrameTime;
 	bool VSync;
@@ -96,6 +97,7 @@ private:
 	double LastTime;
 	unsigned int FPS;
 	std::vector<NShader*> Shaders;
+	std::vector<NCachedTexture*> CachedTextures;
 	std::vector<NTexture*> Textures;
 	NCamera* Camera;
 };

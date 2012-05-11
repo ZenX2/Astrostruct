@@ -60,6 +60,7 @@ public:
 	* @return A pointer to the font system.
 	*/
 	NTextSystem* GetTextSystem();
+	NWindow* AddWindow();
 private:
 	bool LoadedText;
 	NTextSystem* TextSystem;

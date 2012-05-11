@@ -39,6 +39,11 @@ AC_SEARCH_LIBS([luaL_register],[lua],[],[
 		AC_MSG_ERROR(["Couldn't find lua libraries!"])
 	])
 ])
+AC_SEARCH_LIBS([SOIL_load_OGL_texture],[SOIL],[],[
+	AC_CHECK_LIB([SOIL],[main],[LIBS="$LIBS -lSOIL"],[
+		AC_MSG_ERROR(["Couldn't find soil libraries!"])
+	])
+])
 
 # Checks for header files.
 CXXFLAGS="$CXXFLAGS -I/usr/include/freetype2"

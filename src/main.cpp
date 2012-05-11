@@ -15,6 +15,9 @@ int main(int argc, char** argv)
 		GetGame()->CleanUp();
 		return 1;
 	}
+	NWindow* MyWindow = GetGame()->GetScene()->AddWindow();
+	MyWindow->SetTexture("runner");
+	MyWindow->SetScale(256,256);
 	NText* FPSText = GetGame()->GetScene()->AddText("cousine", "FPS: 0");
 	FPSText->SetPos(0,FPSText->GetSize()/2.f);
 	FPSText->SetColor(0,0,0,1);
@@ -25,6 +28,7 @@ int main(int argc, char** argv)
 	while(GetGame()->Running())
 	{
 		GetGame()->GetInput()->Poll();
+		MyWindow->SetPos(GetGame()->GetInput()->GetMouse());
 		if (GetGame()->GetInput()->GetMouseKey(0))
 		{
 			std::string Text;
@@ -44,6 +48,13 @@ int main(int argc, char** argv)
 			YayText->SetSize(Rand(8,72));
 			YayText->SetColor(Rand(0,1),Rand(0,1),Rand(0,1),Rand(0,1));
 			TextCount += 30;
+		}
+		if (GetGame()->GetInput()->GetMouseKey(1))
+		{
+			NWindow* NewWindow = GetGame()->GetScene()->AddWindow();
+			NewWindow->SetTexture("runner");
+			NewWindow->SetScale(256,256);
+			NewWindow->SetPos(GetGame()->GetInput()->GetMouse());
 		}
 		std::stringstream NewText(std::stringstream::in | std::stringstream::out);
 		NewText << "FPS: " << 1/GetGame()->GetRender()->GetFrameTime() << '\0';

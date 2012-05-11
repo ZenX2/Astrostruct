@@ -8,18 +8,35 @@
 #ifndef NAELSTROF_TEXTURE
 #define NAELSTROF_TEXTURE
 
+int CreateAnimation(lua_State* L);
+int Animation__index(lua_State* L);
+int Animation__newindex(lua_State* L);
+int LoadTexture(lua_State* L);
+void LoadTextures();
+class NAnimation
+{
+public:
+	NAnimation();
+	~NAnimation();
+	void AddFrame(std::string FileName);
+	float FPS;
+	int Reference;
+	GLuint GetID(double Time);
+	void SetName(std::string i_Name);
+	std::string GetName();
+private:
+	std::string Name;
+	std::vector<GLuint> Frames;
+};
+NAnimation* lua_checkAnimation(lua_State* L, int narg);
 /**
 * @brief Abstracts OpenGL texture ID's.
 */
 class NTexture
 {
 public:
-	/**
-	* @brief Initializes the texture object from a given (already created) opengl texture ID.
-	*
-	* @param i_TextureID An already allocated, created, etc, opengl texture ID.
-	*/
-	NTexture(GLuint i_TextureID);
+	NTexture(NTexture*);
+	NTexture(std::string i_Name);
 	/**
 	* @brief Deletes the opengl texture object and itself. (So don't go trying to delete the opengl texture you created!)
 	*/
@@ -30,14 +47,13 @@ public:
 	* @return An opengl texture ID.
 	*/
 	GLuint GetID();
-	/**
-	* @brief Sets the texture's filters.
-	*
-	* @param Filter Either GL_LINEAR or GL_NEAREST.
-	*/
-	void SetFilter(GLuint);
+	void AddAnimation(NAnimation* Animation);
+	std::string Name;
+	void Play(std::string i_Name);
 private:
-	GLuint TextureID;
+	unsigned int PlayingAnimation;
+	double TimeOffset;
+	std::vector<NAnimation*> Animations;
 };
 
 #endif

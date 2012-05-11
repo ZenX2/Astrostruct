@@ -108,7 +108,7 @@ private:
 	bool Changed;
 	int Size;
 	int Width, Height;
-	NTexture* Texture;
+	GLuint Texture;
 	std::vector<NGlyph*> Glyphs;
 };
 

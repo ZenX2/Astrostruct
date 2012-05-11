@@ -88,3 +88,8 @@ unsigned int NScene::GetTopDepth()
 {
 	return Nodes.size()-1;
 }
+
+NWindow* NScene::AddWindow()
+{
+	return new NWindow();
+}

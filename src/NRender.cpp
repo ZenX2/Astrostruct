@@ -14,6 +14,13 @@ bool NRender::LoadShaders()
 	} else {
 		delete Shader;
 	}
+	Shader = new NShader("flat");
+	if (Shader->Load("data/shaders/flat.vert","data/shaders/flat.frag") != Fail)
+	{
+		Shaders.push_back(Shader);
+	} else {
+		delete Shader;
+	}
 }
 
 /**
@@ -112,22 +119,12 @@ void NRender::Draw()
 	glfwSwapBuffers();
 }
 
-void NRender::AddTexture(NTexture* Texture)
+void NRender::AddCachedTexture(GLuint Texture)
 {
-	Texture->SetFilter(TextureFilter);
-	Textures.push_back(Texture);
-}
-
-void NRender::RemoveTexture(NTexture* Texture)
-{
-	for (unsigned int i=0;i<Textures.size();i++)
-	{
-		if (Texture == Textures[i])
-		{
-			Textures.erase(Textures.begin()+i);
-			return;
-		}
-	}
+	glBindTexture(GL_TEXTURE_2D,Texture);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, TextureFilter);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, TextureFilter);
+	CachedTextures.push_back(new NCachedTexture("NULL",Texture));
 }
 
 void NRender::SetTextureFilter(GLuint Filter)
@@ -137,9 +134,9 @@ void NRender::SetTextureFilter(GLuint Filter)
 		return;
 	}
 	TextureFilter = Filter;
-	for (unsigned int i=0;i<Textures.size();i++)
+	for (unsigned int i=0;i<CachedTextures.size();i++)
 	{
-		Textures[i]->SetFilter(TextureFilter);
+		CachedTextures[i]->SetFilter(TextureFilter);
 	}
 }
 
@@ -167,4 +164,65 @@ bool NRender::GetVSync()
 double NRender::GetFrameTime()
 {
 	return FrameTime;
+}
+
+GLuint NRender::GetCachedTexture(std::string Name)
+{
+	for (unsigned int i=0;i<CachedTextures.size();i++)
+	{
+		if (CachedTextures[i]->Name == Name)
+		{
+			return CachedTextures[i]->ID;
+		}
+	}
+	NCachedTexture* Cache = new NCachedTexture(Name,SOIL_load_OGL_texture(Name.c_str(),SOIL_LOAD_AUTO,SOIL_CREATE_NEW_ID,SOIL_FLAG_MIPMAPS));
+	if (Cache->ID == 0)
+	{
+		SetColor(Yellow);
+		std::cout << "TEXTURE WARN: ";
+		ClearColor();
+		std::cout << "Couldn't load file " << Name << " as a texture!\n";
+		delete Cache;
+	}
+	CachedTextures.push_back(Cache);
+	return Cache->ID;
+}
+
+NCachedTexture::NCachedTexture(std::string i_Name, GLuint i_ID)
+{
+	ID = i_ID;
+	Name = i_Name;
+	glBindTexture(GL_TEXTURE_2D,ID);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GetGame()->GetRender()->GetTextureFilter());
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GetGame()->GetRender()->GetTextureFilter());
+}
+
+NCachedTexture::~NCachedTexture()
+{
+	glDeleteTextures(1,&ID);
+}
+
+void NCachedTexture::SetFilter(GLuint Filter)
+{
+	glBindTexture(GL_TEXTURE_2D,ID);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, Filter);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, Filter);
+}
+
+void NRender::AddTexture(NTexture* Texture)
+{
+	Textures.push_back(Texture);
+}
+
+NTexture* NRender::GetTexture(std::string Name)
+{
+	for (unsigned int i=0;i<Textures.size();i++)
+	{
+		if (Textures[i]->Name == Name)
+		{
+			NTexture* NewTexture = new NTexture(Textures[i]);
+			return NewTexture;
+		}
+	}
+	return NULL;
 }

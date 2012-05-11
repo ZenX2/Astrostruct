@@ -82,6 +82,7 @@ bool NGame::Init(int i_Width, int i_Height, std::string Title)
 	Input = new NInput();
 	Scene = new NScene();
 	Render = new NRender();
+	LoadTextures();
 	Valid = true;
 	return Success;
 }

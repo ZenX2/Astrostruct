@@ -45,6 +45,7 @@
 #define NAELSTROF_ENGINE
 #include <GL/glew.h>
 #include <GL/glfw.h>
+#include <SOIL.h>
 #include <iostream>
 #include <fstream>
 #include <cctype>
@@ -75,6 +76,7 @@ extern "C"
 #include "NNode.hpp"
 #include "NTexture.hpp"
 #include "NShader.hpp"
+#include "NGui.hpp"
 #include "NText.hpp"
 #include "NScene.hpp"
 #include "NCamera.hpp"
