@@ -30,6 +30,12 @@ public:
 	* @param View the camera view matrix, in the future it might not actually be used.
 	*/
 	void Draw(glm::mat4 View);
+	/**
+	* @brief Currently only calls Texture->Tick.
+	*
+	* @param DT The time passed since last tick.
+	*/
+	void Tick(double DT);
 private:
 	NShader* Shader;
 	bool Changed;

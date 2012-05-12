@@ -182,7 +182,7 @@ NTexture::NTexture(std::string i_Name)
 {
 	Name = i_Name;
 	PlayingAnimation = 0;
-	TimeOffset = CurTime();
+	CurrentTime = 0;
 }
 
 NTexture::NTexture(NTexture* Texture)
@@ -190,7 +190,7 @@ NTexture::NTexture(NTexture* Texture)
 	Animations = Texture->Animations;
 	Name = Texture->Name;
 	PlayingAnimation = 0;
-	TimeOffset = CurTime();
+	CurrentTime = 0;
 }
 
 NTexture::~NTexture()
@@ -221,10 +221,15 @@ void NTexture::Play(std::string i_Name)
 
 GLuint NTexture::GetID()
 {
-	return Animations[PlayingAnimation]->GetID(CurTime()+TimeOffset);
+	return Animations[PlayingAnimation]->GetID(CurrentTime);
 }
 
 void NTexture::AddAnimation(NAnimation* Animation)
 {
 	Animations.push_back(Animation);
+}
+
+void NTexture::Tick(double DT)
+{
+	CurrentTime += DT;
 }

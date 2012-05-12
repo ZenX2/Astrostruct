@@ -120,3 +120,11 @@ void NWindow::Draw(glm::mat4 View)
 	glDisableVertexAttribArray(1);
 	glUseProgram(0);
 }
+
+void NWindow::Tick(double DT)
+{
+	if (Texture != NULL)
+	{
+		Texture->Tick(DT);
+	}
+}

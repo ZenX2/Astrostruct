@@ -137,9 +137,15 @@ public:
 	* @param i_Name The name of the animation.
 	*/
 	void Play(std::string i_Name);
+	/**
+	* @brief Moves the texture forward in time by DT.
+	*
+	* @param DT The time passed since last tick.
+	*/
+	void Tick(double DT);
 private:
+	double CurrentTime;
 	unsigned int PlayingAnimation;
-	double TimeOffset;
 	std::vector<NAnimation*> Animations;
 };
 
