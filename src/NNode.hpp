@@ -160,6 +160,7 @@ public:
 	* @param Depth The desired depth we want to be rendered at.
 	*/
 	virtual void SwapDepth(unsigned int Depth);
+	virtual glm::mat4 GetNonScaleMatrix();
 private:
 	float Angle;
 	glm::vec4 Color;

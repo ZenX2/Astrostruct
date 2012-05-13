@@ -61,6 +61,7 @@ public:
 	*/
 	NTextSystem* GetTextSystem();
 	NWindow* AddWindow();
+	NButton* AddButton();
 private:
 	bool LoadedText;
 	NTextSystem* TextSystem;

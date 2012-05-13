@@ -213,7 +213,7 @@ void NTexture::Play(std::string i_Name)
 {
 	for (unsigned int i=0;i<Animations.size();i++)
 	{
-		if (Name == Animations[i]->GetName())
+		if (i_Name == Animations[i]->GetName())
 		{
 			PlayingAnimation = i;
 			return;

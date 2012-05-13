@@ -144,7 +144,7 @@ configure:3192: checking for a BSD-compatible install
 configure:3260: result: /usr/bin/install -c
 configure:3281: checking for library containing glBegin
 configure:3312: g++ -o conftest -g -O2   conftest.cpp  >&5
-/tmp/ccJCWolF.o: In function `main':
+/tmp/ccqiyNR3.o: In function `main':
 /home/naelstrof/Projects/astrostruct/conftest.cpp:20: undefined reference to `glBegin'
 collect2: error: ld returned 1 exit status
 configure:3312: $? = 1
@@ -177,7 +177,7 @@ configure:3312: $? = 0
 configure:3329: result: -lGL
 configure:3378: checking for library containing glewInit
 configure:3409: g++ -o conftest -g -O2   conftest.cpp -lGL  >&5
-/tmp/ccBd6LNU.o: In function `main':
+/tmp/cccyS4Xf.o: In function `main':
 /home/naelstrof/Projects/astrostruct/conftest.cpp:20: undefined reference to `glewInit'
 collect2: error: ld returned 1 exit status
 configure:3409: $? = 1
@@ -210,7 +210,7 @@ configure:3409: $? = 0
 configure:3426: result: -lGLEW
 configure:3475: checking for library containing glfwInit
 configure:3506: g++ -o conftest -g -O2   conftest.cpp -lGLEW -lGL  >&5
-/tmp/ccfyZJTc.o: In function `main':
+/tmp/ccchxsDh.o: In function `main':
 /home/naelstrof/Projects/astrostruct/conftest.cpp:20: undefined reference to `glfwInit'
 collect2: error: ld returned 1 exit status
 configure:3506: $? = 1
@@ -243,7 +243,7 @@ configure:3506: $? = 0
 configure:3523: result: -lglfw
 configure:3572: checking for library containing FT_Init_FreeType
 configure:3603: g++ -o conftest -g -O2   conftest.cpp -lglfw -lGLEW -lGL  >&5
-/tmp/cc0Dfa8g.o: In function `main':
+/tmp/ccIpqtUu.o: In function `main':
 /home/naelstrof/Projects/astrostruct/conftest.cpp:20: undefined reference to `FT_Init_FreeType'
 collect2: error: ld returned 1 exit status
 configure:3603: $? = 1
@@ -276,7 +276,7 @@ configure:3603: $? = 0
 configure:3620: result: -lfreetype
 configure:3669: checking for library containing luaL_register
 configure:3700: g++ -o conftest -g -O2   conftest.cpp -lfreetype -lglfw -lGLEW -lGL  >&5
-/tmp/ccMTYVvu.o: In function `main':
+/tmp/ccfH7VCG.o: In function `main':
 /home/naelstrof/Projects/astrostruct/conftest.cpp:20: undefined reference to `luaL_register'
 collect2: error: ld returned 1 exit status
 configure:3700: $? = 1
@@ -309,7 +309,7 @@ configure:3700: $? = 0
 configure:3717: result: -llua
 configure:3766: checking for library containing SOIL_load_OGL_texture
 configure:3797: g++ -o conftest -g -O2   conftest.cpp -llua -lfreetype -lglfw -lGLEW -lGL  >&5
-/tmp/ccGdsNBJ.o: In function `main':
+/tmp/cc6Eho0W.o: In function `main':
 /home/naelstrof/Projects/astrostruct/conftest.cpp:20: undefined reference to `SOIL_load_OGL_texture'
 collect2: error: ld returned 1 exit status
 configure:3797: $? = 1

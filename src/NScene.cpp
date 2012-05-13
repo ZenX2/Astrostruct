@@ -94,3 +94,7 @@ NWindow* NScene::AddWindow()
 {
 	return new NWindow();
 }
+NButton* NScene::AddButton()
+{
+	return new NButton();
+}

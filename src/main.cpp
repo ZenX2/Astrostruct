@@ -17,46 +17,25 @@ int main(int argc, char** argv)
 	}
 	NWindow* MyWindow = GetGame()->GetScene()->AddWindow();
 	MyWindow->SetTexture("window");
-	MyWindow->SetScale(256,256);
+	MyWindow->SetScale(256.f,256.f);
+	MyWindow->SetPos(GetGame()->GetWindowSize()/2.f);
+	NButton* MyButton = GetGame()->GetScene()->AddButton();
+	MyButton->SetTexture("button");
+	MyButton->SetParent(MyWindow);
+	MyButton->SetScale(64,32);
+	MyButton->SetText("Quit");
 	NText* FPSText = GetGame()->GetScene()->AddText("cousine", "FPS: 0");
 	FPSText->SetPos(0,FPSText->GetSize()/2.f);
 	FPSText->SetColor(0,0,0,1);
-	NText* CountText = GetGame()->GetScene()->AddText("didactgothic", "Glyphs Rendered: 0");
-	CountText->SetPos(0,FPSText->GetPos().y+CountText->GetSize()/2.f+10);
-	CountText->SetColor(0,0,0,1);
 	unsigned int TextCount = 30;
 	while(GetGame()->Running())
 	{
 		GetGame()->GetInput()->Poll();
-		MyWindow->SetPos(GetGame()->GetInput()->GetMouse());
-		if (GetGame()->GetInput()->GetMouseKey(0))
-		{
-			std::string Text;
-			for (unsigned int i=0;i<30;i++)
-			{
-				char MyChar = 32+rand()%128;
-				if (!isprint(MyChar))
-				{
-					i--;
-					continue;
-				}
-				Text += MyChar;
-			}
-			NText* YayText = GetGame()->GetScene()->AddText("gtw",Text);
-			YayText->SetPos(GetGame()->GetInput()->GetMouse());
-			YayText->SetAng(Rand(0,360));
-			YayText->SetSize(Rand(8,72));
-			YayText->SetColor(Rand(0,1),Rand(0,1),Rand(0,1),Rand(0,1));
-			TextCount += 30;
-		}
+		MyWindow->SetPos(GetGame()->GetWindowSize()/2.f);
 		std::stringstream NewText(std::stringstream::in | std::stringstream::out);
 		NewText << "FPS: " << 1/GetGame()->GetRender()->GetFrameTime() << '\0';
 		FPSText->SetText(NewText.str());
 		FPSText->SwapDepth(GetGame()->GetScene()->GetTopDepth());
-		std::stringstream NewText2(std::stringstream::in | std::stringstream::out);
-		NewText2 << "Glyphs Rendered: " << TextCount << '\0';
-		CountText->SetText(NewText2.str());
-		CountText->SwapDepth(GetGame()->GetScene()->GetTopDepth());
 		GetGame()->GetScene()->Tick();
 		GetGame()->GetRender()->Draw();
 		GetGame()->Poll();

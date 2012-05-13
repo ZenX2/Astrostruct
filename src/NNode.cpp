@@ -19,10 +19,6 @@ void NNode::SetPos(float X, float Y)
 {
 	Position = glm::vec2(X,Y);
 	UpdateMatrix();
-	for (unsigned int i=0;i<Children.size();i++)
-	{
-		Children[i]->UpdateMatrix();
-	}
 }
 
 NNode* NNode::GetParent()
@@ -34,20 +30,12 @@ void NNode::SetPos(glm::vec2 i_Position)
 {
 	Position = i_Position;
 	UpdateMatrix();
-	for (unsigned int i=0;i<Children.size();i++)
-	{
-		Children[i]->UpdateMatrix();
-	}
 }
 
 void NNode::SetAng(float i_Angle)
 {
 	Angle = i_Angle;
 	UpdateMatrix();
-	for (unsigned int i=0;i<Children.size();i++)
-	{
-		Children[i]->UpdateMatrix();
-	}
 }
 
 void NNode::SetParent(NNode* Node)
@@ -63,6 +51,7 @@ void NNode::SetParent(NNode* Node)
 void NNode::AddChild(NNode* Node)
 {
 	Children.push_back(Node);
+	UpdateMatrix();
 }
 
 void NNode::RemoveChild(NNode* Node)
@@ -85,6 +74,10 @@ float NNode::GetAng()
 
 glm::vec2 NNode::GetPos()
 {
+	if (Parent)
+	{
+		return Parent->GetPos()+Position;
+	}
 	return Position;
 }
 
@@ -95,15 +88,30 @@ glm::mat4 NNode::GetModelMatrix()
 
 void NNode::UpdateMatrix()
 {
-	glm::mat4 Pos = glm::translate(glm::mat4(),glm::vec3(GetPos(),0));
+	glm::mat4 Pos = glm::translate(glm::mat4(),glm::vec3(Position,0));
 	glm::mat4 Ang = glm::rotate(glm::mat4(),Angle,glm::vec3(0,0,1));
 	glm::mat4 Sca = glm::scale(glm::mat4(),glm::vec3(Scale,1));
 	if (Parent == NULL)
 	{
 		Matrix = Pos*Ang*Sca;
 	} else {
-		Matrix = Parent->GetModelMatrix()*(Pos*Ang*Sca);
+		Matrix = Parent->GetNonScaleMatrix()*(Pos*Ang*Sca);
 	}
+	for (unsigned int i=0;i<Children.size();i++)
+	{
+		Children[i]->UpdateMatrix();
+	}
+}
+
+glm::mat4 NNode::GetNonScaleMatrix()
+{
+	glm::mat4 Pos = glm::translate(glm::mat4(),glm::vec3(Position,0));
+	glm::mat4 Ang = glm::rotate(glm::mat4(),Angle,glm::vec3(0,0,1));
+	if (Parent != NULL)
+	{
+		return Parent->GetNonScaleMatrix()*Pos*Ang;
+	}
+	return Pos*Ang;
 }
 
 glm::vec2 NNode::GetScale()
