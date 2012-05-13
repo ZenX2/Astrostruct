@@ -60,7 +60,17 @@ public:
 	* @return A pointer to the font system.
 	*/
 	NTextSystem* GetTextSystem();
+	/**
+	 * @brief Adds a window to the scene.
+	 *
+	 * @return A pointer to the new window.
+	 */
 	NWindow* AddWindow();
+	/**
+	 * @brief Adds a button to the scene.
+	 *
+	 * @return A pointer to the new button.
+	 */
 	NButton* AddButton();
 private:
 	bool LoadedText;

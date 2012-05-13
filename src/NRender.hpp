@@ -21,18 +21,38 @@ public:
 	*/
 	void SetFilter(GLuint);
 	/**
+	 * @brief Creates an OpenGL id from the specified texture filepath and associates it with a name for later retreival.
+	 *
+	 * @param i_Name The filepath to the file.
+	 */
+	NCachedTexture(std::string i_Name);
+	/**
 	* @brief Saves the OpenGL id and associates it with a name for later retreival.
 	*
 	* @param i_Name The name of the texture id (normally the filepath).
 	* @param i_ID The texture id we want to cache.
 	*/
-	NCachedTexture(std::string i_Name);
 	NCachedTexture(std::string i_Name, GLuint ID);
 	~NCachedTexture();
 	GLuint ID;
 	std::string Name;
+	/**
+	 * @brief Returns the dimensions of the texture in a glm vec2.
+	 *
+	 * @return The dimensions of the texture.
+	 */
 	glm::vec2 GetSize();
+	/**
+	 * @brief Returns the width of the texture.
+	 *
+	 * @return The width of the texture.
+	 */
 	float GetWidth();
+	/**
+	 * @brief Returns the height of the texture.
+	 *
+	 * @return The height of the texture.
+	 */
 	float GetHeight();
 private:
 	int Width, Height;

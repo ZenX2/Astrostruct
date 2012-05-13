@@ -38,6 +38,13 @@ public:
 	* @return False on failure, true on success.
 	*/
 	bool DoFile(std::string File);
+	/**
+	 * @brief Recursviely searches a folder for files preceded by '.lua' and runs them through lua.
+	 *
+	 * @param Folder The desired folder to search through.
+	 *
+	 * @return True on success, false if an error occured in one of the lua files.
+	 */
 	bool DoFolder(std::string Folder);
 private:
 	lua_State* L;

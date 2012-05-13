@@ -147,7 +147,19 @@ public:
 	* @param DT The time passed since last tick.
 	*/
 	void Tick(double DT);
+	/**
+	 * @brief Returns the texture dimensions of the first texture in the animation.
+	 *
+	 * @return The width and height of a texture in a glm vector.
+	 */
 	glm::vec2 GetSize();
+	/**
+	 * @brief Grabs float data from the first texture's lua reference, useful for GUI where knowing the bordersize of a texture is important.
+	 *
+	 * @param i_Name The name of the lua object.
+	 *
+	 * @return The desired float, or NULL if not found.
+	 */
 	float GetFloat(std::string i_Name);
 private:
 	double CurrentTime;

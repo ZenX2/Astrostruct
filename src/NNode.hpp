@@ -81,7 +81,7 @@ public:
 	*
 	* @param Child The node we want to attach to.
 	*/
-	virtual void AddChild(NNode*);
+	virtual void AddChild(NNode* Child);
 	/**
 	* @brief Detaches the specified node from this one.
 	*
@@ -160,6 +160,11 @@ public:
 	* @param Depth The desired depth we want to be rendered at.
 	*/
 	virtual void SwapDepth(unsigned int Depth);
+	/**
+	 * @brief Gets a matrix that doesn't include scaling; I'm using this because GUI doesn't function properly when it inherits scaling.
+	 *
+	 * @return A matrix without scale applied to it.
+	 */
 	virtual glm::mat4 GetNonScaleMatrix();
 private:
 	float Angle;
