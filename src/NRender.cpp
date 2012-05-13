@@ -166,16 +166,16 @@ double NRender::GetFrameTime()
 	return FrameTime;
 }
 
-GLuint NRender::GetCachedTexture(std::string Name)
+NCachedTexture* NRender::GetCachedTexture(std::string Name)
 {
 	for (unsigned int i=0;i<CachedTextures.size();i++)
 	{
 		if (CachedTextures[i]->Name == Name)
 		{
-			return CachedTextures[i]->ID;
+			return CachedTextures[i];
 		}
 	}
-	NCachedTexture* Cache = new NCachedTexture(Name,SOIL_load_OGL_texture(Name.c_str(),SOIL_LOAD_AUTO,SOIL_CREATE_NEW_ID,SOIL_FLAG_MIPMAPS));
+	NCachedTexture* Cache = new NCachedTexture(Name);
 	if (Cache->ID == 0)
 	{
 		SetColor(Yellow);
@@ -185,16 +185,45 @@ GLuint NRender::GetCachedTexture(std::string Name)
 		delete Cache;
 	}
 	CachedTextures.push_back(Cache);
-	return Cache->ID;
+	return Cache;
+}
+
+NCachedTexture::NCachedTexture(std::string i_Name)
+{
+	Name = i_Name;
+	int Channels;
+	unsigned char* Image = SOIL_load_image(Name.c_str(), &Width, &Height, &Channels, SOIL_LOAD_AUTO);
+	ID = SOIL_create_OGL_texture(Image, Width, Height, Channels, SOIL_CREATE_NEW_ID, SOIL_FLAG_MIPMAPS);
+	SOIL_free_image_data(Image);
+	glBindTexture(GL_TEXTURE_2D,ID);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GetGame()->GetRender()->GetTextureFilter());
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GetGame()->GetRender()->GetTextureFilter());
 }
 
 NCachedTexture::NCachedTexture(std::string i_Name, GLuint i_ID)
 {
-	ID = i_ID;
 	Name = i_Name;
+	ID = i_ID;
 	glBindTexture(GL_TEXTURE_2D,ID);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GetGame()->GetRender()->GetTextureFilter());
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GetGame()->GetRender()->GetTextureFilter());
+	Width = 0;
+	Height = 0;
+}
+
+float NCachedTexture::GetWidth()
+{
+	return Width;
+}
+
+float NCachedTexture::GetHeight()
+{
+	return Height;
+}
+
+glm::vec2 NCachedTexture::GetSize()
+{
+	return glm::vec2(GetWidth(),GetHeight());
 }
 
 NCachedTexture::~NCachedTexture()

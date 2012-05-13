@@ -8,6 +8,8 @@
 #ifndef NAELSTROF_TEXTURE
 #define NAELSTROF_TEXTURE
 
+class NCachedTexture;
+
 /**
 * @brief Lua function to load textures into memory.
 *
@@ -83,9 +85,11 @@ public:
 	* @return Return the name of the animation.
 	*/
 	std::string GetName();
+	glm::vec2 GetSize(double Time);
+	float GetFloat(std::string i_Name);
 private:
 	std::string Name;
-	std::vector<GLuint> Frames;
+	std::vector<NCachedTexture*> Frames;
 };
 /**
 * @brief Takes the argument from lua and transforms it into a pointer to the NAnimation class.
@@ -143,6 +147,8 @@ public:
 	* @param DT The time passed since last tick.
 	*/
 	void Tick(double DT);
+	glm::vec2 GetSize();
+	float GetFloat(std::string i_Name);
 private:
 	double CurrentTime;
 	unsigned int PlayingAnimation;

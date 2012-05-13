@@ -174,7 +174,7 @@ NAnimation::~NAnimation()
 void NAnimation::AddFrame(std::string FileName)
 {
 	//Probably need to do some error checking here...
-	GLuint ID = GetGame()->GetRender()->GetCachedTexture(FileName);
+	NCachedTexture* ID = GetGame()->GetRender()->GetCachedTexture(FileName);
 	Frames.push_back(ID);
 }
 
@@ -200,7 +200,13 @@ NTexture::~NTexture()
 GLuint NAnimation::GetID(double Time)
 {
 	unsigned int IDLoc = fmod(Time*FPS,Frames.size());
-	return Frames[IDLoc];
+	return Frames[IDLoc]->ID;
+}
+
+glm::vec2 NAnimation::GetSize(double Time)
+{
+	unsigned int IDLoc = fmod(Time*FPS,Frames.size());
+	return Frames[IDLoc]->GetSize();
 }
 
 void NTexture::Play(std::string i_Name)
@@ -233,3 +239,33 @@ void NTexture::Tick(double DT)
 {
 	CurrentTime += DT;
 }
+
+glm::vec2 NTexture::GetSize()
+{
+	return Animations[PlayingAnimation]->GetSize(CurrentTime);
+}
+
+float NTexture::GetFloat(std::string i_Name)
+{
+	return Animations[PlayingAnimation]->GetFloat(i_Name);
+}
+
+float NAnimation::GetFloat(std::string i_Name)
+{
+	lua_State* L = GetGame()->GetLua()->GetL();
+	lua_getref(L,Reference);
+	lua_getfield(L,-1,i_Name.c_str());
+	if (!lua_isnumber(L,-1))
+	{
+		SetColor(Yellow);
+		std::cout << "LUA WARN: ";
+		ClearColor();
+		std::cout << "Tried to use variable " << i_Name << " as a number (It's not a number or doesn't exist!).\n";
+		lua_pop(L,2);
+		return 0;
+	}
+	float Number = lua_tonumber(L,-1);
+	lua_pop(L,2);
+	return Number;
+}
+

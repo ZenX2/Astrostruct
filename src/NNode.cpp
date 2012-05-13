@@ -113,7 +113,7 @@ glm::vec2 NNode::GetScale()
 
 void NNode::SetScale(float W, float H)
 {
-	Scale = glm::vec2(W,H);
+	SetScale(glm::vec2(W,H));
 }
 
 void NNode::SetScale(glm::vec2 i_Scale)
@@ -123,7 +123,7 @@ void NNode::SetScale(glm::vec2 i_Scale)
 
 void NNode::SetScale(float i_Scale)
 {
-	Scale = glm::vec2(i_Scale);
+	SetScale(glm::vec2(i_Scale));
 }
 
 void NNode::Tick(double DT) {}

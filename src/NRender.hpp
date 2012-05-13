@@ -26,10 +26,16 @@ public:
 	* @param i_Name The name of the texture id (normally the filepath).
 	* @param i_ID The texture id we want to cache.
 	*/
-	NCachedTexture(std::string i_Name, GLuint i_ID);
+	NCachedTexture(std::string i_Name);
+	NCachedTexture(std::string i_Name, GLuint ID);
 	~NCachedTexture();
 	GLuint ID;
 	std::string Name;
+	glm::vec2 GetSize();
+	float GetWidth();
+	float GetHeight();
+private:
+	int Width, Height;
 };
 /**
 * @brief Handles most rendering calls, and exposes them to the rest of the engine.
@@ -106,7 +112,7 @@ public:
 	*
 	* @return A texture ID for the already loaded image.
 	*/
-	GLuint GetCachedTexture(std::string Name);
+	NCachedTexture* GetCachedTexture(std::string Name);
 	/**
 	* @brief Returns a Texture object from memory.
 	*

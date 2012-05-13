@@ -36,9 +36,32 @@ public:
 	* @param DT The time passed since last tick.
 	*/
 	void Tick(double DT);
+	void SetScale(glm::vec2 i_Scale);
 private:
+	float BorderSize;
 	NShader* Shader;
 	bool Changed;
+	void GenerateBuffers();
+	std::vector<glm::vec2> Verts;
+	std::vector<glm::vec2> UVs;
+	GLuint* Buffers;
+	GLuint ScreenLoc;
+	GLuint TextureLoc;
+	GLuint MatrixLoc;
+	GLuint ColorLoc;
+};
+
+class NButton : public NNode
+{
+public:
+	NButton();
+	~NButton();
+	NTexture* Texture;
+	void SetTexture(std::string Name);
+	void Draw(glm::mat4 View);
+	void Tick(double DT);
+private:
+	NShader* Shader;
 	void GenerateBuffers();
 	std::vector<glm::vec2> Verts;
 	std::vector<glm::vec2> UVs;
