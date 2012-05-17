@@ -83,8 +83,9 @@ bool NGame::Init(int i_Width, int i_Height, std::string Title)
 	Input = new NInput();
 	Scene = new NScene();
 	Render = new NRender();
+	Render->LoadTextures();
 	SoundSystem = new NSoundSystem();
-	LoadTextures();
+	SoundSystem->LoadSounds();
 	Valid = true;
 	return Success;
 }

@@ -183,8 +183,13 @@ NTextureAtlas::NTextureAtlas(FT_Face Face, unsigned int i_Size)
 	glGenTextures(1, &Texture);
 	GetGame()->GetRender()->AddCachedTexture(Texture);
 	glBindTexture(GL_TEXTURE_2D, Texture);
-	glPixelStorei(GL_UNPACK_ALIGNMENT,1);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_ALPHA, Width, Height, 0, GL_ALPHA, GL_UNSIGNED_BYTE, 0);
+	unsigned char* Data = new unsigned char[Width*Height];
+	for (unsigned int i=0;i<Width*Height;i++)
+	{
+	    Data[i] = 0;
+	}
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_ALPHA, Width, Height, 0, GL_ALPHA, GL_UNSIGNED_BYTE, Data);
+	delete Data;
 }
 
 NTextureAtlas::~NTextureAtlas()

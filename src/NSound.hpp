@@ -29,10 +29,11 @@ public:
     NSoundSystem();
     ~NSoundSystem();
     NSoundData* GetSound(std::string Name);
+    void AddSoundData(NSoundData* Data);
     void AddSound(NSound* Sound);
     void RemoveSound(NSound* Sound);
-private:
     void LoadSounds();
+private:
     ALCdevice* AudioDevice;
     ALCcontext* AudioContext;
     std::vector<NSoundData*> SoundData;

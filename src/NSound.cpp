@@ -1,5 +1,19 @@
 #include "NEngine.hpp"
 
+int LoadSound(lua_State* L)
+{
+    const char* Name = luaL_checkstring(L,1);
+    const char* DataDir = luaL_checkstring(L,2);
+    NSoundData* Data = new NSoundData(Name);
+    if (!Data->Load(DataDir))
+    {
+	delete Data;
+	return 0;
+    }
+    GetGame()->GetSoundSystem()->AddSoundData(Data);
+    return 0;
+}
+
 NSoundSystem::NSoundSystem()
 {
     AudioDevice = alcOpenDevice(NULL);
@@ -24,7 +38,11 @@ NSoundSystem::NSoundSystem()
     alListener3f(AL_POSITION,0,0,0);
     alListener3f(AL_VELOCITY,0,0,0);
     alListener3f(AL_ORIENTATION,0,0,-1);
-    LoadSounds();
+}
+
+void NSoundSystem::AddSoundData(NSoundData* Data)
+{
+    SoundData.push_back(Data);
 }
 
 NSoundSystem::~NSoundSystem()
@@ -39,9 +57,16 @@ NSoundSystem::~NSoundSystem()
 
 void NSoundSystem::LoadSounds()
 {
-    NSoundData* Data = new NSoundData("coin");
-    Data->Load("data/sounds/coin.ogg");
-    SoundData.push_back(Data);
+    lua_State* L = GetGame()->GetLua()->GetL();
+    static const luaL_Reg SoundFunctions[] =
+    {
+	    {"LoadSound",LoadSound},
+	    {NULL,NULL}
+    };
+    lua_getglobal(L,"_G");
+    luaL_register(L,NULL,SoundFunctions);
+    lua_pop(L,1);
+    GetGame()->GetLua()->DoFolder("data/sounds");
 }
 
 NSoundData* NSoundSystem::GetSound(std::string Name)

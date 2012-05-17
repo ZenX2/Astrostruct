@@ -153,6 +153,7 @@ public:
 	* @param ID The OpenGL texture ID.
 	*/
 	void AddCachedTexture(GLuint ID);
+	void LoadTextures();
 private:
 	double FrameTime;
 	bool VSync;

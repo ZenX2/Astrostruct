@@ -1,10 +1,34 @@
 #include "NEngine.hpp"
 
-/**
-* @brief Statically loads shaders into memory for other objects to use.
-*
-* @return Nothing.
-*/
+void NRender::LoadTextures()
+{
+	lua_State* L = GetGame()->GetLua()->GetL();
+	static const luaL_Reg BaseFunctions[] = {
+		{"Animation",CreateAnimation},
+		{"LoadTexture",LoadTexture},
+		{NULL,NULL}
+	};
+	lua_getglobal(L,"_G");
+	luaL_register(L,NULL,BaseFunctions);
+	lua_pop(L,1);
+	luaL_getmetatable(L,"AnimationBase");
+	if (lua_isnoneornil(L,-1))
+	{
+		lua_pop(L,1);
+		luaL_newmetatable(L,"AnimationBase");
+	}
+	static const luaL_Reg AnimationMethods[] = {
+		{"__index",Animation__index},
+		{"__newindex",Animation__newindex},
+		{NULL,NULL}
+	};
+	luaL_register(L,NULL,AnimationMethods);
+	lua_pushstring(L,"Animation");
+	lua_setfield(L,-2,"__type");
+	lua_pop(L,1);
+	GetGame()->GetLua()->DoFolder("data/textures");
+}
+
 bool NRender::LoadShaders()
 {
 	NShader* Shader = new NShader("text");
@@ -23,9 +47,6 @@ bool NRender::LoadShaders()
 	}
 }
 
-/**
-* @brief Creates the render system and initializes it.
-*/
 NRender::NRender()
 {
 	FrameTime = 0;
@@ -47,11 +68,9 @@ NRender::NRender()
 	{
 		TextureFilter = GL_NEAREST;
 	}
+	glPixelStorei(GL_UNPACK_ALIGNMENT,1);
 }
 
-/**
-* @brief Deletes the render system and unloads all shaders from memory.
-*/
 NRender::~NRender()
 {
 	for (unsigned int i=0;i<Shaders.size();i++)
@@ -60,13 +79,6 @@ NRender::~NRender()
 	}
 }
 
-/**
-* @brief Returns a pointer to the specified shader object.
-*
-* @param Name The name of the shader.
-*
-* @return The pointer to the specifed shader object or null if it isn't found.
-*/
 NShader* NRender::GetShader(std::string Name)
 {
 	for (unsigned int i=0;i<Shaders.size();i++)
@@ -76,10 +88,6 @@ NShader* NRender::GetShader(std::string Name)
 			return Shaders[i];
 		}
 	}
-	/*SetColor(Yellow);
-	std::cout << "RENDER WARN: ";
-	ClearColor();
-	std::cout << "Attempted to use unknown shader " << Name << "!\n";*/
 	return NULL;
 }
 
