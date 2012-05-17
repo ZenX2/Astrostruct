@@ -153,6 +153,9 @@ public:
 	* @param ID The OpenGL texture ID.
 	*/
 	void AddCachedTexture(GLuint ID);
+	/**
+	 * @brief Uses lua to load all textures into memory.
+	 */
 	void LoadTextures();
 private:
 	double FrameTime;

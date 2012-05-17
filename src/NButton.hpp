@@ -42,7 +42,17 @@ public:
 	 * @param Text The desired display text.
 	 */
 	void SetText(std::string Text);
+	/**
+	 * @brief Returns if the button has been pressed.
+	 *
+	 * @return True if the button is currently pressed, false if it's not.
+	 */
 	bool OnPressed();
+	/**
+	 * @brief Returns if the button has just been released.
+	 *
+	 * @return True if the button has just barely been released, false if it hasn't.
+	 */
 	bool OnRelease();
 private:
 	bool PressedMemory;

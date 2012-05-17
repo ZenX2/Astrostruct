@@ -128,6 +128,11 @@ public:
 	* @brief Deletes this and all of it's children.
 	*/
 	void CleanUp();
+	/**
+	 * @brief Returns a pointer to the sound system.
+	 *
+	 * @return A pointer to the sound system.
+	 */
 	NSoundSystem* GetSoundSystem();
 private:
 	bool WindowChanged;

@@ -17,7 +17,7 @@ int main(int argc, char** argv)
 	}
 	NWindow* MyWindow = GetGame()->GetScene()->AddWindow();
 	MyWindow->SetTexture("window");
-	MyWindow->SetScale(256.f,256.f);
+	MyWindow->SetScale(256,256);
 	MyWindow->SetPos(GetGame()->GetWindowSize()/2.f);
 	NButton* QuitButton = GetGame()->GetScene()->AddButton();
 	QuitButton->SetTexture("button");

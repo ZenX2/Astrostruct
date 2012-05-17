@@ -72,6 +72,13 @@ public:
 	 * @return A pointer to the new button.
 	 */
 	NButton* AddButton();
+	/**
+	 * @brief Adds a sound to the scene.
+	 *
+	 * @param Name The name of the sound we want to load.
+	 *
+	 * @return A pointer to the new sound.
+	 */
 	NSound* AddSound(std::string Name);
 private:
 	bool LoadedText;
