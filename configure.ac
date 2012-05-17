@@ -44,6 +44,16 @@ AC_SEARCH_LIBS([SOIL_load_OGL_texture],[SOIL],[],[
 		AC_MSG_ERROR(["Couldn't find soil libraries!"])
 	])
 ])
+AC_SEARCH_LIBS([alcOpenDevice],[openal OpenAL32],[],[
+	AC_CHECK_LIB([OpenAL32],[main],[LIBS="$LIBS -lOpenAL32"],[
+		AC_MSG_ERROR(["Couldn't find openal libraries!"])
+	])
+])
+AC_SEARCH_LIBS([ov_fopen],[vorbisfile],[],[
+	AC_CHECK_LIB([vorbisfile],[main],[LIBS="$LIBS -lvorbisfile"],[
+		AC_MSG_ERROR(["Couldn't find vorbis libraries!"])
+	])
+])
 
 # Checks for header files.
 CXXFLAGS="$CXXFLAGS -I/usr/include/freetype2"

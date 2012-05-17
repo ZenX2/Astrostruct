@@ -16,7 +16,7 @@ srcdir			= @srcdir@
 VPATH			= @srcdir@
 
 # Build-related substitution variables
-objects			= NGame.@OBJEXT@ NColor.@OBJEXT@ NEngine.@OBJEXT@ NInput.@OBJEXT@ NCamera.@OBJEXT@ NNode.@OBJEXT@ NScene.@OBJEXT@ NRender.@OBJEXT@ NShader.@OBJEXT@ NText.@OBJEXT@ NTexture.@OBJEXT@ NLua.@OBJEXT@ NConfig.@OBJEXT@ NWindow.@OBJEXT@ NButton.@OBJEXT@ NPhysics.@OBJEXT@
+objects			= NGame.@OBJEXT@ NColor.@OBJEXT@ NEngine.@OBJEXT@ NInput.@OBJEXT@ NCamera.@OBJEXT@ NNode.@OBJEXT@ NScene.@OBJEXT@ NRender.@OBJEXT@ NShader.@OBJEXT@ NText.@OBJEXT@ NTexture.@OBJEXT@ NLua.@OBJEXT@ NConfig.@OBJEXT@ NWindow.@OBJEXT@ NButton.@OBJEXT@ NPhysics.@OBJEXT@ NSound.@OBJEXT@
 CXX				= @CXX@
 CXXFLAGS		= @CXXFLAGS@
 LIBS			= @LIBS@

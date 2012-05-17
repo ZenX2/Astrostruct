@@ -128,6 +128,7 @@ public:
 	* @brief Deletes this and all of it's children.
 	*/
 	void CleanUp();
+	NSoundSystem* GetSoundSystem();
 private:
 	bool WindowChanged;
 	/**
@@ -139,7 +140,7 @@ private:
 	NRender* Render;
 	NLua* Lua;
 	NConfig* Config;
-	NTextSystem* TextSystem;
+	NSoundSystem* SoundSystem;
 	bool Valid;
 };
 

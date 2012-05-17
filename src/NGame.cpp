@@ -15,6 +15,7 @@ NGame::~NGame()
 		delete Input;
 		delete Scene;
 		delete Render;
+		delete SoundSystem;
 		delete Config;
 		delete Lua;
 		glfwTerminate();
@@ -82,6 +83,7 @@ bool NGame::Init(int i_Width, int i_Height, std::string Title)
 	Input = new NInput();
 	Scene = new NScene();
 	Render = new NRender();
+	SoundSystem = new NSoundSystem();
 	LoadTextures();
 	Valid = true;
 	return Success;
@@ -191,4 +193,9 @@ void NGame::SetWindowSize(int W, int H)
 void NGame::CleanUp()
 {
 	delete this;
+}
+
+NSoundSystem* NGame::GetSoundSystem()
+{
+    return SoundSystem;
 }

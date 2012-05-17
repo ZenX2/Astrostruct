@@ -72,6 +72,7 @@ public:
 	 * @return A pointer to the new button.
 	 */
 	NButton* AddButton();
+	NSound* AddSound(std::string Name);
 private:
 	bool LoadedText;
 	NTextSystem* TextSystem;

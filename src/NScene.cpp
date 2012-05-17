@@ -98,3 +98,9 @@ NButton* NScene::AddButton()
 {
 	return new NButton();
 }
+NSound* NScene::AddSound(std::string Name)
+{
+    NSound* Sound = new NSound(Name);
+    GetGame()->GetSoundSystem()->AddSound(Sound);
+    return Sound;
+}

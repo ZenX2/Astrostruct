@@ -55,10 +55,13 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <ft2build.h>
+#include FT_FREETYPE_H
 #include <math.h>
 #include <dirent.h>
 #include <sys/stat.h>
-#include FT_FREETYPE_H
+#include <AL/al.h>
+#include <AL/alc.h>
+#include <vorbis/vorbisfile.h>
 #define LUA_COMPAT_MODULE
 extern "C"
 {
@@ -79,6 +82,7 @@ extern "C"
 #include "NNode.hpp"
 #include "NShader.hpp"
 #include "NText.hpp"
+#include "NSound.hpp"
 #include "NTexture.hpp"
 #include "NWindow.hpp"
 #include "NButton.hpp"

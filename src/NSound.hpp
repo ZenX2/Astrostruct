@@ -6,10 +6,10 @@
 class NSoundData
 {
 public:
-    NSoundData();
+    NSoundData(std::string i_Name);
     ~NSoundData();
     std::string Name;
-private:
+    bool Load(std::string FileName);
     ALuint ID;
 };
 
@@ -28,11 +28,15 @@ class NSoundSystem
 public:
     NSoundSystem();
     ~NSoundSystem();
+    NSoundData* GetSound(std::string Name);
+    void AddSound(NSound* Sound);
+    void RemoveSound(NSound* Sound);
 private:
     void LoadSounds();
     ALCdevice* AudioDevice;
     ALCcontext* AudioContext;
     std::vector<NSoundData*> SoundData;
+    std::vector<NSound*> Sounds;
 };
 
 #endif

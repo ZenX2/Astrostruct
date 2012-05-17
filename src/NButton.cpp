@@ -16,6 +16,9 @@ NButton::NButton()
 		TextureLoc = Shader->GetUniformLocation("Texture");
 		ColorLoc = Shader->GetUniformLocation("Color");
 	}
+	IsPressed = false;
+	IsChanged = false;
+	PressedMemory = false;
 }
 
 NButton::~NButton()
@@ -216,6 +219,7 @@ void NButton::Draw(glm::mat4 View)
 
 void NButton::Tick(double DT)
 {
+	IsPressed = false;
 	if (Texture != NULL)
 	{
 		Texture->Tick(DT);
@@ -226,11 +230,19 @@ void NButton::Tick(double DT)
 		if (GetGame()->GetInput()->GetMouseKey(0))
 		{
 			Texture->Play("pressed");
+			IsPressed = true;
 		} else {
 			Texture->Play("active");
 		}
 	} else {
 		Texture->Play("idle");
+	}
+	if (IsPressed != PressedMemory)
+	{
+	    IsChanged = true;
+	    PressedMemory = IsPressed;
+	} else {
+	    IsChanged = false;
 	}
 }
 
@@ -248,3 +260,16 @@ void NButton::SetText(std::string Text)
 	DisplayText->SetText(Text);
 }
 
+bool NButton::OnPressed()
+{
+    return IsPressed;
+}
+
+bool NButton::OnRelease()
+{
+    if (!IsPressed && IsChanged)
+    {
+	return true;
+    }
+    return false;
+}

@@ -42,7 +42,12 @@ public:
 	 * @param Text The desired display text.
 	 */
 	void SetText(std::string Text);
+	bool OnPressed();
+	bool OnRelease();
 private:
+	bool PressedMemory;
+	bool IsPressed;
+	bool IsChanged;
 	bool Changed;
 	float BorderSize;
 	NText* DisplayText;

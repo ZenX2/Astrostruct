@@ -11,7 +11,7 @@ NSoundSystem::NSoundSystem()
 	std::cout << "OpenAL couldn't find an appropriate audio device to play sound through!\n";
 	return;
     }
-    AudioContect = alcCreateContext(AudioDevice,NULL);
+    AudioContext = alcCreateContext(AudioDevice,NULL);
     alcMakeContextCurrent(AudioContext);
     if (!AudioContext)
     {
@@ -29,6 +29,10 @@ NSoundSystem::NSoundSystem()
 
 NSoundSystem::~NSoundSystem()
 {
+    for (unsigned int i=0;i<Sounds.size();i++)
+    {
+	delete Sounds[i];
+    }
     alcDestroyContext(AudioContext);
     alcCloseDevice(AudioDevice);
 }
@@ -40,13 +44,13 @@ void NSoundSystem::LoadSounds()
     SoundData.push_back(Data);
 }
 
-ALuint NSoundSystem::GetSound(std::string Name)
+NSoundData* NSoundSystem::GetSound(std::string Name)
 {
     for (unsigned int i=0;i<SoundData.size();i++)
     {
 	if (SoundData[i]->Name == Name)
 	{
-	    return SoundData[i]->ID;
+	    return SoundData[i];
 	}
     }
     return 0;
@@ -111,5 +115,49 @@ NSoundData::~NSoundData()
 
 NSound::NSound(std::string Name)
 {
-    ID = GetGame()->GetSoundSystem()->GetSound(Name);
+    ID = 0;
+    NSoundData* Check = GetGame()->GetSoundSystem()->GetSound(Name);
+    if (Check == NULL)
+    {
+	return;
+    }
+    alGenSources(1,&ID);
+    alSourcef(ID,AL_PITCH,1);
+    alSourcef(ID,AL_GAIN,1);
+    alSource3f(ID,AL_POSITION,0,0,0);
+    alSource3f(ID,AL_VELOCITY,0,0,0);
+    alSourcei(ID,AL_LOOPING,AL_FALSE);
+    alSourcei(ID,AL_BUFFER,Check->ID);
+}
+
+void NSound::Play()
+{
+    alSourcePlay(ID);
+}
+
+NSound::~NSound()
+{
+    if (!ID)
+    {
+	return;
+    }
+    alDeleteSources(1,&ID);
+}
+
+void NSoundSystem::AddSound(NSound* Sound)
+{
+    Sounds.push_back(Sound);
+}
+
+void NSoundSystem::RemoveSound(NSound* Sound)
+{
+    for (unsigned int i=0;i<Sounds.size();i++)
+    {
+	if (Sound == Sounds[i])
+	{
+	    delete Sound;
+	    Sounds.erase(Sounds.begin()+i);
+	    return;
+	}
+    }
 }
