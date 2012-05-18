@@ -42,6 +42,7 @@ int CreateAnimation(lua_State* L)
 	}
 	lua_newtable(L);
 	Animation->Reference = luaL_ref(L,LUA_REGISTRYINDEX);
+	GetGame()->GetRender()->AddCachedAnimation(Animation);
 	lua_pushAnimation(L,Animation);
 	return 1;
 }

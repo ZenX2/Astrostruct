@@ -18,6 +18,8 @@ NGame::~NGame()
 		delete SoundSystem;
 		delete Config;
 		delete Lua;
+		delete WindowSystem;
+		delete ButtonSystem;
 		glfwTerminate();
 	}
 }
@@ -86,6 +88,8 @@ bool NGame::Init(int i_Width, int i_Height, std::string Title)
 	Render->LoadTextures();
 	SoundSystem = new NSoundSystem();
 	SoundSystem->LoadSounds();
+	WindowSystem = new NWindowSystem();
+	ButtonSystem = new NButtonSystem();
 	Valid = true;
 	return Success;
 }
@@ -199,4 +203,14 @@ void NGame::CleanUp()
 NSoundSystem* NGame::GetSoundSystem()
 {
     return SoundSystem;
+}
+
+NWindowSystem* NGame::GetWindowSystem()
+{
+    return WindowSystem;
+}
+
+NButtonSystem* NGame::GetButtonSystem()
+{
+    return ButtonSystem;
 }

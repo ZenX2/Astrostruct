@@ -72,4 +72,14 @@ private:
 	GLuint ColorLoc;
 };
 
+class NButtonSystem
+{
+public:
+    NButtonSystem();
+    ~NButtonSystem();
+    NButton* AddButton();
+private:
+    std::vector<NButton*> Buttons;
+};
+
 #endif

@@ -189,7 +189,7 @@ NTextureAtlas::NTextureAtlas(FT_Face Face, unsigned int i_Size)
 	    Data[i] = 0;
 	}
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_ALPHA, Width, Height, 0, GL_ALPHA, GL_UNSIGNED_BYTE, Data);
-	delete Data;
+	delete[] Data;
 }
 
 NTextureAtlas::~NTextureAtlas()

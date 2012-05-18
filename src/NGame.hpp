@@ -134,6 +134,8 @@ public:
 	 * @return A pointer to the sound system.
 	 */
 	NSoundSystem* GetSoundSystem();
+	NWindowSystem* GetWindowSystem();
+	NButtonSystem* GetButtonSystem();
 private:
 	bool WindowChanged;
 	/**
@@ -146,6 +148,8 @@ private:
 	NLua* Lua;
 	NConfig* Config;
 	NSoundSystem* SoundSystem;
+	NWindowSystem* WindowSystem;
+	NButtonSystem* ButtonSystem;
 	bool Valid;
 };
 

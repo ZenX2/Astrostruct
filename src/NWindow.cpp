@@ -1,5 +1,24 @@
 #include "NEngine.hpp"
 
+NWindowSystem::NWindowSystem()
+{
+}
+
+NWindowSystem::~NWindowSystem()
+{
+    for (unsigned int i=0;i<Windows.size();i++)
+    {
+	delete Windows[i];
+    }
+}
+
+NWindow* NWindowSystem::AddWindow()
+{
+    NWindow* Window = new NWindow();
+    Windows.push_back(Window);
+    return Window;
+}
+
 NWindow::NWindow()
 {
 	SizeMem = glm::vec2(0);
@@ -20,7 +39,7 @@ NWindow::NWindow()
 NWindow::~NWindow()
 {
 	glDeleteBuffers(2,Buffers);
-	delete Buffers;
+	delete[] Buffers;
 	if (Texture != NULL)
 	{
 		delete Texture;

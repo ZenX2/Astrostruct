@@ -1,5 +1,24 @@
 #include "NEngine.hpp"
 
+NButtonSystem::NButtonSystem()
+{
+}
+
+NButtonSystem::~NButtonSystem()
+{
+    for (unsigned int i=0;i<Buttons.size();i++)
+    {
+	delete Buttons[i];
+    }
+}
+
+NButton* NButtonSystem::AddButton()
+{
+    NButton* Button = new NButton();
+    Buttons.push_back(Button);
+    return Button;
+}
+
 NButton::NButton()
 {
 	BorderSize = 0;
@@ -24,7 +43,7 @@ NButton::NButton()
 NButton::~NButton()
 {
 	glDeleteBuffers(2,Buffers);
-	delete Buffers;
+	delete[] Buffers;
 	if (Texture != NULL)
 	{
 		delete Texture;

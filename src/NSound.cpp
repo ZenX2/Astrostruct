@@ -51,6 +51,10 @@ NSoundSystem::~NSoundSystem()
     {
 	delete Sounds[i];
     }
+    for (unsigned int i=0;i<SoundData.size();i++)
+    {
+	delete SoundData[i];
+    }
     alcDestroyContext(AudioContext);
     alcCloseDevice(AudioDevice);
 }

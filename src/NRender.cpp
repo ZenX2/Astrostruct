@@ -77,6 +77,18 @@ NRender::~NRender()
 	{
 		delete Shaders[i];
 	}
+	for (unsigned int i=0;i<CachedTextures.size();i++)
+	{
+	    delete CachedTextures[i];
+	}
+	for (unsigned int i=0;i<Textures.size();i++)
+	{
+	    delete Textures[i];
+	}
+	for (unsigned int i=0;i<Animations.size();i++)
+	{
+	    delete Animations[i];
+	}
 }
 
 NShader* NRender::GetShader(std::string Name)
@@ -133,6 +145,11 @@ void NRender::AddCachedTexture(GLuint Texture)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, TextureFilter);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, TextureFilter);
 	CachedTextures.push_back(new NCachedTexture("NULL",Texture));
+}
+
+void NRender::AddCachedAnimation(NAnimation* Animation)
+{
+    Animations.push_back(Animation);
 }
 
 void NRender::SetTextureFilter(GLuint Filter)

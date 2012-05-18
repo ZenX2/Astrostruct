@@ -51,4 +51,14 @@ private:
 	GLuint ColorLoc;
 };
 
+class NWindowSystem
+{
+public:
+    NWindowSystem();
+    ~NWindowSystem();
+    NWindow* AddWindow();
+private:
+    std::vector<NWindow*> Windows;
+};
+
 #endif

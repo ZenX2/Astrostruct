@@ -92,11 +92,11 @@ unsigned int NScene::GetTopDepth()
 
 NWindow* NScene::AddWindow()
 {
-	return new NWindow();
+	return GetGame()->GetWindowSystem()->AddWindow();
 }
 NButton* NScene::AddButton()
 {
-	return new NButton();
+	return GetGame()->GetButtonSystem()->AddButton();
 }
 NSound* NScene::AddSound(std::string Name)
 {

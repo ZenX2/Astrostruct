@@ -157,6 +157,7 @@ public:
 	 * @brief Uses lua to load all textures into memory.
 	 */
 	void LoadTextures();
+	void AddCachedAnimation(NAnimation* Animation);
 private:
 	double FrameTime;
 	bool VSync;
@@ -167,6 +168,7 @@ private:
 	std::vector<NShader*> Shaders;
 	std::vector<NCachedTexture*> CachedTextures;
 	std::vector<NTexture*> Textures;
+	std::vector<NAnimation*> Animations;
 	NCamera* Camera;
 };
 
