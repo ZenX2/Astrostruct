@@ -54,6 +54,7 @@ public:
 	 * @return True if the button has just barely been released, false if it hasn't.
 	 */
 	bool OnRelease();
+	void Remove();
 private:
 	bool PressedMemory;
 	bool IsPressed;
@@ -70,16 +71,6 @@ private:
 	GLuint TextureLoc;
 	GLuint MatrixLoc;
 	GLuint ColorLoc;
-};
-
-class NButtonSystem
-{
-public:
-    NButtonSystem();
-    ~NButtonSystem();
-    NButton* AddButton();
-private:
-    std::vector<NButton*> Buttons;
 };
 
 #endif

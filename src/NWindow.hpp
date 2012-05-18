@@ -36,6 +36,7 @@ public:
 	* @param DT The time passed since last tick.
 	*/
 	void Tick(double DT);
+	void Remove();
 private:
 	glm::vec2 SizeMem;
 	float BorderSize;
@@ -49,16 +50,6 @@ private:
 	GLuint TextureLoc;
 	GLuint MatrixLoc;
 	GLuint ColorLoc;
-};
-
-class NWindowSystem
-{
-public:
-    NWindowSystem();
-    ~NWindowSystem();
-    NWindow* AddWindow();
-private:
-    std::vector<NWindow*> Windows;
 };
 
 #endif

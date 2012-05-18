@@ -52,6 +52,7 @@ public:
      * @brief Plays the sound from the ALSource.
      */
     void Play();
+    void Remove();
 private:
     ALuint ID;
 };
@@ -85,18 +86,6 @@ public:
      */
     void AddSoundData(NSoundData* Data);
     /**
-     * @brief Adds a Sound object to memory, this is necessary in order to free all the ALSources.
-     *
-     * @param Sound A pointer to the new sound.
-     */
-    void AddSound(NSound* Sound);
-    /**
-     * @brief Removes a Sound object from memory. Doesn't do anything other than keeps it from attempting to free the ALSource on exit.
-     *
-     * @param Sound The pointer to the sound.
-     */
-    void RemoveSound(NSound* Sound);
-    /**
      * @brief Uses lua to load sounds into memory.
      */
     void LoadSounds();
@@ -104,7 +93,6 @@ private:
     ALCdevice* AudioDevice;
     ALCcontext* AudioContext;
     std::vector<NSoundData*> SoundData;
-    std::vector<NSound*> Sounds;
 };
 
 #endif

@@ -47,10 +47,6 @@ void NSoundSystem::AddSoundData(NSoundData* Data)
 
 NSoundSystem::~NSoundSystem()
 {
-    for (unsigned int i=0;i<Sounds.size();i++)
-    {
-	delete Sounds[i];
-    }
     for (unsigned int i=0;i<SoundData.size();i++)
     {
 	delete SoundData[i];
@@ -173,20 +169,7 @@ NSound::~NSound()
     alDeleteSources(1,&ID);
 }
 
-void NSoundSystem::AddSound(NSound* Sound)
+void NSound::Remove()
 {
-    Sounds.push_back(Sound);
-}
-
-void NSoundSystem::RemoveSound(NSound* Sound)
-{
-    for (unsigned int i=0;i<Sounds.size();i++)
-    {
-	if (Sound == Sounds[i])
-	{
-	    delete Sound;
-	    Sounds.erase(Sounds.begin()+i);
-	    return;
-	}
-    }
+    delete (NSound*)this;
 }

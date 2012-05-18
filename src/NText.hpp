@@ -193,12 +193,6 @@ public:
 	*/
 	float GetWidth();
 	/**
-	* @brief Updates the text node to do stuff, currently sets it to the position of the mouse and spins it.
-	*
-	* @param DT The delta time, aka the amount of time passed since last execution.
-	*/
-	void Tick(double DT);
-	/**
 	* @brief Sets the render mode of the text.
 	*
 	* @param i_Mode The render mode, currently accepts (0)Left, (1)Centered, and (2)Right.
@@ -222,6 +216,7 @@ public:
 	* @param i_Size The desired text render size.
 	*/
 	void SetSize(float i_Size);
+	void Remove();
 	~NText();
 private:
 	glm::vec2 Velocity;
@@ -263,15 +258,6 @@ public:
 	*/
 	NFace* GetFace(std::string Name);
 	/**
-	* @brief Allocates room for a text object and inserts it into the scene.
-	*
-	* @param Font The desired font of the text object.
-	* @param Data The desired string to be rendered from the text object.
-	*
-	* @return A pointer to the new text object.
-	*/
-	NText* AddText(std::string Font,std::string Data);
-	/**
 	* @brief Returns the freetype library for lua.
 	*
 	* @return The freetype library.
@@ -286,7 +272,6 @@ public:
 private:
 	FT_Library FTLib;
 	std::vector<NFace*> Faces;
-	std::vector<NText*> Texts;
 };
 /*@}*/
 

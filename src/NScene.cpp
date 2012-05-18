@@ -33,6 +33,10 @@ NScene::NScene()
 NScene::~NScene()
 {
 	delete TextSystem;
+	for (unsigned int i=0;i<Nodes.size();i++)
+	{
+	    Nodes[i]->Remove();
+	}
 }
 
 NText* NScene::AddText(std::string Font, std::string Data)
@@ -42,7 +46,7 @@ NText* NScene::AddText(std::string Font, std::string Data)
 		TextSystem->LoadFaces();
 		LoadedText = true;
 	}
-	return TextSystem->AddText(Font,Data);
+	return new NText(TextSystem->GetFace(Font),Data);
 }
 
 NTextSystem* NScene::GetTextSystem()
@@ -87,20 +91,18 @@ void NScene::SwapDepth(NNode* Node, unsigned int Depth)
 
 unsigned int NScene::GetTopDepth()
 {
-	return Nodes.size()-1;
+    return Nodes.size()-1;
 }
 
 NWindow* NScene::AddWindow()
 {
-	return GetGame()->GetWindowSystem()->AddWindow();
+    return new NWindow();
 }
 NButton* NScene::AddButton()
 {
-	return GetGame()->GetButtonSystem()->AddButton();
+    return new NButton();
 }
 NSound* NScene::AddSound(std::string Name)
 {
-    NSound* Sound = new NSound(Name);
-    GetGame()->GetSoundSystem()->AddSound(Sound);
-    return Sound;
+    return new NSound(Name);
 }

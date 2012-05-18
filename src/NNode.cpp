@@ -163,3 +163,6 @@ void NNode::SwapDepth(unsigned int Depth)
 {
 	GetGame()->GetScene()->SwapDepth(this, Depth);
 }
+void NNode::Remove()
+{
+}

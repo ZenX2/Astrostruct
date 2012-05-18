@@ -32,10 +32,6 @@ NTextSystem::~NTextSystem()
 	{
 		delete Faces[i];
 	}
-	for (unsigned int i=0;i<Texts.size();i++)
-	{
-		delete Texts[i];
-	}
 	FT_Done_FreeType(FTLib);
 }
 
@@ -63,13 +59,6 @@ void NFace::UpdateMipmaps()
 		}
 		Textures[i]->UpdateMipmaps();
 	}
-}
-
-NText* NTextSystem::AddText(std::string Font, std::string Data)
-{
-	NText* NewText = new NText(GetFace(Font),Data);
-	Texts.push_back(NewText);
-	return NewText;
 }
 
 std::string NFace::GetName()
@@ -454,35 +443,6 @@ NGlyph::~NGlyph()
 {
 }
 
-void NText::Tick(double DT)
-{
-	/*SetPos(GetPos()+Velocity);
-	Velocity.y-=DT*4.f;
-	if (GetPos().y<0)
-	{
-		Velocity.y *= -0.9;
-		SetPos(GetPos().x,0);
-	}
-	if (GetPos().y>GetGame()->GetWindowHeight())
-	{
-		Velocity.y *= -0.9;
-		SetPos(GetPos().x,GetGame()->GetWindowHeight());
-	}
-	if (GetPos().x<0)
-	{
-		Velocity.x *= -0.9;
-		SetPos(0,GetPos().y);
-	}
-	if (GetPos().x>GetGame()->GetWindowWidth())
-	{
-		Velocity.x *= -0.9;
-		SetPos(GetGame()->GetWindowWidth(),GetPos().y);
-	}
-	SetAng(GetAng()+30*DT);
-	SetScale(glm::vec2(1.f)+GetPos()/GetGame()->GetWindowSize()*2.f);
-	SetColor(glm::vec4(0,GetPos()/GetGame()->GetWindowSize(),1));*/
-}
-
 void NText::SetText(std::string i_Data)
 {
 	if (!Data.compare(i_Data))
@@ -516,4 +476,9 @@ FT_Library NTextSystem::GetFreeTypeLib()
 void NTextSystem::AddFace(NFace* Face)
 {
 	Faces.push_back(Face);
+}
+
+void NText::Remove()
+{
+    delete (NText*)this;
 }

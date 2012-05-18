@@ -166,6 +166,7 @@ public:
 	 * @return A matrix without scale applied to it.
 	 */
 	virtual glm::mat4 GetNonScaleMatrix();
+	virtual void Remove();
 private:
 	float Angle;
 	glm::vec4 Color;

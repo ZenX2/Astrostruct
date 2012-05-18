@@ -8,6 +8,10 @@ NShader::NShader(std::string i_Name)
 
 NShader::~NShader()
 {
+	for (unsigned int i=0;i<Uniforms.size();i++)
+	{
+		delete Uniforms[i];
+	}
 	glDeleteProgram(ProgramID);
 }
 
@@ -39,6 +43,10 @@ NUniform::NUniform(GLuint ProgramID, std::string i_Name)
 {
 	Name = i_Name;
 	UniLoc = glGetUniformLocation(ProgramID,Name.c_str());
+}
+
+NUniform::~NUniform()
+{
 }
 
 GLuint NUniform::GetUniformLocation()

@@ -1,24 +1,5 @@
 #include "NEngine.hpp"
 
-NWindowSystem::NWindowSystem()
-{
-}
-
-NWindowSystem::~NWindowSystem()
-{
-    for (unsigned int i=0;i<Windows.size();i++)
-    {
-	delete Windows[i];
-    }
-}
-
-NWindow* NWindowSystem::AddWindow()
-{
-    NWindow* Window = new NWindow();
-    Windows.push_back(Window);
-    return Window;
-}
-
 NWindow::NWindow()
 {
 	SizeMem = glm::vec2(0);
@@ -239,4 +220,8 @@ void NWindow::Tick(double DT)
 	{
 		Texture->Tick(DT);
 	}
+}
+void NWindow::Remove()
+{
+    delete (NWindow*)this;
 }
