@@ -166,6 +166,9 @@ public:
 	 * @return A matrix without scale applied to it.
 	 */
 	virtual glm::mat4 GetNonScaleMatrix();
+	/**
+	 * @brief Unallocates the object, this is used by NScene to unallocate all objects, regardless of what kind of object it really is. (Lots of things inherit NNode!)
+	 */
 	virtual void Remove();
 private:
 	float Angle;

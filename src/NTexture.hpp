@@ -85,7 +85,21 @@ public:
 	* @return Return the name of the animation.
 	*/
 	std::string GetName();
+	/**
+	 * @brief Returns the size of the texture at the specified time of the animation.
+	 *
+	 * @param Time Any amount of time in seconds.
+	 *
+	 * @return A vector containing the width and height of a texture.
+	 */
 	glm::vec2 GetSize(double Time);
+	/**
+	 * @brief Uses lua to retrieve a float.
+	 *
+	 * @param i_Name The name of the lua object.
+	 *
+	 * @return The float grabbed from the lua object, or 0 if it fails.
+	 */
 	float GetFloat(std::string i_Name);
 private:
 	std::string Name;

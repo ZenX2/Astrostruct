@@ -9,6 +9,9 @@
 #ifndef NAELSTROF_COLOR
 #define NAELSTROF_COLOR
 
+/** @addtogroup TerminalColor
+ * @{*/
+
 #define Red 1
 #define Green 2
 #define Yellow 3
@@ -24,5 +27,6 @@ void SetColor(unsigned int Color);
 * @brief Resets color output to normal color.
 */
 void ClearColor();
+/*@}*/
 
 #endif

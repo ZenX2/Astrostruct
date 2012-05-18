@@ -8,6 +8,9 @@
 #ifndef NAELSTROF_SOUND
 #define NAELSTROF_SOUND
 
+/** @addtogroup SoundSystem
+ * @{*/
+
 #define BUFFER_SIZE 4096
 
 /**
@@ -52,6 +55,9 @@ public:
      * @brief Plays the sound from the ALSource.
      */
     void Play();
+	/**
+	 * @brief Unallocates the object.
+	 */
     void Remove();
 private:
     ALuint ID;
@@ -94,5 +100,7 @@ private:
     ALCcontext* AudioContext;
     std::vector<NSoundData*> SoundData;
 };
+
+/*@}*/
 
 #endif

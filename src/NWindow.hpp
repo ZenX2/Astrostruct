@@ -9,6 +9,9 @@
 #ifndef NAELSTROF_WINDOW
 #define NAELSTROF_WINDOW
 
+/** @addtogroup GuiSystem
+ * @{*/
+
 /**
 * @brief Creates a simple box that can have textures applied to it.
 */
@@ -36,6 +39,9 @@ public:
 	* @param DT The time passed since last tick.
 	*/
 	void Tick(double DT);
+	/**
+	 * @brief Unallocates the object.
+	 */
 	void Remove();
 private:
 	glm::vec2 SizeMem;
@@ -51,5 +57,7 @@ private:
 	GLuint MatrixLoc;
 	GLuint ColorLoc;
 };
+
+/*@}*/
 
 #endif

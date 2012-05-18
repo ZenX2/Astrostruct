@@ -75,15 +75,35 @@ extern "C"
 
 #include "config.h"
 #include "NPhysics.hpp"
+/** @defgroup TerminalColor
+ *
+ * Colors incoming terminal text into several predefined colors. Currently only supports linux (and maybe mac).
+ *
+ */
 #include "NColor.hpp"
 #include "NLua.hpp"
 #include "NConfig.hpp"
 #include "NInput.hpp"
 #include "NNode.hpp"
 #include "NShader.hpp"
+/** @defgroup TextSystem
+ *
+ * These classes collaborate together to create a somewhat optimal text rendering system.
+ *
+ */
 #include "NText.hpp"
+/** @defgroup SoundSystem
+ *
+ * These classes collaborate together to create sounds.
+ *
+ */
 #include "NSound.hpp"
 #include "NTexture.hpp"
+/** @defgroup GuiSystem
+ *
+ * These classes collaborate together to create a skinnable gui system.
+ *
+ */
 #include "NWindow.hpp"
 #include "NButton.hpp"
 #include "NScene.hpp"

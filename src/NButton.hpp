@@ -10,6 +10,10 @@
 #define NAELSTROF_BUTTON
 
 /**
+ * @addtogroup GuiSystem
+ * @{*/
+
+/**
 * @brief Creates a pressable button from the specified texture.
 */
 class NButton : public NNode
@@ -54,6 +58,9 @@ public:
 	 * @return True if the button has just barely been released, false if it hasn't.
 	 */
 	bool OnRelease();
+	/**
+	 * @brief Unallocates the object.
+	 */
 	void Remove();
 private:
 	bool PressedMemory;
@@ -72,5 +79,7 @@ private:
 	GLuint MatrixLoc;
 	GLuint ColorLoc;
 };
+
+/*@}*/
 
 #endif

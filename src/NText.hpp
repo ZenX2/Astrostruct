@@ -8,12 +8,6 @@
 #ifndef NAELSTROF_TEXT
 #define NAELSTROF_TEXT
 
-/** @defgroup TextSystem
- *
- * These classes collaborate together to create a somewhat optimal text rendering system.
- *
- */
-
 /** @addtogroup TextSystem
  * @{*/
 
@@ -216,6 +210,9 @@ public:
 	* @param i_Size The desired text render size.
 	*/
 	void SetSize(float i_Size);
+	/**
+	 * @brief Unallocates the object.
+	 */
 	void Remove();
 	~NText();
 private:
@@ -273,6 +270,7 @@ private:
 	FT_Library FTLib;
 	std::vector<NFace*> Faces;
 };
+
 /*@}*/
 
 #endif

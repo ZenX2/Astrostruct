@@ -19,7 +19,7 @@ public:
 	*
 	* @param GLuint
 	*/
-	void SetFilter(GLuint);
+	void SetFilter(GLuint Filter);
 	/**
 	 * @brief Creates an OpenGL id from the specified texture filepath and associates it with a name for later retreival.
 	 *
@@ -122,8 +122,7 @@ public:
 	/**
 	* @brief Returns the amount of time in seconds it took to render the last frame.
 	*
-	* @return The amount of time in seconds it took to render the last frame.
-	*/
+	* @return The amount of time in seconds it took to render the last frame.  */
 	double GetFrameTime();
 	/**
 	* @brief Attempts to grab a texture already in memory and return an ID for it, if it doesn't exist it uses SOIL to load one into memory and returns that ID.
@@ -157,6 +156,11 @@ public:
 	 * @brief Uses lua to load all textures into memory.
 	 */
 	void LoadTextures();
+	/**
+	 * @brief Adds an animation to cache so it can be unallocated later.
+	 *
+	 * @param Animation A pointer to the animation.
+	 */
 	void AddCachedAnimation(NAnimation* Animation);
 private:
 	double FrameTime;
