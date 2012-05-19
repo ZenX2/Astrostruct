@@ -176,7 +176,9 @@ void NButton::Draw(glm::mat4 View)
 		glPushMatrix();
 		glColor4fv(&(GetColor()[0]));
 		glTranslatef(GetPos().x,GetPos().y,0);
-		glRotatef(GetAng(),0,0,1);
+		glRotatef(GetAng().z,0,0,1);
+		glRotatef(GetAng().y,0,1,0);
+		glRotatef(GetAng().x,1,0,0);
 		glScalef(GetScale().x,GetScale().y,0);
 		glDrawArrays(GL_QUADS,0,Verts.size());
 		glPopMatrix();
@@ -225,7 +227,7 @@ void NButton::Tick(double DT)
 		Texture->Tick(DT);
 	}
 	glm::vec2 MP = GetGame()->GetInput()->GetMouse();
-	if (Intersects(glm::vec4(GetPos(),GetScale()),MP))
+	if (Intersects(glm::vec4(GetPos().x,GetPos().y,GetScale().x,GetScale().y),MP))
 	{
 		if (GetGame()->GetInput()->GetMouseKey(0))
 		{

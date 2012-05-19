@@ -44,7 +44,7 @@ public:
 	 */
 	void Remove();
 private:
-	glm::vec2 SizeMem;
+	glm::vec3 SizeMem;
 	float BorderSize;
 	NShader* Shader;
 	bool Changed;

@@ -395,7 +395,9 @@ void NText::Draw(glm::mat4 View)
 		glPushMatrix();
 		glColor4fv(&(GetColor()[0]));
 		glTranslatef(GetPos().x,GetPos().y,0);
-		glRotatef(GetAng(),0,0,1);
+		glRotatef(GetAng().z,0,0,1);
+		glRotatef(GetAng().y,0,1,0);
+		glRotatef(GetAng().x,1,0,0);
 		glScalef(GetScale().x,GetScale().y,0);
 		glDrawArrays(GL_QUADS,0,Verts.size());
 		glPopMatrix();

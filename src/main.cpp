@@ -46,7 +46,6 @@ int main(int argc, char** argv)
 		std::stringstream NewText(std::stringstream::in | std::stringstream::out);
 		NewText << "FPS: " << 1/GetGame()->GetRender()->GetFrameTime() << '\0';
 		FPSText->SetText(NewText.str());
-		FPSText->SwapDepth(GetGame()->GetScene()->GetTopDepth());
 		GetGame()->GetScene()->Tick();
 		GetGame()->GetRender()->Draw();
 		GetGame()->Poll();
