@@ -9,6 +9,8 @@
 #ifndef NAELSTROF_NODE
 #define NAELSTROF_NODE
 
+class NCamera;
+
 /**
 * @brief Base scene class that all other classes derive from.
 */
@@ -23,12 +25,7 @@ public:
 	* @param DT The delta time, aka the time passed since last execution.
 	*/
 	virtual void Tick(double DT);
-	/**
-	* @brief Draws the object.
-	*
-	* @param ModelView Model matrix * View matrix, used in vertex transformations.
-	*/
-	virtual void Draw(glm::mat4 ModelView);
+	virtual void Draw(NCamera* View);
 	/**
 	* @brief Gets the postition of the object.
 	*

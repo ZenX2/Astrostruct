@@ -10,7 +10,7 @@ void NScene::Tick()
 	}
 }
 
-void NScene::Draw(glm::mat4 View)
+void NScene::Draw(NCamera* View)
 {
 	for (unsigned int i=0;i<Nodes.size();i++)
 	{

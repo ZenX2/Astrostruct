@@ -25,7 +25,7 @@ public:
 	*
 	* @param View The camera view matrix.
 	*/
-	void Draw(glm::mat4 View);
+	void Draw(NCamera* View);
 	/**
 	* @brief Adds an object to the scene.
 	*

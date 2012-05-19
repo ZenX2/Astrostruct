@@ -1,41 +1,53 @@
 #include "NEngine.hpp"
 
-NWindow::NWindow()
+NMap::NMap(std::string i_TileSet)
 {
-	SizeMem = glm::vec3(0);
-	Texture = NULL;
+	TileSet = GetGame()->GetRender()->GetTexture(i_TileSet);
+	TileSize = Texture->GetFloat("TileSize");
+	Width = Height = Depth = 0;
 	Changed = true;
-	Buffers = new GLuint[2];
-	glGenBuffers(2,Buffers);
-	Shader = GetGame()->GetRender()->GetShader("flat");
-	if (Shader != NULL)
+}
+NMap::~NMap()
+{
+	for (unsigned int x=0;x<Width;x++)
 	{
-		ScreenLoc = Shader->GetUniformLocation("Screen");
-		MatrixLoc = Shader->GetUniformLocation("MVP");
-		TextureLoc = Shader->GetUniformLocation("Texture");
-		ColorLoc = Shader->GetUniformLocation("Color");
+		for (unsigned int y=0;y<Height;y++)
+		{
+			for (unsigned int z=0;z<Depth;z++)
+			{
+				delete Tiles[x][y][z];
+			}
+		}
 	}
 }
-
-NWindow::~NWindow()
+void NMap::Init(unsigned int i_Width, unsigned int i_Height, unsigned int i_Depth)
 {
-	glDeleteBuffers(2,Buffers);
-	delete[] Buffers;
-	if (Texture != NULL)
+	Width = i_Width;
+	Height = i_Height;
+	Depth = i_Depth;
+	Tiles.resize(Width,std::vector<std::vector<NTile*> Foo);
+	for (unsigned int i=0;i<Width;i++)
 	{
-		delete Texture;
+		Tiles[i].resize(Height,std::vector<NTile*> Foo);
+		for (unsigned int o=0;o<Height;o++)
+		{
+			Tiles[i][o].resize(Depth, NTile* Foo);
+		}
+	}
+	for (unsigned int x=0;x<Width;x++)
+	{
+		for (unsigned int y=0;y<Height;y++)
+		{
+			for (unsigned int z=0;z<Depth;z++)
+			{
+				Tiles[x][y][z] = new NTile();
+			}
+		}
 	}
 }
-
-void NWindow::SetTexture(std::string Name)
+void NMap::GenerateBuffers()
 {
-	Texture = GetGame()->GetRender()->GetTexture(Name);
-	BorderSize = Texture->GetFloat("BorderSize");
-}
-
-void NWindow::GenerateBuffers()
-{
-	if (!Changed && SizeMem == GetScale())
+	if (!Changed)
 	{
 		return;
 	}
@@ -145,84 +157,12 @@ void NWindow::GenerateBuffers()
 	Changed = false;
 	SizeMem = GetScale();
 }
-
-void NWindow::Draw(NCamera* View)
-{
-	GenerateBuffers();
-	if (Texture == NULL)
-	{
-		return;
-	}
-	if (Shader == NULL)
-	{
-		glEnableClientState(GL_VERTEX_ARRAY);
-		glBindBuffer(GL_ARRAY_BUFFER,Buffers[0]);
-		glVertexPointer(2,GL_FLOAT,0,NULL);
-
-		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-		glBindBuffer(GL_ARRAY_BUFFER,Buffers[1]);
-		glTexCoordPointer(2,GL_FLOAT,0,NULL);
-
-		glEnable(GL_TEXTURE_2D);
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		if (Texture != NULL)
-		{
-			glBindTexture(GL_TEXTURE_2D,Texture->GetID());
-		}
-		glPushMatrix();
-		glColor4fv(&(GetColor()[0]));
-		glTranslatef(GetPos().x,GetPos().y,0);
-		glRotatef(GetAng().z,0,0,1);
-		glRotatef(GetAng().y,0,1,0);
-		glRotatef(GetAng().x,1,0,0);
-		glScalef(GetScale().x,GetScale().y,0);
-		glDrawArrays(GL_QUADS,0,Verts.size());
-		glPopMatrix();
-		glDisable(GL_TEXTURE_2D);
-		glDisable(GL_BLEND);
-
-		glDisableClientState(GL_VERTEX_ARRAY);
-		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-		return;
-	}
-	glUseProgram(Shader->GetID());
-	glActiveTexture(GL_TEXTURE0);
-	if (Texture != NULL)
-	{
-		glBindTexture(GL_TEXTURE_2D,Texture->GetID());
-	}
-	glUniform1i(TextureLoc,0);
-	glm::mat4 MVP = View->GetOrthoMatrix()*View->GetViewMatrix()*GetModelMatrix();
-	glUniformMatrix4fv(MatrixLoc,1,GL_FALSE,&MVP[0][0]);
-	glUniform4fv(ColorLoc,1,&(GetColor()[0]));
-	glEnableVertexAttribArray(0);
-	glBindBuffer(GL_ARRAY_BUFFER,Buffers[0]);
-	glVertexAttribPointer(0,2,GL_FLOAT,GL_FALSE,0,NULL);
-	glEnableVertexAttribArray(1);
-	glBindBuffer(GL_ARRAY_BUFFER,Buffers[1]);
-	glVertexAttribPointer(1,2,GL_FLOAT,GL_FALSE,0,NULL);
-	
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	glEnable(GL_TEXTURE_2D);
-	glDrawArrays(GL_QUADS,0,Verts.size());
-	glDisable(GL_TEXTURE_2D);
-	glDisable(GL_BLEND);
-
-	glDisableVertexAttribArray(0);
-	glDisableVertexAttribArray(1);
-	glUseProgram(0);
 }
 
-void NWindow::Tick(double DT)
+NTile::NTile()
 {
-	if (Texture != NULL)
-	{
-		Texture->Tick(DT);
-	}
+	ID = rand()%2;
 }
-void NWindow::Remove()
+NTile::~NTile()
 {
-    delete (NWindow*)this;
 }

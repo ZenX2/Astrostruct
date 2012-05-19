@@ -162,7 +162,10 @@ public:
 	 * @param Animation A pointer to the animation.
 	 */
 	void AddCachedAnimation(NAnimation* Animation);
+	void SetSize(glm::vec2 i_Size);
+	void SetSize(float Width, float Height);
 private:
+	glm::vec2 Size;
 	double FrameTime;
 	bool VSync;
 	GLuint TextureFilter;

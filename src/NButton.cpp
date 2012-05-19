@@ -11,8 +11,7 @@ NButton::NButton()
 	DisplayText = NULL;
 	if (Shader != NULL)
 	{
-		ScreenLoc = Shader->GetUniformLocation("Screen");
-		MatrixLoc = Shader->GetUniformLocation("ModelView");
+		MatrixLoc = Shader->GetUniformLocation("MVP");
 		TextureLoc = Shader->GetUniformLocation("Texture");
 		ColorLoc = Shader->GetUniformLocation("Color");
 	}
@@ -149,7 +148,7 @@ void NButton::GenerateBuffers()
 	Changed = false;
 }
 
-void NButton::Draw(glm::mat4 View)
+void NButton::Draw(NCamera* View)
 {
 	GenerateBuffers();
 	if (Texture == NULL)
@@ -196,9 +195,8 @@ void NButton::Draw(glm::mat4 View)
 		glBindTexture(GL_TEXTURE_2D,Texture->GetID());
 	}
 	glUniform1i(TextureLoc,0);
-	glm::mat4 ModelView = GetModelMatrix()*View;
-	glUniformMatrix4fv(MatrixLoc,1,GL_FALSE,&ModelView[0][0]);
-	glUniform2f(ScreenLoc,GetGame()->GetWindowWidth()/2.f,GetGame()->GetWindowHeight()/2.f);
+	glm::mat4 MVP = View->GetOrthoMatrix()*View->GetViewMatrix()*GetModelMatrix();
+	glUniformMatrix4fv(MatrixLoc,1,GL_FALSE,&MVP[0][0]);
 	glUniform4fv(ColorLoc,1,&(GetColor()[0]));
 	glEnableVertexAttribArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER,Buffers[0]);

@@ -69,6 +69,31 @@ NRender::NRender()
 		TextureFilter = GL_NEAREST;
 	}
 	glPixelStorei(GL_UNPACK_ALIGNMENT,1);
+	glViewport(0,0,GetGame()->GetWindowWidth(),GetGame()->GetWindowHeight());
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	glOrtho(0, GetGame()->GetWindowWidth(), 0, GetGame()->GetWindowHeight(), 0, 300);
+	glMatrixMode(GL_MODELVIEW);
+	Size = GetGame()->GetWindowSize();
+}
+
+void NRender::SetSize(glm::vec2 i_Size)
+{
+	if (Size == i_Size)
+	{
+		return;
+	}
+	Size = i_Size;
+	glViewport(0,0,Size.x,Size.y);
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	glOrtho(0, Size.x, 0, Size.y, 0, 300);
+	glMatrixMode(GL_MODELVIEW);
+}
+
+void NRender::SetSize(float Width, float Height)
+{
+	SetSize(glm::vec2(Width,Height));
 }
 
 NRender::~NRender()
@@ -131,9 +156,10 @@ void NRender::Draw()
 	
 	if (Camera)
 	{
-		GetGame()->GetScene()->Draw(Camera->GetViewMatrix());
+		GetGame()->GetScene()->Draw(Camera);
 	} else {
-		GetGame()->GetScene()->Draw(glm::mat4());
+		Camera = new NCamera();
+		GetGame()->GetScene()->Draw(Camera);
 	}
 	
 	glfwSwapBuffers();

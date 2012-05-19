@@ -153,7 +153,7 @@ void NNode::SetScale(float i_Scale)
 }
 
 void NNode::Tick(double DT) {}
-void NNode::Draw(glm::mat4 View) {}
+void NNode::Draw(NCamera* View) {}
 
 void NNode::SetColor(glm::vec4 i_Color)
 {

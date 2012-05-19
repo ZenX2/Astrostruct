@@ -276,8 +276,7 @@ NText::NText(NFace* i_Face, std::string i_Data) : NNode()
 	if (Shader != NULL)
 	{
 		TextureLoc = Shader->GetUniformLocation("Texture");
-		MatrixLoc = Shader->GetUniformLocation("ModelView");
-		ScreenLoc = Shader->GetUniformLocation("Screen");
+		MatrixLoc = Shader->GetUniformLocation("MVP");
 		ColorLoc = Shader->GetUniformLocation("Color");
 	}
 }
@@ -375,7 +374,7 @@ void NText::SetMode(int i_Mode)
 	Changed = true;
 }
 
-void NText::Draw(glm::mat4 View)
+void NText::Draw(NCamera* View)
 {
 	GenerateBuffers();
 	if (Shader == NULL)
@@ -412,9 +411,8 @@ void NText::Draw(glm::mat4 View)
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D,Face->GetTexture(Size));
 	glUniform1i(TextureLoc,0);
-	glm::mat4 ModelView = GetModelMatrix()*View;
-	glUniformMatrix4fv(MatrixLoc,1,GL_FALSE,&ModelView[0][0]);
-	glUniform2f(ScreenLoc,GetGame()->GetWindowWidth()/2.f,GetGame()->GetWindowHeight()/2.f);
+	glm::mat4 MVP = View->GetOrthoMatrix()*View->GetViewMatrix()*GetModelMatrix();
+	glUniformMatrix4fv(MatrixLoc,1,GL_FALSE,&MVP[0][0]);
 	glUniform4fv(ColorLoc,1,&(GetColor()[0]));
 	glEnableVertexAttribArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER,Buffers[0]);

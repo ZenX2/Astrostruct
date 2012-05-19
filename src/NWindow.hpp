@@ -32,7 +32,7 @@ public:
 	*
 	* @param View the camera view matrix, in the future it might not actually be used.
 	*/
-	void Draw(glm::mat4 View);
+	void Draw(NCamera* View);
 	/**
 	* @brief Currently only calls Texture->Tick.
 	*

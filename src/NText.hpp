@@ -179,7 +179,7 @@ public:
 	*
 	* @param View Camera view matrix
 	*/
-	void Draw(glm::mat4 View);
+	void Draw(NCamera* View);
 	/**
 	* @brief Grabs the width of the text.
 	*

@@ -33,7 +33,7 @@ public:
 	*
 	* @param View The camera view matrix, might not be used in the future.
 	*/
-	void Draw(glm::mat4 View);
+	void Draw(NCamera* View);
 	/**
 	 * @brief Checks if the mouse is hovering or clicking on the button and reacts accordingly.
 	 *

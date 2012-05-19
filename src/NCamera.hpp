@@ -16,24 +16,15 @@ class NCamera : public NNode
 public:
 	NCamera();
 	/**
-	* @brief Gets the zoom level of the camera, 1 = normal zoom, 0.1 = zoom out, 10 = zooom in.
-	*
-	* @return The zoom level.
-	*/
-	float GetZoom();
-	/**
-	* @brief Sets the zoom level of the camera, 1 = normal zoom, 0.1 = zoom out, 10 = zooom in.
-	*
-	* @param Zoom The desired zoom level.
-	*/
-	void SetZoom(float Zoom);
-	/**
 	* @brief Generates and returns a view matrix, don't call this a lot!
 	*
 	* @return View matrix.
 	*/
 	glm::mat4 GetViewMatrix();
+	glm::mat4 GetOrthoMatrix();
 private:
+	glm::mat4 ViewMatrix;
+	glm::mat4 OrthoMatrix;
 	float Zoom;
 };
 
