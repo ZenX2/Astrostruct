@@ -54,46 +54,6 @@ NTextSystem* NScene::GetTextSystem()
 	return TextSystem;
 }
 
-void NScene::SwapDepth(NNode* Node, unsigned int Depth)
-{
-	if (Depth > Nodes.size())
-	{
-		return;
-	}
-	if (Nodes[Depth] == Node)
-	{
-		return;
-	}
-	if (Depth == GetTopDepth())
-	{
-		for (unsigned int i=0;i<Nodes.size();i++)
-		{
-			if (Nodes[i] == Node)
-			{
-				Nodes.erase(Nodes.begin()+i);
-				Nodes.push_back(Node);
-				return;
-			}
-		}
-		return;
-	}
-	for (unsigned int i=0;i<Nodes.size();i++)
-	{
-		if (Nodes[i] == Node)
-		{
-			NNode* NodeMem = Nodes[Depth];
-			Nodes[Depth] = Node;
-			Nodes[i] = NodeMem;
-			return;
-		}
-	}
-}
-
-unsigned int NScene::GetTopDepth()
-{
-    return Nodes.size()-1;
-}
-
 NWindow* NScene::AddWindow()
 {
     return new NWindow();

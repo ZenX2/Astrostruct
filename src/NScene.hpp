@@ -42,19 +42,6 @@ public:
 	*/
 	NText* AddText(std::string Font, std::string Data);
 	/**
-	* @brief Swaps the depth of the specified object.
-	*
-	* @param Node The node we want to swap depths.
-	* @param Depth The desired depth of the node, if a node exists at the desired depth they will swap depths.
-	*/
-	void SwapDepth(NNode* Node, unsigned int Depth);
-	/**
-	* @brief Returns the highest depth available.
-	*
-	* @return The highest depth to render to.
-	*/
-	unsigned int GetTopDepth();
-	/**
 	* @brief Returns a pointer to the text system, only useful for lua to be able to load fonts into it.
 	*
 	* @return A pointer to the font system.
