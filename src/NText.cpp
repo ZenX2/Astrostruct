@@ -5,9 +5,9 @@ int LoadFace(lua_State* L)
 	const char* Name = luaL_checkstring(L,1);
 	const char* Data = luaL_checkstring(L,2);
 	NFace* FontFace = new NFace(Name);
-	if (FontFace->Load(GetGame()->GetScene()->GetTextSystem()->GetFreeTypeLib(),Data))
+	if (FontFace->Load(GetGame()->GetTextSystem()->GetFreeTypeLib(),Data))
 	{
-		GetGame()->GetScene()->GetTextSystem()->AddFace(FontFace);
+		GetGame()->GetTextSystem()->AddFace(FontFace);
 	} else {
 		delete FontFace;
 	}
@@ -261,9 +261,9 @@ GLuint NFace::GetTexture(unsigned int Size)
 	return Textures[Size]->GetTexture();
 }
 
-NText::NText(NFace* i_Face, std::string i_Data) : NNode()
+NText::NText(std::string i_Face, std::string i_Data) : NNode()
 {
-	Face = i_Face;
+	Face = GetGame()->GetTextSystem()->GetFace(i_Face);
 	Shader = GetGame()->GetRender()->GetShader("text");
 	Data = i_Data;
 	Changed = true;

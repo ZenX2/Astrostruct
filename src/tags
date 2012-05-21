@@ -16,8 +16,7 @@ AddCachedTexture	NRender.hpp	/^	void AddCachedTexture(GLuint ID);$/;"	p	class:NR
 AddChild	NNode.cpp	/^	Parent->AddChild(this);$/;"	p	file:	signature:(this)
 AddChild	NNode.cpp	/^void NNode::AddChild(NNode* Node)$/;"	f	class:NNode	signature:(NNode* Node)
 AddChild	NNode.hpp	/^	virtual void AddChild(NNode*);$/;"	p	class:NNode	access:public	signature:(NNode*)
-AddFace	NText.cpp	/^void NTextSystem::AddFace(NFace* Face)$/;"	f	class:NTextSystem	signature:(NFace* Face)
-AddFace	NText.hpp	/^	void AddFace(NFace* Face);$/;"	p	class:NTextSystem	access:public	signature:(NFace* Face)
+AddFace	NText.cpp	/^void NTextSystem::AddFace(NFace* Face)$/;"	f	class:NTextSystem
 AddFrame	NTexture.cpp	/^			Animation->AddFrame(Field);$/;"	p	file:	signature:(Field)
 AddFrame	NTexture.cpp	/^void NAnimation::AddFrame(std::string FileName)$/;"	f	class:NAnimation	signature:(std::string FileName)
 AddFrame	NTexture.hpp	/^	void AddFrame(std::string FileName);$/;"	p	class:NAnimation	access:public	signature:(std::string FileName)
@@ -25,13 +24,11 @@ AddMap	NScene.cpp	/^NMap* NScene::AddMap(std::string TileSet)$/;"	f	class:NScene
 AddNode	NScene.cpp	/^void NScene::AddNode(NNode* Node)$/;"	f	class:NScene
 AddSound	NScene.cpp	/^NSound* NScene::AddSound(std::string Name)$/;"	f	class:NScene
 AddText	NScene.cpp	/^NText* NScene::AddText(std::string Font, std::string Data)$/;"	f	class:NScene
-AddText	NText.cpp	/^NText* NTextSystem::AddText(std::string Font, std::string Data)$/;"	f	class:NTextSystem	signature:(std::string Font, std::string Data)
-AddText	NText.hpp	/^	NText* AddText(std::string Font,std::string Data);$/;"	p	class:NTextSystem	access:public	signature:(std::string Font,std::string Data)
 AddTexture	NRender.cpp	/^void NRender::AddTexture(NTexture* Texture)$/;"	f	class:NRender
 AddTexture	NRender.hpp	/^	void AddTexture(NTexture* Texture);$/;"	p	class:NRender	access:public	signature:(NTexture* Texture)
 AddWindow	NScene.cpp	/^NWindow* NScene::AddWindow()$/;"	f	class:NScene
-AdvanceX	NText.hpp	/^	float AdvanceX;$/;"	m	class:NGlyph	access:public
-AdvanceY	NText.hpp	/^	float AdvanceY;$/;"	m	class:NGlyph	access:public
+AdvanceX	NText.hpp	/^	float AdvanceX;$/;"	m	class:NGlyph
+AdvanceY	NText.hpp	/^	float AdvanceY;$/;"	m	class:NGlyph
 Ang	NNode.cpp	/^	glm::mat4 Ang = glm::rotate(glm::mat4(),Angle,glm::vec3(0,0,1));$/;"	l
 Angle	NNode.hpp	/^	float Angle;$/;"	m	class:NNode	access:private
 Animation	NTexture.cpp	/^	NAnimation* Animation = lua_toAnimation(L,1);$/;"	l
@@ -44,20 +41,20 @@ Animation__newindex	NTexture.cpp	/^int Animation__newindex(lua_State* L)$/;"	f	s
 Animation__newindex	NTexture.hpp	/^int Animation__newindex(lua_State* L);$/;"	p	signature:(lua_State* L)
 Animations	NTexture.hpp	/^	std::vector<NAnimation*> Animations;$/;"	m	class:NTexture	access:private
 ArgCount	NTexture.cpp	/^	unsigned int ArgCount = lua_gettop(L);$/;"	l
-AtlasHeight	NText.hpp	/^	float AtlasHeight;$/;"	m	class:NGlyph	access:public
-AtlasWidth	NText.hpp	/^	float AtlasWidth;$/;"	m	class:NGlyph	access:public
+AtlasHeight	NText.hpp	/^	float AtlasHeight;$/;"	m	class:NGlyph
+AtlasWidth	NText.hpp	/^	float AtlasWidth;$/;"	m	class:NGlyph
 BaseFunctions	NLua.cpp	/^	static const luaL_Reg BaseFunctions[] =$/;"	l	file:
 BaseFunctions	NTexture.cpp	/^	static const luaL_Reg BaseFunctions[] = {$/;"	l	file:
-BitmapHeight	NText.hpp	/^	float BitmapHeight;$/;"	m	class:NGlyph	access:public
-BitmapLeft	NText.hpp	/^	float BitmapLeft;$/;"	m	class:NGlyph	access:public
-BitmapTop	NText.hpp	/^	float BitmapTop;$/;"	m	class:NGlyph	access:public
-BitmapWidth	NText.hpp	/^	float BitmapWidth;$/;"	m	class:NGlyph	access:public
+BitmapHeight	NText.hpp	/^	float BitmapHeight;$/;"	m	class:NGlyph
+BitmapLeft	NText.hpp	/^	float BitmapLeft;$/;"	m	class:NGlyph
+BitmapTop	NText.hpp	/^	float BitmapTop;$/;"	m	class:NGlyph
+BitmapWidth	NText.hpp	/^	float BitmapWidth;$/;"	m	class:NGlyph
 Blue	NColor.hpp	15;"	d
 BorderSize	NButton.hpp	/^	float BorderSize;$/;"	m	class:NButton	access:private
 BorderSize	NWindow.hpp	/^	float BorderSize;$/;"	m	class:NWindow	access:private
 Buffers	NButton.hpp	/^	GLuint* Buffers;$/;"	m	class:NButton	access:private
 Buffers	NMap.hpp	/^	std::vector<GLuint*> Buffers;$/;"	m	class:NMap
-Buffers	NText.hpp	/^	GLuint* Buffers;$/;"	m	class:NText	access:private
+Buffers	NText.hpp	/^	GLuint* Buffers;$/;"	m	class:NText
 Buffers	NWindow.hpp	/^	GLuint* Buffers;$/;"	m	class:NWindow	access:private
 CXX	Makefile	/^CXX				= g++$/;"	m
 CXXFLAGS	Makefile	/^CXXFLAGS		= -g -O2 -I\/usr\/include\/freetype2$/;"	m
@@ -65,34 +62,30 @@ CachedTextures	NRender.hpp	/^	std::vector<NCachedTexture*> CachedTextures;$/;"	m
 Camera	NRender.hpp	/^	NCamera* Camera;$/;"	m	class:NRender	access:private
 Changed	NButton.hpp	/^	bool Changed;$/;"	m	class:NButton	access:private
 Changed	NMap.hpp	/^	std::vector<bool> Changed;$/;"	m	class:NMap
-Changed	NText.hpp	/^	bool Changed;$/;"	m	class:NText	access:private
-Changed	NText.hpp	/^	bool Changed;$/;"	m	class:NTextureAtlas	access:private
+Changed	NText.hpp	/^	bool Changed;$/;"	m	class:NText
+Changed	NText.hpp	/^	bool Changed;$/;"	m	class:NTextureAtlas
 Changed	NWindow.hpp	/^	bool Changed;$/;"	m	class:NWindow	access:private
-Check	NGame.cpp	/^	int Check = 0;$/;"	l
 Children	NNode.hpp	/^	std::vector<NNode*> Children;$/;"	m	class:NNode	access:private
-CleanUp	NGame.cpp	/^void NGame::CleanUp()$/;"	f	class:NGame	signature:()
-CleanUp	NGame.hpp	/^	void CleanUp();$/;"	p	class:NGame	access:public	signature:()
+CleanUp	NGame.cpp	/^void NGame::CleanUp()$/;"	f	class:NGame
 ClearColor	NColor.cpp	/^void ClearColor()$/;"	f	signature:()
 ClearColor	NColor.cpp	/^void ClearColor(){}$/;"	f	signature:()
 ClearColor	NColor.hpp	/^void ClearColor();$/;"	p	signature:()
-Close	NGame.cpp	/^void NGame::Close()$/;"	f	class:NGame	signature:()
-Close	NGame.hpp	/^	void Close();$/;"	p	class:NGame	access:public	signature:()
+Close	NGame.cpp	/^void NGame::Close()$/;"	f	class:NGame
 Code	NShader.cpp	/^	const char* Code = VertexShaderCode.c_str();$/;"	l
 Color	NColor.cpp	/^	std::cout << "\\e[1;" << Color+30 << 'm';$/;"	l
 Color	NNode.hpp	/^	glm::vec4 Color;$/;"	m	class:NNode	access:private
 ColorLoc	NButton.hpp	/^	GLuint ColorLoc;$/;"	m	class:NButton	access:private
 ColorLoc	NMap.hpp	/^	GLuint ColorLoc, MatrixLoc, TextureLoc;$/;"	m	class:NMap
-ColorLoc	NText.hpp	/^	GLuint ColorLoc,TextureLoc,MatrixLoc,ScreenLoc;$/;"	m	class:NText	access:private
+ColorLoc	NText.hpp	/^	GLuint ColorLoc,TextureLoc,MatrixLoc,ScreenLoc;$/;"	m	class:NText
 ColorLoc	NWindow.hpp	/^	GLuint ColorLoc;$/;"	m	class:NWindow	access:private
-Config	NGame.hpp	/^	NConfig* Config;$/;"	m	class:NGame	access:private
+Config	NGame.hpp	/^	NConfig* Config;$/;"	m	class:NGame
 CreateAnimation	NTexture.cpp	/^int CreateAnimation(lua_State* L)$/;"	f	signature:(lua_State* L)
 CreateAnimation	NTexture.hpp	/^int CreateAnimation(lua_State* L);$/;"	p	signature:(lua_State* L)
 CurTime	NEngine.cpp	/^double CurTime()$/;"	f	signature:()
 CurTime	NEngine.hpp	/^double CurTime();$/;"	p	signature:()
 CurrentTime	NTexture.hpp	/^	double CurrentTime;$/;"	m	class:NTexture	access:private
 DEFS	Makefile	/^DEFS			= -DHAVE_CONFIG_H$/;"	m
-Data	NText.cpp	/^	const char* Data = luaL_checkstring(L,2);$/;"	l
-Data	NText.hpp	/^	std::string Data;$/;"	m	class:NText	access:private
+Data	NText.hpp	/^	std::string Data;$/;"	m	class:NText
 Depth	NMap.hpp	/^	unsigned int Width,Height,Depth;$/;"	m	class:NMap
 Difference	NEngine.cpp	/^	float Difference = Max-Min;$/;"	l
 DisplayText	NButton.hpp	/^	NText* DisplayText;$/;"	m	class:NButton	access:private
@@ -108,16 +101,15 @@ Draw	NNode.hpp	/^	virtual void Draw(glm::mat4 ModelView);$/;"	p	class:NNode	acce
 Draw	NRender.cpp	/^void NRender::Draw()$/;"	f	class:NRender
 Draw	NRender.hpp	/^	void Draw();$/;"	p	class:NRender	access:public	signature:()
 Draw	NScene.cpp	/^void NScene::Draw(NCamera* View)$/;"	f	class:NScene
-Draw	NText.cpp	/^void NText::Draw(glm::mat4 View)$/;"	f	class:NText	signature:(glm::mat4 View)
-Draw	NText.hpp	/^	void Draw(glm::mat4 View);$/;"	p	class:NText	access:public	signature:(glm::mat4 View)
+Draw	NText.cpp	/^void NText::Draw(NCamera* View)$/;"	f	class:NText
 Draw	NWindow.cpp	/^void NWindow::Draw(glm::mat4 View)$/;"	f	class:NWindow	signature:(glm::mat4 View)
 Draw	NWindow.hpp	/^	void Draw(glm::mat4 View);$/;"	p	class:NWindow	access:public	signature:(glm::mat4 View)
 FPS	NRender.hpp	/^	unsigned int FPS;$/;"	m	class:NRender	access:private
 FPS	NTexture.hpp	/^	float FPS;$/;"	m	class:NAnimation	access:public
-FTLib	NText.hpp	/^	FT_Library FTLib;$/;"	m	class:NTextSystem	access:private
-Face	NText.hpp	/^	FT_Face Face;$/;"	m	class:NFace	access:private
-Face	NText.hpp	/^	NFace* Face;$/;"	m	class:NText	access:private
-Faces	NText.hpp	/^	std::vector<NFace*> Faces;$/;"	m	class:NTextSystem	access:private
+FTLib	NText.hpp	/^	FT_Library FTLib;$/;"	m	class:NTextSystem
+Face	NText.hpp	/^	FT_Face Face;$/;"	m	class:NFace
+Face	NText.hpp	/^	NFace* Face;$/;"	m	class:NText
+Faces	NText.hpp	/^	std::vector<NFace*> Faces;$/;"	m	class:NTextSystem
 Fail	NEngine.hpp	70;"	d
 Field	NTexture.cpp	/^		const char* Field = luaL_checkstring(L,i);$/;"	l
 Field	NTexture.cpp	/^	const char* Field = luaL_checkstring(L,2);$/;"	l
@@ -127,15 +119,12 @@ File	NConfig.cpp	/^		std::cout << "Tried to use variable " << Name << " as a num
 File	NConfig.cpp	/^		std::cout << "Tried to use variable " << Name << " as a string (It's not a string!). Does it exist in " << File << "?\\n";$/;"	l
 File	NConfig.hpp	/^	std::string File;$/;"	m	class:NConfig	access:private
 File	NLua.cpp	/^	std::string File = luaL_checkstring(L,1);$/;"	l
-File	NText.cpp	/^		std::cout << "Failed to load " << File << "!\\n";$/;"	l
 Files	NLua.cpp	/^			std::cout << "Found " << Files[i] << "\\n";$/;"	l
 Files	NLua.cpp	/^	std::vector<std::string> Files;$/;"	l
 Folder	NLua.cpp	/^	std::cout << "Scanning " << Folder << " for lua files...\\n";$/;"	l
 Folder	NLua.cpp	/^	std::string Folder = Source.substr(1,Found);$/;"	l
 Folders	NLua.cpp	/^	std::vector<std::string> Folders = GetDir(Folder,ParentFolder);$/;"	l
 Folders	NLua.cpp	/^	std::vector<std::string> Folders;$/;"	l
-FontFace	NText.cpp	/^	NFace* FontFace = new NFace(Name);$/;"	l
-FontFunctions	NText.cpp	/^	static const luaL_Reg FontFunctions[] =$/;"	l	file:
 Foo	NTexture.cpp	/^	NAnimation* Foo = lua_toAnimation(L,narg);$/;"	l
 Found	NLua.cpp	/^	int Found = Source.find_last_of("\/\\\\");$/;"	l
 FragmentFilePath	NShader.cpp	/^		std::cout << "Failed to compile " << FragmentFilePath << "\\n";$/;"	l
@@ -151,14 +140,12 @@ Game	NEngine.hpp	/^static NGame* Game = new NGame();$/;"	v
 GenerateBuffers	NButton.cpp	/^void NButton::GenerateBuffers()$/;"	f	class:NButton	signature:()
 GenerateBuffers	NButton.hpp	/^	void GenerateBuffers();$/;"	p	class:NButton	access:private	signature:()
 GenerateBuffers	NMap.cpp	/^void NMap::GenerateBuffers()$/;"	f	class:NMap
-GenerateBuffers	NText.cpp	/^void NText::GenerateBuffers()$/;"	f	class:NText	signature:()
-GenerateBuffers	NText.hpp	/^	void GenerateBuffers();$/;"	p	class:NText	access:private	signature:()
+GenerateBuffers	NText.cpp	/^void NText::GenerateBuffers()$/;"	f	class:NText
 GenerateBuffers	NWindow.cpp	/^void NWindow::GenerateBuffers()$/;"	f	class:NWindow	signature:()
 GenerateBuffers	NWindow.hpp	/^	void GenerateBuffers();$/;"	p	class:NWindow	access:private	signature:()
 GetAng	NButton.cpp	/^		glRotatef(GetAng(),0,0,1);$/;"	p	file:	signature:()
 GetAng	NNode.cpp	/^float NNode::GetAng()$/;"	f	class:NNode	signature:()
 GetAng	NNode.hpp	/^	virtual float GetAng();$/;"	p	class:NNode	access:public	signature:()
-GetAng	NText.cpp	/^		glRotatef(GetAng(),0,0,1);$/;"	p	file:	signature:()
 GetAng	NWindow.cpp	/^		glRotatef(GetAng(),0,0,1);$/;"	p	file:	signature:()
 GetBool	NConfig.cpp	/^bool NConfig::GetBool(std::string Name)$/;"	f	class:NConfig	signature:(std::string Name)
 GetBool	NConfig.hpp	/^	bool GetBool(std::string Name);$/;"	p	class:NConfig	access:public	signature:(std::string Name)
@@ -169,13 +156,10 @@ GetCamera	NRender.hpp	/^	NCamera* GetCamera();$/;"	p	class:NRender	access:public
 GetColor	NButton.cpp	/^		glColor4fv(&(GetColor()[0]));$/;"	p	file:	signature:()
 GetColor	NNode.cpp	/^glm::vec4 NNode::GetColor()$/;"	f	class:NNode	signature:()
 GetColor	NNode.hpp	/^	virtual glm::vec4 GetColor();$/;"	p	class:NNode	access:public	signature:()
-GetColor	NText.cpp	/^		glColor4fv(&(GetColor()[0]));$/;"	p	file:	signature:()
 GetColor	NWindow.cpp	/^		glColor4fv(&(GetColor()[0]));$/;"	p	file:	signature:()
-GetConfig	NGame.cpp	/^NConfig* NGame::GetConfig()$/;"	f	class:NGame	signature:()
-GetConfig	NGame.hpp	/^	NConfig* GetConfig();$/;"	p	class:NGame	access:public	signature:()
+GetConfig	NGame.cpp	/^NConfig* NGame::GetConfig()$/;"	f	class:NGame
 GetDir	NLua.cpp	/^std::vector<std::string> GetDir(std::string DirectoryName, std::string ParentDirectory)$/;"	f	signature:(std::string DirectoryName, std::string ParentDirectory)
-GetFace	NText.cpp	/^NFace* NTextSystem::GetFace(std::string Name)$/;"	f	class:NTextSystem	signature:(std::string Name)
-GetFace	NText.hpp	/^	NFace* GetFace(std::string Name);$/;"	p	class:NTextSystem	access:public	signature:(std::string Name)
+GetFace	NText.cpp	/^NFace* NTextSystem::GetFace(std::string Name)$/;"	f	class:NTextSystem
 GetFiles	NLua.cpp	/^std::vector<std::string> GetFiles(std::string DirectoryName)$/;"	f	signature:(std::string DirectoryName)
 GetFloat	NConfig.cpp	/^float NConfig::GetFloat(std::string Name)$/;"	f	class:NConfig	signature:(std::string Name)
 GetFloat	NConfig.hpp	/^	float GetFloat(std::string Name);$/;"	p	class:NConfig	access:public	signature:(std::string Name)
@@ -185,14 +169,11 @@ GetFloat	NTexture.hpp	/^	float GetFloat(std::string i_Name);$/;"	p	class:NAnimat
 GetFloat	NTexture.hpp	/^	float GetFloat(std::string i_Name);$/;"	p	class:NTexture	access:public	signature:(std::string i_Name)
 GetFrameTime	NRender.cpp	/^double NRender::GetFrameTime()$/;"	f	class:NRender
 GetFrameTime	NRender.hpp	/^	double GetFrameTime();$/;"	p	class:NRender	access:public	signature:()
-GetFreeTypeLib	NText.cpp	/^FT_Library NTextSystem::GetFreeTypeLib()$/;"	f	class:NTextSystem	signature:()
-GetFreeTypeLib	NText.hpp	/^	FT_Library GetFreeTypeLib();$/;"	p	class:NTextSystem	access:public	signature:()
+GetFreeTypeLib	NText.cpp	/^FT_Library NTextSystem::GetFreeTypeLib()$/;"	f	class:NTextSystem
 GetGame	NEngine.cpp	/^NGame* GetGame()$/;"	f	signature:()
 GetGame	NEngine.hpp	/^NGame* GetGame();$/;"	p	signature:()
-GetGlyph	NText.cpp	/^NGlyph* NFace::GetGlyph(unsigned int ID, unsigned int Size)$/;"	f	class:NFace	signature:(unsigned int ID, unsigned int Size)
-GetGlyph	NText.cpp	/^NGlyph* NTextureAtlas::GetGlyph(FT_Face Face, unsigned int ID)$/;"	f	class:NTextureAtlas	signature:(FT_Face Face, unsigned int ID)
-GetGlyph	NText.hpp	/^	NGlyph* GetGlyph(FT_Face Face, unsigned int ID);$/;"	p	class:NTextureAtlas	access:public	signature:(FT_Face Face, unsigned int ID)
-GetGlyph	NText.hpp	/^	NGlyph* GetGlyph(unsigned int ID, unsigned int Size);$/;"	p	class:NFace	access:public	signature:(unsigned int ID, unsigned int Size)
+GetGlyph	NText.cpp	/^NGlyph* NFace::GetGlyph(unsigned int ID, unsigned int Size)$/;"	f	class:NFace
+GetGlyph	NText.cpp	/^NGlyph* NTextureAtlas::GetGlyph(FT_Face Face, unsigned int ID)$/;"	f	class:NTextureAtlas
 GetHeight	NRender.cpp	/^float NCachedTexture::GetHeight()$/;"	f	class:NCachedTexture
 GetHeight	NRender.hpp	/^	float GetHeight();$/;"	p	class:NCachedTexture	access:public	signature:()
 GetID	NShader.cpp	/^GLuint NShader::GetID()$/;"	f	class:NShader	signature:()
@@ -201,14 +182,12 @@ GetID	NTexture.cpp	/^GLuint NAnimation::GetID(double Time)$/;"	f	class:NAnimatio
 GetID	NTexture.cpp	/^GLuint NTexture::GetID()$/;"	f	class:NTexture	signature:()
 GetID	NTexture.hpp	/^	GLuint GetID();$/;"	p	class:NTexture	access:public	signature:()
 GetID	NTexture.hpp	/^	GLuint GetID(double Time);$/;"	p	class:NAnimation	access:public	signature:(double Time)
-GetInput	NGame.cpp	/^NInput* NGame::GetInput()$/;"	f	class:NGame	signature:()
-GetInput	NGame.hpp	/^	NInput* GetInput();$/;"	p	class:NGame	access:public	signature:()
+GetInput	NGame.cpp	/^NInput* NGame::GetInput()$/;"	f	class:NGame
 GetKey	NInput.cpp	/^int NInput::GetKey(int Key)$/;"	f	class:NInput	signature:(int Key)
 GetKey	NInput.hpp	/^	int GetKey(int Key);$/;"	p	class:NInput	access:public	signature:(int Key)
 GetL	NLua.cpp	/^lua_State* NLua::GetL()$/;"	f	class:NLua	signature:()
 GetL	NLua.hpp	/^	lua_State* GetL();$/;"	p	class:NLua	access:public	signature:()
-GetLua	NGame.cpp	/^NLua* NGame::GetLua()$/;"	f	class:NGame	signature:()
-GetLua	NGame.hpp	/^	NLua* GetLua();$/;"	p	class:NGame	access:public	signature:()
+GetLua	NGame.cpp	/^NLua* NGame::GetLua()$/;"	f	class:NGame
 GetModelMatrix	NNode.cpp	/^glm::mat4 NNode::GetModelMatrix()$/;"	f	class:NNode	signature:()
 GetModelMatrix	NNode.hpp	/^	virtual glm::mat4 GetModelMatrix();$/;"	p	class:NNode	access:public	signature:()
 GetMouse	NInput.cpp	/^glm::vec2 NInput::GetMouse()$/;"	f	class:NInput	signature:()
@@ -223,8 +202,7 @@ GetName	NShader.cpp	/^std::string NShader::GetName()$/;"	f	class:NShader	signatu
 GetName	NShader.cpp	/^std::string NUniform::GetName()$/;"	f	class:NUniform	signature:()
 GetName	NShader.hpp	/^	std::string GetName();$/;"	p	class:NShader	access:public	signature:()
 GetName	NShader.hpp	/^	std::string GetName();$/;"	p	class:NUniform	access:public	signature:()
-GetName	NText.cpp	/^std::string NFace::GetName()$/;"	f	class:NFace	signature:()
-GetName	NText.hpp	/^	std::string GetName();$/;"	p	class:NFace	access:public	signature:()
+GetName	NText.cpp	/^std::string NFace::GetName()$/;"	f	class:NFace
 GetName	NTexture.cpp	/^std::string NAnimation::GetName()$/;"	f	class:NAnimation	signature:()
 GetName	NTexture.hpp	/^	std::string GetName();$/;"	p	class:NAnimation	access:public	signature:()
 GetNonScaleMatrix	NNode.cpp	/^glm::mat4 NNode::GetNonScaleMatrix()$/;"	f	class:NNode	signature:()
@@ -236,38 +214,31 @@ GetPerspMatrix	NCamera.cpp	/^glm::mat4 NCamera::GetPerspMatrix()$/;"	f	class:NCa
 GetPerspViewMatrix	NCamera.cpp	/^glm::mat4 NCamera::GetPerspViewMatrix()$/;"	f	class:NCamera
 GetPos	NNode.cpp	/^glm::vec2 NNode::GetPos()$/;"	f	class:NNode	signature:()
 GetPos	NNode.hpp	/^	virtual glm::vec2 GetPos();$/;"	p	class:NNode	access:public	signature:()
-GetRender	NGame.cpp	/^NRender* NGame::GetRender()$/;"	f	class:NGame	signature:()
-GetRender	NGame.hpp	/^	NRender* GetRender();$/;"	p	class:NGame	access:public	signature:()
+GetRender	NGame.cpp	/^NRender* NGame::GetRender()$/;"	f	class:NGame
 GetScale	NNode.cpp	/^glm::vec2 NNode::GetScale()$/;"	f	class:NNode	signature:()
 GetScale	NNode.hpp	/^	virtual glm::vec2 GetScale();$/;"	p	class:NNode	access:public	signature:()
-GetScene	NGame.cpp	/^NScene* NGame::GetScene()$/;"	f	class:NGame	signature:()
-GetScene	NGame.hpp	/^	NScene* GetScene();$/;"	p	class:NGame	access:public	signature:()
+GetScene	NGame.cpp	/^NScene* NGame::GetScene()$/;"	f	class:NGame
 GetShader	NRender.cpp	/^NShader* NRender::GetShader(std::string Name)$/;"	f	class:NRender
 GetShader	NRender.hpp	/^	NShader* GetShader(std::string Name);$/;"	p	class:NRender	access:public	signature:(std::string Name)
 GetSize	NRender.cpp	/^glm::vec2 NCachedTexture::GetSize()$/;"	f	class:NCachedTexture
 GetSize	NRender.hpp	/^	glm::vec2 GetSize();$/;"	p	class:NCachedTexture	access:public	signature:()
-GetSize	NText.cpp	/^float NText::GetSize()$/;"	f	class:NText	signature:()
-GetSize	NText.cpp	/^unsigned int NTextureAtlas::GetSize()$/;"	f	class:NTextureAtlas	signature:()
-GetSize	NText.hpp	/^	float GetSize();$/;"	p	class:NText	access:public	signature:()
-GetSize	NText.hpp	/^	unsigned int GetSize();$/;"	p	class:NTextureAtlas	access:public	signature:()
+GetSize	NText.cpp	/^float NText::GetSize()$/;"	f	class:NText
+GetSize	NText.cpp	/^unsigned int NTextureAtlas::GetSize()$/;"	f	class:NTextureAtlas
 GetSize	NTexture.cpp	/^glm::vec2 NAnimation::GetSize(double Time)$/;"	f	class:NAnimation	signature:(double Time)
 GetSize	NTexture.cpp	/^glm::vec2 NTexture::GetSize()$/;"	f	class:NTexture	signature:()
 GetSize	NTexture.hpp	/^	glm::vec2 GetSize();$/;"	p	class:NTexture	access:public	signature:()
 GetSize	NTexture.hpp	/^	glm::vec2 GetSize(double Time);$/;"	p	class:NAnimation	access:public	signature:(double Time)
+GetSoundSystem	NGame.cpp	/^NSoundSystem* NGame::GetSoundSystem()$/;"	f	class:NGame
 GetString	NConfig.cpp	/^std::string NConfig::GetString(std::string Name)$/;"	f	class:NConfig	signature:(std::string Name)
 GetString	NConfig.hpp	/^	std::string GetString(std::string Name);$/;"	p	class:NConfig	access:public	signature:(std::string Name)
-GetTextSystem	NGame.hpp	/^	NTextSystem* GetTextSystem();$/;"	p	class:NGame	access:public	signature:()
-GetTextSystem	NScene.cpp	/^NTextSystem* NScene::GetTextSystem()$/;"	f	class:NScene
+GetTextSystem	NGame.cpp	/^NTextSystem* NGame::GetTextSystem()$/;"	f	class:NGame
 GetTexture	NRender.cpp	/^NTexture* NRender::GetTexture(std::string Name)$/;"	f	class:NRender
 GetTexture	NRender.hpp	/^	NTexture* GetTexture(std::string Name);$/;"	p	class:NRender	access:public	signature:(std::string Name)
-GetTexture	NText.cpp	/^GLuint NFace::GetTexture(unsigned int Size)$/;"	f	class:NFace	signature:(unsigned int Size)
-GetTexture	NText.cpp	/^GLuint NTextureAtlas::GetTexture()$/;"	f	class:NTextureAtlas	signature:()
-GetTexture	NText.hpp	/^	GLuint GetTexture();$/;"	p	class:NTextureAtlas	access:public	signature:()
-GetTexture	NText.hpp	/^	GLuint GetTexture(unsigned int Size);$/;"	p	class:NFace	access:public	signature:(unsigned int Size)
+GetTexture	NText.cpp	/^GLuint NFace::GetTexture(unsigned int Size)$/;"	f	class:NFace
+GetTexture	NText.cpp	/^GLuint NTextureAtlas::GetTexture()$/;"	f	class:NTextureAtlas
 GetTextureFilter	NRender.cpp	/^GLuint NRender::GetTextureFilter()$/;"	f	class:NRender
 GetTextureFilter	NRender.hpp	/^	GLuint GetTextureFilter();$/;"	p	class:NRender	access:public	signature:()
-GetUV	NText.cpp	/^float NGlyph::GetUV()$/;"	f	class:NGlyph	signature:()
-GetUV	NText.hpp	/^	float GetUV();$/;"	p	class:NGlyph	access:public	signature:()
+GetUV	NText.cpp	/^float NGlyph::GetUV()$/;"	f	class:NGlyph
 GetUniformLocation	NShader.cpp	/^GLuint NShader::GetUniformLocation(std::string i_Name)$/;"	f	class:NShader	signature:(std::string i_Name)
 GetUniformLocation	NShader.cpp	/^GLuint NUniform::GetUniformLocation()$/;"	f	class:NUniform	signature:()
 GetUniformLocation	NShader.hpp	/^	GLuint GetUniformLocation();$/;"	p	class:NUniform	access:public	signature:()
@@ -277,20 +248,12 @@ GetVSync	NRender.hpp	/^	bool GetVSync();$/;"	p	class:NRender	access:public	signa
 GetViewMatrix	NCamera.cpp	/^glm::mat4 NCamera::GetViewMatrix()$/;"	f	class:NCamera
 GetWidth	NRender.cpp	/^float NCachedTexture::GetWidth()$/;"	f	class:NCachedTexture
 GetWidth	NRender.hpp	/^	float GetWidth();$/;"	p	class:NCachedTexture	access:public	signature:()
-GetWidth	NText.cpp	/^float NText::GetWidth()$/;"	f	class:NText	signature:()
-GetWidth	NText.hpp	/^	float GetWidth();$/;"	p	class:NText	access:public	signature:()
-GetWindowChanged	NGame.cpp	/^bool NGame::GetWindowChanged()$/;"	f	class:NGame	signature:()
-GetWindowChanged	NGame.hpp	/^	bool GetWindowChanged();$/;"	p	class:NGame	access:public	signature:()
-GetWindowHeight	NGame.cpp	/^int NGame::GetWindowHeight()$/;"	f	class:NGame	signature:()
-GetWindowHeight	NGame.hpp	/^	int GetWindowHeight();$/;"	p	class:NGame	access:public	signature:()
-GetWindowSize	NGame.cpp	/^glm::vec2 NGame::GetWindowSize()$/;"	f	class:NGame	signature:()
-GetWindowSize	NGame.hpp	/^	glm::vec2 GetWindowSize();$/;"	p	class:NGame	access:public	signature:()
-GetWindowWidth	NGame.cpp	/^int NGame::GetWindowWidth()$/;"	f	class:NGame	signature:()
-GetWindowWidth	NGame.hpp	/^	int GetWindowWidth();$/;"	p	class:NGame	access:public	signature:()
-Glyph	NText.cpp	/^			NGlyph* Glyph = Face->GetGlyph(Data[i],Size);$/;"	l
-Glyph	NText.cpp	/^		NGlyph* Glyph = Face->GetGlyph(Data[i],Size);$/;"	l
-Glyph	NText.cpp	/^	FT_GlyphSlot Glyph = Face->glyph;$/;"	l
-Glyphs	NText.hpp	/^	std::vector<NGlyph*> Glyphs;$/;"	m	class:NTextureAtlas	access:private
+GetWidth	NText.cpp	/^float NText::GetWidth()$/;"	f	class:NText
+GetWindowChanged	NGame.cpp	/^bool NGame::GetWindowChanged()$/;"	f	class:NGame
+GetWindowHeight	NGame.cpp	/^int NGame::GetWindowHeight()$/;"	f	class:NGame
+GetWindowSize	NGame.cpp	/^glm::vec2 NGame::GetWindowSize()$/;"	f	class:NGame
+GetWindowWidth	NGame.cpp	/^int NGame::GetWindowWidth()$/;"	f	class:NGame
+Glyphs	NText.hpp	/^	std::vector<NGlyph*> Glyphs;$/;"	m	class:NTextureAtlas
 Green	NColor.hpp	13;"	d
 HAVE_FLOOR	config.h	5;"	d
 HAVE_INTTYPES_H	config.h	8;"	d
@@ -304,10 +267,10 @@ HAVE_STRING_H	config.h	29;"	d
 HAVE_SYS_STAT_H	config.h	32;"	d
 HAVE_SYS_TYPES_H	config.h	35;"	d
 HAVE_UNISTD_H	config.h	38;"	d
-Height	NGame.hpp	/^	int Height;$/;"	m	class:NGame	access:public
+Height	NGame.hpp	/^	int Height;$/;"	m	class:NGame
 Height	NMap.hpp	/^	unsigned int Width,Height,Depth;$/;"	m	class:NMap
 Height	NRender.hpp	/^	int Width, Height;$/;"	m	class:NCachedTexture	access:private
-Height	NText.hpp	/^	int Width, Height;$/;"	m	class:NTextureAtlas	access:private
+Height	NText.hpp	/^	int Width, Height;$/;"	m	class:NTextureAtlas
 ID	NMap.hpp	/^	unsigned int ID;$/;"	m	class:NTile
 ID	NRender.hpp	/^	GLuint ID;$/;"	m	class:NCachedTexture	access:public
 ID	NTexture.cpp	/^	NCachedTexture* ID = GetGame()->GetRender()->GetCachedTexture(FileName);$/;"	l
@@ -317,10 +280,9 @@ INSTALL_DATA	Makefile	/^INSTALL_DATA	= ${INSTALL} -m 644$/;"	m
 Include	NLua.cpp	/^int Include(lua_State* L)$/;"	f	signature:(lua_State* L)
 Include	NLua.hpp	/^int Include(lua_State* L);$/;"	p	signature:(lua_State* L)
 InfoLogLength	NShader.cpp	/^	int InfoLogLength;$/;"	l
-Init	NGame.cpp	/^bool NGame::Init(int i_Width, int i_Height, std::string Title)$/;"	f	class:NGame	signature:(int i_Width, int i_Height, std::string Title)
-Init	NGame.hpp	/^	bool Init(int Width,int Height,std::string Title);$/;"	p	class:NGame	access:public	signature:(int Width,int Height,std::string Title)
+Init	NGame.cpp	/^bool NGame::Init(int i_Width, int i_Height, std::string Title)$/;"	f	class:NGame
 Init	NMap.cpp	/^void NMap::Init(unsigned int i_Width, unsigned int i_Height, unsigned int i_Depth)$/;"	f	class:NMap
-Input	NGame.hpp	/^	NInput* Input;$/;"	m	class:NGame	access:private
+Input	NGame.hpp	/^	NInput* Input;$/;"	m	class:NGame
 Intersects	NPhysics.cpp	/^bool Intersects(glm::vec4 Box, glm::vec2 Point)$/;"	f	signature:(glm::vec4 Box, glm::vec2 Point)
 Intersects	NPhysics.hpp	/^bool Intersects(glm::vec4 Box, glm::vec2 Point);$/;"	p	signature:(glm::vec4 Box, glm::vec2 Point)
 KeyChanged	NInput.cpp	/^bool NInput::KeyChanged(int Key)$/;"	f	class:NInput	signature:(int Key)
@@ -328,7 +290,6 @@ KeyChanged	NInput.hpp	/^	bool KeyChanged(int Key);$/;"	p	class:NInput	access:pub
 Keys	NInput.hpp	/^	int Keys[128];$/;"	m	class:NInput	access:private
 L	NConfig.cpp	/^	lua_State* L = GetGame()->GetLua()->GetL();$/;"	l
 L	NLua.hpp	/^	lua_State* L;$/;"	m	class:NLua	access:private
-L	NText.cpp	/^	lua_State* L = GetGame()->GetLua()->GetL();$/;"	l
 L	NTexture.cpp	/^	lua_State* L = GetGame()->GetLua()->GetL();$/;"	l
 LIBS	Makefile	/^LIBS			= -lSOIL -llua -lfreetype -lglfw -lGLEW -lGL $/;"	m
 LUA_COMPAT_MODULE	NEngine.hpp	62;"	d
@@ -337,12 +298,9 @@ LastTime	NRender.hpp	/^	double LastTime;$/;"	m	class:NRender	access:private
 Line	NShader.cpp	/^	std::string Line;$/;"	l
 Load	NShader.cpp	/^bool NShader::Load(std::string VertexFilePath, std::string FragmentFilePath)$/;"	f	class:NShader	signature:(std::string VertexFilePath, std::string FragmentFilePath)
 Load	NShader.hpp	/^	bool Load(std::string VertexShaderPath,std::string FragmentShaderPath);$/;"	p	class:NShader	access:public	signature:(std::string VertexShaderPath,std::string FragmentShaderPath)
-Load	NText.cpp	/^bool NFace::Load(FT_Library FTLib, std::string File)$/;"	f	class:NFace	signature:(FT_Library FTLib, std::string File)
-Load	NText.hpp	/^	bool Load(FT_Library FTLib, std::string File);$/;"	p	class:NFace	access:public	signature:(FT_Library FTLib, std::string File)
-LoadFace	NText.cpp	/^int LoadFace(lua_State* L)$/;"	f	signature:(lua_State* L)
-LoadFace	NText.hpp	/^int LoadFace(lua_State* L);$/;"	p	signature:(lua_State* L)
-LoadFaces	NText.cpp	/^void NTextSystem::LoadFaces()$/;"	f	class:NTextSystem	signature:()
-LoadFaces	NText.hpp	/^	void LoadFaces();$/;"	p	class:NTextSystem	access:public	signature:()
+Load	NText.cpp	/^bool NFace::Load(FT_Library FTLib, std::string File)$/;"	f	class:NFace
+LoadFace	NText.cpp	/^int LoadFace(lua_State* L)$/;"	f
+LoadFaces	NText.cpp	/^void NTextSystem::LoadFaces()$/;"	f	class:NTextSystem
 LoadShaders	NRender.cpp	/^bool NRender::LoadShaders()$/;"	f	class:NRender
 LoadShaders	NRender.hpp	/^	bool LoadShaders();$/;"	p	class:NRender	access:public	signature:()
 LoadTexture	NTexture.cpp	/^int LoadTexture(lua_State* L)$/;"	f	signature:(lua_State* L)
@@ -350,18 +308,16 @@ LoadTexture	NTexture.hpp	/^int LoadTexture(lua_State* L);$/;"	p	signature:(lua_S
 LoadTextures	NRender.cpp	/^void NRender::LoadTextures()$/;"	f	class:NRender
 LoadTextures	NTexture.cpp	/^void LoadTextures()$/;"	f	signature:()
 LoadTextures	NTexture.hpp	/^void LoadTextures();$/;"	p	signature:()
-LoadedText	NScene.hpp	/^	bool LoadedText;$/;"	m	class:NScene
-Lua	NGame.hpp	/^	NLua* Lua;$/;"	m	class:NGame	access:private
+Lua	NGame.hpp	/^	NLua* Lua;$/;"	m	class:NGame
 MP	NButton.cpp	/^	glm::vec2 MP = GetGame()->GetInput()->GetMouse();$/;"	l
 Matrix	NNode.hpp	/^	glm::mat4 Matrix;$/;"	m	class:NNode	access:private
 MatrixLoc	NButton.hpp	/^	GLuint MatrixLoc;$/;"	m	class:NButton	access:private
 MatrixLoc	NMap.hpp	/^	GLuint ColorLoc, MatrixLoc, TextureLoc;$/;"	m	class:NMap
-MatrixLoc	NText.hpp	/^	GLuint ColorLoc,TextureLoc,MatrixLoc,ScreenLoc;$/;"	m	class:NText	access:private
+MatrixLoc	NText.hpp	/^	GLuint ColorLoc,TextureLoc,MatrixLoc,ScreenLoc;$/;"	m	class:NText
 MatrixLoc	NWindow.hpp	/^	GLuint MatrixLoc;$/;"	m	class:NWindow	access:private
 MaxFPS	NRender.hpp	/^	float MaxFPS;$/;"	m	class:NRender	access:private
-Mode	NText.hpp	/^	int Mode;$/;"	m	class:NText	access:private
+Mode	NText.hpp	/^	int Mode;$/;"	m	class:NText
 ModelView	NButton.cpp	/^	glm::mat4 ModelView = GetModelMatrix()*View;$/;"	l
-ModelView	NText.cpp	/^	glm::mat4 ModelView = GetModelMatrix()*View;$/;"	l
 ModelView	NWindow.cpp	/^	glm::mat4 ModelView = GetModelMatrix()*View;$/;"	l
 MouseX	NInput.hpp	/^	int MouseX;$/;"	m	class:NInput	access:private
 MouseY	NInput.hpp	/^	int MouseY;$/;"	m	class:NInput	access:private
@@ -466,100 +422,12 @@ NConfig::NConfig	NConfig.cpp	/^NConfig::NConfig(std::string i_File)$/;"	f	class:
 NConfig::NConfig	NConfig.hpp	/^	NConfig(std::string i_File);$/;"	p	class:NConfig	access:public	signature:(std::string i_File)
 NConfig::~NConfig	NConfig.cpp	/^NConfig::~NConfig()$/;"	f	class:NConfig	signature:()
 NConfig::~NConfig	NConfig.hpp	/^	~NConfig();$/;"	p	class:NConfig	access:public	signature:()
-NFace	NText.cpp	/^NFace::NFace(std::string i_Name)$/;"	f	class:NFace	signature:(std::string i_Name)
-NFace	NText.hpp	/^	NFace(std::string i_Name);$/;"	p	class:NFace	access:public	signature:(std::string i_Name)
+NFace	NText.cpp	/^NFace::NFace(std::string i_Name)$/;"	f	class:NFace
 NFace	NText.hpp	/^class NFace$/;"	c
-NFace::Face	NText.hpp	/^	FT_Face Face;$/;"	m	class:NFace	access:private
-NFace::GetGlyph	NText.cpp	/^NGlyph* NFace::GetGlyph(unsigned int ID, unsigned int Size)$/;"	f	class:NFace	signature:(unsigned int ID, unsigned int Size)
-NFace::GetGlyph	NText.hpp	/^	NGlyph* GetGlyph(unsigned int ID, unsigned int Size);$/;"	p	class:NFace	access:public	signature:(unsigned int ID, unsigned int Size)
-NFace::GetName	NText.cpp	/^std::string NFace::GetName()$/;"	f	class:NFace	signature:()
-NFace::GetName	NText.hpp	/^	std::string GetName();$/;"	p	class:NFace	access:public	signature:()
-NFace::GetTexture	NText.cpp	/^GLuint NFace::GetTexture(unsigned int Size)$/;"	f	class:NFace	signature:(unsigned int Size)
-NFace::GetTexture	NText.hpp	/^	GLuint GetTexture(unsigned int Size);$/;"	p	class:NFace	access:public	signature:(unsigned int Size)
-NFace::Load	NText.cpp	/^bool NFace::Load(FT_Library FTLib, std::string File)$/;"	f	class:NFace	signature:(FT_Library FTLib, std::string File)
-NFace::Load	NText.hpp	/^	bool Load(FT_Library FTLib, std::string File);$/;"	p	class:NFace	access:public	signature:(FT_Library FTLib, std::string File)
-NFace::NFace	NText.cpp	/^NFace::NFace(std::string i_Name)$/;"	f	class:NFace	signature:(std::string i_Name)
-NFace::NFace	NText.hpp	/^	NFace(std::string i_Name);$/;"	p	class:NFace	access:public	signature:(std::string i_Name)
-NFace::Name	NText.hpp	/^	std::string Name;$/;"	m	class:NFace	access:private
-NFace::Textures	NText.hpp	/^	std::vector<NTextureAtlas*> Textures;$/;"	m	class:NFace	access:private
-NFace::UpdateMipmaps	NText.cpp	/^void NFace::UpdateMipmaps()$/;"	f	class:NFace	signature:()
-NFace::UpdateMipmaps	NText.hpp	/^	void UpdateMipmaps();$/;"	p	class:NFace	access:public	signature:()
-NFace::~NFace	NText.cpp	/^NFace::~NFace()$/;"	f	class:NFace	signature:()
-NFace::~NFace	NText.hpp	/^	~NFace();$/;"	p	class:NFace	access:public	signature:()
-NGame	NGame.cpp	/^NGame::NGame()$/;"	f	class:NGame	signature:()
-NGame	NGame.hpp	/^	NGame();$/;"	p	class:NGame	access:public	signature:()
+NGame	NGame.cpp	/^NGame::NGame()$/;"	f	class:NGame
 NGame	NGame.hpp	/^class NGame$/;"	c
-NGame::CleanUp	NGame.cpp	/^void NGame::CleanUp()$/;"	f	class:NGame	signature:()
-NGame::CleanUp	NGame.hpp	/^	void CleanUp();$/;"	p	class:NGame	access:public	signature:()
-NGame::Close	NGame.cpp	/^void NGame::Close()$/;"	f	class:NGame	signature:()
-NGame::Close	NGame.hpp	/^	void Close();$/;"	p	class:NGame	access:public	signature:()
-NGame::Config	NGame.hpp	/^	NConfig* Config;$/;"	m	class:NGame	access:private
-NGame::GetConfig	NGame.cpp	/^NConfig* NGame::GetConfig()$/;"	f	class:NGame	signature:()
-NGame::GetConfig	NGame.hpp	/^	NConfig* GetConfig();$/;"	p	class:NGame	access:public	signature:()
-NGame::GetInput	NGame.cpp	/^NInput* NGame::GetInput()$/;"	f	class:NGame	signature:()
-NGame::GetInput	NGame.hpp	/^	NInput* GetInput();$/;"	p	class:NGame	access:public	signature:()
-NGame::GetLua	NGame.cpp	/^NLua* NGame::GetLua()$/;"	f	class:NGame	signature:()
-NGame::GetLua	NGame.hpp	/^	NLua* GetLua();$/;"	p	class:NGame	access:public	signature:()
-NGame::GetRender	NGame.cpp	/^NRender* NGame::GetRender()$/;"	f	class:NGame	signature:()
-NGame::GetRender	NGame.hpp	/^	NRender* GetRender();$/;"	p	class:NGame	access:public	signature:()
-NGame::GetScene	NGame.cpp	/^NScene* NGame::GetScene()$/;"	f	class:NGame	signature:()
-NGame::GetScene	NGame.hpp	/^	NScene* GetScene();$/;"	p	class:NGame	access:public	signature:()
-NGame::GetTextSystem	NGame.hpp	/^	NTextSystem* GetTextSystem();$/;"	p	class:NGame	access:public	signature:()
-NGame::GetWindowChanged	NGame.cpp	/^bool NGame::GetWindowChanged()$/;"	f	class:NGame	signature:()
-NGame::GetWindowChanged	NGame.hpp	/^	bool GetWindowChanged();$/;"	p	class:NGame	access:public	signature:()
-NGame::GetWindowHeight	NGame.cpp	/^int NGame::GetWindowHeight()$/;"	f	class:NGame	signature:()
-NGame::GetWindowHeight	NGame.hpp	/^	int GetWindowHeight();$/;"	p	class:NGame	access:public	signature:()
-NGame::GetWindowSize	NGame.cpp	/^glm::vec2 NGame::GetWindowSize()$/;"	f	class:NGame	signature:()
-NGame::GetWindowSize	NGame.hpp	/^	glm::vec2 GetWindowSize();$/;"	p	class:NGame	access:public	signature:()
-NGame::GetWindowWidth	NGame.cpp	/^int NGame::GetWindowWidth()$/;"	f	class:NGame	signature:()
-NGame::GetWindowWidth	NGame.hpp	/^	int GetWindowWidth();$/;"	p	class:NGame	access:public	signature:()
-NGame::Height	NGame.hpp	/^	int Height;$/;"	m	class:NGame	access:public
-NGame::Init	NGame.cpp	/^bool NGame::Init(int i_Width, int i_Height, std::string Title)$/;"	f	class:NGame	signature:(int i_Width, int i_Height, std::string Title)
-NGame::Init	NGame.hpp	/^	bool Init(int Width,int Height,std::string Title);$/;"	p	class:NGame	access:public	signature:(int Width,int Height,std::string Title)
-NGame::Input	NGame.hpp	/^	NInput* Input;$/;"	m	class:NGame	access:private
-NGame::Lua	NGame.hpp	/^	NLua* Lua;$/;"	m	class:NGame	access:private
-NGame::NGame	NGame.cpp	/^NGame::NGame()$/;"	f	class:NGame	signature:()
-NGame::NGame	NGame.hpp	/^	NGame();$/;"	p	class:NGame	access:public	signature:()
-NGame::NewHeight	NGame.hpp	/^	int NewHeight;$/;"	m	class:NGame	access:public
-NGame::NewWidth	NGame.hpp	/^	int NewWidth;$/;"	m	class:NGame	access:public
-NGame::Poll	NGame.cpp	/^void NGame::Poll()$/;"	f	class:NGame	signature:()
-NGame::Poll	NGame.hpp	/^	void Poll();$/;"	p	class:NGame	access:public	signature:()
-NGame::Render	NGame.hpp	/^	NRender* Render;$/;"	m	class:NGame	access:private
-NGame::Run	NGame.hpp	/^	bool Run;$/;"	m	class:NGame	access:private
-NGame::Running	NGame.cpp	/^bool NGame::Running()$/;"	f	class:NGame	signature:()
-NGame::Running	NGame.hpp	/^	bool Running();$/;"	p	class:NGame	access:public	signature:()
-NGame::Scene	NGame.hpp	/^	NScene* Scene;$/;"	m	class:NGame	access:private
-NGame::SetWindowChanged	NGame.cpp	/^void NGame::SetWindowChanged(bool Changed)$/;"	f	class:NGame	signature:(bool Changed)
-NGame::SetWindowChanged	NGame.hpp	/^	void SetWindowChanged(bool Changed);$/;"	p	class:NGame	access:public	signature:(bool Changed)
-NGame::SetWindowSize	NGame.cpp	/^void NGame::SetWindowSize(int W, int H)$/;"	f	class:NGame	signature:(int W, int H)
-NGame::SetWindowSize	NGame.hpp	/^	void SetWindowSize(int W,int H);$/;"	p	class:NGame	access:public	signature:(int W,int H)
-NGame::TextSystem	NGame.hpp	/^	NTextSystem* TextSystem;$/;"	m	class:NGame	access:private
-NGame::Valid	NGame.hpp	/^	bool Valid;$/;"	m	class:NGame	access:private
-NGame::Width	NGame.hpp	/^	int Width;$/;"	m	class:NGame	access:public
-NGame::WindowChanged	NGame.hpp	/^	bool WindowChanged;$/;"	m	class:NGame	access:private
-NGame::~NGame	NGame.cpp	/^NGame::~NGame()$/;"	f	class:NGame	signature:()
-NGame::~NGame	NGame.hpp	/^	~NGame();$/;"	p	class:NGame	access:public	signature:()
-NGlyph	NText.cpp	/^NGlyph::NGlyph(FT_Face Face, float i_X)$/;"	f	class:NGlyph	signature:(FT_Face Face, float i_X)
-NGlyph	NText.hpp	/^	NGlyph(FT_Face Face,float i_X);$/;"	p	class:NGlyph	access:public	signature:(FT_Face Face,float i_X)
+NGlyph	NText.cpp	/^NGlyph::NGlyph(FT_Face Face, float i_X)$/;"	f	class:NGlyph
 NGlyph	NText.hpp	/^class NGlyph$/;"	c
-NGlyph::AdvanceX	NText.hpp	/^	float AdvanceX;$/;"	m	class:NGlyph	access:public
-NGlyph::AdvanceY	NText.hpp	/^	float AdvanceY;$/;"	m	class:NGlyph	access:public
-NGlyph::AtlasHeight	NText.hpp	/^	float AtlasHeight;$/;"	m	class:NGlyph	access:public
-NGlyph::AtlasWidth	NText.hpp	/^	float AtlasWidth;$/;"	m	class:NGlyph	access:public
-NGlyph::BitmapHeight	NText.hpp	/^	float BitmapHeight;$/;"	m	class:NGlyph	access:public
-NGlyph::BitmapLeft	NText.hpp	/^	float BitmapLeft;$/;"	m	class:NGlyph	access:public
-NGlyph::BitmapTop	NText.hpp	/^	float BitmapTop;$/;"	m	class:NGlyph	access:public
-NGlyph::BitmapWidth	NText.hpp	/^	float BitmapWidth;$/;"	m	class:NGlyph	access:public
-NGlyph::GetUV	NText.cpp	/^float NGlyph::GetUV()$/;"	f	class:NGlyph	signature:()
-NGlyph::GetUV	NText.hpp	/^	float GetUV();$/;"	p	class:NGlyph	access:public	signature:()
-NGlyph::NGlyph	NText.cpp	/^NGlyph::NGlyph(FT_Face Face, float i_X)$/;"	f	class:NGlyph	signature:(FT_Face Face, float i_X)
-NGlyph::NGlyph	NText.hpp	/^	NGlyph(FT_Face Face,float i_X);$/;"	p	class:NGlyph	access:public	signature:(FT_Face Face,float i_X)
-NGlyph::Rendered	NText.hpp	/^	bool Rendered;$/;"	m	class:NGlyph	access:public
-NGlyph::SetAtlas	NText.cpp	/^void NGlyph::SetAtlas(float Width, float Height)$/;"	f	class:NGlyph	signature:(float Width, float Height)
-NGlyph::SetAtlas	NText.hpp	/^	void SetAtlas(float Width,float Height);$/;"	p	class:NGlyph	access:public	signature:(float Width,float Height)
-NGlyph::X	NText.hpp	/^	float X;$/;"	m	class:NGlyph	access:public
-NGlyph::~NGlyph	NText.cpp	/^NGlyph::~NGlyph()$/;"	f	class:NGlyph	signature:()
-NGlyph::~NGlyph	NText.hpp	/^	~NGlyph();$/;"	p	class:NGlyph	access:public	signature:()
 NInput	NInput.hpp	/^class NInput$/;"	c
 NInput::GetKey	NInput.cpp	/^int NInput::GetKey(int Key)$/;"	f	class:NInput	signature:(int Key)
 NInput::GetKey	NInput.hpp	/^	int GetKey(int Key);$/;"	p	class:NInput	access:public	signature:(int Key)
@@ -705,64 +573,10 @@ NShader::ProgramID	NShader.hpp	/^	GLuint ProgramID;$/;"	m	class:NShader	access:p
 NShader::Uniforms	NShader.hpp	/^	std::vector<NUniform*> Uniforms;$/;"	m	class:NShader	access:private
 NShader::~NShader	NShader.cpp	/^NShader::~NShader()$/;"	f	class:NShader	signature:()
 NShader::~NShader	NShader.hpp	/^	~NShader();$/;"	p	class:NShader	access:public	signature:()
-NText	NText.cpp	/^NText::NText(NFace* i_Face, std::string i_Data) : NNode()$/;"	f	class:NText	signature:(NFace* i_Face, std::string i_Data)
-NText	NText.hpp	/^	NText(NFace* i_Face,std::string i_Data);$/;"	p	class:NText	access:public	signature:(NFace* i_Face,std::string i_Data)
-NText	NText.hpp	/^class NText : public NNode$/;"	c	inherits:NNode
-NText::Buffers	NText.hpp	/^	GLuint* Buffers;$/;"	m	class:NText	access:private
-NText::Changed	NText.hpp	/^	bool Changed;$/;"	m	class:NText	access:private
-NText::ColorLoc	NText.hpp	/^	GLuint ColorLoc,TextureLoc,MatrixLoc,ScreenLoc;$/;"	m	class:NText	access:private
-NText::Data	NText.hpp	/^	std::string Data;$/;"	m	class:NText	access:private
-NText::Draw	NText.cpp	/^void NText::Draw(glm::mat4 View)$/;"	f	class:NText	signature:(glm::mat4 View)
-NText::Draw	NText.hpp	/^	void Draw(glm::mat4 View);$/;"	p	class:NText	access:public	signature:(glm::mat4 View)
-NText::Face	NText.hpp	/^	NFace* Face;$/;"	m	class:NText	access:private
-NText::GenerateBuffers	NText.cpp	/^void NText::GenerateBuffers()$/;"	f	class:NText	signature:()
-NText::GenerateBuffers	NText.hpp	/^	void GenerateBuffers();$/;"	p	class:NText	access:private	signature:()
-NText::GetSize	NText.cpp	/^float NText::GetSize()$/;"	f	class:NText	signature:()
-NText::GetSize	NText.hpp	/^	float GetSize();$/;"	p	class:NText	access:public	signature:()
-NText::GetWidth	NText.cpp	/^float NText::GetWidth()$/;"	f	class:NText	signature:()
-NText::GetWidth	NText.hpp	/^	float GetWidth();$/;"	p	class:NText	access:public	signature:()
-NText::MatrixLoc	NText.hpp	/^	GLuint ColorLoc,TextureLoc,MatrixLoc,ScreenLoc;$/;"	m	class:NText	access:private
-NText::Mode	NText.hpp	/^	int Mode;$/;"	m	class:NText	access:private
-NText::NText	NText.cpp	/^NText::NText(NFace* i_Face, std::string i_Data) : NNode()$/;"	f	class:NText	signature:(NFace* i_Face, std::string i_Data)
-NText::NText	NText.hpp	/^	NText(NFace* i_Face,std::string i_Data);$/;"	p	class:NText	access:public	signature:(NFace* i_Face,std::string i_Data)
-NText::ScreenLoc	NText.hpp	/^	GLuint ColorLoc,TextureLoc,MatrixLoc,ScreenLoc;$/;"	m	class:NText	access:private
-NText::SetMode	NText.cpp	/^void NText::SetMode(int i_Mode)$/;"	f	class:NText	signature:(int i_Mode)
-NText::SetMode	NText.hpp	/^	void SetMode(int i_Mode);$/;"	p	class:NText	access:public	signature:(int i_Mode)
-NText::SetSize	NText.cpp	/^void NText::SetSize(float i_Size)$/;"	f	class:NText	signature:(float i_Size)
-NText::SetSize	NText.hpp	/^	void SetSize(float i_Size);$/;"	p	class:NText	access:public	signature:(float i_Size)
-NText::SetText	NText.cpp	/^void NText::SetText(std::string i_Data)$/;"	f	class:NText	signature:(std::string i_Data)
-NText::SetText	NText.hpp	/^	void SetText(std::string i_Data);$/;"	p	class:NText	access:public	signature:(std::string i_Data)
-NText::Shader	NText.hpp	/^	NShader* Shader;$/;"	m	class:NText	access:private
-NText::Size	NText.hpp	/^	float Size;$/;"	m	class:NText	access:private
-NText::TextureLoc	NText.hpp	/^	GLuint ColorLoc,TextureLoc,MatrixLoc,ScreenLoc;$/;"	m	class:NText	access:private
-NText::Tick	NText.cpp	/^void NText::Tick(double DT)$/;"	f	class:NText	signature:(double DT)
-NText::Tick	NText.hpp	/^	void Tick(double DT);$/;"	p	class:NText	access:public	signature:(double DT)
-NText::UVs	NText.hpp	/^	std::vector<glm::vec2> UVs;$/;"	m	class:NText	access:private
-NText::Velocity	NText.hpp	/^	glm::vec2 Velocity;$/;"	m	class:NText	access:private
-NText::Verts	NText.hpp	/^	std::vector<glm::vec2> Verts;$/;"	m	class:NText	access:private
-NText::Width	NText.hpp	/^	float Width;$/;"	m	class:NText	access:private
-NText::~NText	NText.cpp	/^NText::~NText()$/;"	f	class:NText	signature:()
-NText::~NText	NText.hpp	/^	~NText();$/;"	p	class:NText	access:public	signature:()
-NTextSystem	NText.cpp	/^NTextSystem::NTextSystem()$/;"	f	class:NTextSystem	signature:()
-NTextSystem	NText.hpp	/^	NTextSystem();$/;"	p	class:NTextSystem	access:public	signature:()
+NText	NText.cpp	/^NText::NText(std::string i_Face, std::string i_Data) : NNode()$/;"	f	class:NText
+NText	NText.hpp	/^class NText : public NNode$/;"	c
+NTextSystem	NText.cpp	/^NTextSystem::NTextSystem()$/;"	f	class:NTextSystem
 NTextSystem	NText.hpp	/^class NTextSystem$/;"	c
-NTextSystem::AddFace	NText.cpp	/^void NTextSystem::AddFace(NFace* Face)$/;"	f	class:NTextSystem	signature:(NFace* Face)
-NTextSystem::AddFace	NText.hpp	/^	void AddFace(NFace* Face);$/;"	p	class:NTextSystem	access:public	signature:(NFace* Face)
-NTextSystem::AddText	NText.cpp	/^NText* NTextSystem::AddText(std::string Font, std::string Data)$/;"	f	class:NTextSystem	signature:(std::string Font, std::string Data)
-NTextSystem::AddText	NText.hpp	/^	NText* AddText(std::string Font,std::string Data);$/;"	p	class:NTextSystem	access:public	signature:(std::string Font,std::string Data)
-NTextSystem::FTLib	NText.hpp	/^	FT_Library FTLib;$/;"	m	class:NTextSystem	access:private
-NTextSystem::Faces	NText.hpp	/^	std::vector<NFace*> Faces;$/;"	m	class:NTextSystem	access:private
-NTextSystem::GetFace	NText.cpp	/^NFace* NTextSystem::GetFace(std::string Name)$/;"	f	class:NTextSystem	signature:(std::string Name)
-NTextSystem::GetFace	NText.hpp	/^	NFace* GetFace(std::string Name);$/;"	p	class:NTextSystem	access:public	signature:(std::string Name)
-NTextSystem::GetFreeTypeLib	NText.cpp	/^FT_Library NTextSystem::GetFreeTypeLib()$/;"	f	class:NTextSystem	signature:()
-NTextSystem::GetFreeTypeLib	NText.hpp	/^	FT_Library GetFreeTypeLib();$/;"	p	class:NTextSystem	access:public	signature:()
-NTextSystem::LoadFaces	NText.cpp	/^void NTextSystem::LoadFaces()$/;"	f	class:NTextSystem	signature:()
-NTextSystem::LoadFaces	NText.hpp	/^	void LoadFaces();$/;"	p	class:NTextSystem	access:public	signature:()
-NTextSystem::NTextSystem	NText.cpp	/^NTextSystem::NTextSystem()$/;"	f	class:NTextSystem	signature:()
-NTextSystem::NTextSystem	NText.hpp	/^	NTextSystem();$/;"	p	class:NTextSystem	access:public	signature:()
-NTextSystem::Texts	NText.hpp	/^	std::vector<NText*> Texts;$/;"	m	class:NTextSystem	access:private
-NTextSystem::~NTextSystem	NText.cpp	/^NTextSystem::~NTextSystem()$/;"	f	class:NTextSystem	signature:()
-NTextSystem::~NTextSystem	NText.hpp	/^	~NTextSystem();$/;"	p	class:NTextSystem	access:public	signature:()
 NTexture	NTexture.cpp	/^NTexture::NTexture(NTexture* Texture)$/;"	f	class:NTexture	signature:(NTexture* Texture)
 NTexture	NTexture.cpp	/^NTexture::NTexture(std::string i_Name)$/;"	f	class:NTexture	signature:(std::string i_Name)
 NTexture	NTexture.hpp	/^	NTexture(NTexture* Texture);$/;"	p	class:NTexture	access:public	signature:(NTexture* Texture)
@@ -790,27 +604,8 @@ NTexture::Tick	NTexture.cpp	/^void NTexture::Tick(double DT)$/;"	f	class:NTextur
 NTexture::Tick	NTexture.hpp	/^	void Tick(double DT);$/;"	p	class:NTexture	access:public	signature:(double DT)
 NTexture::~NTexture	NTexture.cpp	/^NTexture::~NTexture()$/;"	f	class:NTexture	signature:()
 NTexture::~NTexture	NTexture.hpp	/^	~NTexture();$/;"	p	class:NTexture	access:public	signature:()
-NTextureAtlas	NText.cpp	/^NTextureAtlas::NTextureAtlas(FT_Face Face, unsigned int i_Size)$/;"	f	class:NTextureAtlas	signature:(FT_Face Face, unsigned int i_Size)
-NTextureAtlas	NText.hpp	/^	NTextureAtlas(FT_Face Face, unsigned int i_Size);$/;"	p	class:NTextureAtlas	access:public	signature:(FT_Face Face, unsigned int i_Size)
+NTextureAtlas	NText.cpp	/^NTextureAtlas::NTextureAtlas(FT_Face Face, unsigned int i_Size)$/;"	f	class:NTextureAtlas
 NTextureAtlas	NText.hpp	/^class NTextureAtlas$/;"	c
-NTextureAtlas::Changed	NText.hpp	/^	bool Changed;$/;"	m	class:NTextureAtlas	access:private
-NTextureAtlas::GetGlyph	NText.cpp	/^NGlyph* NTextureAtlas::GetGlyph(FT_Face Face, unsigned int ID)$/;"	f	class:NTextureAtlas	signature:(FT_Face Face, unsigned int ID)
-NTextureAtlas::GetGlyph	NText.hpp	/^	NGlyph* GetGlyph(FT_Face Face, unsigned int ID);$/;"	p	class:NTextureAtlas	access:public	signature:(FT_Face Face, unsigned int ID)
-NTextureAtlas::GetSize	NText.cpp	/^unsigned int NTextureAtlas::GetSize()$/;"	f	class:NTextureAtlas	signature:()
-NTextureAtlas::GetSize	NText.hpp	/^	unsigned int GetSize();$/;"	p	class:NTextureAtlas	access:public	signature:()
-NTextureAtlas::GetTexture	NText.cpp	/^GLuint NTextureAtlas::GetTexture()$/;"	f	class:NTextureAtlas	signature:()
-NTextureAtlas::GetTexture	NText.hpp	/^	GLuint GetTexture();$/;"	p	class:NTextureAtlas	access:public	signature:()
-NTextureAtlas::Glyphs	NText.hpp	/^	std::vector<NGlyph*> Glyphs;$/;"	m	class:NTextureAtlas	access:private
-NTextureAtlas::Height	NText.hpp	/^	int Width, Height;$/;"	m	class:NTextureAtlas	access:private
-NTextureAtlas::NTextureAtlas	NText.cpp	/^NTextureAtlas::NTextureAtlas(FT_Face Face, unsigned int i_Size)$/;"	f	class:NTextureAtlas	signature:(FT_Face Face, unsigned int i_Size)
-NTextureAtlas::NTextureAtlas	NText.hpp	/^	NTextureAtlas(FT_Face Face, unsigned int i_Size);$/;"	p	class:NTextureAtlas	access:public	signature:(FT_Face Face, unsigned int i_Size)
-NTextureAtlas::Size	NText.hpp	/^	int Size;$/;"	m	class:NTextureAtlas	access:private
-NTextureAtlas::Texture	NText.hpp	/^	GLuint Texture;$/;"	m	class:NTextureAtlas	access:private
-NTextureAtlas::UpdateMipmaps	NText.cpp	/^void NTextureAtlas::UpdateMipmaps()$/;"	f	class:NTextureAtlas	signature:()
-NTextureAtlas::UpdateMipmaps	NText.hpp	/^	void UpdateMipmaps();$/;"	p	class:NTextureAtlas	access:public	signature:()
-NTextureAtlas::Width	NText.hpp	/^	int Width, Height;$/;"	m	class:NTextureAtlas	access:private
-NTextureAtlas::~NTextureAtlas	NText.cpp	/^NTextureAtlas::~NTextureAtlas()$/;"	f	class:NTextureAtlas	signature:()
-NTextureAtlas::~NTextureAtlas	NText.hpp	/^	~NTextureAtlas();$/;"	p	class:NTextureAtlas	access:public	signature:()
 NTile	NMap.cpp	/^NTile::NTile()$/;"	f	class:NTile
 NTile	NMap.hpp	/^class NTile$/;"	c
 NUniform	NShader.cpp	/^NUniform::NUniform(GLuint ProgramID, std::string i_Name)$/;"	f	class:NUniform	signature:(GLuint ProgramID, std::string i_Name)
@@ -856,18 +651,15 @@ Name	NRender.hpp	/^	std::string Name;$/;"	m	class:NCachedTexture	access:public
 Name	NShader.cpp	/^	std::cout << "Linking program \\"" << Name << "\\"\\n";$/;"	l
 Name	NShader.hpp	/^	std::string Name;$/;"	m	class:NShader	access:private
 Name	NShader.hpp	/^	std::string Name;$/;"	m	class:NUniform	access:private
-Name	NText.cpp	/^	const char* Name = luaL_checkstring(L,1);$/;"	l
-Name	NText.hpp	/^	std::string Name;$/;"	m	class:NFace	access:private
+Name	NText.hpp	/^	std::string Name;$/;"	m	class:NFace
 Name	NTexture.cpp	/^	std::cout << "Animation " << i_Name << " not found in texture " << Name << "\\n";$/;"	l
 Name	NTexture.hpp	/^	std::string Name;$/;"	m	class:NAnimation	access:private
 Name	NTexture.hpp	/^	std::string Name;$/;"	m	class:NTexture	access:public
 NewFiles	NLua.cpp	/^		std::vector<std::string> NewFiles = GetFiles(Folders[i]);$/;"	l
 NewFiles	NLua.cpp	/^	std::vector<std::string> NewFiles = GetFiles(Folder);$/;"	l
-NewGlyph	NText.cpp	/^		NGlyph* NewGlyph = new NGlyph(Face,Width);$/;"	l
-NewHeight	NGame.hpp	/^	int NewHeight;$/;"	m	class:NGame	access:public
-NewText	NText.cpp	/^	NText* NewText = new NText(GetFace(Font),Data);$/;"	l
+NewHeight	NGame.hpp	/^	int NewHeight;$/;"	m	class:NGame
 NewUniform	NShader.cpp	/^	NUniform* NewUniform = new NUniform(GetID(), i_Name);$/;"	l
-NewWidth	NGame.hpp	/^	int NewWidth;$/;"	m	class:NGame	access:public
+NewWidth	NGame.hpp	/^	int NewWidth;$/;"	m	class:NGame
 Nodes	NScene.hpp	/^	std::vector<NNode*> Nodes;$/;"	m	class:NScene
 Number	NConfig.cpp	/^	float Number = lua_tonumber(L,-1);$/;"	l
 Number	NTexture.cpp	/^	float Number = lua_tonumber(L,-1);$/;"	l
@@ -880,14 +672,12 @@ PACKAGE_URL	config.h	56;"	d
 PACKAGE_VERSION	config.h	59;"	d
 Parent	NNode.hpp	/^	NNode* Parent;$/;"	m	class:NNode	access:private
 ParentFolder	NLua.cpp	/^	std::string ParentFolder = Folder;$/;"	l
-PenX	NText.cpp	/^	float PenX = 0;$/;"	l
 PerspMatrix	NCamera.hpp	/^	glm::mat4 PerspMatrix;$/;"	m	class:NCamera
 Play	NTexture.cpp	/^void NTexture::Play(std::string i_Name)$/;"	f	class:NTexture	signature:(std::string i_Name)
 Play	NTexture.hpp	/^	void Play(std::string i_Name);$/;"	p	class:NTexture	access:public	signature:(std::string i_Name)
 PlayingAnimation	NTexture.hpp	/^	unsigned int PlayingAnimation;$/;"	m	class:NTexture	access:private
 Pointer	NTexture.cpp	/^	NAnimation** Pointer = (NAnimation**)lua_newuserdata(L,sizeof(NAnimation*));$/;"	l
-Poll	NGame.cpp	/^void NGame::Poll()$/;"	f	class:NGame	signature:()
-Poll	NGame.hpp	/^	void Poll();$/;"	p	class:NGame	access:public	signature:()
+Poll	NGame.cpp	/^void NGame::Poll()$/;"	f	class:NGame
 Poll	NInput.cpp	/^void NInput::Poll()$/;"	f	class:NInput	signature:()
 Poll	NInput.hpp	/^	void Poll();$/;"	p	class:NInput	access:public	signature:()
 Pos	NNode.cpp	/^	glm::mat4 Pos = glm::translate(glm::mat4(),glm::vec3(Position,0));$/;"	l
@@ -901,20 +691,19 @@ Rand	NEngine.hpp	/^float Rand(float Min, float Max);$/;"	p	signature:(float Min,
 Red	NColor.hpp	12;"	d
 Reference	NTexture.hpp	/^	int Reference;$/;"	m	class:NAnimation	access:public
 Remove	NMap.cpp	/^void NMap::Remove()$/;"	f	class:NMap
+Remove	NText.cpp	/^void NText::Remove()$/;"	f	class:NText
 RemoveChild	NNode.cpp	/^		Parent->RemoveChild(this);$/;"	p	file:	signature:(this)
 RemoveChild	NNode.cpp	/^void NNode::RemoveChild(NNode* Node)$/;"	f	class:NNode	signature:(NNode* Node)
 RemoveChild	NNode.hpp	/^	virtual void RemoveChild(NNode* Child);$/;"	p	class:NNode	access:public	signature:(NNode* Child)
-Render	NGame.hpp	/^	NRender* Render;$/;"	m	class:NGame	access:private
-Rendered	NText.hpp	/^	bool Rendered;$/;"	m	class:NGlyph	access:public
-ResizeWindow	NGame.cpp	/^void ResizeWindow(int W, int H)$/;"	f	signature:(int W, int H)
-ResizeWindow	NGame.hpp	/^void ResizeWindow(int W, int H);$/;"	p	signature:(int W, int H)
+Render	NGame.hpp	/^	NRender* Render;$/;"	m	class:NGame
+Rendered	NText.hpp	/^	bool Rendered;$/;"	m	class:NGlyph
+ResizeWindow	NGame.cpp	/^void ResizeWindow(int W, int H)$/;"	f
 Result	NLua.cpp	/^	bool Result = Success;$/;"	l
 Result	NShader.cpp	/^	GLint Result;$/;"	l
 ReturnBool	NConfig.cpp	/^	bool ReturnBool = (bool)lua_toboolean(L,-1);$/;"	l
 ReturnString	NConfig.cpp	/^	std::string ReturnString = Text;$/;"	l
-Run	NGame.hpp	/^	bool Run;$/;"	m	class:NGame	access:private
-Running	NGame.cpp	/^bool NGame::Running()$/;"	f	class:NGame	signature:()
-Running	NGame.hpp	/^	bool Running();$/;"	p	class:NGame	access:public	signature:()
+Run	NGame.hpp	/^	bool Run;$/;"	m	class:NGame
+Running	NGame.cpp	/^bool NGame::Running()$/;"	f	class:NGame
 STDC_HEADERS	config.h	62;"	d
 SX	NButton.cpp	/^		float SX = BorderSize\/GetScale().x;$/;"	l
 SX	NWindow.cpp	/^		float SX = BorderSize\/GetScale().x;$/;"	l
@@ -922,15 +711,13 @@ SY	NButton.cpp	/^		float SY = BorderSize\/GetScale().y;$/;"	l
 SY	NWindow.cpp	/^		float SY = BorderSize\/GetScale().y;$/;"	l
 Sca	NNode.cpp	/^	glm::mat4 Sca = glm::scale(glm::mat4(),glm::vec3(Scale,1));$/;"	l
 Scale	NNode.hpp	/^	glm::vec2 Scale;$/;"	m	class:NNode	access:private
-Scene	NGame.hpp	/^	NScene* Scene;$/;"	m	class:NGame	access:private
+Scene	NGame.hpp	/^	NScene* Scene;$/;"	m	class:NGame
 ScreenLoc	NButton.hpp	/^	GLuint ScreenLoc;$/;"	m	class:NButton	access:private
-ScreenLoc	NText.hpp	/^	GLuint ColorLoc,TextureLoc,MatrixLoc,ScreenLoc;$/;"	m	class:NText	access:private
+ScreenLoc	NText.hpp	/^	GLuint ColorLoc,TextureLoc,MatrixLoc,ScreenLoc;$/;"	m	class:NText
 ScreenLoc	NWindow.hpp	/^	GLuint ScreenLoc;$/;"	m	class:NWindow	access:private
 SetAng	NNode.cpp	/^void NNode::SetAng(float i_Angle)$/;"	f	class:NNode	signature:(float i_Angle)
 SetAng	NNode.hpp	/^	virtual void SetAng(float i_Angle);$/;"	p	class:NNode	access:public	signature:(float i_Angle)
-SetAtlas	NText.cpp	/^		Glyphs[i]->SetAtlas(Width,Height);$/;"	p	file:	signature:(Width,Height)
-SetAtlas	NText.cpp	/^void NGlyph::SetAtlas(float Width, float Height)$/;"	f	class:NGlyph	signature:(float Width, float Height)
-SetAtlas	NText.hpp	/^	void SetAtlas(float Width,float Height);$/;"	p	class:NGlyph	access:public	signature:(float Width,float Height)
+SetAtlas	NText.cpp	/^void NGlyph::SetAtlas(float Width, float Height)$/;"	f	class:NGlyph
 SetCamera	NRender.cpp	/^void NRender::SetCamera(NCamera* i_Camera)$/;"	f	class:NRender
 SetCamera	NRender.hpp	/^	void SetCamera(NCamera* Camera);$/;"	p	class:NRender	access:public	signature:(NCamera* Camera)
 SetColor	NColor.cpp	/^void SetColor(unsigned int Color) {}$/;"	f	signature:(unsigned int Color)
@@ -946,8 +733,7 @@ SetColor	NNode.hpp	/^	virtual void SetColor(glm::vec3 i_Color);$/;"	p	class:NNod
 SetColor	NNode.hpp	/^	virtual void SetColor(glm::vec4 i_Color);$/;"	p	class:NNode	access:public	signature:(glm::vec4 i_Color)
 SetFilter	NRender.cpp	/^void NCachedTexture::SetFilter(GLuint Filter)$/;"	f	class:NCachedTexture
 SetFilter	NRender.hpp	/^	void SetFilter(GLuint);$/;"	p	class:NCachedTexture	access:public	signature:(GLuint)
-SetMode	NText.cpp	/^void NText::SetMode(int i_Mode)$/;"	f	class:NText	signature:(int i_Mode)
-SetMode	NText.hpp	/^	void SetMode(int i_Mode);$/;"	p	class:NText	access:public	signature:(int i_Mode)
+SetMode	NText.cpp	/^void NText::SetMode(int i_Mode)$/;"	f	class:NText
 SetName	NTexture.cpp	/^void NAnimation::SetName(std::string i_Name)$/;"	f	class:NAnimation	signature:(std::string i_Name)
 SetName	NTexture.hpp	/^	void SetName(std::string i_Name);$/;"	p	class:NAnimation	access:public	signature:(std::string i_Name)
 SetParent	NButton.cpp	/^		DisplayText->SetParent(this);$/;"	p	file:	signature:(this)
@@ -966,13 +752,11 @@ SetScale	NNode.hpp	/^	virtual void SetScale(float i_Scale);$/;"	p	class:NNode	ac
 SetScale	NNode.hpp	/^	virtual void SetScale(glm::vec2 i_Scale);$/;"	p	class:NNode	access:public	signature:(glm::vec2 i_Scale)
 SetSize	NRender.cpp	/^void NRender::SetSize(float Width, float Height)$/;"	f	class:NRender
 SetSize	NRender.cpp	/^void NRender::SetSize(glm::vec2 i_Size)$/;"	f	class:NRender
-SetSize	NText.cpp	/^void NText::SetSize(float i_Size)$/;"	f	class:NText	signature:(float i_Size)
-SetSize	NText.hpp	/^	void SetSize(float i_Size);$/;"	p	class:NText	access:public	signature:(float i_Size)
+SetSize	NText.cpp	/^void NText::SetSize(float i_Size)$/;"	f	class:NText
 SetText	NButton.cpp	/^	DisplayText->SetText(Text);$/;"	p	file:	signature:(Text)
 SetText	NButton.cpp	/^void NButton::SetText(std::string Text)$/;"	f	class:NButton	signature:(std::string Text)
 SetText	NButton.hpp	/^	void SetText(std::string Text);$/;"	p	class:NButton	access:public	signature:(std::string Text)
-SetText	NText.cpp	/^void NText::SetText(std::string i_Data)$/;"	f	class:NText	signature:(std::string i_Data)
-SetText	NText.hpp	/^	void SetText(std::string i_Data);$/;"	p	class:NText	access:public	signature:(std::string i_Data)
+SetText	NText.cpp	/^void NText::SetText(std::string i_Data)$/;"	f	class:NText
 SetTexture	NButton.cpp	/^void NButton::SetTexture(std::string Name)$/;"	f	class:NButton	signature:(std::string Name)
 SetTexture	NButton.hpp	/^	void SetTexture(std::string Name);$/;"	p	class:NButton	access:public	signature:(std::string Name)
 SetTexture	NWindow.cpp	/^void NWindow::SetTexture(std::string Name)$/;"	f	class:NWindow	signature:(std::string Name)
@@ -981,40 +765,37 @@ SetTextureFilter	NRender.cpp	/^void NRender::SetTextureFilter(GLuint Filter)$/;"
 SetTextureFilter	NRender.hpp	/^	void SetTextureFilter(GLuint Param);$/;"	p	class:NRender	access:public	signature:(GLuint Param)
 SetVSync	NRender.cpp	/^void NRender::SetVSync(bool i_VSync)$/;"	f	class:NRender
 SetVSync	NRender.hpp	/^	void SetVSync(bool i_VSync);$/;"	p	class:NRender	access:public	signature:(bool i_VSync)
-SetWindowChanged	NGame.cpp	/^void NGame::SetWindowChanged(bool Changed)$/;"	f	class:NGame	signature:(bool Changed)
-SetWindowChanged	NGame.hpp	/^	void SetWindowChanged(bool Changed);$/;"	p	class:NGame	access:public	signature:(bool Changed)
-SetWindowSize	NGame.cpp	/^void NGame::SetWindowSize(int W, int H)$/;"	f	class:NGame	signature:(int W, int H)
-SetWindowSize	NGame.hpp	/^	void SetWindowSize(int W,int H);$/;"	p	class:NGame	access:public	signature:(int W,int H)
+SetWindowChanged	NGame.cpp	/^void NGame::SetWindowChanged(bool Changed)$/;"	f	class:NGame
+SetWindowSize	NGame.cpp	/^void NGame::SetWindowSize(int W, int H)$/;"	f	class:NGame
 Shader	NButton.hpp	/^	NShader* Shader;$/;"	m	class:NButton	access:private
 Shader	NMap.hpp	/^	NShader* Shader;$/;"	m	class:NMap
-Shader	NText.hpp	/^	NShader* Shader;$/;"	m	class:NText	access:private
+Shader	NText.hpp	/^	NShader* Shader;$/;"	m	class:NText
 Shader	NWindow.hpp	/^	NShader* Shader;$/;"	m	class:NWindow	access:private
 Shaders	NRender.hpp	/^	std::vector<NShader*> Shaders;$/;"	m	class:NRender	access:private
-Size	NText.hpp	/^	float Size;$/;"	m	class:NText	access:private
-Size	NText.hpp	/^	int Size;$/;"	m	class:NTextureAtlas	access:private
+Size	NText.hpp	/^	float Size;$/;"	m	class:NText
+Size	NText.hpp	/^	int Size;$/;"	m	class:NTextureAtlas
 SizeMem	NWindow.hpp	/^	glm::vec2 SizeMem;$/;"	m	class:NWindow	access:private
+SoundSystem	NGame.hpp	/^	NSoundSystem* SoundSystem;$/;"	m	class:NGame
 Source	NLua.cpp	/^	std::string Source = ar2.source;$/;"	l
 Success	NEngine.hpp	71;"	d
 SwapDepth	NNode.cpp	/^void NNode::SwapDepth(unsigned int Depth)$/;"	f	class:NNode	signature:(unsigned int Depth)
 SwapDepth	NNode.hpp	/^	virtual void SwapDepth(unsigned int Depth);$/;"	p	class:NNode	access:public	signature:(unsigned int Depth)
 Text	NConfig.cpp	/^	const char* Text = lua_tostring(L,-1);$/;"	l
-TextSystem	NGame.hpp	/^	NTextSystem* TextSystem;$/;"	m	class:NGame	access:private
-TextSystem	NScene.hpp	/^	NTextSystem* TextSystem;$/;"	m	class:NScene
-Texts	NText.hpp	/^	std::vector<NText*> Texts;$/;"	m	class:NTextSystem	access:private
+TextSystem	NGame.hpp	/^	NTextSystem* TextSystem;$/;"	m	class:NGame
 Texture	NButton.hpp	/^	NTexture* Texture;$/;"	m	class:NButton	access:public
 Texture	NMap.hpp	/^	NTexture* Texture;$/;"	m	class:NMap
-Texture	NText.hpp	/^	GLuint Texture;$/;"	m	class:NTextureAtlas	access:private
+Texture	NText.hpp	/^	GLuint Texture;$/;"	m	class:NTextureAtlas
 Texture	NTexture.cpp	/^	NTexture* Texture = new NTexture(luaL_checkstring(L,1));$/;"	l
 Texture	NWindow.hpp	/^	NTexture* Texture;$/;"	m	class:NWindow	access:public
 TextureFilter	NRender.hpp	/^	GLuint TextureFilter;$/;"	m	class:NRender	access:private
 TextureHeight	NMap.hpp	/^	unsigned int TextureHeight;$/;"	m	class:NMap
 TextureLoc	NButton.hpp	/^	GLuint TextureLoc;$/;"	m	class:NButton	access:private
 TextureLoc	NMap.hpp	/^	GLuint ColorLoc, MatrixLoc, TextureLoc;$/;"	m	class:NMap
-TextureLoc	NText.hpp	/^	GLuint ColorLoc,TextureLoc,MatrixLoc,ScreenLoc;$/;"	m	class:NText	access:private
+TextureLoc	NText.hpp	/^	GLuint ColorLoc,TextureLoc,MatrixLoc,ScreenLoc;$/;"	m	class:NText
 TextureLoc	NWindow.hpp	/^	GLuint TextureLoc;$/;"	m	class:NWindow	access:private
 TextureWidth	NMap.hpp	/^	unsigned int TextureWidth;$/;"	m	class:NMap
 Textures	NRender.hpp	/^	std::vector<NTexture*> Textures;$/;"	m	class:NRender	access:private
-Textures	NText.hpp	/^	std::vector<NTextureAtlas*> Textures;$/;"	m	class:NFace	access:private
+Textures	NText.hpp	/^	std::vector<NTextureAtlas*> Textures;$/;"	m	class:NFace
 Tick	NButton.cpp	/^		Texture->Tick(DT);$/;"	p	file:	signature:(DT)
 Tick	NButton.cpp	/^void NButton::Tick(double DT)$/;"	f	class:NButton	signature:(double DT)
 Tick	NButton.hpp	/^	void Tick(double DT);$/;"	p	class:NButton	access:public	signature:(double DT)
@@ -1022,8 +803,6 @@ Tick	NMap.cpp	/^void NMap::Tick(double DT)$/;"	f	class:NMap
 Tick	NNode.cpp	/^void NNode::Tick(double DT) {}$/;"	f	class:NNode	signature:(double DT)
 Tick	NNode.hpp	/^	virtual void Tick(double DT);$/;"	p	class:NNode	access:public	signature:(double DT)
 Tick	NScene.cpp	/^void NScene::Tick()$/;"	f	class:NScene
-Tick	NText.cpp	/^void NText::Tick(double DT)$/;"	f	class:NText	signature:(double DT)
-Tick	NText.hpp	/^	void Tick(double DT);$/;"	p	class:NText	access:public	signature:(double DT)
 Tick	NTexture.cpp	/^void NTexture::Tick(double DT)$/;"	f	class:NTexture	signature:(double DT)
 Tick	NTexture.hpp	/^	void Tick(double DT);$/;"	p	class:NTexture	access:public	signature:(double DT)
 Tick	NWindow.cpp	/^		Texture->Tick(DT);$/;"	p	file:	signature:(DT)
@@ -1031,12 +810,9 @@ Tick	NWindow.cpp	/^void NWindow::Tick(double DT)$/;"	f	class:NWindow	signature:(
 Tick	NWindow.hpp	/^	void Tick(double DT);$/;"	p	class:NWindow	access:public	signature:(double DT)
 TileSize	NMap.hpp	/^	float TileSize;$/;"	m	class:NMap
 Tiles	NMap.hpp	/^	std::vector<std::vector<std::vector<NTile* > > > Tiles;$/;"	m	class:NMap
-UV	NText.cpp	/^		float UV = Glyph->GetUV();$/;"	l
-UV2	NText.cpp	/^		float UV2 = UV+Glyph->BitmapWidth\/Glyph->AtlasWidth;$/;"	l
-UV3	NText.cpp	/^		float UV3 = Glyph->BitmapHeight\/Glyph->AtlasHeight;$/;"	l
 UVs	NButton.hpp	/^	std::vector<glm::vec2> UVs;$/;"	m	class:NButton	access:private
 UVs	NMap.hpp	/^	std::vector<std::vector<glm::vec2> > UVs;$/;"	m	class:NMap
-UVs	NText.hpp	/^	std::vector<glm::vec2> UVs;$/;"	m	class:NText	access:private
+UVs	NText.hpp	/^	std::vector<glm::vec2> UVs;$/;"	m	class:NText
 UVs	NWindow.hpp	/^	std::vector<glm::vec2> UVs;$/;"	m	class:NWindow	access:private
 UX	NButton.cpp	/^		float UX = BorderSize\/Texture->GetSize().x;$/;"	l
 UX	NWindow.cpp	/^		float UX = BorderSize\/Texture->GetSize().x;$/;"	l
@@ -1048,15 +824,11 @@ UpdateMatrix	NNode.cpp	/^			Children[i]->UpdateMatrix();$/;"	p	file:	signature:(
 UpdateMatrix	NNode.cpp	/^		Children[i]->UpdateMatrix();$/;"	p	file:	signature:()
 UpdateMatrix	NNode.cpp	/^void NNode::UpdateMatrix()$/;"	f	class:NNode	signature:()
 UpdateMatrix	NNode.hpp	/^	virtual void UpdateMatrix();$/;"	p	class:NNode	access:public	signature:()
-UpdateMipmaps	NText.cpp	/^		Textures[i]->UpdateMipmaps();$/;"	p	file:	signature:()
-UpdateMipmaps	NText.cpp	/^	Face->UpdateMipmaps();$/;"	p	file:	signature:()
-UpdateMipmaps	NText.cpp	/^void NFace::UpdateMipmaps()$/;"	f	class:NFace	signature:()
-UpdateMipmaps	NText.cpp	/^void NTextureAtlas::UpdateMipmaps()$/;"	f	class:NTextureAtlas	signature:()
-UpdateMipmaps	NText.hpp	/^	void UpdateMipmaps();$/;"	p	class:NFace	access:public	signature:()
-UpdateMipmaps	NText.hpp	/^	void UpdateMipmaps();$/;"	p	class:NTextureAtlas	access:public	signature:()
+UpdateMipmaps	NText.cpp	/^void NFace::UpdateMipmaps()$/;"	f	class:NFace
+UpdateMipmaps	NText.cpp	/^void NTextureAtlas::UpdateMipmaps()$/;"	f	class:NTextureAtlas
 VSync	NRender.hpp	/^	bool VSync;$/;"	m	class:NRender	access:private
-Valid	NGame.hpp	/^	bool Valid;$/;"	m	class:NGame	access:private
-Velocity	NText.hpp	/^	glm::vec2 Velocity;$/;"	m	class:NText	access:private
+Valid	NGame.hpp	/^	bool Valid;$/;"	m	class:NGame
+Velocity	NText.hpp	/^	glm::vec2 Velocity;$/;"	m	class:NText
 VertexFilePath	NShader.cpp	/^		std::cout << "Failed to compile " << VertexFilePath << "\\n";$/;"	l
 VertexFilePath	NShader.cpp	/^		std::cout << "Failed to load " << VertexFilePath << "!\\n";$/;"	l
 VertexFilePath	NShader.cpp	/^	std::cout << "Compiling shader " << VertexFilePath << "\\n";$/;"	l
@@ -1066,21 +838,17 @@ VertexShaderID	NShader.cpp	/^	GLuint VertexShaderID = glCreateShader(GL_VERTEX_S
 VertexShaderStream	NShader.cpp	/^	std::ifstream VertexShaderStream(VertexFilePath.c_str(), std::ios::in);$/;"	p	file:	signature:(VertexFilePath.c_str(), std::ios::in)
 Verts	NButton.hpp	/^	std::vector<glm::vec2> Verts;$/;"	m	class:NButton	access:private
 Verts	NMap.hpp	/^	std::vector<std::vector<glm::vec3> > Verts;$/;"	m	class:NMap
-Verts	NText.hpp	/^	std::vector<glm::vec2> Verts;$/;"	m	class:NText	access:private
+Verts	NText.hpp	/^	std::vector<glm::vec2> Verts;$/;"	m	class:NText
 Verts	NWindow.hpp	/^	std::vector<glm::vec2> Verts;$/;"	m	class:NWindow	access:private
 ViewMatrix	NCamera.hpp	/^	glm::mat4 ViewMatrix;$/;"	m	class:NCamera
-Width	NGame.hpp	/^	int Width;$/;"	m	class:NGame	access:public
+Width	NGame.hpp	/^	int Width;$/;"	m	class:NGame
 Width	NMap.hpp	/^	unsigned int Width,Height,Depth;$/;"	m	class:NMap
 Width	NRender.hpp	/^	int Width, Height;$/;"	m	class:NCachedTexture	access:private
-Width	NText.hpp	/^	float Width;$/;"	m	class:NText	access:private
-Width	NText.hpp	/^	int Width, Height;$/;"	m	class:NTextureAtlas	access:private
-WindowChanged	NGame.hpp	/^	bool WindowChanged;$/;"	m	class:NGame	access:private
+Width	NText.hpp	/^	float Width;$/;"	m	class:NText
+Width	NText.hpp	/^	int Width, Height;$/;"	m	class:NTextureAtlas
+WindowChanged	NGame.hpp	/^	bool WindowChanged;$/;"	m	class:NGame
 X	NEngine.cpp	/^	float X = (float(rand())\/float(RAND_MAX))*Difference;$/;"	l
-X	NText.cpp	/^		float X = Glyph->BitmapWidth;$/;"	l
-X	NText.hpp	/^	float X;$/;"	m	class:NGlyph	access:public
-XOff	NText.cpp	/^		float XOff = Glyph->BitmapLeft;$/;"	l
-Y	NText.cpp	/^		float Y = Glyph->BitmapHeight;$/;"	l
-YOff	NText.cpp	/^		float YOff = -Glyph->BitmapHeight+Glyph->BitmapTop-Size\/2.f;$/;"	l
+X	NText.hpp	/^	float X;$/;"	m	class:NGlyph
 Yellow	NColor.hpp	14;"	d
 Zoom	NCamera.hpp	/^	float Zoom;$/;"	m	class:NCamera
 ar1	NLua.cpp	/^	lua_Debug ar1;$/;"	l
@@ -1097,19 +865,12 @@ as_fn_unset	config.status	/^as_fn_unset ()$/;"	f
 bindir	Makefile	/^bindir         	= ${exec_prefix}\/bin$/;"	m
 clear	NButton.cpp	/^	UVs.clear();$/;"	p	file:	signature:()
 clear	NButton.cpp	/^	Verts.clear();$/;"	p	file:	signature:()
-clear	NText.cpp	/^	UVs.clear();$/;"	p	file:	signature:()
-clear	NText.cpp	/^	Verts.clear();$/;"	p	file:	signature:()
 clear	NWindow.cpp	/^	UVs.clear();$/;"	p	file:	signature:()
 clear	NWindow.cpp	/^	Verts.clear();$/;"	p	file:	signature:()
 close	NShader.cpp	/^	FragmentShaderStream.close();$/;"	p	file:	signature:()
 close	NShader.cpp	/^	VertexShaderStream.close();$/;"	p	file:	signature:()
 cout	NColor.cpp	/^	std::cout << "\\e[0m";$/;"	m	class:std	file:
 cout	NConfig.cpp	/^		std::cout << "CONFIG WARN: ";$/;"	m	class:std	file:
-cout	NGame.cpp	/^		std::cout << "ENGINE ERROR: ";$/;"	m	class:std	file:
-cout	NGame.cpp	/^		std::cout << "ENGINE INFO: ";$/;"	m	class:std	file:
-cout	NGame.cpp	/^		std::cout << "GLEW failed to initialize!\\n";$/;"	m	class:std	file:
-cout	NGame.cpp	/^		std::cout << "GLFW failed to initialize!\\n";$/;"	m	class:std	file:
-cout	NGame.cpp	/^		std::cout << "GLFW failed to open a window!\\n";$/;"	m	class:std	file:
 cout	NInput.cpp	/^		std::cout << "Attempted to grab a key out of range!\\n";$/;"	m	class:std	file:
 cout	NInput.cpp	/^		std::cout << "INPUT WARN: ";$/;"	m	class:std	file:
 cout	NLua.cpp	/^			std::cout << "LUA INFO: ";$/;"	m	class:std	file:
@@ -1120,8 +881,6 @@ cout	NShader.cpp	/^		std::cout << "SHADER INFO: ";$/;"	m	class:std	file:
 cout	NShader.cpp	/^		std::cout << "SHADER WARN: " ;$/;"	m	class:std	file:
 cout	NShader.cpp	/^		std::cout << "SHADER WARN: ";$/;"	m	class:std	file:
 cout	NShader.cpp	/^	std::cout << "SHADER INFO: ";$/;"	m	class:std	file:
-cout	NText.cpp	/^		std::cout << "FREETYPE WARN: ";$/;"	m	class:std	file:
-cout	NText.cpp	/^		std::cout << "FreeType failed to initialize!\\n";$/;"	m	class:std	file:
 cout	NTexture.cpp	/^		std::cout << "LUA WARN: ";$/;"	m	class:std	file:
 cout	NTexture.cpp	/^	std::cout << "TEXTURE WARN: ";$/;"	m	class:std	file:
 dirp	NLua.cpp	/^	dirent *dirp;$/;"	l
@@ -1129,7 +888,6 @@ distdir	Makefile	/^distdir        	= $(tarname)-$(version)$/;"	m
 dp	NLua.cpp	/^	DIR *dp;$/;"	l
 erase	NNode.cpp	/^			Children.erase(Children.begin()+i);$/;"	p	file:	signature:(Children.begin()+i)
 exec_prefix	Makefile	/^exec_prefix    	= ${prefix}$/;"	m
-flush	NGame.cpp	/^		std::cout << "Game window was closed, exiting...\\n" << std::flush;$/;"	m	class:std	file:
 i_Name	NTexture.cpp	/^		std::cout << "Tried to use variable " << i_Name << " as a number (It's not a number or doesn't exist!).\\n";$/;"	l
 insert	NLua.cpp	/^		Files.insert(Files.end(),NewFiles.begin(),NewFiles.end());$/;"	p	file:	signature:(Files.end(),NewFiles.begin(),NewFiles.end())
 insert	NLua.cpp	/^		Folders.insert(Folders.end(),RFolders.begin(),RFolders.end());$/;"	p	file:	signature:(Folders.end(),RFolders.begin(),RFolders.end())
@@ -1147,19 +905,12 @@ package	Makefile	/^package        	= astrostruct$/;"	m
 prefix	Makefile	/^prefix         	= \/usr\/local$/;"	m
 push_back	NNode.cpp	/^	Children.push_back(Node);$/;"	p	file:	signature:(Node)
 push_back	NShader.cpp	/^	Uniforms.push_back(NewUniform);$/;"	p	file:	signature:(NewUniform)
-push_back	NText.cpp	/^	Faces.push_back(Face);$/;"	p	file:	signature:(Face)
-push_back	NText.cpp	/^	Texts.push_back(NewText);$/;"	p	file:	signature:(NewText)
 push_back	NTexture.cpp	/^	Animations.push_back(Animation);$/;"	p	file:	signature:(Animation)
 push_back	NTexture.cpp	/^	Frames.push_back(ID);$/;"	p	file:	signature:(ID)
 srcdir	Makefile	/^srcdir			= .$/;"	m
 stat_base	NLua.cpp	/^		struct stat stat_base;$/;"	l
 std::cout	NColor.cpp	/^	std::cout << "\\e[0m";$/;"	m	class:std	file:
 std::cout	NConfig.cpp	/^		std::cout << "CONFIG WARN: ";$/;"	m	class:std	file:
-std::cout	NGame.cpp	/^		std::cout << "ENGINE ERROR: ";$/;"	m	class:std	file:
-std::cout	NGame.cpp	/^		std::cout << "ENGINE INFO: ";$/;"	m	class:std	file:
-std::cout	NGame.cpp	/^		std::cout << "GLEW failed to initialize!\\n";$/;"	m	class:std	file:
-std::cout	NGame.cpp	/^		std::cout << "GLFW failed to initialize!\\n";$/;"	m	class:std	file:
-std::cout	NGame.cpp	/^		std::cout << "GLFW failed to open a window!\\n";$/;"	m	class:std	file:
 std::cout	NInput.cpp	/^		std::cout << "Attempted to grab a key out of range!\\n";$/;"	m	class:std	file:
 std::cout	NInput.cpp	/^		std::cout << "INPUT WARN: ";$/;"	m	class:std	file:
 std::cout	NLua.cpp	/^			std::cout << "LUA INFO: ";$/;"	m	class:std	file:
@@ -1170,11 +921,8 @@ std::cout	NShader.cpp	/^		std::cout << "SHADER INFO: ";$/;"	m	class:std	file:
 std::cout	NShader.cpp	/^		std::cout << "SHADER WARN: " ;$/;"	m	class:std	file:
 std::cout	NShader.cpp	/^		std::cout << "SHADER WARN: ";$/;"	m	class:std	file:
 std::cout	NShader.cpp	/^	std::cout << "SHADER INFO: ";$/;"	m	class:std	file:
-std::cout	NText.cpp	/^		std::cout << "FREETYPE WARN: ";$/;"	m	class:std	file:
-std::cout	NText.cpp	/^		std::cout << "FreeType failed to initialize!\\n";$/;"	m	class:std	file:
 std::cout	NTexture.cpp	/^		std::cout << "LUA WARN: ";$/;"	m	class:std	file:
 std::cout	NTexture.cpp	/^	std::cout << "TEXTURE WARN: ";$/;"	m	class:std	file:
-std::flush	NGame.cpp	/^		std::cout << "Game window was closed, exiting...\\n" << std::flush;$/;"	m	class:std	file:
 tarname	Makefile	/^tarname        	= astrostruct$/;"	m
 vec2	NButton.cpp	/^		UVs.push_back(glm::vec2(UX,0));$/;"	p	file:	signature:(UX,0)
 vec2	NButton.cpp	/^		UVs.push_back(glm::vec2(UX,1));$/;"	p	file:	signature:(UX,1)
@@ -1190,10 +938,6 @@ vec2	NButton.cpp	/^		Verts.push_back(glm::vec2(.5-SX,.5));$/;"	p	file:	signature
 vec2	NButton.cpp	/^		Verts.push_back(glm::vec2(.5-SX,.5-SY));$/;"	p	file:	signature:(.5-SX,.5-SY)
 vec2	NNode.cpp	/^	SetScale(glm::vec2(W,H));$/;"	p	file:	signature:(W,H)
 vec2	NNode.cpp	/^	SetScale(glm::vec2(i_Scale));$/;"	p	file:	signature:(i_Scale)
-vec2	NText.cpp	/^		UVs.push_back(glm::vec2(UV,0));$/;"	p	file:	signature:(UV,0)
-vec2	NText.cpp	/^		UVs.push_back(glm::vec2(UV,UV3));$/;"	p	file:	signature:(UV,UV3)
-vec2	NText.cpp	/^		UVs.push_back(glm::vec2(UV2,0));$/;"	p	file:	signature:(UV2,0)
-vec2	NText.cpp	/^		UVs.push_back(glm::vec2(UV2,UV3));$/;"	p	file:	signature:(UV2,UV3)
 vec2	NWindow.cpp	/^		UVs.push_back(glm::vec2(UX,0));$/;"	p	file:	signature:(UX,0)
 vec2	NWindow.cpp	/^		UVs.push_back(glm::vec2(UX,1));$/;"	p	file:	signature:(UX,1)
 vec2	NWindow.cpp	/^		UVs.push_back(glm::vec2(UX,1-UY));$/;"	p	file:	signature:(UX,1-UY)
@@ -1215,12 +959,9 @@ version	Makefile	/^version        	= 1.0$/;"	m
 ~NCachedTexture	NRender.hpp	/^	~NCachedTexture();$/;"	p	class:NCachedTexture	access:public	signature:()
 ~NConfig	NConfig.cpp	/^NConfig::~NConfig()$/;"	f	class:NConfig	signature:()
 ~NConfig	NConfig.hpp	/^	~NConfig();$/;"	p	class:NConfig	access:public	signature:()
-~NFace	NText.cpp	/^NFace::~NFace()$/;"	f	class:NFace	signature:()
-~NFace	NText.hpp	/^	~NFace();$/;"	p	class:NFace	access:public	signature:()
-~NGame	NGame.cpp	/^NGame::~NGame()$/;"	f	class:NGame	signature:()
-~NGame	NGame.hpp	/^	~NGame();$/;"	p	class:NGame	access:public	signature:()
-~NGlyph	NText.cpp	/^NGlyph::~NGlyph()$/;"	f	class:NGlyph	signature:()
-~NGlyph	NText.hpp	/^	~NGlyph();$/;"	p	class:NGlyph	access:public	signature:()
+~NFace	NText.cpp	/^NFace::~NFace()$/;"	f	class:NFace
+~NGame	NGame.cpp	/^NGame::~NGame()$/;"	f	class:NGame
+~NGlyph	NText.cpp	/^NGlyph::~NGlyph()$/;"	f	class:NGlyph
 ~NLua	NLua.cpp	/^NLua::~NLua()$/;"	f	class:NLua	signature:()
 ~NLua	NLua.hpp	/^	~NLua();$/;"	p	class:NLua	access:public	signature:()
 ~NMap	NMap.cpp	/^NMap::~NMap()$/;"	f	class:NMap
@@ -1231,14 +972,11 @@ version	Makefile	/^version        	= 1.0$/;"	m
 ~NScene	NScene.cpp	/^NScene::~NScene()$/;"	f	class:NScene
 ~NShader	NShader.cpp	/^NShader::~NShader()$/;"	f	class:NShader	signature:()
 ~NShader	NShader.hpp	/^	~NShader();$/;"	p	class:NShader	access:public	signature:()
-~NText	NText.cpp	/^NText::~NText()$/;"	f	class:NText	signature:()
-~NText	NText.hpp	/^	~NText();$/;"	p	class:NText	access:public	signature:()
-~NTextSystem	NText.cpp	/^NTextSystem::~NTextSystem()$/;"	f	class:NTextSystem	signature:()
-~NTextSystem	NText.hpp	/^	~NTextSystem();$/;"	p	class:NTextSystem	access:public	signature:()
+~NText	NText.cpp	/^NText::~NText()$/;"	f	class:NText
+~NTextSystem	NText.cpp	/^NTextSystem::~NTextSystem()$/;"	f	class:NTextSystem
 ~NTexture	NTexture.cpp	/^NTexture::~NTexture()$/;"	f	class:NTexture	signature:()
 ~NTexture	NTexture.hpp	/^	~NTexture();$/;"	p	class:NTexture	access:public	signature:()
-~NTextureAtlas	NText.cpp	/^NTextureAtlas::~NTextureAtlas()$/;"	f	class:NTextureAtlas	signature:()
-~NTextureAtlas	NText.hpp	/^	~NTextureAtlas();$/;"	p	class:NTextureAtlas	access:public	signature:()
+~NTextureAtlas	NText.cpp	/^NTextureAtlas::~NTextureAtlas()$/;"	f	class:NTextureAtlas
 ~NTile	NMap.cpp	/^NTile::~NTile()$/;"	f	class:NTile
 ~NUniform	NShader.hpp	/^	~NUniform();$/;"	p	class:NUniform	access:public	signature:()
 ~NWindow	NWindow.cpp	/^NWindow::~NWindow()$/;"	f	class:NWindow	signature:()

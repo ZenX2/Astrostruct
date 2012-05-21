@@ -42,12 +42,6 @@ public:
 	*/
 	NText* AddText(std::string Font, std::string Data);
 	/**
-	* @brief Returns a pointer to the text system, only useful for lua to be able to load fonts into it.
-	*
-	* @return A pointer to the font system.
-	*/
-	NTextSystem* GetTextSystem();
-	/**
 	 * @brief Adds a window to the scene.
 	 *
 	 * @return A pointer to the new window.
@@ -69,8 +63,6 @@ public:
 	NSound* AddSound(std::string Name);
 	NMap* AddMap(std::string TileSet);
 private:
-	bool LoadedText;
-	NTextSystem* TextSystem;
 	double LastTick;
 	std::vector<NNode*> Nodes;
 };

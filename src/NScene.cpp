@@ -26,13 +26,10 @@ void NScene::AddNode(NNode* Node)
 NScene::NScene()
 {
 	LastTick = CurTime();
-	TextSystem = new NTextSystem();
-	LoadedText = false;
 }
 
 NScene::~NScene()
 {
-	delete TextSystem;
 	for (unsigned int i=0;i<Nodes.size();i++)
 	{
 	    Nodes[i]->Remove();
@@ -41,17 +38,7 @@ NScene::~NScene()
 
 NText* NScene::AddText(std::string Font, std::string Data)
 {
-	if (!LoadedText)
-	{
-		TextSystem->LoadFaces();
-		LoadedText = true;
-	}
-	return new NText(TextSystem->GetFace(Font),Data);
-}
-
-NTextSystem* NScene::GetTextSystem()
-{
-	return TextSystem;
+	return new NText(Font,Data);
 }
 
 NWindow* NScene::AddWindow()

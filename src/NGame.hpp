@@ -146,6 +146,7 @@ private:
 	NLua* Lua;
 	NConfig* Config;
 	NSoundSystem* SoundSystem;
+	NTextSystem* TextSystem;
 	bool Valid;
 };
 

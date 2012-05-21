@@ -173,7 +173,7 @@ public:
 	* @param i_Face The font that we want to render.
 	* @param i_Data The string of text we want to render.
 	*/
-	NText(NFace* i_Face,std::string i_Data);
+	NText(std::string i_Face,std::string i_Data);
 	/**
 	* @brief Generates a vertex and UV array if the string it needs to render has changed or doesn't exist, then draws it to screen.
 	*

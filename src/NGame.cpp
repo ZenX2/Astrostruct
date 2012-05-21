@@ -17,6 +17,7 @@ NGame::~NGame()
 		delete Scene;
 		delete Render;
 		delete SoundSystem;
+		delete TextSystem;
 		delete Config;
 		delete Lua;
 		glfwTerminate();
@@ -82,6 +83,8 @@ bool NGame::Init(int i_Width, int i_Height, std::string Title)
 	Render->LoadTextures();
 	SoundSystem = new NSoundSystem();
 	SoundSystem->LoadSounds();
+	TextSystem = new NTextSystem();
+	TextSystem->LoadFaces();
 	Valid = true;
 	return Success;
 }
@@ -191,4 +194,9 @@ void NGame::CleanUp()
 NSoundSystem* NGame::GetSoundSystem()
 {
     return SoundSystem;
+}
+
+NTextSystem* NGame::GetTextSystem()
+{
+	return TextSystem;
 }
