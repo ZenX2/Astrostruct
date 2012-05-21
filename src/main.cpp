@@ -31,16 +31,41 @@ int main(int argc, char** argv)
 	PlayButton->SetScale(64,32);
 	PlayButton->SetText("Play");
 	PlayButton->SetPos(0,32);
+	NMap* MyMap = GetGame()->GetScene()->AddMap("grimy");
+	MyMap->Init(16,16,16);
 	NText* FPSText = GetGame()->GetScene()->AddText("cousine", "FPS: 0");
 	FPSText->SetPos(0,FPSText->GetSize()/2.f);
 	FPSText->SetColor(0,0,0,1);
 	NSound* CoinSound = GetGame()->GetScene()->AddSound("coin");
+	NCamera* Camera = new NCamera();
+	GetGame()->GetRender()->SetCamera(Camera);
 	while(GetGame()->Running())
 	{
 		GetGame()->GetInput()->Poll();
 		if (PlayButton->OnRelease())
 		{
 		    CoinSound->Play();
+		}
+		if (GetGame()->GetInput()->GetKey('W'))
+		{
+			Camera->SetPos(Camera->GetPos()+glm::vec3(0,6,0));
+		} else if (GetGame()->GetInput()->GetKey('S'))
+		{
+			Camera->SetPos(Camera->GetPos()-glm::vec3(0,6,0));
+		}
+		if (GetGame()->GetInput()->GetKey('A'))
+		{
+			Camera->SetPos(Camera->GetPos()-glm::vec3(6,0,0));
+		} else if (GetGame()->GetInput()->GetKey('D'))
+		{
+			Camera->SetPos(Camera->GetPos()+glm::vec3(6,0,0));
+		}
+		if (GetGame()->GetInput()->GetKey('Q'))
+		{
+			Camera->SetPos(Camera->GetPos()-glm::vec3(0,0,6));
+		} else if (GetGame()->GetInput()->GetKey('E'))
+		{
+			Camera->SetPos(Camera->GetPos()+glm::vec3(0,0,6));
 		}
 		MyWindow->SetPos(GetGame()->GetWindowSize()/2.f);
 		std::stringstream NewText(std::stringstream::in | std::stringstream::out);

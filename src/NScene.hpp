@@ -80,6 +80,7 @@ public:
 	 * @return A pointer to the new sound.
 	 */
 	NSound* AddSound(std::string Name);
+	NMap* AddMap(std::string TileSet);
 private:
 	bool LoadedText;
 	NTextSystem* TextSystem;

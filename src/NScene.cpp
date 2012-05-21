@@ -106,3 +106,7 @@ NSound* NScene::AddSound(std::string Name)
 {
     return new NSound(Name);
 }
+NMap* NScene::AddMap(std::string TileSet)
+{
+	return new NMap(TileSet);
+}

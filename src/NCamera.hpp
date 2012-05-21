@@ -20,11 +20,14 @@ public:
 	*
 	* @return View matrix.
 	*/
+	glm::mat4 GetPerspViewMatrix();
 	glm::mat4 GetViewMatrix();
 	glm::mat4 GetOrthoMatrix();
+	glm::mat4 GetPerspMatrix();
 private:
 	glm::mat4 ViewMatrix;
 	glm::mat4 OrthoMatrix;
+	glm::mat4 PerspMatrix;
 	float Zoom;
 };
 

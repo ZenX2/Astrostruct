@@ -104,6 +104,7 @@ extern "C"
  * These classes collaborate together to create a skinnable gui system.
  *
  */
+#include "NMap.hpp"
 #include "NWindow.hpp"
 #include "NButton.hpp"
 #include "NScene.hpp"

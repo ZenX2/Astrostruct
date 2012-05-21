@@ -6,6 +6,7 @@ NGame::NGame()
 	Height = 0;
 	Run = true;
 	Valid = false;
+	WindowChanged = true;
 }
 
 NGame::~NGame()

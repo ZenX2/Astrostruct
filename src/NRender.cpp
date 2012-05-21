@@ -45,6 +45,13 @@ bool NRender::LoadShaders()
 	} else {
 		delete Shader;
 	}
+	Shader = new NShader("map");
+	if (Shader->Load("data/shaders/map.vert","data/shaders/map.frag") != Fail)
+	{
+		Shaders.push_back(Shader);
+	} else {
+		delete Shader;
+	}
 }
 
 NRender::NRender()
