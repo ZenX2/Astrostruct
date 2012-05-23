@@ -4,6 +4,8 @@ void NInput::Poll()
 {
 	glfwGetMousePos(&MouseX,&MouseY);
 	MouseY = -MouseY+GetGame()->GetWindowHeight();
+	MouseX += GetGame()->GetRender()->GetCamera()->GetPos().x;
+	MouseY += GetGame()->GetRender()->GetCamera()->GetPos().y;
 }
 
 int NInput::GetKey(int Key)

@@ -54,6 +54,7 @@
 #include <vector>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/projection.hpp>
 #include <ft2build.h>
 #include FT_FREETYPE_H
 #include <math.h>

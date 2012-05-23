@@ -149,7 +149,7 @@ void NMap::Draw(NCamera* View)
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D,Texture->GetID());
 	glUniform1i(TextureLoc,0);
-	glm::mat4 MVP = View->GetOrthoMatrix()*View->GetViewMatrix()*GetModelMatrix();
+	glm::mat4 MVP = View->GetPerspMatrix()*View->GetPerspViewMatrix()*GetModelMatrix();
 	glUniformMatrix4fv(MatrixLoc,1,GL_FALSE,&MVP[0][0]);
 	glUniform4fv(ColorLoc,1,&(GetColor()[0]));
 	glEnableVertexAttribArray(0);
