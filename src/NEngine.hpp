@@ -43,6 +43,9 @@
 
 #ifndef NAELSTROF_ENGINE
 #define NAELSTROF_ENGINE
+//#define _UNICODE
+//#define UNICODE
+#include "config.h"
 #include <GL/glew.h>
 #include <GL/glfw.h>
 #include <SOIL.h>
@@ -74,7 +77,22 @@ extern "C"
 #define Fail false
 #define Success true
 
-#include "config.h"
+#ifdef _UNICODE
+	#define tcout wcout
+	#define tofstream wofstream
+	#define tchar wchar_t
+	#define tstringstream wstringstream
+	#define tstring wstring
+	#define _T(x) L"x"
+#else
+	#define tcout cout
+	#define tofstream ofstream
+	#define tchar char
+	#define tstringstream stringstream
+	#define tstring string
+	#define _T(x) x
+#endif
+
 #include "NPhysics.hpp"
 /** @defgroup TerminalColor
  *

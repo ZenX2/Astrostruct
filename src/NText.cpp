@@ -4,8 +4,11 @@ int LoadFace(lua_State* L)
 {
 	const char* Name = luaL_checkstring(L,1);
 	const char* Data = luaL_checkstring(L,2);
-	NFace* FontFace = new NFace(Name);
-	if (FontFace->Load(GetGame()->GetTextSystem()->GetFreeTypeLib(),Data))
+	std::tstringstream tName, tData;
+	tName << Name;
+	tData << Data;
+	NFace* FontFace = new NFace(tName.str());
+	if (FontFace->Load(GetGame()->GetTextSystem()->GetFreeTypeLib(),tData.str()))
 	{
 		GetGame()->GetTextSystem()->AddFace(FontFace);
 	} else {
@@ -61,12 +64,12 @@ void NFace::UpdateMipmaps()
 	}
 }
 
-std::string NFace::GetName()
+std::tstring NFace::GetName()
 {
 	return Name;
 }
 
-NFace* NTextSystem::GetFace(std::string Name)
+NFace* NTextSystem::GetFace(std::tstring Name)
 {
 	for (unsigned int i=0;i<Faces.size();i++)
 	{
@@ -78,7 +81,7 @@ NFace* NTextSystem::GetFace(std::string Name)
 	return NULL;
 }
 
-NFace::NFace(std::string i_Name)
+NFace::NFace(std::tstring i_Name)
 {
 	Name = i_Name;
 	Face = NULL;
@@ -92,25 +95,25 @@ NFace::~NFace()
 	}
 }
 
-bool NFace::Load(FT_Library FTLib, std::string File)
+bool NFace::Load(FT_Library FTLib, std::tstring File)
 {
 	if (!FTLib)
 	{
 		return Fail;
 	}
 	//Load the font face
-	if (FT_New_Face(FTLib,File.c_str(),0,&Face))
+	if (FT_New_Face(FTLib,(const char*)File.c_str(),0,&Face))
 	{
 		SetColor(Yellow);
-		std::cout << "FREETYPE WARN: ";
+		std::tcout << _T("FREETYPE WARN: ");
 		ClearColor();
-		std::cout << "Failed to load " << File << "!\n";
+		std::tcout << _T("Failed to load ") << File << _T("!\n");
 		return Fail;
 	}
 	return Success;
 }
 
-NGlyph::NGlyph(FT_Face Face, float i_X)
+NGlyph::NGlyph(FT_Face Face)
 {
 	FT_GlyphSlot Glyph = Face->glyph;
 	AdvanceX = Glyph->advance.x >> 6;
@@ -119,55 +122,17 @@ NGlyph::NGlyph(FT_Face Face, float i_X)
 	BitmapHeight = Glyph->bitmap.rows;
 	BitmapLeft = Glyph->bitmap_left;
 	BitmapTop = Glyph->bitmap_top;
-	X = i_X;
-	AtlasWidth = 0;
-	AtlasHeight = 0;
 	Rendered = false;
-}
-
-float NGlyph::GetUV()
-{
-	return X/AtlasWidth;
-}
-
-void NGlyph::SetAtlas(float Width, float Height)
-{
-	AtlasWidth = Width;
-	AtlasHeight = Height;
+	TextureRect = glm::vec4(0);
 }
 
 NTextureAtlas::NTextureAtlas(FT_Face Face, unsigned int i_Size)
 {
 	//Get Width and Height of desired textureatlas
 	Changed = true;
-	Width = 0;
-	Height = 0;
+	Width = 256;
+	Height = 256;
 	Size = i_Size;
-	FT_Set_Pixel_Sizes(Face,0,Size);
-	FT_GlyphSlot Glyph = Face->glyph;
-	Glyphs.resize(128,NULL);
-	for (unsigned int i=32;i<128;i++)
-	{
-		if (FT_Load_Char(Face,i,FT_LOAD_RENDER))
-		{
-			//Ignore errors
-			continue;
-		}
-		NGlyph* NewGlyph = new NGlyph(Face,Width);
-		Glyphs[i] = NewGlyph;
-		Width += Glyph->bitmap.width;
-		Height = std::max(Height,Glyph->bitmap.rows);
-	}
-	//Generate glyph info
-	for (unsigned int i=0;i<Glyphs.size();i++)
-	{
-		if (Glyphs[i] == NULL)
-		{
-			continue;
-		}
-		Glyphs[i]->SetAtlas(Width,Height);
-	}
-	//Now tell opengl to actually create the texture
 	glActiveTexture(GL_TEXTURE0);
 	glGenTextures(1, &Texture);
 	GetGame()->GetRender()->AddCachedTexture(Texture);
@@ -178,6 +143,7 @@ NTextureAtlas::NTextureAtlas(FT_Face Face, unsigned int i_Size)
 	    Data[i] = 0;
 	}
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_ALPHA, Width, Height, 0, GL_ALPHA, GL_UNSIGNED_BYTE, Data);
+	Node = new NTextureNode(glm::vec4(Width,Height,0,0));
 	delete[] Data;
 }
 
@@ -194,36 +160,38 @@ unsigned int NTextureAtlas::GetSize()
 	return Size;
 }
 
-NGlyph* NTextureAtlas::GetGlyph(FT_Face Face, unsigned int ID)
+NGlyph* NTextureAtlas::GetGlyph(FT_Face Face, tchar ID)
 {
+	FT_Set_Pixel_Sizes(Face,0,Size);
 	if (ID > Glyphs.size())
 	{
-		return NULL;
+		Glyphs.resize(ID+1,NULL);
+		FT_Load_Char(Face,ID,FT_LOAD_RENDER);
+		NGlyph* NewGlyph = new NGlyph(Face);
+		Glyphs[ID] = NewGlyph;
 	}
 	if (Glyphs[ID] == NULL)
 	{
-		return NULL;
+		FT_Load_Char(Face,ID,FT_LOAD_RENDER);
+		NGlyph* NewGlyph = new NGlyph(Face);
+		Glyphs[ID] = NewGlyph;
 	}
-	FT_Set_Pixel_Sizes(Face,0,Size);
+	if (Glyphs[ID]->Rendered)
+	{
+		return Glyphs[ID];
+	}
+	FT_Load_Char(Face,ID,FT_LOAD_RENDER);
 	FT_GlyphSlot Glyph = Face->glyph;
-	if (Glyph == NULL)
+	NTextureNode* Temp = Node->Insert(glm::vec2(Glyph->bitmap.width+2,Glyph->bitmap.rows+2));
+	if (Temp == NULL)
 	{
-		SetColor(Yellow);
-		std::cout << "FREETYPE WARN: ";
-		ClearColor();
-		std::cout << "Failed to load glyph for " << (char)ID << "!\n";
+		return Glyphs[ID];
 	}
-	if (!Glyphs[ID]->Rendered)
-	{
-		if (FT_Load_Char(Face,ID,FT_LOAD_RENDER))
-		{
-			return NULL;
-		}
-		glBindTexture(GL_TEXTURE_2D, Texture);
-		glTexSubImage2D(GL_TEXTURE_2D, 0, Glyphs[ID]->X, 0, Glyph->bitmap.width, Glyph->bitmap.rows, GL_ALPHA, GL_UNSIGNED_BYTE, Glyph->bitmap.buffer);
-		Glyphs[ID]->Rendered = true;
-		Changed = true;
-	}
+	glBindTexture(GL_TEXTURE_2D, Texture);
+	glTexSubImage2D(GL_TEXTURE_2D, 0, Temp->Rect.z+1, Temp->Rect.w+1, Glyph->bitmap.width, Glyph->bitmap.rows, GL_ALPHA, GL_UNSIGNED_BYTE, Glyph->bitmap.buffer);
+	Glyphs[ID]->Rendered = true;
+	Glyphs[ID]->TextureRect = glm::vec4(float(Temp->Rect.z+1)/float(Width), float(Temp->Rect.w+1)/float(Height), float(Glyph->bitmap.width)/float(Width), float(Glyph->bitmap.rows)/float(Height));
+	Changed = true;
 	return Glyphs[ID];
 }
 
@@ -243,7 +211,7 @@ GLuint NTextureAtlas::GetTexture()
 	return Texture;
 }
 
-NGlyph* NFace::GetGlyph(unsigned int ID, unsigned int Size)
+NGlyph* NFace::GetGlyph(tchar ID, unsigned int Size)
 {
 	if (Textures.size()<=Size)
 	{
@@ -261,7 +229,7 @@ GLuint NFace::GetTexture(unsigned int Size)
 	return Textures[Size]->GetTexture();
 }
 
-NText::NText(std::string i_Face, std::string i_Data) : NNode()
+NText::NText(std::tstring i_Face, std::tstring i_Data) : NNode()
 {
 	Face = GetGame()->GetTextSystem()->GetFace(i_Face);
 	Shader = GetGame()->GetRender()->GetShader("text");
@@ -314,11 +282,6 @@ void NText::GenerateBuffers()
 		{
 			continue;
 		}
-		if (!Glyph->BitmapWidth || !Glyph->BitmapHeight)
-		{
-			PenX += Glyph->AdvanceX;
-			continue;
-		}
 		float X = Glyph->BitmapWidth;
 		float Y = Glyph->BitmapHeight;
 		float YOff = -Glyph->BitmapHeight+Glyph->BitmapTop-Size/2.f;
@@ -346,13 +309,11 @@ void NText::GenerateBuffers()
 		Verts.push_back(glm::vec2(XOff+PenX+X,Y+YOff));
 		Verts.push_back(glm::vec2(XOff+PenX,Y+YOff));
 
-		float UV = Glyph->GetUV();
-		float UV2 = UV+Glyph->BitmapWidth/Glyph->AtlasWidth;
-		float UV3 = Glyph->BitmapHeight/Glyph->AtlasHeight;
-		UVs.push_back(glm::vec2(UV,UV3));
-		UVs.push_back(glm::vec2(UV2,UV3));
-		UVs.push_back(glm::vec2(UV2,0));
-		UVs.push_back(glm::vec2(UV,0));
+		glm::vec4 UV = Glyph->TextureRect;
+		UVs.push_back(glm::vec2(UV.x,UV.y+UV.w));
+		UVs.push_back(glm::vec2(UV.x+UV.z,UV.y+UV.w));
+		UVs.push_back(glm::vec2(UV.x+UV.z,UV.y));
+		UVs.push_back(glm::vec2(UV.x,UV.y));
 		PenX += Glyph->AdvanceX;
 	}
 	Changed = false;
@@ -443,7 +404,7 @@ NGlyph::~NGlyph()
 {
 }
 
-void NText::SetText(std::string i_Data)
+void NText::SetText(std::tstring i_Data)
 {
 	if (!Data.compare(i_Data))
 	{
@@ -481,4 +442,75 @@ void NTextSystem::AddFace(NFace* Face)
 void NText::Remove()
 {
     delete (NText*)this;
+}
+/*
+class NTextureNode
+{
+public:
+	NTextureNode* Insert(glm::vec2 Rect);
+private:
+	glm::vec4 Rect;
+	bool HasChildren;
+	NTextureNode Children[2];
+	NTextureNode* Parent;
+};*/
+
+NTextureNode::NTextureNode(glm::vec4 i_Rect)
+{
+	Rect = i_Rect;
+	HasChildren = false;
+	HasImage = false;
+}
+
+NTextureNode* NTextureNode::Insert(glm::vec2 i_Rect)
+{
+	//If we're trying to store a non-existant box, return nothing.
+	if (i_Rect.x == 0 || i_Rect.y == 0)
+	{
+		return NULL;
+	}
+	//If we're a branch then attempt to insert the rectangle in it's children
+	if (HasChildren)
+	{
+		NTextureNode* Node = Children[0]->Insert(i_Rect);
+		if (Node != NULL)
+		{
+			return Node;
+		}
+		return Children[1]->Insert(i_Rect);
+	}
+	//If we're a leaf..
+	//If we already have an image here, return null.
+	if (HasImage)
+	{
+		return NULL;
+	}
+	//If the image doesn't fit, return null.
+	if (Rect.x < i_Rect.x || Rect.y < i_Rect.y)
+	{
+		return NULL;
+	}
+	//If the image fits perfectly, accept
+	if (Rect.x == i_Rect.x && Rect.y == i_Rect.y)
+	{
+		HasImage = true;
+		return this;
+	}
+	//Otherwise we need to split into more nodes
+	//Decide which way to split (horizontal or vertical)
+	float W = Rect.x - i_Rect.x;
+	float H = Rect.y - i_Rect.y;
+	if (W>H)
+	{
+		//Vertical split
+		Children[0] = new NTextureNode(glm::vec4(i_Rect.x,Rect.y,Rect.z,Rect.w));
+		Children[1] = new NTextureNode(glm::vec4(W,Rect.y,Rect.z+i_Rect.x,Rect.w));
+	} else {
+		//Horizontal split
+		Children[0] = new NTextureNode(glm::vec4(Rect.x,i_Rect.y,Rect.z,Rect.w));
+		Children[1] = new NTextureNode(glm::vec4(Rect.x,H,Rect.z,Rect.w+i_Rect.y));
+	}
+	HasChildren = true;
+	//Then attempt to insert it into the first child we created.
+	return Children[0]->Insert(i_Rect);
 }

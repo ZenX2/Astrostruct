@@ -246,11 +246,11 @@ void NButton::Tick(double DT)
 	}
 }
 
-void NButton::SetText(std::string Text)
+void NButton::SetText(std::tstring Text)
 {
 	if (DisplayText == NULL)
 	{
-		DisplayText = GetGame()->GetScene()->AddText("didactgothic",Text);
+		DisplayText = GetGame()->GetScene()->AddText(_T("didactgothic"),Text);
 		DisplayText->SetMode(1);
 		DisplayText->SetSize(GetScale().y/1.3);
 		DisplayText->SetParent(this);

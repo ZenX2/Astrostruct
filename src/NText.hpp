@@ -32,7 +32,7 @@ public:
 	* @param Face The freetype font face.
 	* @param i_X Position on the texture atlas. 
 	*/
-	NGlyph(FT_Face Face,float i_X);
+	NGlyph(FT_Face Face);
 	~NGlyph();
 	/**
 	* @brief Stores information about the atlas the contains this glyph.
@@ -54,9 +54,21 @@ public:
 	float BitmapHeight;
 	float BitmapLeft;
 	float BitmapTop;
-	float AtlasWidth;
-	float AtlasHeight;
-	float X;
+	glm::vec4 TextureRect;
+};
+
+class NTextureNode
+{
+public:
+	NTextureNode* Insert(glm::vec2 i_Rect);
+	NTextureNode(glm::vec4 i_Rect);
+	~NTextureNode();
+	glm::vec4 Rect;
+private:
+	bool HasImage;
+	bool HasChildren;
+	NTextureNode* Children[2];
+	NTextureNode* Parent;
 };
 
 /**
@@ -81,7 +93,7 @@ public:
 	*
 	* @return Cached glyph data containing data necessary to render it.
 	*/
-	NGlyph* GetGlyph(FT_Face Face, unsigned int ID);
+	NGlyph* GetGlyph(FT_Face Face, tchar ID);
 	/**
 	* @brief Returns an OpenGL texture ID to the texture atlas.
 	*
@@ -99,6 +111,7 @@ public:
 	*/
 	unsigned int GetSize();
 private:
+	NTextureNode* Node;
 	bool Changed;
 	int Size;
 	int Width, Height;
@@ -117,7 +130,7 @@ public:
 	*
 	* @param i_Name The name you want the face to have, it can be anything!
 	*/
-	NFace(std::string i_Name);
+	NFace(std::tstring i_Name);
 	~NFace();
 	/**
 	* @brief Returns an OpenGL texture that coorisponds to the given size, if it doesn't exist, create it!
@@ -135,7 +148,7 @@ public:
 	*
 	* @return 
 	*/
-	NGlyph* GetGlyph(unsigned int ID, unsigned int Size);
+	NGlyph* GetGlyph(tchar ID, unsigned int Size);
 	/**
 	* @brief Loads a freetype font face into memory.
 	*
@@ -144,19 +157,19 @@ public:
 	*
 	* @return False on failure, true on success.
 	*/
-	bool Load(FT_Library FTLib, std::string File);
+	bool Load(FT_Library FTLib, std::tstring File);
 	/**
 	* @brief Returns the name of the freetype font face given at the constructor.
 	*
 	* @return The name given in the constructor.
 	*/
-	std::string GetName();
+	std::tstring GetName();
 	/**
 	* @brief Updates the mipmaps of all textures that are rendering from this face.
 	*/
 	void UpdateMipmaps();
 private:
-	std::string Name;
+	std::tstring Name;
 	FT_Face Face;
 	std::vector<NTextureAtlas*> Textures;
 };
@@ -173,7 +186,7 @@ public:
 	* @param i_Face The font that we want to render.
 	* @param i_Data The string of text we want to render.
 	*/
-	NText(std::string i_Face,std::string i_Data);
+	NText(std::tstring i_Face, std::tstring i_Data);
 	/**
 	* @brief Generates a vertex and UV array if the string it needs to render has changed or doesn't exist, then draws it to screen.
 	*
@@ -197,7 +210,7 @@ public:
 	*
 	* @param i_Data The desired string of text to be rendered.
 	*/
-	void SetText(std::string i_Data);
+	void SetText(std::tstring i_Data);
 	/**
 	* @brief Returns the size of the rendered glyphs, the actual size depends on the font!
 	*
@@ -226,7 +239,7 @@ private:
 	void GenerateBuffers();
 	NShader* Shader;
 	NFace* Face;
-	std::string Data;
+	std::tstring Data;
 	std::vector<glm::vec2> Verts;
 	std::vector<glm::vec2> UVs;
 	bool Changed;
@@ -253,7 +266,7 @@ public:
 	*
 	* @return The font face.
 	*/
-	NFace* GetFace(std::string Name);
+	NFace* GetFace(std::tstring Name);
 	/**
 	* @brief Returns the freetype library for lua.
 	*

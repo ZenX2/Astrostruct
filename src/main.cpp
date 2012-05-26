@@ -3,15 +3,15 @@
 int main(int argc, char** argv)
 {
 	SetColor(Blue);
-	std::cout << "ENGINE INFO: ";
+	std::tcout << "ENGINE INFO: ";
 	ClearColor();
-	std::cout << "Welcome to " << PACKAGE_STRING << "! Report bugs to " << PACKAGE_BUGREPORT << "!\n";
+	std::tcout << "Welcome to " << PACKAGE_STRING << "! Report bugs to " << PACKAGE_BUGREPORT << "!\n";
 	if (!GetGame()->Init(512,512,"Astrostruct"))
 	{
 		SetColor(Red);
-		std::cout << "ENGINE ERROR: ";
+		std::tcout << "ENGINE ERROR: ";
 		ClearColor();
-		std::cout << "Failed to initialize the game!\n";
+		std::tcout << "Failed to initialize the game!\n";
 		GetGame()->CleanUp();
 		return 1;
 	}
@@ -23,22 +23,22 @@ int main(int argc, char** argv)
 	QuitButton->SetTexture("button");
 	QuitButton->SetParent(MyWindow);
 	QuitButton->SetScale(64,32);
-	QuitButton->SetText("Quit");
+	QuitButton->SetText(_T("Quit"));
 	QuitButton->SetPos(0,-32);
 	NButton* PlayButton = GetGame()->GetScene()->AddButton();
 	PlayButton->SetTexture("button");
 	PlayButton->SetParent(MyWindow);
 	PlayButton->SetScale(64,32);
-	PlayButton->SetText("Play");
+	PlayButton->SetText(_T("Play"));
 	PlayButton->SetPos(0,32);
 	NMap* MyMap = GetGame()->GetScene()->AddMap("grimy");
 	MyMap->Init(16,16,16);
-	NText* FPSText = GetGame()->GetScene()->AddText("cousine", "FPS: 0");
-	FPSText->SetPos(0,FPSText->GetSize()/2.f);
-	FPSText->SetColor(0,0,0,1);
 	NSound* CoinSound = GetGame()->GetScene()->AddSound("coin");
 	NCamera* Camera = new NCamera();
 	GetGame()->GetRender()->SetCamera(Camera);
+	NText* FPSText = GetGame()->GetScene()->AddText(_T("cousine"), _T("FPS: 0"));
+	FPSText->SetPos(0,FPSText->GetSize()/2.f);
+	FPSText->SetColor(0,0,0,1);
 	while(GetGame()->Running())
 	{
 		GetGame()->GetInput()->Poll();
@@ -68,8 +68,8 @@ int main(int argc, char** argv)
 			Camera->SetPos(Camera->GetPos()+glm::vec3(0,0,6));
 		}
 		MyWindow->SetPos(GetGame()->GetWindowSize()/2.f);
-		std::stringstream NewText(std::stringstream::in | std::stringstream::out);
-		NewText << "FPS: " << 1/GetGame()->GetRender()->GetFrameTime() << '\0';
+		std::tstringstream NewText(std::tstringstream::in | std::tstringstream::out);
+		NewText << "FPS: " << (1.f/GetGame()->GetRender()->GetFrameTime());
 		FPSText->SetText(NewText.str());
 		GetGame()->GetScene()->Tick();
 		GetGame()->GetRender()->Draw();
