@@ -187,7 +187,6 @@ public:
 	 * @brief Unallocates the object, this is used by NScene to unallocate all objects, regardless of what kind of object it really is. (Lots of things inherit NNode!)
 	 */
 	virtual void Remove();
-private:
 	glm::vec3 Angle;
 	glm::vec4 Color;
 	glm::vec3 Position;

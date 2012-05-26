@@ -168,8 +168,31 @@ void NRender::Draw()
 		Camera = new NCamera();
 		GetGame()->GetScene()->Draw(Camera);
 	}
-	
 	glfwSwapBuffers();
+	glError();
+}
+
+void NRender::glError()
+{
+	GLenum Error = glGetError();
+	while (Error != GL_NO_ERROR)
+	{
+		std::string ErrorString;
+		switch (Error)
+		{
+			case GL_INVALID_OPERATION: 				ErrorString = "GL_INVALID_OPERATION"; break;
+			case GL_INVALID_ENUM: 					ErrorString = "GL_INVALID_ENUM"; break;
+			case GL_INVALID_VALUE: 					ErrorString = "GL_INVALID_VALUE"; break;
+			case GL_OUT_OF_MEMORY: 					ErrorString = "GL_OUT_OF_MEMORY"; break;
+			case GL_INVALID_FRAMEBUFFER_OPERATION: 	ErrorString = "GL_INVALID_FRAMEBUFFER_OPERATION"; break;
+			default: 								ErrorString = "UNKOWN_ERROR"; break;
+		}
+		SetColor(Yellow);
+		std::cout << "RENDER WARN: ";
+		ClearColor();
+		std::cout << "OpenGL reported an error: " << ErrorString << ".\n";
+		Error = glGetError();
+	}
 }
 
 void NRender::AddCachedTexture(GLuint Texture)

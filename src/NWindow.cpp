@@ -107,8 +107,7 @@ void NWindow::GenerateBuffers()
 		Verts.push_back(glm::vec2(.5,.5-SY));
 		UVs.push_back(glm::vec2(1,UY));
 		Verts.push_back(glm::vec2(.5,-.5+SY));
-		UVs.push_back(glm::vec2(1,1-UY));
-		Verts.push_back(glm::vec2(.5-SX,-.5+SY));
+		UVs.push_back(glm::vec2(1,1-UY)); Verts.push_back(glm::vec2(.5-SX,-.5+SY));
 		UVs.push_back(glm::vec2(1-UX,1-UY));
 		//Bottom Left Corner
 		Verts.push_back(glm::vec2(-.5,-.5+SY));
@@ -170,15 +169,15 @@ void NWindow::Draw(NCamera* View)
 		{
 			glBindTexture(GL_TEXTURE_2D,Texture->GetID());
 		}
-		glPushMatrix();
+
+		glMatrixMode(GL_PROJECTION);
+		glLoadMatrixf(&View->GetOrthoMatrix()[0][0]);
+		glMatrixMode(GL_MODELVIEW);
+		glm::mat4 MVP = View->GetViewMatrix()*GetModelMatrix();
+		glLoadMatrixf(&MVP[0][0]);
+
 		glColor4fv(&(GetColor()[0]));
-		glTranslatef(GetPos().x,GetPos().y,0);
-		glRotatef(GetAng().z,0,0,1);
-		glRotatef(GetAng().y,0,1,0);
-		glRotatef(GetAng().x,1,0,0);
-		glScalef(GetScale().x,GetScale().y,0);
 		glDrawArrays(GL_QUADS,0,Verts.size());
-		glPopMatrix();
 		glDisable(GL_TEXTURE_2D);
 		glDisable(GL_BLEND);
 

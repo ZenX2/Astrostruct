@@ -165,6 +165,7 @@ public:
 	void SetSize(glm::vec2 i_Size);
 	void SetSize(float Width, float Height);
 private:
+	void glError();
 	glm::vec2 Size;
 	double FrameTime;
 	bool VSync;

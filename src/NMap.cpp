@@ -115,13 +115,14 @@ void NMap::Draw(NCamera* View)
 	GenerateBuffers();
 	if (Shader == NULL)
 	{
-		glPushMatrix();
+
+		glMatrixMode(GL_PROJECTION);
+		glLoadMatrixf(&View->GetPerspMatrix()[0][0]);
+		glMatrixMode(GL_MODELVIEW);
+		glm::mat4 MVP = View->GetPerspViewMatrix()*GetModelMatrix();
+		glLoadMatrixf(&MVP[0][0]);
+
 		glColor4fv(&(GetColor()[0]));
-		glTranslatef(GetPos().x,GetPos().y,0);
-		glRotatef(GetAng().z,0,0,1);
-		glRotatef(GetAng().y,0,1,0);
-		glRotatef(GetAng().x,1,0,0);
-		glScalef(GetScale().x,GetScale().y,0);
 		glEnable(GL_TEXTURE_2D);
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -138,7 +139,6 @@ void NMap::Draw(NCamera* View)
 
 			glDrawArrays(GL_QUADS,0,Verts[i].size());
 		}
-		glPopMatrix();
 		glDisable(GL_TEXTURE_2D);
 		glDisable(GL_BLEND);
 		glDisableClientState(GL_VERTEX_ARRAY);

@@ -391,15 +391,15 @@ void NText::Draw(NCamera* View)
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		glBindTexture(GL_TEXTURE_2D,Face->GetTexture(Size));
-		glPushMatrix();
+
+		glMatrixMode(GL_PROJECTION);
+		glLoadMatrixf(&View->GetOrthoMatrix()[0][0]);
+		glMatrixMode(GL_MODELVIEW);
+		glm::mat4 MVP = View->GetViewMatrix()*GetModelMatrix();
+		glLoadMatrixf(&MVP[0][0]);
+
 		glColor4fv(&(GetColor()[0]));
-		glTranslatef(GetPos().x,GetPos().y,0);
-		glRotatef(GetAng().z,0,0,1);
-		glRotatef(GetAng().y,0,1,0);
-		glRotatef(GetAng().x,1,0,0);
-		glScalef(GetScale().x,GetScale().y,0);
 		glDrawArrays(GL_QUADS,0,Verts.size());
-		glPopMatrix();
 		glDisable(GL_TEXTURE_2D);
 		glDisable(GL_BLEND);
 
