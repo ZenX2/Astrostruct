@@ -57,6 +57,7 @@ CXXFLAGS	Makefile	/^CXXFLAGS		= -g -O2 -I\/usr\/include\/freetype2$/;"	m
 CachedTextures	NRender.hpp	/^	std::vector<NCachedTexture*> CachedTextures;$/;"	m	class:NRender
 Camera	NRender.hpp	/^	NCamera* Camera;$/;"	m	class:NRender
 Changed	NButton.hpp	/^	bool Changed;$/;"	m	class:NButton
+Changed	NCamera.hpp	/^	bool Changed;$/;"	m	class:NCamera
 Changed	NMap.hpp	/^	std::vector<bool> Changed;$/;"	m	class:NMap
 Changed	NText.hpp	/^	bool Changed;$/;"	m	class:NText
 Changed	NText.hpp	/^	bool Changed;$/;"	m	class:NTextureAtlas
@@ -299,7 +300,7 @@ NAELSTROF_ENGINE	NEngine.hpp	45;"	d
 NAELSTROF_GAME	NGame.hpp	2;"	d
 NAELSTROF_INPUT	NInput.hpp	10;"	d
 NAELSTROF_LUA	NLua.hpp	9;"	d
-NAELSTROF_MAP	NMap.hpp	2;"	d
+NAELSTROF_MAP	NMap.hpp	9;"	d
 NAELSTROF_NODE	NNode.hpp	10;"	d
 NAELSTROF_PHYSICS	NPhysics.hpp	2;"	d
 NAELSTROF_RENDER	NRender.hpp	9;"	d
@@ -535,6 +536,7 @@ Parent	NNode.hpp	/^	NNode* Parent;$/;"	m	class:NNode
 Parent	NText.hpp	/^	NTextureNode* Parent;$/;"	m	class:NTextureNode
 ParentFolder	NLua.cpp	/^	std::string ParentFolder = Folder;$/;"	l
 PerspMatrix	NCamera.hpp	/^	glm::mat4 PerspMatrix;$/;"	m	class:NCamera
+PerspViewMatrix	NCamera.hpp	/^	glm::mat4 PerspViewMatrix;$/;"	m	class:NCamera
 Play	NTexture.cpp	/^void NTexture::Play(std::string i_Name)$/;"	f	class:NTexture	signature:(std::string i_Name)
 Play	NTexture.hpp	/^	void Play(std::string i_Name);$/;"	p	class:NTexture	access:public	signature:(std::string i_Name)
 PlayingAnimation	NTexture.hpp	/^	unsigned int PlayingAnimation;$/;"	m	class:NTexture	access:private
@@ -576,6 +578,7 @@ Scene	NGame.hpp	/^	NScene* Scene;$/;"	m	class:NGame
 ScreenLoc	NButton.hpp	/^	GLuint ScreenLoc;$/;"	m	class:NButton
 ScreenLoc	NText.hpp	/^	GLuint ColorLoc,TextureLoc,MatrixLoc,ScreenLoc;$/;"	m	class:NText
 ScreenLoc	NWindow.hpp	/^	GLuint ScreenLoc;$/;"	m	class:NWindow	access:private
+SetAng	NCamera.cpp	/^void NCamera::SetAng(glm::vec3 i_Angle)$/;"	f	class:NCamera
 SetAng	NNode.cpp	/^void NNode::SetAng(float i_Angle)$/;"	f	class:NNode	signature:(float i_Angle)
 SetCamera	NRender.cpp	/^void NRender::SetCamera(NCamera* i_Camera)$/;"	f	class:NRender
 SetColor	NColor.cpp	/^void SetColor(unsigned int Color) {}$/;"	f	signature:(unsigned int Color)
@@ -591,8 +594,10 @@ SetName	NTexture.cpp	/^void NAnimation::SetName(std::string i_Name)$/;"	f	class:
 SetName	NTexture.hpp	/^	void SetName(std::string i_Name);$/;"	p	class:NAnimation	access:public	signature:(std::string i_Name)
 SetParent	NNode.cpp	/^			Children[i]->SetParent(NULL);$/;"	p	file:	signature:(NULL)
 SetParent	NNode.cpp	/^void NNode::SetParent(NNode* Node)$/;"	f	class:NNode	signature:(NNode* Node)
+SetPos	NCamera.cpp	/^void NCamera::SetPos(glm::vec3 i_Position)$/;"	f	class:NCamera
 SetPos	NNode.cpp	/^void NNode::SetPos(float X, float Y)$/;"	f	class:NNode	signature:(float X, float Y)
 SetPos	NNode.cpp	/^void NNode::SetPos(glm::vec2 i_Position)$/;"	f	class:NNode	signature:(glm::vec2 i_Position)
+SetScale	NCamera.cpp	/^void NCamera::SetScale(glm::vec3 i_Scale)$/;"	f	class:NCamera
 SetScale	NNode.cpp	/^void NNode::SetScale(float W, float H)$/;"	f	class:NNode	signature:(float W, float H)
 SetScale	NNode.cpp	/^void NNode::SetScale(float i_Scale)$/;"	f	class:NNode	signature:(float i_Scale)
 SetScale	NNode.cpp	/^void NNode::SetScale(glm::vec2 i_Scale)$/;"	f	class:NNode	signature:(glm::vec2 i_Scale)
@@ -654,6 +659,7 @@ UVs	NText.hpp	/^	std::vector<glm::vec2> UVs;$/;"	m	class:NText
 UVs	NWindow.hpp	/^	std::vector<glm::vec2> UVs;$/;"	m	class:NWindow	access:private
 UniLoc	NShader.hpp	/^	GLuint UniLoc;$/;"	m	class:NUniform	access:private
 Uniforms	NShader.hpp	/^	std::vector<NUniform*> Uniforms;$/;"	m	class:NShader	access:private
+UpdateMatrix	NCamera.cpp	/^void NCamera::UpdateMatrix()$/;"	f	class:NCamera
 UpdateMatrix	NNode.cpp	/^			Children[i]->UpdateMatrix();$/;"	p	file:	signature:()
 UpdateMatrix	NNode.cpp	/^		Children[i]->UpdateMatrix();$/;"	p	file:	signature:()
 UpdateMatrix	NNode.cpp	/^void NNode::UpdateMatrix()$/;"	f	class:NNode	signature:()

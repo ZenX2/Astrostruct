@@ -162,7 +162,18 @@ public:
 	 * @param Animation A pointer to the animation.
 	 */
 	void AddCachedAnimation(NAnimation* Animation);
+	/**
+	 * @brief Sets the OpenGL context's viewport.
+	 *
+	 * @param i_Size The size of the current render window.
+	 */
 	void SetSize(glm::vec2 i_Size);
+	/**
+	 * @brief Sets the OpenGL context's viewport.
+	 *
+	 * @param Width The width of the current render window.
+	 * @param Height The width of the current render window.
+	 */
 	void SetSize(float Width, float Height);
 private:
 	void glError();

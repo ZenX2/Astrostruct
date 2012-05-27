@@ -57,10 +57,25 @@ public:
 	glm::vec4 TextureRect;
 };
 
+/**
+ * @brief Used to pack boxes into the texture atlas
+ */
 class NTextureNode
 {
 public:
+	/**
+	 * @brief Recursively looks for a place to store the specified box onto the texture.
+	 *
+	 * @param i_Rect The width and height of the box we want to store on it.
+	 *
+	 * @return The node that the rectangle has been placed into.
+	 */
 	NTextureNode* Insert(glm::vec2 i_Rect);
+	/**
+	 * @brief Creates a node with the specified rectangle.
+	 *
+	 * @param i_Rect The width, height, x, and y of the rectangle.
+	 */
 	NTextureNode(glm::vec4 i_Rect);
 	~NTextureNode();
 	glm::vec4 Rect;

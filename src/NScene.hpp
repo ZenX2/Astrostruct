@@ -61,6 +61,13 @@ public:
 	 * @return A pointer to the new sound.
 	 */
 	NSound* AddSound(std::string Name);
+	/**
+	 * @brief Adds a map to the scene.
+	 *
+	 * @param TileSet The name of the texture we want to use for the map.
+	 *
+	 * @return A pointer to the map created.
+	 */
 	NMap* AddMap(std::string TileSet);
 private:
 	double LastTick;

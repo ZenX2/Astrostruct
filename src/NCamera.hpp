@@ -16,16 +16,37 @@ class NCamera : public NNode
 public:
 	NCamera();
 	/**
-	* @brief Generates and returns a view matrix, don't call this a lot!
+	* @brief Returns a view matrix.
 	*
-	* @return View matrix.
+	* @return A View matrix.
 	*/
 	glm::mat4 GetPerspViewMatrix();
+	/**
+	 * @brief Returns a view matrix.
+	 *
+	 * @return A View matrix.
+	 */
 	glm::mat4 GetViewMatrix();
+	/**
+	 * @brief Returns an orthagraphic matrix.
+	 *
+	 * @return An orthagraphic matrix.
+	 */
 	glm::mat4 GetOrthoMatrix();
+	/**
+	 * @brief Returns a perspective matrix.
+	 *
+	 * @return A perspective matrix.
+	 */
 	glm::mat4 GetPerspMatrix();
+	void SetPos(glm::vec3 i_Position);
+	void SetAng(glm::vec3 i_Angle);
+	void SetScale(glm::vec3 i_Scale);
 private:
+	bool Changed;
+	void UpdateMatrix();
 	glm::mat4 ViewMatrix;
+	glm::mat4 PerspViewMatrix;
 	glm::mat4 OrthoMatrix;
 	glm::mat4 PerspMatrix;
 	float Zoom;
