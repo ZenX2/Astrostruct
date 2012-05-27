@@ -101,8 +101,9 @@ bool NFace::Load(FT_Library FTLib, std::tstring File)
 	{
 		return Fail;
 	}
+	
 	//Load the font face
-	if (FT_New_Face(FTLib,(const char*)File.c_str(),0,&Face))
+	if (FT_New_Face(FTLib,ToMBS(File).c_str(),0,&Face))
 	{
 		SetColor(Yellow);
 		std::tcout << _T("FREETYPE WARN: ");
@@ -110,6 +111,7 @@ bool NFace::Load(FT_Library FTLib, std::tstring File)
 		std::tcout << _T("Failed to load ") << File << _T("!\n");
 		return Fail;
 	}
+	
 	return Success;
 }
 
