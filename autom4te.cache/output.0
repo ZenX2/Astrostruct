@@ -3957,9 +3957,9 @@ fi
 
 fi
 
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for library containing ov_fopen" >&5
-$as_echo_n "checking for library containing ov_fopen... " >&6; }
-if ${ac_cv_search_ov_fopen+:} false; then :
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for library containing alureInitDevice" >&5
+$as_echo_n "checking for library containing alureInitDevice... " >&6; }
+if ${ac_cv_search_alureInitDevice+:} false; then :
   $as_echo_n "(cached) " >&6
 else
   ac_func_search_save_LIBS=$LIBS
@@ -3972,16 +3972,16 @@ cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 #ifdef __cplusplus
 extern "C"
 #endif
-char ov_fopen ();
+char alureInitDevice ();
 int
 main ()
 {
-return ov_fopen ();
+return alureInitDevice ();
   ;
   return 0;
 }
 _ACEOF
-for ac_lib in '' vorbisfile; do
+for ac_lib in '' alure; do
   if test -z "$ac_lib"; then
     ac_res="none required"
   else
@@ -3989,37 +3989,37 @@ for ac_lib in '' vorbisfile; do
     LIBS="-l$ac_lib  $ac_func_search_save_LIBS"
   fi
   if ac_fn_cxx_try_link "$LINENO"; then :
-  ac_cv_search_ov_fopen=$ac_res
+  ac_cv_search_alureInitDevice=$ac_res
 fi
 rm -f core conftest.err conftest.$ac_objext \
     conftest$ac_exeext
-  if ${ac_cv_search_ov_fopen+:} false; then :
+  if ${ac_cv_search_alureInitDevice+:} false; then :
   break
 fi
 done
-if ${ac_cv_search_ov_fopen+:} false; then :
+if ${ac_cv_search_alureInitDevice+:} false; then :
   
 else
-  ac_cv_search_ov_fopen=no
+  ac_cv_search_alureInitDevice=no
 fi
 rm conftest.$ac_ext
 LIBS=$ac_func_search_save_LIBS
 fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_search_ov_fopen" >&5
-$as_echo "$ac_cv_search_ov_fopen" >&6; }
-ac_res=$ac_cv_search_ov_fopen
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_search_alureInitDevice" >&5
+$as_echo "$ac_cv_search_alureInitDevice" >&6; }
+ac_res=$ac_cv_search_alureInitDevice
 if test "$ac_res" != no; then :
   test "$ac_res" = "none required" || LIBS="$ac_res $LIBS"
   
 else
   
-	{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for main in -lvorbisfile" >&5
-$as_echo_n "checking for main in -lvorbisfile... " >&6; }
-if ${ac_cv_lib_vorbisfile_main+:} false; then :
+	{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for main in -lalure" >&5
+$as_echo_n "checking for main in -lalure... " >&6; }
+if ${ac_cv_lib_alure_main+:} false; then :
   $as_echo_n "(cached) " >&6
 else
   ac_check_lib_save_LIBS=$LIBS
-LIBS="-lvorbisfile  $LIBS"
+LIBS="-lalure  $LIBS"
 cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
 
@@ -4033,21 +4033,118 @@ return main ();
 }
 _ACEOF
 if ac_fn_cxx_try_link "$LINENO"; then :
-  ac_cv_lib_vorbisfile_main=yes
+  ac_cv_lib_alure_main=yes
 else
-  ac_cv_lib_vorbisfile_main=no
+  ac_cv_lib_alure_main=no
 fi
 rm -f core conftest.err conftest.$ac_objext \
     conftest$ac_exeext conftest.$ac_ext
 LIBS=$ac_check_lib_save_LIBS
 fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_vorbisfile_main" >&5
-$as_echo "$ac_cv_lib_vorbisfile_main" >&6; }
-if test "x$ac_cv_lib_vorbisfile_main" = xyes; then :
-  LIBS="$LIBS -lvorbisfile"
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_alure_main" >&5
+$as_echo "$ac_cv_lib_alure_main" >&6; }
+if test "x$ac_cv_lib_alure_main" = xyes; then :
+  LIBS="$LIBS -lalure"
 else
   
-		as_fn_error $? "\"Couldn't find vorbis libraries!\"" "$LINENO" 5
+		as_fn_error $? "\"Couldn't find alure libraries!\"" "$LINENO" 5
+	
+fi
+
+
+fi
+
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for library containing PHYSFS_init" >&5
+$as_echo_n "checking for library containing PHYSFS_init... " >&6; }
+if ${ac_cv_search_PHYSFS_init+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  ac_func_search_save_LIBS=$LIBS
+cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+/* Override any GCC internal prototype to avoid an error.
+   Use char because int might match the return type of a GCC
+   builtin and then its argument prototype would still apply.  */
+#ifdef __cplusplus
+extern "C"
+#endif
+char PHYSFS_init ();
+int
+main ()
+{
+return PHYSFS_init ();
+  ;
+  return 0;
+}
+_ACEOF
+for ac_lib in '' physfs; do
+  if test -z "$ac_lib"; then
+    ac_res="none required"
+  else
+    ac_res=-l$ac_lib
+    LIBS="-l$ac_lib  $ac_func_search_save_LIBS"
+  fi
+  if ac_fn_cxx_try_link "$LINENO"; then :
+  ac_cv_search_PHYSFS_init=$ac_res
+fi
+rm -f core conftest.err conftest.$ac_objext \
+    conftest$ac_exeext
+  if ${ac_cv_search_PHYSFS_init+:} false; then :
+  break
+fi
+done
+if ${ac_cv_search_PHYSFS_init+:} false; then :
+  
+else
+  ac_cv_search_PHYSFS_init=no
+fi
+rm conftest.$ac_ext
+LIBS=$ac_func_search_save_LIBS
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_search_PHYSFS_init" >&5
+$as_echo "$ac_cv_search_PHYSFS_init" >&6; }
+ac_res=$ac_cv_search_PHYSFS_init
+if test "$ac_res" != no; then :
+  test "$ac_res" = "none required" || LIBS="$ac_res $LIBS"
+  
+else
+  
+	{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for main in -lphysfs" >&5
+$as_echo_n "checking for main in -lphysfs... " >&6; }
+if ${ac_cv_lib_physfs_main+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  ac_check_lib_save_LIBS=$LIBS
+LIBS="-lphysfs  $LIBS"
+cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+
+int
+main ()
+{
+return main ();
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_cxx_try_link "$LINENO"; then :
+  ac_cv_lib_physfs_main=yes
+else
+  ac_cv_lib_physfs_main=no
+fi
+rm -f core conftest.err conftest.$ac_objext \
+    conftest$ac_exeext conftest.$ac_ext
+LIBS=$ac_check_lib_save_LIBS
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_physfs_main" >&5
+$as_echo "$ac_cv_lib_physfs_main" >&6; }
+if test "x$ac_cv_lib_physfs_main" = xyes; then :
+  LIBS="$LIBS -lphysfs"
+else
+  
+		as_fn_error $? "\"Couldn't find physfs libraries!\"" "$LINENO" 5
 	
 fi
 

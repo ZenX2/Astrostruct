@@ -96,8 +96,6 @@ public:
      */
     void LoadSounds();
 private:
-    ALCdevice* AudioDevice;
-    ALCcontext* AudioContext;
     std::vector<NSoundData*> SoundData;
 };
 

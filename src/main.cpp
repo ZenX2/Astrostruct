@@ -1,17 +1,17 @@
 #include "NEngine.hpp"
 
-int main(int argc, char** argv)
+int main(int argc, char* argv[])
 {
 	SetColor(Blue);
-	std::tcout << "ENGINE INFO: ";
+	std::cout << "ENGINE INFO: ";
 	ClearColor();
-	std::tcout << "Welcome to " << PACKAGE_STRING << "! Report bugs to " << PACKAGE_BUGREPORT << "!\n";
-	if (!GetGame()->Init(512,512,"Astrostruct"))
+	std::cout << "Welcome to " << PACKAGE_STRING << "! Report bugs to " << PACKAGE_BUGREPORT << "!\n";
+	if (!GetGame()->Init(512,512,"Astrostruct",argc,argv))
 	{
 		SetColor(Red);
-		std::tcout << "ENGINE ERROR: ";
+		std::cout << "ENGINE ERROR: ";
 		ClearColor();
-		std::tcout << "Failed to initialize the game!\n";
+		std::cout << "Failed to initialize the game!\n";
 		GetGame()->CleanUp();
 		return 1;
 	}
@@ -29,7 +29,7 @@ int main(int argc, char** argv)
 	PlayButton->SetTexture("button");
 	PlayButton->SetParent(MyWindow);
 	PlayButton->SetScale(64,32);
-	PlayButton->SetText(_T("Play"));
+	PlayButton->SetText(_T("Play®"));
 	PlayButton->SetPos(0,32);
 	NMap* MyMap = GetGame()->GetScene()->AddMap("grimy");
 	MyMap->Init(16,16,16);
@@ -68,7 +68,7 @@ int main(int argc, char** argv)
 			Camera->SetPos(Camera->GetPos()+glm::vec3(0,0,6));
 		}
 		MyWindow->SetPos(GetGame()->GetWindowSize()/2.f);
-		std::tstringstream NewText(std::tstringstream::in | std::tstringstream::out);
+		std::stringstream NewText(std::stringstream::in | std::stringstream::out);
 		NewText << "FPS: " << (1.f/GetGame()->GetRender()->GetFrameTime());
 		FPSText->SetText(NewText.str());
 		GetGame()->GetScene()->Tick();

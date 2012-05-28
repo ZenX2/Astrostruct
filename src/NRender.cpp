@@ -26,27 +26,27 @@ void NRender::LoadTextures()
 	lua_pushstring(L,"Animation");
 	lua_setfield(L,-2,"__type");
 	lua_pop(L,1);
-	GetGame()->GetLua()->DoFolder("data/textures");
+	GetGame()->GetLua()->DoFolder("textures");
 }
 
 bool NRender::LoadShaders()
 {
 	NShader* Shader = new NShader("text");
-	if (Shader->Load("data/shaders/text.vert","data/shaders/text.frag") != Fail)
+	if (Shader->Load("shaders/text.vert","shaders/text.frag") != Fail)
 	{
 		Shaders.push_back(Shader);
 	} else {
 		delete Shader;
 	}
 	Shader = new NShader("flat");
-	if (Shader->Load("data/shaders/flat.vert","data/shaders/flat.frag") != Fail)
+	if (Shader->Load("shaders/flat.vert","shaders/flat.frag") != Fail)
 	{
 		Shaders.push_back(Shader);
 	} else {
 		delete Shader;
 	}
 	Shader = new NShader("map");
-	if (Shader->Load("data/shaders/map.vert","data/shaders/map.frag") != Fail)
+	if (Shader->Load("shaders/map.vert","shaders/map.frag") != Fail)
 	{
 		Shaders.push_back(Shader);
 	} else {
@@ -77,10 +77,6 @@ NRender::NRender()
 	}
 	glPixelStorei(GL_UNPACK_ALIGNMENT,1);
 	glViewport(0,0,GetGame()->GetWindowWidth(),GetGame()->GetWindowHeight());
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	glOrtho(0, GetGame()->GetWindowWidth(), 0, GetGame()->GetWindowHeight(), 0, 300);
-	glMatrixMode(GL_MODELVIEW);
 	Size = GetGame()->GetWindowSize();
 }
 
@@ -92,10 +88,6 @@ void NRender::SetSize(glm::vec2 i_Size)
 	}
 	Size = i_Size;
 	glViewport(0,0,Size.x,Size.y);
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	glOrtho(0, Size.x, 0, Size.y, 0, 300);
-	glMatrixMode(GL_MODELVIEW);
 }
 
 void NRender::SetSize(float Width, float Height)
@@ -257,28 +249,42 @@ NCachedTexture* NRender::GetCachedTexture(std::string Name)
 		}
 	}
 	NCachedTexture* Cache = new NCachedTexture(Name);
-	if (Cache->ID == 0)
-	{
-		SetColor(Yellow);
-		std::cout << "TEXTURE WARN: ";
-		ClearColor();
-		std::cout << "Couldn't load file " << Name << " as a texture!\n";
-		delete Cache;
-	}
 	CachedTextures.push_back(Cache);
 	return Cache;
 }
 
 NCachedTexture::NCachedTexture(std::string i_Name)
 {
+	IsGood = false;
+	ID = 0;
+	Width = 0;
+	Height = 0;
 	Name = i_Name;
 	int Channels;
-	unsigned char* Image = SOIL_load_image(Name.c_str(), &Width, &Height, &Channels, SOIL_LOAD_AUTO);
+	NFile File = GetGame()->GetFileSystem()->GetFile(Name);
+	if (!File.Good())
+	{
+		SetColor(Yellow);
+		std::cout << "TEXTURE WARN: ";
+		ClearColor();
+		std::cout << "Couldn't load " << Name << " as a texture, it doesn't exist!\n";
+		return;
+	}
+	char* ImageData = new char[File.Size()];
+	File.Read(ImageData,File.Size());
+	unsigned char* Image = SOIL_load_image_from_memory((const unsigned char*)ImageData,File.Size(),&Width, &Height, &Channels, SOIL_LOAD_AUTO);
 	ID = SOIL_create_OGL_texture(Image, Width, Height, Channels, SOIL_CREATE_NEW_ID, SOIL_FLAG_MIPMAPS);
 	SOIL_free_image_data(Image);
+	delete[] ImageData;
 	glBindTexture(GL_TEXTURE_2D,ID);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GetGame()->GetRender()->GetTextureFilter());
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GetGame()->GetRender()->GetTextureFilter());
+	IsGood = true;
+}
+
+bool NCachedTexture::Good()
+{
+	return IsGood;
 }
 
 NCachedTexture::NCachedTexture(std::string i_Name, GLuint i_ID)

@@ -108,7 +108,7 @@ public:
 	*
 	* @return Cached glyph data containing data necessary to render it.
 	*/
-	NGlyph* GetGlyph(FT_Face Face, tchar ID);
+	NGlyph* GetGlyph(FT_Face Face, wchar_t ID);
 	/**
 	* @brief Returns an OpenGL texture ID to the texture atlas.
 	*
@@ -145,7 +145,7 @@ public:
 	*
 	* @param i_Name The name you want the face to have, it can be anything!
 	*/
-	NFace(std::tstring i_Name);
+	NFace(std::wstring i_Name);
 	~NFace();
 	/**
 	* @brief Returns an OpenGL texture that coorisponds to the given size, if it doesn't exist, create it!
@@ -163,7 +163,7 @@ public:
 	*
 	* @return 
 	*/
-	NGlyph* GetGlyph(tchar ID, unsigned int Size);
+	NGlyph* GetGlyph(wchar_t ID, unsigned int Size);
 	/**
 	* @brief Loads a freetype font face into memory.
 	*
@@ -172,19 +172,20 @@ public:
 	*
 	* @return False on failure, true on success.
 	*/
-	bool Load(FT_Library FTLib, std::tstring File);
+	bool Load(std::wstring File);
 	/**
 	* @brief Returns the name of the freetype font face given at the constructor.
 	*
 	* @return The name given in the constructor.
 	*/
-	std::tstring GetName();
+	std::wstring GetName();
 	/**
 	* @brief Updates the mipmaps of all textures that are rendering from this face.
 	*/
 	void UpdateMipmaps();
 private:
-	std::tstring Name;
+	char* FileData;
+	std::wstring Name;
 	FT_Face Face;
 	std::vector<NTextureAtlas*> Textures;
 };
@@ -201,7 +202,7 @@ public:
 	* @param i_Face The font that we want to render.
 	* @param i_Data The string of text we want to render.
 	*/
-	NText(std::tstring i_Face, std::tstring i_Data);
+	NText(std::wstring i_Face, std::wstring i_Data);
 	/**
 	* @brief Generates a vertex and UV array if the string it needs to render has changed or doesn't exist, then draws it to screen.
 	*
@@ -225,7 +226,8 @@ public:
 	*
 	* @param i_Data The desired string of text to be rendered.
 	*/
-	void SetText(std::tstring i_Data);
+	void SetText(std::wstring i_Data);
+	void SetText(std::string i_Data);
 	/**
 	* @brief Returns the size of the rendered glyphs, the actual size depends on the font!
 	*
@@ -254,7 +256,7 @@ private:
 	void GenerateBuffers();
 	NShader* Shader;
 	NFace* Face;
-	std::tstring Data;
+	std::wstring Data;
 	std::vector<glm::vec2> Verts;
 	std::vector<glm::vec2> UVs;
 	bool Changed;
@@ -281,7 +283,7 @@ public:
 	*
 	* @return The font face.
 	*/
-	NFace* GetFace(std::tstring Name);
+	NFace* GetFace(std::wstring Name);
 	/**
 	* @brief Returns the freetype library for lua.
 	*

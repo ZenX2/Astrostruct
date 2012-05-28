@@ -35,6 +35,10 @@ void NWindow::SetTexture(std::string Name)
 
 void NWindow::GenerateBuffers()
 {
+	if (!Texture->Good())
+	{
+		return;
+	}
 	if (!Changed && SizeMem == GetScale())
 	{
 		return;

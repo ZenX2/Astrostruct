@@ -4,11 +4,12 @@ int LoadFace(lua_State* L)
 {
 	const char* Name = luaL_checkstring(L,1);
 	const char* Data = luaL_checkstring(L,2);
-	std::tstringstream tName, tData;
+	std::wstringstream tName;
 	tName << Name;
+	std::wstringstream tData;
 	tData << Data;
 	NFace* FontFace = new NFace(tName.str());
-	if (FontFace->Load(GetGame()->GetTextSystem()->GetFreeTypeLib(),tData.str()))
+	if (FontFace->Load(tData.str()))
 	{
 		GetGame()->GetTextSystem()->AddFace(FontFace);
 	} else {
@@ -49,7 +50,7 @@ void NTextSystem::LoadFaces()
 	lua_getglobal(L,"_G");
 	luaL_register(L,NULL,FontFunctions);
 	lua_pop(L,1);
-	GetGame()->GetLua()->DoFolder("data/fonts");
+	GetGame()->GetLua()->DoFolder("fonts");
 }
 
 void NFace::UpdateMipmaps()
@@ -64,12 +65,12 @@ void NFace::UpdateMipmaps()
 	}
 }
 
-std::tstring NFace::GetName()
+std::wstring NFace::GetName()
 {
 	return Name;
 }
 
-NFace* NTextSystem::GetFace(std::tstring Name)
+NFace* NTextSystem::GetFace(std::wstring Name)
 {
 	for (unsigned int i=0;i<Faces.size();i++)
 	{
@@ -81,10 +82,11 @@ NFace* NTextSystem::GetFace(std::tstring Name)
 	return NULL;
 }
 
-NFace::NFace(std::tstring i_Name)
+NFace::NFace(std::wstring i_Name)
 {
 	Name = i_Name;
 	Face = NULL;
+	FileData = NULL;
 }
 
 NFace::~NFace()
@@ -93,25 +95,39 @@ NFace::~NFace()
 	{
 		delete Textures[i];
 	}
+	if (FileData)
+	{
+		delete[] FileData;
+	}
 }
 
-bool NFace::Load(FT_Library FTLib, std::tstring File)
+bool NFace::Load(std::wstring File)
 {
+	FT_Library FTLib = GetGame()->GetTextSystem()->GetFreeTypeLib();
 	if (!FTLib)
 	{
 		return Fail;
 	}
-	
-	//Load the font face
-	if (FT_New_Face(FTLib,ToMBS(File).c_str(),0,&Face))
+	NFile MyFile = GetGame()->GetFileSystem()->GetFile(ToMBS(File));
+	if (!MyFile.Good())
 	{
 		SetColor(Yellow);
-		std::tcout << _T("FREETYPE WARN: ");
+		std::cout << "FREETYPE WARN: ";
 		ClearColor();
-		std::tcout << _T("Failed to load ") << File << _T("!\n");
+		std::wcout << _T("Failed to load ") << File << _T(", it doesn't exist!\n");
 		return Fail;
 	}
-	
+	FileData = new char[MyFile.Size()];
+	MyFile.Read(FileData,MyFile.Size());
+	if (FT_New_Memory_Face(FTLib,(const unsigned char*)FileData,MyFile.Size(),0,&Face))
+	{
+		delete[] FileData;
+		SetColor(Yellow);
+		std::cout << "FREETYPE WARN: ";
+		ClearColor();
+		std::wcout << _T("Failed to load ") << File << _T(", corrupt or not a freetype-compadible font!\n");
+		return Fail;
+	}
 	return Success;
 }
 
@@ -162,7 +178,7 @@ unsigned int NTextureAtlas::GetSize()
 	return Size;
 }
 
-NGlyph* NTextureAtlas::GetGlyph(FT_Face Face, tchar ID)
+NGlyph* NTextureAtlas::GetGlyph(FT_Face Face, wchar_t ID)
 {
 	FT_Set_Pixel_Sizes(Face,0,Size);
 	if (ID > Glyphs.size())
@@ -213,7 +229,7 @@ GLuint NTextureAtlas::GetTexture()
 	return Texture;
 }
 
-NGlyph* NFace::GetGlyph(tchar ID, unsigned int Size)
+NGlyph* NFace::GetGlyph(wchar_t ID, unsigned int Size)
 {
 	if (Textures.size()<=Size)
 	{
@@ -231,7 +247,7 @@ GLuint NFace::GetTexture(unsigned int Size)
 	return Textures[Size]->GetTexture();
 }
 
-NText::NText(std::tstring i_Face, std::tstring i_Data) : NNode()
+NText::NText(std::wstring i_Face, std::wstring i_Data) : NNode()
 {
 	Face = GetGame()->GetTextSystem()->GetFace(i_Face);
 	Shader = GetGame()->GetRender()->GetShader("text");
@@ -339,6 +355,10 @@ void NText::SetMode(int i_Mode)
 
 void NText::Draw(NCamera* View)
 {
+	if (Face == NULL)
+	{
+		return;
+	}
 	GenerateBuffers();
 	if (Shader == NULL)
 	{
@@ -406,13 +426,25 @@ NGlyph::~NGlyph()
 {
 }
 
-void NText::SetText(std::tstring i_Data)
+void NText::SetText(std::wstring i_Data)
 {
 	if (!Data.compare(i_Data))
 	{
 		return;
 	}
 	Data = i_Data;
+	Changed = true;
+}
+
+void NText::SetText(std::string i_Data)
+{
+	std::wstringstream NewData;
+	NewData << i_Data.c_str();
+	if (!Data.compare(NewData.str()))
+	{
+		return;
+	}
+	Data = NewData.str();
 	Changed = true;
 }
 
@@ -445,17 +477,6 @@ void NText::Remove()
 {
     delete (NText*)this;
 }
-/*
-class NTextureNode
-{
-public:
-	NTextureNode* Insert(glm::vec2 Rect);
-private:
-	glm::vec4 Rect;
-	bool HasChildren;
-	NTextureNode Children[2];
-	NTextureNode* Parent;
-};*/
 
 NTextureNode::NTextureNode(glm::vec4 i_Rect)
 {

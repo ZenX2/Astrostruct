@@ -36,7 +36,7 @@ NScene::~NScene()
 	}
 }
 
-NText* NScene::AddText(std::tstring Font, std::tstring Data)
+NText* NScene::AddText(std::wstring Font, std::wstring Data)
 {
 	return new NText(Font,Data);
 }

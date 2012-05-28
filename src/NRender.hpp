@@ -54,7 +54,9 @@ public:
 	 * @return The height of the texture.
 	 */
 	float GetHeight();
+	bool Good();
 private:
+	float IsGood;
 	int Width, Height;
 };
 /**

@@ -64,9 +64,9 @@ bool NShader::Load(std::string VertexFilePath, std::string FragmentFilePath)
 	GLuint VertexShaderID = glCreateShader(GL_VERTEX_SHADER);
 	GLuint FragmentShaderID = glCreateShader(GL_FRAGMENT_SHADER);
 	//Read the Vertex shader into memory from the file
-	std::string VertexShaderCode;
-	std::ifstream VertexShaderStream(VertexFilePath.c_str(), std::ios::in);
-	if (!VertexShaderStream.good())
+	char* VertexShaderCode;
+	NFile VertexShaderStream = GetGame()->GetFileSystem()->GetFile(VertexFilePath);
+	if (!VertexShaderStream.Good())
 	{
 		SetColor(Yellow);
 		std::cout << "SHADER WARN: ";
@@ -76,17 +76,12 @@ bool NShader::Load(std::string VertexFilePath, std::string FragmentFilePath)
 		glDeleteShader(FragmentShaderID);
 		return Fail;
 	}
-	std::string Line;
-	while (getline(VertexShaderStream,Line))
-	{
-		VertexShaderCode += Line + "\n";
-	}
-	VertexShaderStream.close();
-
+	VertexShaderCode = new char[VertexShaderStream.Size()];
+	VertexShaderStream.Read(VertexShaderCode,VertexShaderStream.Size());
 	//Now do the same with the fragment shader
-	std::string FragmentShaderCode;
-	std::ifstream FragmentShaderStream(FragmentFilePath.c_str(), std::ios::in);
-	if (!FragmentShaderStream.good())
+	char* FragmentShaderCode;
+	NFile FragmentShaderStream = GetGame()->GetFileSystem()->GetFile(FragmentFilePath);
+	if (!FragmentShaderStream.Good())
 	{
 		SetColor(Yellow);
 		std::cout << "SHADER WARN: " ;
@@ -96,20 +91,20 @@ bool NShader::Load(std::string VertexFilePath, std::string FragmentFilePath)
 		glDeleteShader(FragmentShaderID);
 		return Fail;
 	}
-	while (getline(FragmentShaderStream,Line))
-	{
-		FragmentShaderCode += Line + "\n";
-	}
-	FragmentShaderStream.close();
+	FragmentShaderCode = new char[FragmentShaderStream.Size()];
+	FragmentShaderStream.Read(FragmentShaderCode,FragmentShaderStream.Size());
 
 	//Now compile the vertex shader
 	SetColor(Blue);
 	std::cout << "SHADER INFO: ";
 	ClearColor();
 	std::cout << "Compiling shader " << VertexFilePath << "\n";
-	const char* Code = VertexShaderCode.c_str();
+	std::string Conversion;
+	Conversion.append(VertexShaderCode,VertexShaderStream.Size());
+	const char* Code = Conversion.c_str();
 	glShaderSource(VertexShaderID, 1, &Code, NULL);
 	glCompileShader(VertexShaderID);
+	delete[] VertexShaderCode;
 	
 	GLint Result;
 	int InfoLogLength;
@@ -142,9 +137,12 @@ bool NShader::Load(std::string VertexFilePath, std::string FragmentFilePath)
 	std::cout << "SHADER INFO: ";
 	ClearColor();
 	std::cout << "Compiling shader " << FragmentFilePath << "\n";
-	Code = FragmentShaderCode.c_str();
+	Conversion.clear();
+	Conversion.append(FragmentShaderCode,FragmentShaderStream.Size());
+	Code = Conversion.c_str();
 	glShaderSource(FragmentShaderID, 1, &Code, NULL);
 	glCompileShader(FragmentShaderID);
+	delete[] FragmentShaderCode;
 	
 	glGetShaderiv(FragmentShaderID, GL_COMPILE_STATUS, &Result);
 	glGetShaderiv(FragmentShaderID, GL_INFO_LOG_LENGTH, &InfoLogLength);

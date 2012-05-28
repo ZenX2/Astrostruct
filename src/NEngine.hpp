@@ -10,8 +10,7 @@
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 * GNU General Public License for more details.
 * 
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
+* You should have received a copy of the GNU General Public License * along with this program; if not, write to the Free Software
 * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 * 
 */
@@ -43,15 +42,16 @@
 
 #ifndef NAELSTROF_ENGINE
 #define NAELSTROF_ENGINE
-#include "NUnicode.hpp"
 #include "config.h"
+#include <cstdlib>
+#include <string>
+#include "NUnicode.hpp"
 #include <GL/glew.h>
 #include <GL/glfw.h>
 #include <SOIL.h>
 #include <iostream>
 #include <fstream>
 #include <cctype>
-#include <string>
 #include <sstream>
 #include <vector>
 #include <glm/glm.hpp>
@@ -62,9 +62,8 @@
 #include <math.h>
 #include <dirent.h>
 #include <sys/stat.h>
-#include <AL/al.h>
-#include <AL/alc.h>
-#include <vorbis/vorbisfile.h>
+#include <AL/alure.h>
+#include <physfs.h>
 #define LUA_COMPAT_MODULE
 extern "C"
 {
@@ -76,6 +75,7 @@ extern "C"
 #define Fail false
 #define Success true
 
+#include "NFileSystem.hpp"
 #include "NPhysics.hpp"
 /** @defgroup TerminalColor
  *

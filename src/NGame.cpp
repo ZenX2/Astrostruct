@@ -13,6 +13,7 @@ NGame::~NGame()
 {
 	if (Valid)
 	{
+		delete FileSystem;
 		delete Input;
 		delete Scene;
 		delete Render;
@@ -24,7 +25,7 @@ NGame::~NGame()
 	}
 }
 
-bool NGame::Init(int i_Width, int i_Height, std::string Title)
+bool NGame::Init(int i_Width, int i_Height, std::string Title, int argc, char* argv[])
 {
 	//Initialize everything we can
 	Width = i_Width;
@@ -37,8 +38,9 @@ bool NGame::Init(int i_Width, int i_Height, std::string Title)
 		std::cout << "GLFW failed to initialize!\n";
 		return Fail;
 	}
+	FileSystem = new NFileSystem(argv[0]);
 	Lua = new NLua();
-	Config = new NConfig("data/config/init.lua");
+	Config = new NConfig("config/init.lua");
 	//Now lets load some data from our config interface
 	NewWidth = Config->GetFloat("Width");
 	NewHeight = Config->GetFloat("Height");
@@ -199,4 +201,9 @@ NSoundSystem* NGame::GetSoundSystem()
 NTextSystem* NGame::GetTextSystem()
 {
 	return TextSystem;
+}
+
+NFileSystem* NGame::GetFileSystem()
+{
+	return FileSystem;
 }

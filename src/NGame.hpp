@@ -32,7 +32,7 @@ public:
 	*
 	* @return True on success, false on failure.
 	*/
-	bool Init(int Width,int Height,std::string Title);
+	bool Init(int Width, int Height,std::string Title, int argc, char* argv[]);
 	/**
 	* @brief Grabs the input interface for other parts of the engine to use.
 	*
@@ -134,12 +134,14 @@ public:
 	 * @return A pointer to the sound system.
 	 */
 	NSoundSystem* GetSoundSystem();
+	NFileSystem* GetFileSystem();
 private:
 	bool WindowChanged;
 	/**
 	* @brief If the game is running or not.
 	*/
 	bool Run;
+	NFileSystem* FileSystem;
 	NInput* Input;
 	NScene* Scene;
 	NRender* Render;

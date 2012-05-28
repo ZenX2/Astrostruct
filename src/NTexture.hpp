@@ -101,6 +101,7 @@ public:
 	 * @return The float grabbed from the lua object, or 0 if it fails.
 	 */
 	float GetFloat(std::string i_Name);
+	bool Good();
 private:
 	std::string Name;
 	std::vector<NCachedTexture*> Frames;
@@ -175,7 +176,10 @@ public:
 	 * @return The desired float, or NULL if not found.
 	 */
 	float GetFloat(std::string i_Name);
+	bool Good();
 private:
+	bool GoodCheck;
+	bool IsGood;
 	double CurrentTime;
 	unsigned int PlayingAnimation;
 	std::vector<NAnimation*> Animations;

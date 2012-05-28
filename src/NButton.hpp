@@ -45,7 +45,7 @@ public:
 	 *
 	 * @param Text The desired display text.
 	 */
-	void SetText(std::tstring Text);
+	void SetText(std::wstring Text);
 	/**
 	 * @brief Returns if the button has been pressed.
 	 *

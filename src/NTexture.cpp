@@ -163,6 +163,8 @@ NTexture::NTexture(NTexture* Texture)
 	Name = Texture->Name;
 	PlayingAnimation = 0;
 	CurrentTime = 0;
+	GoodCheck = false;
+	IsGood = true;
 }
 
 NTexture::~NTexture()
@@ -173,6 +175,18 @@ GLuint NAnimation::GetID(double Time)
 {
 	unsigned int IDLoc = fmod(Time*FPS,Frames.size());
 	return Frames[IDLoc]->ID;
+}
+
+bool NAnimation::Good()
+{
+	for (unsigned int i=0;i<Frames.size();i++)
+	{
+		if (!Frames[i]->Good())
+		{
+			return false;
+		}
+	}
+	return true;
 }
 
 glm::vec2 NAnimation::GetSize(double Time)
@@ -195,6 +209,21 @@ void NTexture::Play(std::string i_Name)
 	std::cout << "TEXTURE WARN: ";
 	ClearColor();
 	std::cout << "Animation " << i_Name << " not found in texture " << Name << "\n";
+}
+
+bool NTexture::Good()
+{
+	if (!GoodCheck)
+	{
+		for (unsigned int i=0;i<Animations.size();i++)
+		{
+			if (!Animations[i]->Good())
+			{
+				IsGood = false;
+			}
+		}
+	}
+	return IsGood;
 }
 
 GLuint NTexture::GetID()

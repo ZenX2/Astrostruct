@@ -38,6 +38,10 @@ void NButton::SetTexture(std::string Name)
 
 void NButton::GenerateBuffers()
 {
+	if (!Texture->Good())
+	{
+		return;
+	}
 	if (!Changed)
 	{
 		return;
@@ -246,7 +250,7 @@ void NButton::Tick(double DT)
 	}
 }
 
-void NButton::SetText(std::tstring Text)
+void NButton::SetText(std::wstring Text)
 {
 	if (DisplayText == NULL)
 	{

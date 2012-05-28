@@ -1,1 +1,1 @@
-LoadSound("coin", "data/sounds/coin.ogg")
+LoadSound("coin", "sounds/coin.ogg")

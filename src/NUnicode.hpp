@@ -16,24 +16,7 @@
 #define UNICODE
 // _MBCS means you can use Unicode paths with FreeType.
 #define _MBCS
-
-#ifdef _UNICODE
-	#define tcout wcout
-	#define tofstream wofstream
-	#define tchar wchar_t
-	#define tstringstream wstringstream
-	#define tstring wstring
-	#define _T(x) L ## x
-#else
-	#define tcout cout
-	#define tofstream ofstream
-	#define tchar char
-	#define tstringstream stringstream
-	#define tstring string
-	#define _T(x) x
-#endif
-
-#include <string>
+#define _T(x) L ## x
 
 /**
 * @brief Converts a wide string to a multibyte version.
@@ -43,11 +26,6 @@
 * @return A multibyte string.
 */
 std::string ToMBS(std::wstring wideString);
-
-/**
-* @brief Fallback if Unicode support isn't enabled..
-*/
-std::string ToMBS(std::string narrowString);
 
 /*@}*/
 

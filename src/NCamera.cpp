@@ -35,7 +35,7 @@ glm::mat4 NCamera::GetPerspMatrix()
 
 void NCamera::UpdateMatrix()
 {
-	if (!Changed || GetGame()->GetWindowChanged())
+	if (!Changed && !GetGame()->GetWindowChanged())
 	{
 		return;
 	}

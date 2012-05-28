@@ -49,9 +49,14 @@ AC_SEARCH_LIBS([alcOpenDevice],[openal OpenAL32],[],[
 		AC_MSG_ERROR(["Couldn't find openal libraries!"])
 	])
 ])
-AC_SEARCH_LIBS([ov_fopen],[vorbisfile],[],[
-	AC_CHECK_LIB([vorbisfile],[main],[LIBS="$LIBS -lvorbisfile"],[
-		AC_MSG_ERROR(["Couldn't find vorbis libraries!"])
+AC_SEARCH_LIBS([alureInitDevice],[alure],[],[
+	AC_CHECK_LIB([alure],[main],[LIBS="$LIBS -lalure"],[
+		AC_MSG_ERROR(["Couldn't find alure libraries!"])
+	])
+])
+AC_SEARCH_LIBS([PHYSFS_init],[physfs],[],[
+	AC_CHECK_LIB([physfs],[main],[LIBS="$LIBS -lphysfs"],[
+		AC_MSG_ERROR(["Couldn't find physfs libraries!"])
 	])
 ])
 
