@@ -101,6 +101,11 @@ public:
 	 * @return The float grabbed from the lua object, or 0 if it fails.
 	 */
 	float GetFloat(std::string i_Name);
+	/**
+	 * @brief Returns if all the textures successfully loaded.
+	 *
+	 * @return False on failure, true on success.
+	 */
 	bool Good();
 private:
 	std::string Name;
@@ -176,6 +181,11 @@ public:
 	 * @return The desired float, or NULL if not found.
 	 */
 	float GetFloat(std::string i_Name);
+	/**
+	 * @brief Returns if all the textures successfully loaded.
+	 *
+	 * @return False on failure, true on success.
+	 */
 	bool Good();
 private:
 	bool GoodCheck;

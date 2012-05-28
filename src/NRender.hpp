@@ -32,7 +32,7 @@ public:
 	* @param i_Name The name of the texture id (normally the filepath).
 	* @param i_ID The texture id we want to cache.
 	*/
-	NCachedTexture(std::string i_Name, GLuint ID);
+	NCachedTexture(std::string i_Name, GLuint i_ID);
 	~NCachedTexture();
 	GLuint ID;
 	std::string Name;
@@ -54,6 +54,11 @@ public:
 	 * @return The height of the texture.
 	 */
 	float GetHeight();
+	/**
+	 * @brief Gets if this texture is good or not.
+	 *
+	 * @return False if it failed to load, true if it's a valid texture.
+	 */
 	bool Good();
 private:
 	float IsGood;

@@ -25,6 +25,11 @@ public:
 	* @param DT The delta time, aka the time passed since last execution.
 	*/
 	virtual void Tick(double DT);
+	/**
+	 * @brief Draws the desired node.
+	 *
+	 * @param View The camera it's being drawn from.
+	 */
 	virtual void Draw(NCamera* View);
 	/**
 	* @brief Gets the postition of the object.

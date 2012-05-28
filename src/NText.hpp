@@ -30,7 +30,6 @@ public:
 	* @brief Initializes a glyph using a font face, and a position on the texture atlas.
 	*
 	* @param Face The freetype font face.
-	* @param i_X Position on the texture atlas. 
 	*/
 	NGlyph(FT_Face Face);
 	~NGlyph();
@@ -167,7 +166,6 @@ public:
 	/**
 	* @brief Loads a freetype font face into memory.
 	*
-	* @param FTLib The freetype library.
 	* @param File The filepath to the freetype-readable font.
 	*
 	* @return False on failure, true on success.
@@ -227,6 +225,11 @@ public:
 	* @param i_Data The desired string of text to be rendered.
 	*/
 	void SetText(std::wstring i_Data);
+	/**
+	* @brief Sets the desired text to be rendered at the next Draw call.
+	*
+	* @param i_Data The desired string of text to be rendered.
+	*/
 	void SetText(std::string i_Data);
 	/**
 	* @brief Returns the size of the rendered glyphs, the actual size depends on the font!

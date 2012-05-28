@@ -29,6 +29,8 @@ public:
 	* @param Width Desired width of the window.
 	* @param Height Desired height of the window.
 	* @param Title Desired title of the window.
+	* @param argc The amount of arguments.
+	* @param argv The arguments passed to main().
 	*
 	* @return True on success, false on failure.
 	*/
@@ -134,12 +136,14 @@ public:
 	 * @return A pointer to the sound system.
 	 */
 	NSoundSystem* GetSoundSystem();
+	/**
+	 * @brief Returns a pointer to the filesystem.
+	 *
+	 * @return A pointer to the filesystem.
+	 */
 	NFileSystem* GetFileSystem();
 private:
 	bool WindowChanged;
-	/**
-	* @brief If the game is running or not.
-	*/
 	bool Run;
 	NFileSystem* FileSystem;
 	NInput* Input;
