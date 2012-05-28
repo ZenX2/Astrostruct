@@ -18,6 +18,8 @@ NButton::NButton()
 	IsPressed = false;
 	IsChanged = false;
 	PressedMemory = false;
+	TextureWidth = 0;
+	TextureHeight = 0;
 }
 
 NButton::~NButton()
@@ -33,12 +35,17 @@ NButton::~NButton()
 void NButton::SetTexture(std::string Name)
 {
 	Texture = GetGame()->GetRender()->GetTexture(Name);
-	BorderSize = Texture->GetFloat("BorderSize");
+	if (Texture)
+	{
+		TextureWidth = Texture->GetSize().x;
+		TextureHeight = Texture->GetSize().y;
+		BorderSize = Texture->GetFloat("BorderSize");
+	}
 }
 
 void NButton::GenerateBuffers()
 {
-	if (!Texture->Good())
+	if (!Texture)
 	{
 		return;
 	}
@@ -61,8 +68,8 @@ void NButton::GenerateBuffers()
 	} else {
 		float SY = BorderSize/GetScale().y;
 		float SX = BorderSize/GetScale().x;
-		float UX = BorderSize/Texture->GetSize().x;
-		float UY = BorderSize/Texture->GetSize().y;
+		float UX = BorderSize/TextureWidth;
+		float UY = BorderSize/TextureHeight;
 		//Top Left Corner
 		Verts.push_back(glm::vec2(-.5,.5));
 		UVs.push_back(glm::vec2(0,0));
@@ -224,7 +231,7 @@ void NButton::Draw(NCamera* View)
 void NButton::Tick(double DT)
 {
 	IsPressed = false;
-	if (Texture != NULL)
+	if (Texture)
 	{
 		Texture->Tick(DT);
 	}
@@ -233,20 +240,29 @@ void NButton::Tick(double DT)
 	{
 		if (GetGame()->GetInput()->GetMouseKey(0))
 		{
-			Texture->Play("pressed");
+			if (Texture)
+			{
+				Texture->Play("pressed");
+			}
 			IsPressed = true;
 		} else {
-			Texture->Play("active");
+			if (Texture)
+			{
+				Texture->Play("active");
+			}
+		}
+		if (IsPressed != PressedMemory)
+		{
+			IsChanged = true;
+			PressedMemory = IsPressed;
+		} else {
+			IsChanged = false;
 		}
 	} else {
-		Texture->Play("idle");
-	}
-	if (IsPressed != PressedMemory)
-	{
-	    IsChanged = true;
-	    PressedMemory = IsPressed;
-	} else {
-	    IsChanged = false;
+		if (Texture)
+		{
+			Texture->Play("idle");
+		}
 	}
 }
 

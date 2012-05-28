@@ -4,9 +4,9 @@ NMap::NMap(std::string i_TileSet)
 {
 	Shader = GetGame()->GetRender()->GetShader("map");
 	Texture = GetGame()->GetRender()->GetTexture(i_TileSet);
-	TileSize = Texture->GetFloat("TileSize");
-	if (Texture->Good())
+	if (Texture)
 	{
+		TileSize = Texture->GetFloat("TileSize");
 		TextureWidth = Texture->GetSize().x;
 		TextureHeight = Texture->GetSize().y;
 	}
@@ -76,7 +76,7 @@ void NMap::Init(unsigned int i_Width, unsigned int i_Height, unsigned int i_Dept
 }
 void NMap::GenerateBuffers()
 {
-	if (!Texture->Good())
+	if (!Texture)
 	{
 		return;
 	}
@@ -119,7 +119,7 @@ void NMap::GenerateBuffers()
 }
 void NMap::Draw(NCamera* View)
 {
-	if (!Texture->Good())
+	if (!Texture)
 	{
 		return;
 	}
@@ -186,7 +186,10 @@ void NMap::Draw(NCamera* View)
 }
 void NMap::Tick(double DT)
 {
-	Texture->Tick(DT);
+	if (Texture)
+	{
+		Texture->Tick(DT);
+	}
 }
 void NMap::Remove()
 {

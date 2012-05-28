@@ -16,7 +16,7 @@ srcdir			= .
 
 
 # Recursive commands
-all clean main:
+all main:
 	$(MAKE) -C src $@
 
 # Package up for distrobution
@@ -49,6 +49,10 @@ distcheck: $(distdir).tar.gz
 	rm -rf $(distdir)
 	@echo "*** Package $(distdir).tar.gz is\
 	 ready for distribution."
+
+clean:
+	rm -rf doc/html doc/latex
+	$(MAKE) -C src $@
 
 FORCE:
 	-rm -f $(distdir).tar.gz

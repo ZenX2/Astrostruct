@@ -30,7 +30,6 @@ Animation__index	NTexture.cpp	/^int Animation__index(lua_State* L)$/;"	f
 Animation__newindex	NTexture.cpp	/^int Animation__newindex(lua_State* L)$/;"	f
 Animations	NRender.hpp	/^	std::vector<NAnimation*> Animations;$/;"	m	class:NRender
 Animations	NTexture.hpp	/^	std::vector<NAnimation*> Animations;$/;"	m	class:NTexture
-BUFFER_SIZE	NSound.hpp	14;"	d
 BitmapHeight	NText.hpp	/^	float BitmapHeight;$/;"	m	class:NGlyph
 BitmapLeft	NText.hpp	/^	float BitmapLeft;$/;"	m	class:NGlyph
 BitmapTop	NText.hpp	/^	float BitmapTop;$/;"	m	class:NGlyph
@@ -552,12 +551,14 @@ Texture	NMap.hpp	/^	NTexture* Texture;$/;"	m	class:NMap
 Texture	NText.hpp	/^	GLuint Texture;$/;"	m	class:NTextureAtlas
 Texture	NWindow.hpp	/^	NTexture* Texture;$/;"	m	class:NWindow	access:public
 TextureFilter	NRender.hpp	/^	GLuint TextureFilter;$/;"	m	class:NRender
+TextureHeight	NButton.hpp	/^	unsigned int TextureWidth, TextureHeight;$/;"	m	class:NButton
 TextureHeight	NMap.hpp	/^	unsigned int TextureHeight;$/;"	m	class:NMap
 TextureLoc	NButton.hpp	/^	GLuint TextureLoc;$/;"	m	class:NButton
 TextureLoc	NMap.hpp	/^	GLuint ColorLoc, MatrixLoc, TextureLoc;$/;"	m	class:NMap
 TextureLoc	NText.hpp	/^	GLuint ColorLoc,TextureLoc,MatrixLoc,ScreenLoc;$/;"	m	class:NText
 TextureLoc	NWindow.hpp	/^	GLuint TextureLoc;$/;"	m	class:NWindow	access:private
 TextureRect	NText.hpp	/^	glm::vec4 TextureRect;$/;"	m	class:NGlyph
+TextureWidth	NButton.hpp	/^	unsigned int TextureWidth, TextureHeight;$/;"	m	class:NButton
 TextureWidth	NMap.hpp	/^	unsigned int TextureWidth;$/;"	m	class:NMap
 Textures	NRender.hpp	/^	std::vector<NTexture*> Textures;$/;"	m	class:NRender
 Textures	NText.hpp	/^	std::vector<NTextureAtlas*> Textures;$/;"	m	class:NFace

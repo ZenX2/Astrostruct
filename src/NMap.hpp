@@ -25,6 +25,11 @@ public:
 class NMap : public NNode
 {
 public:
+	/**
+	 * @brief Initializes the map with the specified tileset. The tileset should be a texture with "TileSize" specified within one of it's animations, else it won't work properly!
+	 *
+	 * @param i_TileSet The name of the texture.
+	 */
 	NMap(std::string i_TileSet);
 	~NMap();
 	/**

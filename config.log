@@ -144,7 +144,7 @@ configure:3192: checking for a BSD-compatible install
 configure:3260: result: /usr/bin/install -c
 configure:3281: checking for library containing glBegin
 configure:3312: g++ -o conftest -g -O2   conftest.cpp  >&5
-/tmp/ccU3awa5.o: In function `main':
+/tmp/cclB7g0n.o: In function `main':
 /home/naelstrof/Projects/astrostruct/conftest.cpp:20: undefined reference to `glBegin'
 collect2: error: ld returned 1 exit status
 configure:3312: $? = 1
@@ -177,7 +177,7 @@ configure:3312: $? = 0
 configure:3329: result: -lGL
 configure:3378: checking for library containing glewInit
 configure:3409: g++ -o conftest -g -O2   conftest.cpp -lGL  >&5
-/tmp/cct20iVb.o: In function `main':
+/tmp/cczYJFmy.o: In function `main':
 /home/naelstrof/Projects/astrostruct/conftest.cpp:20: undefined reference to `glewInit'
 collect2: error: ld returned 1 exit status
 configure:3409: $? = 1
@@ -210,7 +210,7 @@ configure:3409: $? = 0
 configure:3426: result: -lGLEW
 configure:3475: checking for library containing glfwInit
 configure:3506: g++ -o conftest -g -O2   conftest.cpp -lGLEW -lGL  >&5
-/tmp/ccKspHGo.o: In function `main':
+/tmp/ccb1PYKH.o: In function `main':
 /home/naelstrof/Projects/astrostruct/conftest.cpp:20: undefined reference to `glfwInit'
 collect2: error: ld returned 1 exit status
 configure:3506: $? = 1
@@ -243,7 +243,7 @@ configure:3506: $? = 0
 configure:3523: result: -lglfw
 configure:3572: checking for library containing FT_Init_FreeType
 configure:3603: g++ -o conftest -g -O2   conftest.cpp -lglfw -lGLEW -lGL  >&5
-/tmp/ccxJufkr.o: In function `main':
+/tmp/cc2wGhUN.o: In function `main':
 /home/naelstrof/Projects/astrostruct/conftest.cpp:20: undefined reference to `FT_Init_FreeType'
 collect2: error: ld returned 1 exit status
 configure:3603: $? = 1
@@ -276,7 +276,7 @@ configure:3603: $? = 0
 configure:3620: result: -lfreetype
 configure:3669: checking for library containing luaL_register
 configure:3700: g++ -o conftest -g -O2   conftest.cpp -lfreetype -lglfw -lGLEW -lGL  >&5
-/tmp/ccRDCujE.o: In function `main':
+/tmp/cc3pC8oZ.o: In function `main':
 /home/naelstrof/Projects/astrostruct/conftest.cpp:20: undefined reference to `luaL_register'
 collect2: error: ld returned 1 exit status
 configure:3700: $? = 1
@@ -309,7 +309,7 @@ configure:3700: $? = 0
 configure:3717: result: -llua
 configure:3766: checking for library containing SOIL_load_OGL_texture
 configure:3797: g++ -o conftest -g -O2   conftest.cpp -llua -lfreetype -lglfw -lGLEW -lGL  >&5
-/tmp/ccoVXG1Q.o: In function `main':
+/tmp/ccgr4DPe.o: In function `main':
 /home/naelstrof/Projects/astrostruct/conftest.cpp:20: undefined reference to `SOIL_load_OGL_texture'
 collect2: error: ld returned 1 exit status
 configure:3797: $? = 1
@@ -342,7 +342,7 @@ configure:3797: $? = 0
 configure:3814: result: -lSOIL
 configure:3863: checking for library containing alcOpenDevice
 configure:3894: g++ -o conftest -g -O2   conftest.cpp -lSOIL -llua -lfreetype -lglfw -lGLEW -lGL  >&5
-/tmp/cctxWA56.o: In function `main':
+/tmp/ccxsvJ3t.o: In function `main':
 /home/naelstrof/Projects/astrostruct/conftest.cpp:20: undefined reference to `alcOpenDevice'
 collect2: error: ld returned 1 exit status
 configure:3894: $? = 1
@@ -375,7 +375,7 @@ configure:3894: $? = 0
 configure:3911: result: -lopenal
 configure:3960: checking for library containing alureInitDevice
 configure:3991: g++ -o conftest -g -O2   conftest.cpp -lopenal -lSOIL -llua -lfreetype -lglfw -lGLEW -lGL  >&5
-/tmp/ccEBqjjk.o: In function `main':
+/tmp/ccVcBeoJ.o: In function `main':
 /home/naelstrof/Projects/astrostruct/conftest.cpp:20: undefined reference to `alureInitDevice'
 collect2: error: ld returned 1 exit status
 configure:3991: $? = 1
@@ -408,7 +408,7 @@ configure:3991: $? = 0
 configure:4008: result: -lalure
 configure:4057: checking for library containing PHYSFS_init
 configure:4088: g++ -o conftest -g -O2   conftest.cpp -lalure -lopenal -lSOIL -llua -lfreetype -lglfw -lGLEW -lGL  >&5
-/tmp/ccUG5LLz.o: In function `main':
+/tmp/ccUQ12ZO.o: In function `main':
 /home/naelstrof/Projects/astrostruct/conftest.cpp:20: undefined reference to `PHYSFS_init'
 collect2: error: ld returned 1 exit status
 configure:4088: $? = 1
@@ -487,8 +487,6 @@ configure:4460: $? = 0
 configure:4533: g++ -o conftest -g -O2 -I/usr/include/freetype2   conftest.cpp -lphysfs -lalure -lopenal -lSOIL -llua -lfreetype -lglfw -lGLEW -lGL  >&5
 configure:4533: $? = 0
 configure:4533: ./conftest
-Error loading libdumb.so: libdumb.so: cannot open shared object file: No such file or directory
-Error loading libfluidsynth.so.1: libfluidsynth.so.1: cannot open shared object file: No such file or directory
 configure:4533: $? = 0
 configure:4544: result: yes
 configure:4557: checking for sys/types.h

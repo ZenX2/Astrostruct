@@ -336,6 +336,10 @@ NTexture* NRender::GetTexture(std::string Name)
 	{
 		if (Textures[i]->Name == Name)
 		{
+			if (!Textures[i]->Good())
+			{
+				return NULL;
+			}
 			NTexture* NewTexture = new NTexture(Textures[i]);
 			return NewTexture;
 		}

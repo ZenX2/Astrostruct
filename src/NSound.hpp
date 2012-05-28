@@ -11,8 +11,6 @@
 /** @addtogroup SoundSystem
  * @{*/
 
-#define BUFFER_SIZE 4096
-
 /**
  * @brief Caches loaded sounds into memory.
  */

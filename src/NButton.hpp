@@ -63,6 +63,7 @@ public:
 	 */
 	void Remove();
 private:
+	unsigned int TextureWidth, TextureHeight;
 	bool PressedMemory;
 	bool IsPressed;
 	bool IsChanged;

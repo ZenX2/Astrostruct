@@ -21,7 +21,7 @@ NWindow::~NWindow()
 {
 	glDeleteBuffers(2,Buffers);
 	delete[] Buffers;
-	if (Texture != NULL)
+	if (Texture)
 	{
 		delete Texture;
 	}
@@ -30,12 +30,15 @@ NWindow::~NWindow()
 void NWindow::SetTexture(std::string Name)
 {
 	Texture = GetGame()->GetRender()->GetTexture(Name);
-	BorderSize = Texture->GetFloat("BorderSize");
+	if (Texture)
+	{
+		BorderSize = Texture->GetFloat("BorderSize");
+	}
 }
 
 void NWindow::GenerateBuffers()
 {
-	if (!Texture->Good())
+	if (!Texture)
 	{
 		return;
 	}
@@ -220,7 +223,7 @@ void NWindow::Draw(NCamera* View)
 
 void NWindow::Tick(double DT)
 {
-	if (Texture != NULL)
+	if (Texture)
 	{
 		Texture->Tick(DT);
 	}
