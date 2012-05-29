@@ -26,7 +26,7 @@ NButton::~NButton()
 {
 	glDeleteBuffers(2,Buffers);
 	delete[] Buffers;
-	if (Texture != NULL)
+	if (Texture)
 	{
 		delete Texture;
 	}

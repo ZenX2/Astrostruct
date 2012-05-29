@@ -57,3 +57,7 @@ NMap* NScene::AddMap(std::string TileSet)
 {
 	return new NMap(TileSet);
 }
+NCamera* NScene::AddCamera()
+{
+	return new NCamera();
+}

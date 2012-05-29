@@ -11,6 +11,7 @@ AddAnimation	NTexture.cpp	/^void NTexture::AddAnimation(NAnimation* Animation)$/
 AddButton	NScene.cpp	/^NButton* NScene::AddButton()$/;"	f	class:NScene
 AddCachedAnimation	NRender.cpp	/^void NRender::AddCachedAnimation(NAnimation* Animation)$/;"	f	class:NRender
 AddCachedTexture	NRender.cpp	/^void NRender::AddCachedTexture(GLuint Texture)$/;"	f	class:NRender
+AddCamera	NScene.cpp	/^NCamera* NScene::AddCamera()$/;"	f	class:NScene
 AddChild	NNode.cpp	/^	Parent->AddChild(this);$/;"	p	file:	signature:(this)
 AddChild	NNode.cpp	/^void NNode::AddChild(NNode* Node)$/;"	f	class:NNode	signature:(NNode* Node)
 AddFace	NText.cpp	/^void NTextSystem::AddFace(NFace* Face)$/;"	f	class:NTextSystem
@@ -473,6 +474,7 @@ Rect	NText.hpp	/^	glm::vec4 Rect;$/;"	m	class:NTextureNode
 Red	NColor.hpp	12;"	d
 Reference	NTexture.hpp	/^	int Reference;$/;"	m	class:NAnimation
 Remove	NButton.cpp	/^void NButton::Remove()$/;"	f	class:NButton
+Remove	NCamera.cpp	/^void NCamera::Remove()$/;"	f	class:NCamera
 Remove	NMap.cpp	/^void NMap::Remove()$/;"	f	class:NMap
 Remove	NSound.cpp	/^void NSound::Remove()$/;"	f	class:NSound
 Remove	NText.cpp	/^void NText::Remove()$/;"	f	class:NText
@@ -657,6 +659,7 @@ version	Makefile	/^version        	= 1.0$/;"	m
 ~NTextSystem	NText.cpp	/^NTextSystem::~NTextSystem()$/;"	f	class:NTextSystem
 ~NTexture	NTexture.cpp	/^NTexture::~NTexture()$/;"	f	class:NTexture
 ~NTextureAtlas	NText.cpp	/^NTextureAtlas::~NTextureAtlas()$/;"	f	class:NTextureAtlas
+~NTextureNode	NText.cpp	/^NTextureNode::~NTextureNode()$/;"	f	class:NTextureNode
 ~NTile	NMap.cpp	/^NTile::~NTile()$/;"	f	class:NTile
 ~NUniform	NShader.cpp	/^NUniform::~NUniform()$/;"	f	class:NUniform
 ~NUniform	NShader.hpp	/^	~NUniform();$/;"	p	class:NUniform	access:public	signature:()

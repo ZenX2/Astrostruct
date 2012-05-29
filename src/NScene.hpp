@@ -69,6 +69,12 @@ public:
 	 * @return A pointer to the map created.
 	 */
 	NMap* AddMap(std::string TileSet);
+	/**
+	 * @brief Adds a camera to the scene.
+	 *
+	 * @return A pointer to the camera.
+	 */
+	NCamera* AddCamera();
 private:
 	double LastTick;
 	std::vector<NNode*> Nodes;

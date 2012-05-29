@@ -98,6 +98,7 @@ std::vector<std::string> NFileSystem::GetFiles(std::string Directory)
 		}
 		i++;
 	}
+	PHYSFS_freeList(Listing);
 	return Files;
 }
 

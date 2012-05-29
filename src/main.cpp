@@ -34,7 +34,7 @@ int main(int argc, char* argv[])
 	NMap* MyMap = GetGame()->GetScene()->AddMap("grimy");
 	MyMap->Init(16,16,16);
 	NSound* CoinSound = GetGame()->GetScene()->AddSound("coin");
-	NCamera* Camera = new NCamera();
+	NCamera* Camera = GetGame()->GetScene()->AddCamera();
 	GetGame()->GetRender()->SetCamera(Camera);
 	NText* FPSText = GetGame()->GetScene()->AddText(_t("cousine"), _t("FPS: 0"));
 	FPSText->SetPos(0,FPSText->GetSize()/2.f);

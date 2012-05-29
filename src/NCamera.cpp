@@ -64,3 +64,8 @@ void NCamera::SetAng(glm::vec3 i_Angle)
 	Angle = i_Angle;
 	Changed = true;
 }
+
+void NCamera::Remove()
+{
+	delete (NCamera*)this;
+}

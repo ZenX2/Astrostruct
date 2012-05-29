@@ -34,6 +34,10 @@ NMap::~NMap()
 	{
 		delete[] Buffers[i];
 	}
+	if (Texture)
+	{
+		delete Texture;
+	}
 }
 void NMap::Init(unsigned int i_Width, unsigned int i_Height, unsigned int i_Depth)
 {

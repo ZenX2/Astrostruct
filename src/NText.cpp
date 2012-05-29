@@ -169,6 +169,7 @@ NTextureAtlas::~NTextureAtlas()
 	{
 		delete Glyphs[i];
 	}
+	delete Node;
 }
 
 unsigned int NTextureAtlas::GetSize()
@@ -534,4 +535,13 @@ NTextureNode* NTextureNode::Insert(glm::vec2 i_Rect)
 	HasChildren = true;
 	//Then attempt to insert it into the first child we created.
 	return Children[0]->Insert(i_Rect);
+}
+
+NTextureNode::~NTextureNode()
+{
+	if (HasChildren)
+	{
+		delete Children[0];
+		delete Children[1];
+	}
 }

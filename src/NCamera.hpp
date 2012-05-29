@@ -42,6 +42,7 @@ public:
 	void SetPos(glm::vec3 i_Position);
 	void SetAng(glm::vec3 i_Angle);
 	void SetScale(glm::vec3 i_Scale);
+	void Remove();
 private:
 	bool Changed;
 	void UpdateMatrix();
