@@ -50,7 +50,10 @@ AC_SEARCH_LIBS([alcOpenDevice],[openal OpenAL32],[],[
 	])
 ])
 AC_SEARCH_LIBS([alureInitDevice],[alure],[],[
-	AC_CHECK_LIB([alure],[main],[LIBS="$LIBS -lalure"],[
+	AC_CHECK_LIB([ALURE32],[main],[
+		LIBS="$LIBS -lALURE32"
+		CXXFLAGS="$CXXFLAGS -I/usr/include/AL"
+		],[
 		AC_MSG_ERROR(["Couldn't find alure libraries!"])
 	])
 ])
@@ -60,13 +63,25 @@ AC_SEARCH_LIBS([PHYSFS_init],[physfs],[],[
 	])
 ])
 
-# Checks for header files.
-CXXFLAGS="$CXXFLAGS -I/usr/include/freetype2"
+AC_CHECK_HEADERS([freetype/freetype.h],[],[
+		AC_MSG_NOTICE(["Couldn't locate freetype headers, attempting to use freetype-config to find them."])
+		FREETYPEFLAGS=`freetype-config --cflags`
+		CXXFLAGS="$CXXFLAGS $FREETYPEFLAGS"
+])
+
+AC_CHECK_HEADERS([utf8.h],[],[
+		AC_MSG_ERROR(["Couldn't find UTF8-CPP headers!"])
+])
+
+AC_CHECK_HEADERS([glm/glm.hpp],[],[
+		AC_MSG_ERROR(["Couldn't find GLM headers!"])
+])
+
 AC_CHECKING([for freetype headers])
 AC_COMPILE_IFELSE([AC_LANG_SOURCE([
 #include <ft2build.h>
 #include FT_FREETYPE_H
-])],[AC_MSG_RESULT([found])], [AC_MSG_ERROR([Failed to find freetype headers!
+])],[AC_MSG_RESULT([yes])], [AC_MSG_ERROR([Failed to find freetype headers!
 Try adding CXXFLAGS="-I/usr/include/freetype2" to the command line!])])
 
 # Checks for typedefs, structures, and compiler characteristics.

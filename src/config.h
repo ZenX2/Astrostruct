@@ -4,6 +4,12 @@
 /* Define to 1 if you have the `floor' function. */
 #define HAVE_FLOOR 1
 
+/* Define to 1 if you have the <freetype/freetype.h> header file. */
+/* #undef HAVE_FREETYPE_FREETYPE_H */
+
+/* Define to 1 if you have the <glm/glm.hpp> header file. */
+#define HAVE_GLM_GLM_HPP 1
+
 /* Define to 1 if you have the <inttypes.h> header file. */
 #define HAVE_INTTYPES_H 1
 
@@ -36,6 +42,9 @@
 
 /* Define to 1 if you have the <unistd.h> header file. */
 #define HAVE_UNISTD_H 1
+
+/* Define to 1 if you have the <utf8.h> header file. */
+#define HAVE_UTF8_H 1
 
 /* Define to 1 if the system has the type `_Bool'. */
 /* #undef HAVE__BOOL */

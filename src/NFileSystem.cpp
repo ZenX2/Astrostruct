@@ -59,7 +59,14 @@ NFile::~NFile()
 
 NFileSystem::NFileSystem(char* CurrentPath)
 {
-	PHYSFS_init(CurrentPath);
+	if (!PHYSFS_init(CurrentPath))
+	{
+		SetColor(Yellow);
+		std::cout << "FILESYSTEM WARN: ";
+		ClearColor();
+		std::cout << "PHYSFS encountered an error: " << PHYSFS_getLastError() << "\n";
+		return;
+	}
 	PHYSFS_permitSymbolicLinks(false);
 	PHYSFS_addToSearchPath("data",0);
 	SetColor(Blue);
@@ -88,10 +95,10 @@ std::vector<std::string> NFileSystem::GetFiles(std::string Directory)
 	std::vector<std::string> Files;
 	while (Listing[i] != NULL)
 	{
-		Files.push_back((Directory)+PHYSFS_getDirSeparator()+std::string(Listing[i]));
-		if (PHYSFS_isDirectory((Directory+PHYSFS_getDirSeparator()+std::string(Listing[i])).c_str()))
+		Files.push_back((Directory)+'/'+std::string(Listing[i]));
+		if (PHYSFS_isDirectory((Directory+'/'+std::string(Listing[i])).c_str()))
 		{
-			std::vector<std::string> NewFiles = GetFiles(Directory+PHYSFS_getDirSeparator()+std::string(Listing[i]));
+			std::vector<std::string> NewFiles = GetFiles(Directory+'/'+std::string(Listing[i]));
 			Files.insert(Files.end(),NewFiles.begin(),NewFiles.end());
 			i++;
 			continue;

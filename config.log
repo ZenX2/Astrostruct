@@ -40,18 +40,18 @@ PATH: /usr/bin/core_perl
 ## Core tests. ##
 ## ----------- ##
 
-configure:2161: checking for g++
-configure:2177: found /usr/bin/g++
-configure:2188: result: g++
-configure:2215: checking for C++ compiler version
-configure:2224: g++ --version >&5
+configure:2252: checking for g++
+configure:2268: found /usr/bin/g++
+configure:2279: result: g++
+configure:2306: checking for C++ compiler version
+configure:2315: g++ --version >&5
 g++ (GCC) 4.7.0 20120505 (prerelease)
 Copyright (C) 2012 Free Software Foundation, Inc.
 This is free software; see the source for copying conditions.  There is NO
 warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
-configure:2235: $? = 0
-configure:2224: g++ -v >&5
+configure:2326: $? = 0
+configure:2315: g++ -v >&5
 Using built-in specs.
 COLLECT_GCC=g++
 COLLECT_LTO_WRAPPER=/usr/lib/gcc/x86_64-unknown-linux-gnu/4.7.0/lto-wrapper
@@ -59,57 +59,57 @@ Target: x86_64-unknown-linux-gnu
 Configured with: /build/src/gcc-4.7-20120505/configure --prefix=/usr --libdir=/usr/lib --libexecdir=/usr/lib --mandir=/usr/share/man --infodir=/usr/share/info --with-bugurl=https://bugs.archlinux.org/ --enable-languages=c,c++,ada,fortran,go,lto,objc,obj-c++ --enable-shared --enable-threads=posix --with-system-zlib --enable-__cxa_atexit --disable-libunwind-exceptions --enable-clocale=gnu --disable-libstdcxx-pch --enable-libstdcxx-time --enable-gnu-unique-object --enable-linker-build-id --with-ppl --enable-cloog-backend=isl --enable-lto --enable-gold --enable-ld=default --enable-plugin --with-plugin-ld=ld.gold --with-linker-hash-style=gnu --disable-multilib --disable-libssp --disable-build-with-cxx --disable-build-poststage1-with-cxx --enable-checking=release
 Thread model: posix
 gcc version 4.7.0 20120505 (prerelease) (GCC) 
-configure:2235: $? = 0
-configure:2224: g++ -V >&5
+configure:2326: $? = 0
+configure:2315: g++ -V >&5
 g++: error: unrecognized command line option '-V'
 g++: fatal error: no input files
 compilation terminated.
-configure:2235: $? = 1
-configure:2224: g++ -qversion >&5
+configure:2326: $? = 1
+configure:2315: g++ -qversion >&5
 g++: error: unrecognized command line option '-qversion'
 g++: fatal error: no input files
 compilation terminated.
-configure:2235: $? = 1
-configure:2255: checking whether the C++ compiler works
-configure:2277: g++    conftest.cpp  >&5
-configure:2281: $? = 0
-configure:2329: result: yes
-configure:2332: checking for C++ compiler default output file name
-configure:2334: result: a.out
-configure:2340: checking for suffix of executables
-configure:2347: g++ -o conftest    conftest.cpp  >&5
-configure:2351: $? = 0
-configure:2373: result: 
-configure:2395: checking whether we are cross compiling
-configure:2403: g++ -o conftest    conftest.cpp  >&5
-configure:2407: $? = 0
-configure:2414: ./conftest
-configure:2418: $? = 0
-configure:2433: result: no
-configure:2438: checking for suffix of object files
-configure:2460: g++ -c   conftest.cpp >&5
-configure:2464: $? = 0
-configure:2485: result: o
-configure:2489: checking whether we are using the GNU C++ compiler
-configure:2508: g++ -c   conftest.cpp >&5
-configure:2508: $? = 0
-configure:2517: result: yes
-configure:2526: checking whether g++ accepts -g
-configure:2546: g++ -c -g  conftest.cpp >&5
-configure:2546: $? = 0
-configure:2587: result: yes
-configure:2658: checking for gcc
-configure:2674: found /usr/bin/gcc
-configure:2685: result: gcc
-configure:2914: checking for C compiler version
-configure:2923: gcc --version >&5
+configure:2326: $? = 1
+configure:2346: checking whether the C++ compiler works
+configure:2368: g++    conftest.cpp  >&5
+configure:2372: $? = 0
+configure:2420: result: yes
+configure:2423: checking for C++ compiler default output file name
+configure:2425: result: a.out
+configure:2431: checking for suffix of executables
+configure:2438: g++ -o conftest    conftest.cpp  >&5
+configure:2442: $? = 0
+configure:2464: result: 
+configure:2486: checking whether we are cross compiling
+configure:2494: g++ -o conftest    conftest.cpp  >&5
+configure:2498: $? = 0
+configure:2505: ./conftest
+configure:2509: $? = 0
+configure:2524: result: no
+configure:2529: checking for suffix of object files
+configure:2551: g++ -c   conftest.cpp >&5
+configure:2555: $? = 0
+configure:2576: result: o
+configure:2580: checking whether we are using the GNU C++ compiler
+configure:2599: g++ -c   conftest.cpp >&5
+configure:2599: $? = 0
+configure:2608: result: yes
+configure:2617: checking whether g++ accepts -g
+configure:2637: g++ -c -g  conftest.cpp >&5
+configure:2637: $? = 0
+configure:2678: result: yes
+configure:2749: checking for gcc
+configure:2765: found /usr/bin/gcc
+configure:2776: result: gcc
+configure:3005: checking for C compiler version
+configure:3014: gcc --version >&5
 gcc (GCC) 4.7.0 20120505 (prerelease)
 Copyright (C) 2012 Free Software Foundation, Inc.
 This is free software; see the source for copying conditions.  There is NO
 warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
-configure:2934: $? = 0
-configure:2923: gcc -v >&5
+configure:3025: $? = 0
+configure:3014: gcc -v >&5
 Using built-in specs.
 COLLECT_GCC=gcc
 COLLECT_LTO_WRAPPER=/usr/lib/gcc/x86_64-unknown-linux-gnu/4.7.0/lto-wrapper
@@ -117,37 +117,37 @@ Target: x86_64-unknown-linux-gnu
 Configured with: /build/src/gcc-4.7-20120505/configure --prefix=/usr --libdir=/usr/lib --libexecdir=/usr/lib --mandir=/usr/share/man --infodir=/usr/share/info --with-bugurl=https://bugs.archlinux.org/ --enable-languages=c,c++,ada,fortran,go,lto,objc,obj-c++ --enable-shared --enable-threads=posix --with-system-zlib --enable-__cxa_atexit --disable-libunwind-exceptions --enable-clocale=gnu --disable-libstdcxx-pch --enable-libstdcxx-time --enable-gnu-unique-object --enable-linker-build-id --with-ppl --enable-cloog-backend=isl --enable-lto --enable-gold --enable-ld=default --enable-plugin --with-plugin-ld=ld.gold --with-linker-hash-style=gnu --disable-multilib --disable-libssp --disable-build-with-cxx --disable-build-poststage1-with-cxx --enable-checking=release
 Thread model: posix
 gcc version 4.7.0 20120505 (prerelease) (GCC) 
-configure:2934: $? = 0
-configure:2923: gcc -V >&5
+configure:3025: $? = 0
+configure:3014: gcc -V >&5
 gcc: error: unrecognized command line option '-V'
 gcc: fatal error: no input files
 compilation terminated.
-configure:2934: $? = 1
-configure:2923: gcc -qversion >&5
+configure:3025: $? = 1
+configure:3014: gcc -qversion >&5
 gcc: error: unrecognized command line option '-qversion'
 gcc: fatal error: no input files
 compilation terminated.
-configure:2934: $? = 1
-configure:2938: checking whether we are using the GNU C compiler
-configure:2957: gcc -c   conftest.c >&5
-configure:2957: $? = 0
-configure:2966: result: yes
-configure:2975: checking whether gcc accepts -g
-configure:2995: gcc -c -g  conftest.c >&5
-configure:2995: $? = 0
-configure:3036: result: yes
-configure:3053: checking for gcc option to accept ISO C89
-configure:3116: gcc  -c -g -O2  conftest.c >&5
-configure:3116: $? = 0
-configure:3129: result: none needed
-configure:3192: checking for a BSD-compatible install
-configure:3260: result: /usr/bin/install -c
-configure:3281: checking for library containing glBegin
-configure:3312: g++ -o conftest -g -O2   conftest.cpp  >&5
-/tmp/cclB7g0n.o: In function `main':
+configure:3025: $? = 1
+configure:3029: checking whether we are using the GNU C compiler
+configure:3048: gcc -c   conftest.c >&5
+configure:3048: $? = 0
+configure:3057: result: yes
+configure:3066: checking whether gcc accepts -g
+configure:3086: gcc -c -g  conftest.c >&5
+configure:3086: $? = 0
+configure:3127: result: yes
+configure:3144: checking for gcc option to accept ISO C89
+configure:3207: gcc  -c -g -O2  conftest.c >&5
+configure:3207: $? = 0
+configure:3220: result: none needed
+configure:3283: checking for a BSD-compatible install
+configure:3351: result: /usr/bin/install -c
+configure:3372: checking for library containing glBegin
+configure:3403: g++ -o conftest -g -O2   conftest.cpp  >&5
+/tmp/ccPcYdCr.o: In function `main':
 /home/naelstrof/Projects/astrostruct/conftest.cpp:20: undefined reference to `glBegin'
 collect2: error: ld returned 1 exit status
-configure:3312: $? = 1
+configure:3403: $? = 1
 configure: failed program was:
 | /* confdefs.h */
 | #define PACKAGE_NAME "astrostruct"
@@ -172,15 +172,15 @@ configure: failed program was:
 |   ;
 |   return 0;
 | }
-configure:3312: g++ -o conftest -g -O2   conftest.cpp -lGL   >&5
-configure:3312: $? = 0
-configure:3329: result: -lGL
-configure:3378: checking for library containing glewInit
-configure:3409: g++ -o conftest -g -O2   conftest.cpp -lGL  >&5
-/tmp/cczYJFmy.o: In function `main':
+configure:3403: g++ -o conftest -g -O2   conftest.cpp -lGL   >&5
+configure:3403: $? = 0
+configure:3420: result: -lGL
+configure:3469: checking for library containing glewInit
+configure:3500: g++ -o conftest -g -O2   conftest.cpp -lGL  >&5
+/tmp/ccTP7JWx.o: In function `main':
 /home/naelstrof/Projects/astrostruct/conftest.cpp:20: undefined reference to `glewInit'
 collect2: error: ld returned 1 exit status
-configure:3409: $? = 1
+configure:3500: $? = 1
 configure: failed program was:
 | /* confdefs.h */
 | #define PACKAGE_NAME "astrostruct"
@@ -205,15 +205,15 @@ configure: failed program was:
 |   ;
 |   return 0;
 | }
-configure:3409: g++ -o conftest -g -O2   conftest.cpp -lGLEW  -lGL  >&5
-configure:3409: $? = 0
-configure:3426: result: -lGLEW
-configure:3475: checking for library containing glfwInit
-configure:3506: g++ -o conftest -g -O2   conftest.cpp -lGLEW -lGL  >&5
-/tmp/ccb1PYKH.o: In function `main':
+configure:3500: g++ -o conftest -g -O2   conftest.cpp -lGLEW  -lGL  >&5
+configure:3500: $? = 0
+configure:3517: result: -lGLEW
+configure:3566: checking for library containing glfwInit
+configure:3597: g++ -o conftest -g -O2   conftest.cpp -lGLEW -lGL  >&5
+/tmp/ccGwTHvI.o: In function `main':
 /home/naelstrof/Projects/astrostruct/conftest.cpp:20: undefined reference to `glfwInit'
 collect2: error: ld returned 1 exit status
-configure:3506: $? = 1
+configure:3597: $? = 1
 configure: failed program was:
 | /* confdefs.h */
 | #define PACKAGE_NAME "astrostruct"
@@ -238,15 +238,15 @@ configure: failed program was:
 |   ;
 |   return 0;
 | }
-configure:3506: g++ -o conftest -g -O2   conftest.cpp -lglfw  -lGLEW -lGL  >&5
-configure:3506: $? = 0
-configure:3523: result: -lglfw
-configure:3572: checking for library containing FT_Init_FreeType
-configure:3603: g++ -o conftest -g -O2   conftest.cpp -lglfw -lGLEW -lGL  >&5
-/tmp/cc2wGhUN.o: In function `main':
+configure:3597: g++ -o conftest -g -O2   conftest.cpp -lglfw  -lGLEW -lGL  >&5
+configure:3597: $? = 0
+configure:3614: result: -lglfw
+configure:3663: checking for library containing FT_Init_FreeType
+configure:3694: g++ -o conftest -g -O2   conftest.cpp -lglfw -lGLEW -lGL  >&5
+/tmp/ccomtS6U.o: In function `main':
 /home/naelstrof/Projects/astrostruct/conftest.cpp:20: undefined reference to `FT_Init_FreeType'
 collect2: error: ld returned 1 exit status
-configure:3603: $? = 1
+configure:3694: $? = 1
 configure: failed program was:
 | /* confdefs.h */
 | #define PACKAGE_NAME "astrostruct"
@@ -271,15 +271,15 @@ configure: failed program was:
 |   ;
 |   return 0;
 | }
-configure:3603: g++ -o conftest -g -O2   conftest.cpp -lfreetype  -lglfw -lGLEW -lGL  >&5
-configure:3603: $? = 0
-configure:3620: result: -lfreetype
-configure:3669: checking for library containing luaL_register
-configure:3700: g++ -o conftest -g -O2   conftest.cpp -lfreetype -lglfw -lGLEW -lGL  >&5
-/tmp/cc3pC8oZ.o: In function `main':
+configure:3694: g++ -o conftest -g -O2   conftest.cpp -lfreetype  -lglfw -lGLEW -lGL  >&5
+configure:3694: $? = 0
+configure:3711: result: -lfreetype
+configure:3760: checking for library containing luaL_register
+configure:3791: g++ -o conftest -g -O2   conftest.cpp -lfreetype -lglfw -lGLEW -lGL  >&5
+/tmp/ccD8O5e8.o: In function `main':
 /home/naelstrof/Projects/astrostruct/conftest.cpp:20: undefined reference to `luaL_register'
 collect2: error: ld returned 1 exit status
-configure:3700: $? = 1
+configure:3791: $? = 1
 configure: failed program was:
 | /* confdefs.h */
 | #define PACKAGE_NAME "astrostruct"
@@ -304,15 +304,15 @@ configure: failed program was:
 |   ;
 |   return 0;
 | }
-configure:3700: g++ -o conftest -g -O2   conftest.cpp -llua  -lfreetype -lglfw -lGLEW -lGL  >&5
-configure:3700: $? = 0
-configure:3717: result: -llua
-configure:3766: checking for library containing SOIL_load_OGL_texture
-configure:3797: g++ -o conftest -g -O2   conftest.cpp -llua -lfreetype -lglfw -lGLEW -lGL  >&5
-/tmp/ccgr4DPe.o: In function `main':
+configure:3791: g++ -o conftest -g -O2   conftest.cpp -llua  -lfreetype -lglfw -lGLEW -lGL  >&5
+configure:3791: $? = 0
+configure:3808: result: -llua
+configure:3857: checking for library containing SOIL_load_OGL_texture
+configure:3888: g++ -o conftest -g -O2   conftest.cpp -llua -lfreetype -lglfw -lGLEW -lGL  >&5
+/tmp/ccq1y74k.o: In function `main':
 /home/naelstrof/Projects/astrostruct/conftest.cpp:20: undefined reference to `SOIL_load_OGL_texture'
 collect2: error: ld returned 1 exit status
-configure:3797: $? = 1
+configure:3888: $? = 1
 configure: failed program was:
 | /* confdefs.h */
 | #define PACKAGE_NAME "astrostruct"
@@ -337,15 +337,15 @@ configure: failed program was:
 |   ;
 |   return 0;
 | }
-configure:3797: g++ -o conftest -g -O2   conftest.cpp -lSOIL  -llua -lfreetype -lglfw -lGLEW -lGL  >&5
-configure:3797: $? = 0
-configure:3814: result: -lSOIL
-configure:3863: checking for library containing alcOpenDevice
-configure:3894: g++ -o conftest -g -O2   conftest.cpp -lSOIL -llua -lfreetype -lglfw -lGLEW -lGL  >&5
-/tmp/ccxsvJ3t.o: In function `main':
+configure:3888: g++ -o conftest -g -O2   conftest.cpp -lSOIL  -llua -lfreetype -lglfw -lGLEW -lGL  >&5
+configure:3888: $? = 0
+configure:3905: result: -lSOIL
+configure:3954: checking for library containing alcOpenDevice
+configure:3985: g++ -o conftest -g -O2   conftest.cpp -lSOIL -llua -lfreetype -lglfw -lGLEW -lGL  >&5
+/tmp/ccIOatly.o: In function `main':
 /home/naelstrof/Projects/astrostruct/conftest.cpp:20: undefined reference to `alcOpenDevice'
 collect2: error: ld returned 1 exit status
-configure:3894: $? = 1
+configure:3985: $? = 1
 configure: failed program was:
 | /* confdefs.h */
 | #define PACKAGE_NAME "astrostruct"
@@ -370,15 +370,15 @@ configure: failed program was:
 |   ;
 |   return 0;
 | }
-configure:3894: g++ -o conftest -g -O2   conftest.cpp -lopenal  -lSOIL -llua -lfreetype -lglfw -lGLEW -lGL  >&5
-configure:3894: $? = 0
-configure:3911: result: -lopenal
-configure:3960: checking for library containing alureInitDevice
-configure:3991: g++ -o conftest -g -O2   conftest.cpp -lopenal -lSOIL -llua -lfreetype -lglfw -lGLEW -lGL  >&5
-/tmp/ccVcBeoJ.o: In function `main':
+configure:3985: g++ -o conftest -g -O2   conftest.cpp -lopenal  -lSOIL -llua -lfreetype -lglfw -lGLEW -lGL  >&5
+configure:3985: $? = 0
+configure:4002: result: -lopenal
+configure:4051: checking for library containing alureInitDevice
+configure:4082: g++ -o conftest -g -O2   conftest.cpp -lopenal -lSOIL -llua -lfreetype -lglfw -lGLEW -lGL  >&5
+/tmp/ccWR6a1D.o: In function `main':
 /home/naelstrof/Projects/astrostruct/conftest.cpp:20: undefined reference to `alureInitDevice'
 collect2: error: ld returned 1 exit status
-configure:3991: $? = 1
+configure:4082: $? = 1
 configure: failed program was:
 | /* confdefs.h */
 | #define PACKAGE_NAME "astrostruct"
@@ -403,15 +403,15 @@ configure: failed program was:
 |   ;
 |   return 0;
 | }
-configure:3991: g++ -o conftest -g -O2   conftest.cpp -lalure  -lopenal -lSOIL -llua -lfreetype -lglfw -lGLEW -lGL  >&5
-configure:3991: $? = 0
-configure:4008: result: -lalure
-configure:4057: checking for library containing PHYSFS_init
-configure:4088: g++ -o conftest -g -O2   conftest.cpp -lalure -lopenal -lSOIL -llua -lfreetype -lglfw -lGLEW -lGL  >&5
-/tmp/ccUQ12ZO.o: In function `main':
+configure:4082: g++ -o conftest -g -O2   conftest.cpp -lalure  -lopenal -lSOIL -llua -lfreetype -lglfw -lGLEW -lGL  >&5
+configure:4082: $? = 0
+configure:4099: result: -lalure
+configure:4151: checking for library containing PHYSFS_init
+configure:4182: g++ -o conftest -g -O2   conftest.cpp -lalure -lopenal -lSOIL -llua -lfreetype -lglfw -lGLEW -lGL  >&5
+/tmp/cc4mNcvR.o: In function `main':
 /home/naelstrof/Projects/astrostruct/conftest.cpp:20: undefined reference to `PHYSFS_init'
 collect2: error: ld returned 1 exit status
-configure:4088: $? = 1
+configure:4182: $? = 1
 configure: failed program was:
 | /* confdefs.h */
 | #define PACKAGE_NAME "astrostruct"
@@ -436,37 +436,16 @@ configure: failed program was:
 |   ;
 |   return 0;
 | }
-configure:4088: g++ -o conftest -g -O2   conftest.cpp -lphysfs  -lalure -lopenal -lSOIL -llua -lfreetype -lglfw -lGLEW -lGL  >&5
-configure:4088: $? = 0
-configure:4105: result: -lphysfs
-configure:4157: checking for freetype headers...
-configure:4166: g++ -c -g -O2 -I/usr/include/freetype2  conftest.cpp >&5
-configure:4166: $? = 0
-configure:4167: result: found
-configure:4181: checking how to run the C++ preprocessor
-configure:4208: g++ -E  conftest.cpp
-configure:4208: $? = 0
-configure:4222: g++ -E  conftest.cpp
-conftest.cpp:9:28: fatal error: ac_nonexistent.h: No such file or directory
-compilation terminated.
-configure:4222: $? = 1
-configure: failed program was:
-| /* confdefs.h */
-| #define PACKAGE_NAME "astrostruct"
-| #define PACKAGE_TARNAME "astrostruct"
-| #define PACKAGE_VERSION "1.0"
-| #define PACKAGE_STRING "astrostruct 1.0"
-| #define PACKAGE_BUGREPORT "naelstrof@gmail.com"
-| #define PACKAGE_URL ""
-| /* end confdefs.h.  */
-| #include <ac_nonexistent.h>
-configure:4247: result: g++ -E
-configure:4267: g++ -E  conftest.cpp
-configure:4267: $? = 0
+configure:4182: g++ -o conftest -g -O2   conftest.cpp -lphysfs  -lalure -lopenal -lSOIL -llua -lfreetype -lglfw -lGLEW -lGL  >&5
+configure:4182: $? = 0
+configure:4199: result: -lphysfs
+configure:4254: checking how to run the C++ preprocessor
 configure:4281: g++ -E  conftest.cpp
+configure:4281: $? = 0
+configure:4295: g++ -E  conftest.cpp
 conftest.cpp:9:28: fatal error: ac_nonexistent.h: No such file or directory
 compilation terminated.
-configure:4281: $? = 1
+configure:4295: $? = 1
 configure: failed program was:
 | /* confdefs.h */
 | #define PACKAGE_NAME "astrostruct"
@@ -477,63 +456,76 @@ configure: failed program was:
 | #define PACKAGE_URL ""
 | /* end confdefs.h.  */
 | #include <ac_nonexistent.h>
-configure:4310: checking for grep that handles long lines and -e
-configure:4368: result: /usr/bin/grep
-configure:4373: checking for egrep
-configure:4435: result: /usr/bin/grep -E
-configure:4440: checking for ANSI C header files
-configure:4460: g++ -c -g -O2 -I/usr/include/freetype2  conftest.cpp >&5
-configure:4460: $? = 0
-configure:4533: g++ -o conftest -g -O2 -I/usr/include/freetype2   conftest.cpp -lphysfs -lalure -lopenal -lSOIL -llua -lfreetype -lglfw -lGLEW -lGL  >&5
+configure:4320: result: g++ -E
+configure:4340: g++ -E  conftest.cpp
+configure:4340: $? = 0
+configure:4354: g++ -E  conftest.cpp
+conftest.cpp:9:28: fatal error: ac_nonexistent.h: No such file or directory
+compilation terminated.
+configure:4354: $? = 1
+configure: failed program was:
+| /* confdefs.h */
+| #define PACKAGE_NAME "astrostruct"
+| #define PACKAGE_TARNAME "astrostruct"
+| #define PACKAGE_VERSION "1.0"
+| #define PACKAGE_STRING "astrostruct 1.0"
+| #define PACKAGE_BUGREPORT "naelstrof@gmail.com"
+| #define PACKAGE_URL ""
+| /* end confdefs.h.  */
+| #include <ac_nonexistent.h>
+configure:4383: checking for grep that handles long lines and -e
+configure:4441: result: /usr/bin/grep
+configure:4446: checking for egrep
+configure:4508: result: /usr/bin/grep -E
+configure:4513: checking for ANSI C header files
+configure:4533: g++ -c -g -O2  conftest.cpp >&5
 configure:4533: $? = 0
-configure:4533: ./conftest
-configure:4533: $? = 0
-configure:4544: result: yes
-configure:4557: checking for sys/types.h
-configure:4557: g++ -c -g -O2 -I/usr/include/freetype2  conftest.cpp >&5
-configure:4557: $? = 0
-configure:4557: result: yes
-configure:4557: checking for sys/stat.h
-configure:4557: g++ -c -g -O2 -I/usr/include/freetype2  conftest.cpp >&5
-configure:4557: $? = 0
-configure:4557: result: yes
-configure:4557: checking for stdlib.h
-configure:4557: g++ -c -g -O2 -I/usr/include/freetype2  conftest.cpp >&5
-configure:4557: $? = 0
-configure:4557: result: yes
-configure:4557: checking for string.h
-configure:4557: g++ -c -g -O2 -I/usr/include/freetype2  conftest.cpp >&5
-configure:4557: $? = 0
-configure:4557: result: yes
-configure:4557: checking for memory.h
-configure:4557: g++ -c -g -O2 -I/usr/include/freetype2  conftest.cpp >&5
-configure:4557: $? = 0
-configure:4557: result: yes
-configure:4557: checking for strings.h
-configure:4557: g++ -c -g -O2 -I/usr/include/freetype2  conftest.cpp >&5
-configure:4557: $? = 0
-configure:4557: result: yes
-configure:4557: checking for inttypes.h
-configure:4557: g++ -c -g -O2 -I/usr/include/freetype2  conftest.cpp >&5
-configure:4557: $? = 0
-configure:4557: result: yes
-configure:4557: checking for stdint.h
-configure:4557: g++ -c -g -O2 -I/usr/include/freetype2  conftest.cpp >&5
-configure:4557: $? = 0
-configure:4557: result: yes
-configure:4557: checking for unistd.h
-configure:4557: g++ -c -g -O2 -I/usr/include/freetype2  conftest.cpp >&5
-configure:4557: $? = 0
-configure:4557: result: yes
-configure:4569: checking for stdbool.h that conforms to C99
-configure:4636: g++ -c -g -O2 -I/usr/include/freetype2  conftest.cpp >&5
-configure:4636: $? = 0
-configure:4643: result: yes
-configure:4645: checking for _Bool
-configure:4645: g++ -c -g -O2 -I/usr/include/freetype2  conftest.cpp >&5
-conftest.cpp: In function 'int main()':
-conftest.cpp:55:13: error: '_Bool' was not declared in this scope
-configure:4645: $? = 1
+configure:4606: g++ -o conftest -g -O2   conftest.cpp -lphysfs -lalure -lopenal -lSOIL -llua -lfreetype -lglfw -lGLEW -lGL  >&5
+configure:4606: $? = 0
+configure:4606: ./conftest
+configure:4606: $? = 0
+configure:4617: result: yes
+configure:4630: checking for sys/types.h
+configure:4630: g++ -c -g -O2  conftest.cpp >&5
+configure:4630: $? = 0
+configure:4630: result: yes
+configure:4630: checking for sys/stat.h
+configure:4630: g++ -c -g -O2  conftest.cpp >&5
+configure:4630: $? = 0
+configure:4630: result: yes
+configure:4630: checking for stdlib.h
+configure:4630: g++ -c -g -O2  conftest.cpp >&5
+configure:4630: $? = 0
+configure:4630: result: yes
+configure:4630: checking for string.h
+configure:4630: g++ -c -g -O2  conftest.cpp >&5
+configure:4630: $? = 0
+configure:4630: result: yes
+configure:4630: checking for memory.h
+configure:4630: g++ -c -g -O2  conftest.cpp >&5
+configure:4630: $? = 0
+configure:4630: result: yes
+configure:4630: checking for strings.h
+configure:4630: g++ -c -g -O2  conftest.cpp >&5
+configure:4630: $? = 0
+configure:4630: result: yes
+configure:4630: checking for inttypes.h
+configure:4630: g++ -c -g -O2  conftest.cpp >&5
+configure:4630: $? = 0
+configure:4630: result: yes
+configure:4630: checking for stdint.h
+configure:4630: g++ -c -g -O2  conftest.cpp >&5
+configure:4630: $? = 0
+configure:4630: result: yes
+configure:4630: checking for unistd.h
+configure:4630: g++ -c -g -O2  conftest.cpp >&5
+configure:4630: $? = 0
+configure:4630: result: yes
+configure:4644: checking freetype/freetype.h usability
+configure:4644: g++ -c -g -O2  conftest.cpp >&5
+conftest.cpp:52:31: fatal error: freetype/freetype.h: No such file or directory
+compilation terminated.
+configure:4644: $? = 1
 configure: failed program was:
 | /* confdefs.h */
 | #define PACKAGE_NAME "astrostruct"
@@ -586,6 +578,124 @@ configure: failed program was:
 | #ifdef HAVE_UNISTD_H
 | # include <unistd.h>
 | #endif
+| #include <freetype/freetype.h>
+configure:4644: result: no
+configure:4644: checking freetype/freetype.h presence
+configure:4644: g++ -E  conftest.cpp
+conftest.cpp:19:31: fatal error: freetype/freetype.h: No such file or directory
+compilation terminated.
+configure:4644: $? = 1
+configure: failed program was:
+| /* confdefs.h */
+| #define PACKAGE_NAME "astrostruct"
+| #define PACKAGE_TARNAME "astrostruct"
+| #define PACKAGE_VERSION "1.0"
+| #define PACKAGE_STRING "astrostruct 1.0"
+| #define PACKAGE_BUGREPORT "naelstrof@gmail.com"
+| #define PACKAGE_URL ""
+| #define STDC_HEADERS 1
+| #define HAVE_SYS_TYPES_H 1
+| #define HAVE_SYS_STAT_H 1
+| #define HAVE_STDLIB_H 1
+| #define HAVE_STRING_H 1
+| #define HAVE_MEMORY_H 1
+| #define HAVE_STRINGS_H 1
+| #define HAVE_INTTYPES_H 1
+| #define HAVE_STDINT_H 1
+| #define HAVE_UNISTD_H 1
+| /* end confdefs.h.  */
+| #include <freetype/freetype.h>
+configure:4644: result: no
+configure:4644: checking for freetype/freetype.h
+configure:4644: result: no
+configure:4652: "Couldn't locate freetype headers, attempting to use freetype-config to find them."
+configure:4664: checking utf8.h usability
+configure:4664: g++ -c -g -O2 -I/usr/include/freetype2  conftest.cpp >&5
+configure:4664: $? = 0
+configure:4664: result: yes
+configure:4664: checking utf8.h presence
+configure:4664: g++ -E  conftest.cpp
+configure:4664: $? = 0
+configure:4664: result: yes
+configure:4664: checking for utf8.h
+configure:4664: result: yes
+configure:4681: checking glm/glm.hpp usability
+configure:4681: g++ -c -g -O2 -I/usr/include/freetype2  conftest.cpp >&5
+configure:4681: $? = 0
+configure:4681: result: yes
+configure:4681: checking glm/glm.hpp presence
+configure:4681: g++ -E  conftest.cpp
+configure:4681: $? = 0
+configure:4681: result: yes
+configure:4681: checking for glm/glm.hpp
+configure:4681: result: yes
+configure:4696: checking for freetype headers...
+configure:4705: g++ -c -g -O2 -I/usr/include/freetype2  conftest.cpp >&5
+configure:4705: $? = 0
+configure:4706: result: yes
+configure:4715: checking for stdbool.h that conforms to C99
+configure:4782: g++ -c -g -O2 -I/usr/include/freetype2  conftest.cpp >&5
+configure:4782: $? = 0
+configure:4789: result: yes
+configure:4791: checking for _Bool
+configure:4791: g++ -c -g -O2 -I/usr/include/freetype2  conftest.cpp >&5
+conftest.cpp: In function 'int main()':
+conftest.cpp:57:13: error: '_Bool' was not declared in this scope
+configure:4791: $? = 1
+configure: failed program was:
+| /* confdefs.h */
+| #define PACKAGE_NAME "astrostruct"
+| #define PACKAGE_TARNAME "astrostruct"
+| #define PACKAGE_VERSION "1.0"
+| #define PACKAGE_STRING "astrostruct 1.0"
+| #define PACKAGE_BUGREPORT "naelstrof@gmail.com"
+| #define PACKAGE_URL ""
+| #define STDC_HEADERS 1
+| #define HAVE_SYS_TYPES_H 1
+| #define HAVE_SYS_STAT_H 1
+| #define HAVE_STDLIB_H 1
+| #define HAVE_STRING_H 1
+| #define HAVE_MEMORY_H 1
+| #define HAVE_STRINGS_H 1
+| #define HAVE_INTTYPES_H 1
+| #define HAVE_STDINT_H 1
+| #define HAVE_UNISTD_H 1
+| #define HAVE_UTF8_H 1
+| #define HAVE_GLM_GLM_HPP 1
+| /* end confdefs.h.  */
+| #include <stdio.h>
+| #ifdef HAVE_SYS_TYPES_H
+| # include <sys/types.h>
+| #endif
+| #ifdef HAVE_SYS_STAT_H
+| # include <sys/stat.h>
+| #endif
+| #ifdef STDC_HEADERS
+| # include <stdlib.h>
+| # include <stddef.h>
+| #else
+| # ifdef HAVE_STDLIB_H
+| #  include <stdlib.h>
+| # endif
+| #endif
+| #ifdef HAVE_STRING_H
+| # if !defined STDC_HEADERS && defined HAVE_MEMORY_H
+| #  include <memory.h>
+| # endif
+| # include <string.h>
+| #endif
+| #ifdef HAVE_STRINGS_H
+| # include <strings.h>
+| #endif
+| #ifdef HAVE_INTTYPES_H
+| # include <inttypes.h>
+| #endif
+| #ifdef HAVE_STDINT_H
+| # include <stdint.h>
+| #endif
+| #ifdef HAVE_UNISTD_H
+| # include <unistd.h>
+| #endif
 | int
 | main ()
 | {
@@ -594,16 +704,16 @@ configure: failed program was:
 |   ;
 |   return 0;
 | }
-configure:4645: result: no
-configure:4667: checking for floor
-configure:4667: g++ -o conftest -g -O2 -I/usr/include/freetype2   conftest.cpp -lphysfs -lalure -lopenal -lSOIL -llua -lfreetype -lglfw -lGLEW -lGL  >&5
-configure:4667: $? = 0
-configure:4667: result: yes
-configure:4667: checking for sqrt
-configure:4667: g++ -o conftest -g -O2 -I/usr/include/freetype2   conftest.cpp -lphysfs -lalure -lopenal -lSOIL -llua -lfreetype -lglfw -lGLEW -lGL  >&5
-configure:4667: $? = 0
-configure:4667: result: yes
-configure:4793: creating ./config.status
+configure:4791: result: no
+configure:4813: checking for floor
+configure:4813: g++ -o conftest -g -O2 -I/usr/include/freetype2   conftest.cpp -lphysfs -lalure -lopenal -lSOIL -llua -lfreetype -lglfw -lGLEW -lGL  >&5
+configure:4813: $? = 0
+configure:4813: result: yes
+configure:4813: checking for sqrt
+configure:4813: g++ -o conftest -g -O2 -I/usr/include/freetype2   conftest.cpp -lphysfs -lalure -lopenal -lSOIL -llua -lfreetype -lglfw -lGLEW -lGL  >&5
+configure:4813: $? = 0
+configure:4813: result: yes
+configure:4939: creating ./config.status
 
 ## ---------------------- ##
 ## Running config.status. ##
@@ -620,10 +730,10 @@ generated by GNU Autoconf 2.69.  Invocation command line was
 
 on Winston
 
-config.status:808: creating Makefile
-config.status:808: creating src/Makefile
-config.status:808: creating src/config.h
-config.status:983: src/config.h is unchanged
+config.status:810: creating Makefile
+config.status:810: creating src/Makefile
+config.status:810: creating src/config.h
+config.status:985: src/config.h is unchanged
 
 ## ---------------- ##
 ## Cache variables. ##
@@ -657,6 +767,8 @@ ac_cv_env_target_alias_set=
 ac_cv_env_target_alias_value=
 ac_cv_func_floor=yes
 ac_cv_func_sqrt=yes
+ac_cv_header_freetype_freetype_h=no
+ac_cv_header_glm_glm_hpp=yes
 ac_cv_header_inttypes_h=yes
 ac_cv_header_memory_h=yes
 ac_cv_header_stdbool_h=yes
@@ -668,6 +780,7 @@ ac_cv_header_strings_h=yes
 ac_cv_header_sys_stat_h=yes
 ac_cv_header_sys_types_h=yes
 ac_cv_header_unistd_h=yes
+ac_cv_header_utf8_h=yes
 ac_cv_objext=o
 ac_cv_path_EGREP='/usr/bin/grep -E'
 ac_cv_path_GREP=/usr/bin/grep
@@ -771,6 +884,8 @@ target_alias=''
 #define HAVE_INTTYPES_H 1
 #define HAVE_STDINT_H 1
 #define HAVE_UNISTD_H 1
+#define HAVE_UTF8_H 1
+#define HAVE_GLM_GLM_HPP 1
 #define HAVE_STDBOOL_H 1
 #define HAVE_FLOOR 1
 #define HAVE_SQRT 1
