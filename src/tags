@@ -35,7 +35,8 @@ BitmapHeight	NText.hpp	/^	float BitmapHeight;$/;"	m	class:NGlyph
 BitmapLeft	NText.hpp	/^	float BitmapLeft;$/;"	m	class:NGlyph
 BitmapTop	NText.hpp	/^	float BitmapTop;$/;"	m	class:NGlyph
 BitmapWidth	NText.hpp	/^	float BitmapWidth;$/;"	m	class:NGlyph
-Blue	NColor.hpp	15;"	d
+Blue	NColor.hpp	22;"	d
+Blue	NColor.hpp	27;"	d
 BorderSize	NButton.hpp	/^	float BorderSize;$/;"	m	class:NButton
 BorderSize	NWindow.hpp	/^	float BorderSize;$/;"	m	class:NWindow	access:private
 Buffers	NButton.hpp	/^	GLuint* Buffers;$/;"	m	class:NButton
@@ -55,17 +56,15 @@ Changed	NWindow.hpp	/^	bool Changed;$/;"	m	class:NWindow	access:private
 Children	NNode.hpp	/^	std::vector<NNode*> Children;$/;"	m	class:NNode
 Children	NText.hpp	/^	NTextureNode* Children[2];$/;"	m	class:NTextureNode
 CleanUp	NGame.cpp	/^void NGame::CleanUp()$/;"	f	class:NGame
-ClearColor	NColor.cpp	/^void ClearColor()$/;"	f	signature:()
-ClearColor	NColor.cpp	/^void ClearColor(){}$/;"	f	signature:()
-ClearColor	NColor.hpp	/^void ClearColor();$/;"	p	signature:()
+ClearColor	NColor.cpp	/^void ClearColor()$/;"	f
 Close	NGame.cpp	/^void NGame::Close()$/;"	f	class:NGame
-Color	NColor.cpp	/^	std::cout << "\\e[1;" << Color+30 << 'm';$/;"	l
 Color	NNode.hpp	/^	glm::vec4 Color;$/;"	m	class:NNode
 ColorLoc	NButton.hpp	/^	GLuint ColorLoc;$/;"	m	class:NButton
 ColorLoc	NMap.hpp	/^	GLuint ColorLoc, MatrixLoc, TextureLoc;$/;"	m	class:NMap
 ColorLoc	NText.hpp	/^	GLuint ColorLoc,TextureLoc,MatrixLoc,ScreenLoc;$/;"	m	class:NText
 ColorLoc	NWindow.hpp	/^	GLuint ColorLoc;$/;"	m	class:NWindow	access:private
 Config	NGame.hpp	/^	NConfig* Config;$/;"	m	class:NGame
+Console	NColor.hpp	/^	static HANDLE* Console = NULL;$/;"	v
 CreateAnimation	NTexture.cpp	/^int CreateAnimation(lua_State* L)$/;"	f
 CurTime	NEngine.cpp	/^double CurTime()$/;"	f	signature:()
 CurrentTime	NTexture.hpp	/^	double CurrentTime;$/;"	m	class:NTexture
@@ -117,6 +116,7 @@ GetCachedTexture	NRender.cpp	/^NCachedTexture* NRender::GetCachedTexture(std::st
 GetCamera	NRender.cpp	/^NCamera* NRender::GetCamera()$/;"	f	class:NRender
 GetColor	NNode.cpp	/^glm::vec4 NNode::GetColor()$/;"	f	class:NNode	signature:()
 GetConfig	NGame.cpp	/^NConfig* NGame::GetConfig()$/;"	f	class:NGame
+GetConsole	NColor.cpp	/^HANDLE* GetConsole()$/;"	f
 GetFace	NText.cpp	/^NFace* NTextSystem::GetFace(std::wstring Name)$/;"	f	class:NTextSystem
 GetFile	NFileSystem.cpp	/^NFile NFileSystem::GetFile(std::string File)$/;"	f	class:NFileSystem
 GetFileSystem	NGame.cpp	/^NFileSystem* NGame::GetFileSystem()$/;"	f	class:NGame
@@ -198,7 +198,8 @@ Good	NRender.cpp	/^bool NCachedTexture::Good()$/;"	f	class:NCachedTexture
 Good	NTexture.cpp	/^bool NAnimation::Good()$/;"	f	class:NAnimation
 Good	NTexture.cpp	/^bool NTexture::Good()$/;"	f	class:NTexture
 GoodCheck	NTexture.hpp	/^	bool GoodCheck;$/;"	m	class:NTexture
-Green	NColor.hpp	13;"	d
+Green	NColor.hpp	20;"	d
+Green	NColor.hpp	25;"	d
 HAVE_FLOOR	config.h	5;"	d
 HAVE_INTTYPES_H	config.h	8;"	d
 HAVE_MEMORY_H	config.h	11;"	d
@@ -471,7 +472,8 @@ ProgramID	NShader.hpp	/^	GLuint ProgramID;$/;"	m	class:NShader	access:private
 Rand	NEngine.cpp	/^float Rand(float Min, float Max)$/;"	f	signature:(float Min, float Max)
 Read	NFileSystem.cpp	/^unsigned int NFile::Read(void* Buffer, unsigned int Size)$/;"	f	class:NFile
 Rect	NText.hpp	/^	glm::vec4 Rect;$/;"	m	class:NTextureNode
-Red	NColor.hpp	12;"	d
+Red	NColor.hpp	19;"	d
+Red	NColor.hpp	24;"	d
 Reference	NTexture.hpp	/^	int Reference;$/;"	m	class:NAnimation
 Remove	NButton.cpp	/^void NButton::Remove()$/;"	f	class:NButton
 Remove	NCamera.cpp	/^void NCamera::Remove()$/;"	f	class:NCamera
@@ -500,9 +502,7 @@ Seek	NFileSystem.cpp	/^void NFile::Seek(unsigned int Pos)$/;"	f	class:NFile
 SetAng	NCamera.cpp	/^void NCamera::SetAng(glm::vec3 i_Angle)$/;"	f	class:NCamera
 SetAng	NNode.cpp	/^void NNode::SetAng(float i_Angle)$/;"	f	class:NNode	signature:(float i_Angle)
 SetCamera	NRender.cpp	/^void NRender::SetCamera(NCamera* i_Camera)$/;"	f	class:NRender
-SetColor	NColor.cpp	/^void SetColor(unsigned int Color) {}$/;"	f	signature:(unsigned int Color)
-SetColor	NColor.cpp	/^void SetColor(unsigned int Color)$/;"	f	signature:(unsigned int Color)
-SetColor	NColor.hpp	/^void SetColor(unsigned int Color);$/;"	p	signature:(unsigned int Color)
+SetColor	NColor.cpp	/^void SetColor(unsigned int Color)$/;"	f
 SetColor	NNode.cpp	/^void NNode::SetColor(float R, float G, float B)$/;"	f	class:NNode	signature:(float R, float G, float B)
 SetColor	NNode.cpp	/^void NNode::SetColor(float R, float G, float B, float A)$/;"	f	class:NNode	signature:(float R, float G, float B, float A)
 SetColor	NNode.cpp	/^void NNode::SetColor(glm::vec3 i_Color)$/;"	f	class:NNode	signature:(glm::vec3 i_Color)
@@ -602,7 +602,8 @@ Width	NText.hpp	/^	float Width;$/;"	m	class:NText
 Width	NText.hpp	/^	int Width, Height;$/;"	m	class:NTextureAtlas
 WindowChanged	NGame.hpp	/^	bool WindowChanged;$/;"	m	class:NGame
 X	NEngine.cpp	/^	float X = (float(rand())\/float(RAND_MAX))*Difference;$/;"	l
-Yellow	NColor.hpp	14;"	d
+Yellow	NColor.hpp	21;"	d
+Yellow	NColor.hpp	26;"	d
 Zoom	NCamera.hpp	/^	float Zoom;$/;"	m	class:NCamera
 _t	NUnicode.hpp	22;"	d
 as_fn_append	config.status	/^  as_fn_append ()$/;"	f
@@ -613,7 +614,6 @@ as_fn_mkdir_p	config.status	/^as_fn_mkdir_p ()$/;"	f
 as_fn_set_status	config.status	/^as_fn_set_status ()$/;"	f
 as_fn_unset	config.status	/^as_fn_unset ()$/;"	f
 bindir	Makefile	/^bindir         	= ${exec_prefix}\/bin$/;"	m
-cout	NColor.cpp	/^	std::cout << "\\e[0m";$/;"	m	class:std	file:
 cout	NConfig.cpp	/^		std::cout << "CONFIG WARN: ";$/;"	m	class:std	file:
 distdir	Makefile	/^distdir        	= $(tarname)-$(version)$/;"	m
 erase	NNode.cpp	/^			Children.erase(Children.begin()+i);$/;"	p	file:	signature:(Children.begin()+i)
@@ -628,7 +628,6 @@ package	Makefile	/^package        	= astrostruct$/;"	m
 prefix	Makefile	/^prefix         	= \/usr\/local$/;"	m
 push_back	NNode.cpp	/^	Children.push_back(Node);$/;"	p	file:	signature:(Node)
 srcdir	Makefile	/^srcdir			= .$/;"	m
-std::cout	NColor.cpp	/^	std::cout << "\\e[0m";$/;"	m	class:std	file:
 std::cout	NConfig.cpp	/^		std::cout << "CONFIG WARN: ";$/;"	m	class:std	file:
 tarname	Makefile	/^tarname        	= astrostruct$/;"	m
 vec2	NNode.cpp	/^	SetScale(glm::vec2(W,H));$/;"	p	file:	signature:(W,H)

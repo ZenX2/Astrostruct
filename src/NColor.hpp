@@ -12,10 +12,20 @@
 /** @addtogroup TerminalColor
  * @{*/
 
-#define Red 1
-#define Green 2
-#define Yellow 3
-#define Blue 4
+#ifdef _WIN32
+    #include <windows.h>
+	static HANDLE* Console = NULL;
+	HANDLE* GetConsole();
+    #define Red 12
+    #define Green 10
+    #define Yellow 14
+    #define Blue 9
+#else
+    #define Red 1
+    #define Green 2
+    #define Yellow 3
+    #define Blue 4
+#endif
 
 /**
 * @brief Sets the color of text output.
