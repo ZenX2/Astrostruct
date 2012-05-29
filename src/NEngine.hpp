@@ -45,6 +45,7 @@
 #include "config.h"
 #include <cstdlib>
 #include <string>
+#include <utf8.h>
 #include "NUnicode.hpp"
 #include <GL/glew.h>
 #include <GL/glfw.h>

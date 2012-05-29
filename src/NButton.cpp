@@ -270,7 +270,7 @@ void NButton::SetText(std::wstring Text)
 {
 	if (DisplayText == NULL)
 	{
-		DisplayText = GetGame()->GetScene()->AddText(_T("didactgothic"),Text);
+		DisplayText = GetGame()->GetScene()->AddText(_t("didactgothic"),Text);
 		DisplayText->SetMode(1);
 		DisplayText->SetSize(GetScale().y/1.3);
 		DisplayText->SetParent(this);

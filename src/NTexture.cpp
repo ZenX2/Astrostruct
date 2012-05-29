@@ -155,6 +155,8 @@ NTexture::NTexture(std::string i_Name)
 	Name = i_Name;
 	PlayingAnimation = 0;
 	CurrentTime = 0;
+	GoodCheck = false;
+	IsGood = true;
 }
 
 NTexture::NTexture(NTexture* Texture)

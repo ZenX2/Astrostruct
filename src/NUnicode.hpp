@@ -12,20 +12,31 @@
 /** @addtogroup Unicode
  * @{*/
 
-#define _UNICODE
-#define UNICODE
-// _MBCS means you can use Unicode paths with FreeType.
-#define _MBCS
-#define _T(x) L ## x
+/**
+ * @brief Turns string literals into a unicode string.
+ *
+ * @param The string literal.
+ *
+ * @return A wide version of the literal.
+ */
+#define _t(x) L ## x
 
 /**
 * @brief Converts a wide string to a multibyte version.
 *
-* @param wideString The wide string.
+* @param WideString The wide string.
 *
 * @return A multibyte string.
 */
-std::string ToMBS(std::wstring wideString);
+std::string ToMBS(std::wstring WideString);
+/**
+ * @brief Converts a narrow string to a wide one.
+ *
+ * @param NarrowString The narrow string.
+ *
+ * @return A wide string.
+ */
+std::wstring ToMBS(std::string NarrowString);
 
 /*@}*/
 

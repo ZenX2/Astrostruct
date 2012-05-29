@@ -93,7 +93,7 @@ FTLib	NText.hpp	/^	FT_Library FTLib;$/;"	m	class:NTextSystem
 Face	NText.hpp	/^	FT_Face Face;$/;"	m	class:NFace
 Face	NText.hpp	/^	NFace* Face;$/;"	m	class:NText
 Faces	NText.hpp	/^	std::vector<NFace*> Faces;$/;"	m	class:NTextSystem
-Fail	NEngine.hpp	75;"	d
+Fail	NEngine.hpp	76;"	d
 File	NConfig.cpp	/^		std::cout << "Tried to use variable " << Name << " as a boolean (It's not a boolean!). Does it exist in " << File << "?\\n";$/;"	l
 File	NConfig.cpp	/^		std::cout << "Tried to use variable " << Name << " as a number (It's not a number!). Does it exist in " << File << "?\\n";$/;"	l
 File	NConfig.cpp	/^		std::cout << "Tried to use variable " << Name << " as a string (It's not a string!). Does it exist in " << File << "?\\n";$/;"	l
@@ -240,7 +240,7 @@ Keys	NInput.hpp	/^	int Keys[128];$/;"	m	class:NInput	access:private
 L	NConfig.cpp	/^	lua_State* L = GetGame()->GetLua()->GetL();$/;"	l
 L	NLua.hpp	/^	lua_State* L;$/;"	m	class:NLua	access:private
 LIBS	Makefile	/^LIBS			= -lSOIL -llua -lfreetype -lglfw -lGLEW -lGL $/;"	m
-LUA_COMPAT_MODULE	NEngine.hpp	67;"	d
+LUA_COMPAT_MODULE	NEngine.hpp	68;"	d
 LastTick	NScene.hpp	/^	double LastTick;$/;"	m	class:NScene
 LastTime	NRender.hpp	/^	double LastTime;$/;"	m	class:NRender
 Load	NShader.cpp	/^bool NShader::Load(std::string VertexFilePath, std::string FragmentFilePath)$/;"	f	class:NShader
@@ -542,7 +542,7 @@ Size	NText.hpp	/^	int Size;$/;"	m	class:NTextureAtlas
 SizeMem	NWindow.hpp	/^	glm::vec2 SizeMem;$/;"	m	class:NWindow	access:private
 SoundData	NSound.hpp	/^    std::vector<NSoundData*> SoundData;$/;"	m	class:NSoundSystem
 SoundSystem	NGame.hpp	/^	NSoundSystem* SoundSystem;$/;"	m	class:NGame
-Success	NEngine.hpp	76;"	d
+Success	NEngine.hpp	77;"	d
 SwapDepth	NNode.cpp	/^void NNode::SwapDepth(unsigned int Depth)$/;"	f	class:NNode	signature:(unsigned int Depth)
 Text	NConfig.cpp	/^	const char* Text = lua_tostring(L,-1);$/;"	l
 TextSystem	NGame.hpp	/^	NTextSystem* TextSystem;$/;"	m	class:NGame
@@ -572,7 +572,7 @@ Tick	NWindow.hpp	/^	void Tick(double DT);$/;"	p	class:NWindow	access:public	sign
 TileSize	NMap.hpp	/^	float TileSize;$/;"	m	class:NMap
 Tiles	NMap.hpp	/^	std::vector<std::vector<std::vector<NTile* > > > Tiles;$/;"	m	class:NMap
 ToMBS	NUnicode.cpp	/^std::string ToMBS(std::wstring WideString)$/;"	f
-UNICODE	NUnicode.hpp	16;"	d
+ToMBS	NUnicode.cpp	/^std::wstring ToMBS(std::string NarrowString)$/;"	f
 UVs	NButton.hpp	/^	std::vector<glm::vec2> UVs;$/;"	m	class:NButton
 UVs	NMap.hpp	/^	std::vector<std::vector<glm::vec2> > UVs;$/;"	m	class:NMap
 UVs	NText.hpp	/^	std::vector<glm::vec2> UVs;$/;"	m	class:NText
@@ -602,9 +602,7 @@ WindowChanged	NGame.hpp	/^	bool WindowChanged;$/;"	m	class:NGame
 X	NEngine.cpp	/^	float X = (float(rand())\/float(RAND_MAX))*Difference;$/;"	l
 Yellow	NColor.hpp	14;"	d
 Zoom	NCamera.hpp	/^	float Zoom;$/;"	m	class:NCamera
-_MBCS	NUnicode.hpp	18;"	d
-_T	NUnicode.hpp	19;"	d
-_UNICODE	NUnicode.hpp	15;"	d
+_t	NUnicode.hpp	22;"	d
 as_fn_append	config.status	/^  as_fn_append ()$/;"	f
 as_fn_arith	config.status	/^  as_fn_arith ()$/;"	f
 as_fn_error	config.status	/^as_fn_error ()$/;"	f

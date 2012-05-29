@@ -4,12 +4,10 @@ int LoadFace(lua_State* L)
 {
 	const char* Name = luaL_checkstring(L,1);
 	const char* Data = luaL_checkstring(L,2);
-	std::wstringstream tName;
-	tName << Name;
-	std::wstringstream tData;
-	tData << Data;
-	NFace* FontFace = new NFace(tName.str());
-	if (FontFace->Load(tData.str()))
+	std::string sName(Name);
+	std::string sData(Data);
+	NFace* FontFace = new NFace(ToMBS(sName));
+	if (FontFace->Load(ToMBS(sData)))
 	{
 		GetGame()->GetTextSystem()->AddFace(FontFace);
 	} else {
@@ -114,7 +112,7 @@ bool NFace::Load(std::wstring File)
 		SetColor(Yellow);
 		std::cout << "FREETYPE WARN: ";
 		ClearColor();
-		std::wcout << _T("Failed to load ") << File << _T(", it doesn't exist!\n");
+		std::wcout << _t("Failed to load ") << File << _t(", it doesn't exist!\n");
 		return Fail;
 	}
 	FileData = new char[MyFile.Size()];
@@ -125,7 +123,7 @@ bool NFace::Load(std::wstring File)
 		SetColor(Yellow);
 		std::cout << "FREETYPE WARN: ";
 		ClearColor();
-		std::wcout << _T("Failed to load ") << File << _T(", corrupt or not a freetype-compadible font!\n");
+		std::wcout << _t("Failed to load ") << File << _t(", corrupt or not a freetype-compadible font!\n");
 		return Fail;
 	}
 	return Success;

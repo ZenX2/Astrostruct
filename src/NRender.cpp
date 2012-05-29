@@ -338,6 +338,10 @@ NTexture* NRender::GetTexture(std::string Name)
 		{
 			if (!Textures[i]->Good())
 			{
+				SetColor(Yellow);
+				std::cout << "RENDER WARN: ";
+				ClearColor();
+				std::cout << "A bad texture was attempted to be loaded: " << Name << "!\n";
 				return NULL;
 			}
 			NTexture* NewTexture = new NTexture(Textures[i]);

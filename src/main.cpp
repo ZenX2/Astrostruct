@@ -23,20 +23,20 @@ int main(int argc, char* argv[])
 	QuitButton->SetTexture("button");
 	QuitButton->SetParent(MyWindow);
 	QuitButton->SetScale(64,32);
-	QuitButton->SetText(_T("Quit"));
+	QuitButton->SetText(_t("Quit"));
 	QuitButton->SetPos(0,-32);
 	NButton* PlayButton = GetGame()->GetScene()->AddButton();
 	PlayButton->SetTexture("button");
 	PlayButton->SetParent(MyWindow);
 	PlayButton->SetScale(64,32);
-	PlayButton->SetText(_T("Play®"));
+	PlayButton->SetText(_t("Play®"));
 	PlayButton->SetPos(0,32);
 	NMap* MyMap = GetGame()->GetScene()->AddMap("grimy");
 	MyMap->Init(16,16,16);
 	NSound* CoinSound = GetGame()->GetScene()->AddSound("coin");
 	NCamera* Camera = new NCamera();
 	GetGame()->GetRender()->SetCamera(Camera);
-	NText* FPSText = GetGame()->GetScene()->AddText(_T("cousine"), _T("FPS: 0"));
+	NText* FPSText = GetGame()->GetScene()->AddText(_t("cousine"), _t("FPS: 0"));
 	FPSText->SetPos(0,FPSText->GetSize()/2.f);
 	FPSText->SetColor(0,0,0,1);
 	while(GetGame()->Running())
