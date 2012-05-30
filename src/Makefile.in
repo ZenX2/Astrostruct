@@ -34,6 +34,14 @@ main@EXEEXT@: main.@OBJEXT@ $(objects)
 clean:
 	rm -f main@EXEEXT@ *.@OBJEXT@
 
+gitadd: clean
+	git add *.cpp
+	git add *.hpp
+	git add data
+	git add astrostruct.png
+	git add config.h.in
+	git add Makefile.in
+
 #Autotools mumbo jumbo
 
 Makefile: Makefile.in ../config.status
@@ -42,4 +50,4 @@ Makefile: Makefile.in ../config.status
 ../config.status: ../configure
 	cd .. && ./config.status --recheck
 
-.PHONY: all clean install uninstall
+.PHONY: all clean install uninstall gitadd

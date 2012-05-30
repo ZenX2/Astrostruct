@@ -54,6 +54,18 @@ clean:
 	rm -rf doc/html doc/latex
 	$(MAKE) -C src $@
 
+gitadd: clean
+	git add Makefile.in
+	git add configure.ac
+	git add configure
+	git add config.doxygen
+	git add windowsbin
+	git add doc
+	git add install-sh
+	git add README.md
+	git add astrostruct.xcf
+	$(MAKE) -C src $@
+
 FORCE:
 	-rm -f $(distdir).tar.gz
 	-rm -rf $(distdir)
@@ -76,4 +88,4 @@ Makefile: Makefile.in config.status
 config.status: configure
 	./config.status --recheck
 
-.PHONY: all clean dist FORCE distcheck install uninstall
+.PHONY: all clean dist FORCE distcheck install uninstall gitadd
