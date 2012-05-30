@@ -16,7 +16,21 @@
 * @return 0
 */
 int Include(lua_State* L);
+/**
+ * @brief Prints help on how to use the lua console to console.
+ *
+ * @param L The lua state.
+ *
+ * @return 0
+ */
 int ConsoleHelp(lua_State* L);
+/**
+ * @brief Exits the game via lua. It produces an INFO message in order to make malicious scripts more obvious.
+ *
+ * @param L The lua state.
+ *
+ * @return 0
+ */
 int Quit(lua_State* L);
 /**
 * @brief Class that initializes and exposes lua to the rest of the engine.

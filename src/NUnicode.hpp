@@ -15,7 +15,7 @@
 /**
  * @brief Turns string literals into a unicode string.
  *
- * @param The string literal.
+ * @param x The string literal.
  *
  * @return A wide version of the literal.
  */

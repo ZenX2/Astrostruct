@@ -15,6 +15,11 @@
 #ifdef _WIN32
     #include <windows.h>
 	static HANDLE* Console = NULL;
+	/**
+	 * @brief In windows, it returns a handle to the console in order to change it's color, this shouldn't be called by anything in the engine else it'll lose it's multi-platform-ness.
+	 *
+	 * @return A handle to the console.
+	 */
 	HANDLE* GetConsole();
     #define Red 12
     #define Green 10
@@ -37,6 +42,9 @@ void SetColor(unsigned int Color);
 * @brief Resets color output to normal color.
 */
 void ClearColor();
+/**
+ * @brief In windows it frees the console handle if it exists, in Linux it does nothing :u.
+ */
 void NFreeConsole();
 /*@}*/
 

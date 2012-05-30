@@ -17,7 +17,7 @@ public:
 	/**
 	* @brief Sets the OpenGL texture filter of the stored texture id.
 	*
-	* @param GLuint
+	* @param Filter Changes the filter of the texture in memory.
 	*/
 	void SetFilter(GLuint Filter);
 	/**
