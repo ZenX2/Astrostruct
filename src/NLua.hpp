@@ -16,6 +16,8 @@
 * @return 0
 */
 int Include(lua_State* L);
+int ConsoleHelp(lua_State* L);
+int Quit(lua_State* L);
 /**
 * @brief Class that initializes and exposes lua to the rest of the engine.
 */
@@ -49,5 +51,62 @@ public:
 private:
 	lua_State* L;
 };
+/**
+* @brief Lua function to load textures into memory.
+*
+* @param L The lua state.
+*
+* @return 1
+*/
+int CreateAnimation(lua_State* L);
+/**
+* @brief AnimationBase __index function for lua.
+*
+* @param L The lua state.
+*
+* @return 1
+*/
+int Animation__index(lua_State* L);
+/**
+* @brief AnimationBase __newindex function for lua.
+*
+* @param L The lua state.
+*
+* @return 0
+*/
+int Animation__newindex(lua_State* L);
+/**
+* @brief Loads a texture into memory, it's used by lua and takes infinite arguments. The first argument is the desired name of the texture and the rest are AnimationBase objects.
+*
+* @param L The lua state.
+*
+* @return 0
+*/
+int LoadTexture(lua_State* L);
+/**
+* @brief Takes the argument from lua and transforms it into a pointer to the NAnimation class.
+*
+* @param L The lua state.
+* @param narg The number of the arg given to the lua function.
+*
+* @return A pointer to the NAnimation class.
+*/
+NAnimation* lua_checkAnimation(lua_State* L, int narg);
+/**
+* @brief Lua function that loads font faces into memory.
+*
+* @param L The lua state.
+*
+* @return 0
+*/
+int LoadFace(lua_State* L);
+/**
+ * @brief Lua function that loads sounds into memory.
+ *
+ * @param L The lua state.
+ *
+ * @return 0
+ */
+int LoadSound(lua_State* L);
 
 #endif

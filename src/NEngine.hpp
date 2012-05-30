@@ -55,6 +55,7 @@
 #include <cctype>
 #include <sstream>
 #include <vector>
+#include <signal.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/projection.hpp>
@@ -76,6 +77,7 @@ extern "C"
 #define Fail false
 #define Success true
 
+#include "NSignal.hpp"
 #include "NFileSystem.hpp"
 #include "NPhysics.hpp"
 /** @defgroup TerminalColor
@@ -84,7 +86,6 @@ extern "C"
  *
  */
 #include "NColor.hpp"
-#include "NLua.hpp"
 #include "NConfig.hpp"
 #include "NInput.hpp"
 #include "NNode.hpp"
@@ -113,6 +114,8 @@ extern "C"
 #include "NScene.hpp"
 #include "NCamera.hpp"
 #include "NRender.hpp"
+#include "NConsole.hpp"
+#include "NLua.hpp"
 #include "NGame.hpp"
 
 static NGame* Game = new NGame();

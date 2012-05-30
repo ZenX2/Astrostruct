@@ -12,15 +12,6 @@
  * @{*/
 
 /**
-* @brief Lua function that loads font faces into memory.
-*
-* @param L The lua state
-*
-* @return Number of things added to the lua stack.
-*/
-int LoadFace(lua_State* L);
-
-/**
 * @brief Caches data about a glyph.
 */
 class NGlyph

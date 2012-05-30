@@ -37,6 +37,7 @@ void SetColor(unsigned int Color);
 * @brief Resets color output to normal color.
 */
 void ClearColor();
+void NFreeConsole();
 /*@}*/
 
 #endif

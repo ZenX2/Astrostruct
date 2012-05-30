@@ -105,8 +105,7 @@ public:
 	* @brief Returns if the window size has been changed recently, this is useful for rendering objects that depend on the window size and need to be regenerated everytime the window changes.
 	*
 	* @return True if the window changed, false if it hasn't.
-	*/
-	bool GetWindowChanged();
+	*/ bool GetWindowChanged();
 	/**
 	* @brief Grabs the lua interface.
 	*
@@ -153,6 +152,8 @@ private:
 	NConfig* Config;
 	NSoundSystem* SoundSystem;
 	NTextSystem* TextSystem;
+	NSignalInterceptor* SignalInterceptor;
+	NConsole* Console;
 	bool Valid;
 };
 

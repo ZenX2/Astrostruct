@@ -1,19 +1,5 @@
 #include "NEngine.hpp"
 
-int LoadSound(lua_State* L)
-{
-    const char* Name = luaL_checkstring(L,1);
-    const char* DataDir = luaL_checkstring(L,2);
-    NSoundData* Data = new NSoundData(Name);
-    if (!Data->Load(DataDir))
-    {
-	delete Data;
-	return 0;
-    }
-    GetGame()->GetSoundSystem()->AddSoundData(Data);
-    return 0;
-}
-
 NSoundSystem::NSoundSystem()
 {
 	ALCsizei Count;

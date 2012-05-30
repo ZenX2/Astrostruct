@@ -1,21 +1,5 @@
 #include "NEngine.hpp"
 
-int LoadFace(lua_State* L)
-{
-	const char* Name = luaL_checkstring(L,1);
-	const char* Data = luaL_checkstring(L,2);
-	std::string sName(Name);
-	std::string sData(Data);
-	NFace* FontFace = new NFace(ToMBS(sName));
-	if (FontFace->Load(ToMBS(sData)))
-	{
-		GetGame()->GetTextSystem()->AddFace(FontFace);
-	} else {
-		delete FontFace;
-	}
-	return 0;
-}
-
 NTextSystem::NTextSystem()
 {
 	if (FT_Init_FreeType(&FTLib))

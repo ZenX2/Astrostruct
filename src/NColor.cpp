@@ -9,6 +9,11 @@ HANDLE* GetConsole()
 	}
 	return Console;
 }
+void NFreeConsole()
+{
+	delete Console;
+	Console = NULL;
+}
 void SetColor(unsigned int Color)
 {
 	if (Color>255)
@@ -22,6 +27,7 @@ void ClearColor()
 	SetConsoleTextAttribute(*GetConsole(),15);
 }
 #else
+void NFreeConsole(){}
 void SetColor(unsigned int Color)
 {
 	std::cout << "\e[1;" << Color+30 << 'm';

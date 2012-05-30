@@ -11,6 +11,8 @@ NGame::NGame()
 
 NGame::~NGame()
 {
+	NFreeConsole();
+	delete SignalInterceptor;
 	if (Valid)
 	{
 		delete FileSystem;
@@ -21,6 +23,7 @@ NGame::~NGame()
 		delete TextSystem;
 		delete Config;
 		delete Lua;
+		delete Console;
 		glfwTerminate();
 	}
 }
@@ -28,6 +31,7 @@ NGame::~NGame()
 bool NGame::Init(int i_Width, int i_Height, std::string Title, int argc, char* argv[])
 {
 	//Initialize everything we can
+	SignalInterceptor = new NSignalInterceptor();
 	Width = i_Width;
 	Height = i_Height;
 	if (!glfwInit())
@@ -87,6 +91,7 @@ bool NGame::Init(int i_Width, int i_Height, std::string Title, int argc, char* a
 	SoundSystem->LoadSounds();
 	TextSystem = new NTextSystem();
 	TextSystem->LoadFaces();
+	Console = new NConsole();
 	Valid = true;
 	return Success;
 }

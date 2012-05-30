@@ -11,38 +11,6 @@
 class NCachedTexture;
 
 /**
-* @brief Lua function to load textures into memory.
-*
-* @param L The lua state.
-*
-* @return 1
-*/
-int CreateAnimation(lua_State* L);
-/**
-* @brief AnimationBase __index function for lua.
-*
-* @param L The lua state.
-*
-* @return 1
-*/
-int Animation__index(lua_State* L);
-/**
-* @brief AnimationBase __newindex function for lua.
-*
-* @param L The lua state.
-*
-* @return 0
-*/
-int Animation__newindex(lua_State* L);
-/**
-* @brief Loads a texture into memory, it's used by lua and takes infinite arguments. The first argument is the desired name of the texture and the rest are AnimationBase objects.
-*
-* @param L The lua state.
-*
-* @return 0
-*/
-int LoadTexture(lua_State* L);
-/**
 * @brief Causes lua to recursively search data/textures for lua files. Ones that should contain code to load textures.
 */
 void LoadTextures();
@@ -111,15 +79,6 @@ private:
 	std::string Name;
 	std::vector<NCachedTexture*> Frames;
 };
-/**
-* @brief Takes the argument from lua and transforms it into a pointer to the NAnimation class.
-*
-* @param L The lua state.
-* @param narg The number of the arg given to the lua function.
-*
-* @return A pointer to the NAnimation class.
-*/
-NAnimation* lua_checkAnimation(lua_State* L, int narg);
 /**
 * @brief Abstracts OpenGL texture ID's and allows for animations of a series of images.
 */
