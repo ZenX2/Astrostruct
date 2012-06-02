@@ -15,10 +15,11 @@ void SignalHandler(int Signal)
 		}
 		case SIGSEGV:
 		{
-			SetColor(Yellow);
-			std::cout << "SIGNAL WARN: ";
+			SetColor(Red);
+			std::cout << "SIGNAL ERROR: ";
 			ClearColor();
-			std::cout << "Recieved signal " << SignalToString(Signal) << ": this could cause stability issues and break a lot of things!\n";
+			std::cout << "Recieved signal " << SignalToString(Signal) << ": please use valgrind to get some debug info and send bug reports!\n";
+			exit(1);
 			break;
 		}
 		case SIGFPE:

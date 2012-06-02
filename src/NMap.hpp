@@ -16,6 +16,8 @@ class NTile
 public:
 	NTile();
 	~NTile();
+	bool IsSolid();
+	bool IsOpenSpace();
 	unsigned int ID;
 };
 
@@ -56,8 +58,14 @@ public:
 	 * @brief Unallocates the memory in use by this class.
 	 */
 	void Remove();
+	void ViewLevel(int Level);
+	int GetLevel();
+	float GetTileSize();
+	unsigned int GetDepth();
 private:
+	unsigned int ViewingLevel;
 	NShader* Shader;
+	NShader* OutlineShader;
 	float TileSize;
 	unsigned int TextureWidth;
 	unsigned int TextureHeight;
@@ -67,9 +75,10 @@ private:
 	std::vector<std::vector<std::vector<NTile* > > > Tiles;
 	std::vector<GLuint*> Buffers;
 	std::vector<std::vector<glm::vec3> > Verts;
+	std::vector<std::vector<glm::vec3> > Outline;
 	std::vector<std::vector<glm::vec2> > UVs;
 	std::vector<bool> Changed;
-	GLuint ColorLoc, MatrixLoc, TextureLoc;
+	GLuint ColorLoc, MatrixLoc, TextureLoc, OutlineColorLoc, OutlineMatrixLoc;
 };
 
 #endif

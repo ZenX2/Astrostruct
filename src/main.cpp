@@ -35,12 +35,15 @@ int main(int argc, char* argv[])
 	MyMap->Init(16,16,16);
 	NSound* CoinSound = GetGame()->GetScene()->AddSound("coin");
 	NCamera* Camera = GetGame()->GetScene()->AddCamera();
+	Camera->SetPos(glm::vec3(0,0,800));
 	GetGame()->GetRender()->SetCamera(Camera);
 	NText* FPSText = GetGame()->GetScene()->AddText(_t("cousine"), _t("FPS: 0"));
 	FPSText->SetPos(0,FPSText->GetSize()/2.f);
 	FPSText->SetColor(0,0,0,1);
+	glm::vec3 WantedPosition(0,0,800);
 	while(GetGame()->Running())
 	{
+		Camera->SetPos(Camera->GetPos()-(Camera->GetPos()-WantedPosition)/4.f);
 		GetGame()->GetInput()->Poll();
 		if (PlayButton->OnRelease())
 		{
@@ -48,24 +51,32 @@ int main(int argc, char* argv[])
 		}
 		if (GetGame()->GetInput()->GetKey('W'))
 		{
-			Camera->SetPos(Camera->GetPos()+glm::vec3(0,6,0));
+			WantedPosition += glm::vec3(0,6,0);
 		} else if (GetGame()->GetInput()->GetKey('S'))
 		{
-			Camera->SetPos(Camera->GetPos()-glm::vec3(0,6,0));
+			WantedPosition -= glm::vec3(0,6,0);
 		}
 		if (GetGame()->GetInput()->GetKey('A'))
 		{
-			Camera->SetPos(Camera->GetPos()-glm::vec3(6,0,0));
+			WantedPosition -= glm::vec3(6,0,0);
 		} else if (GetGame()->GetInput()->GetKey('D'))
 		{
-			Camera->SetPos(Camera->GetPos()+glm::vec3(6,0,0));
+			WantedPosition += glm::vec3(6,0,0);
 		}
-		if (GetGame()->GetInput()->GetKey('Q'))
+		if (GetGame()->GetInput()->KeyChanged('Q') && GetGame()->GetInput()->GetKey('Q'))
 		{
-			Camera->SetPos(Camera->GetPos()-glm::vec3(0,0,6));
-		} else if (GetGame()->GetInput()->GetKey('E'))
+			if (MyMap->GetLevel()>1)
+			{
+				WantedPosition -= glm::vec3(0,0,MyMap->GetTileSize());
+			}
+			MyMap->ViewLevel(MyMap->GetLevel()-1);
+		} else if (GetGame()->GetInput()->KeyChanged('E') && GetGame()->GetInput()->GetKey('E'))
 		{
-			Camera->SetPos(Camera->GetPos()+glm::vec3(0,0,6));
+			if (MyMap->GetLevel()<MyMap->GetDepth()-1)
+			{
+				WantedPosition += glm::vec3(0,0,MyMap->GetTileSize());
+			}
+			MyMap->ViewLevel(MyMap->GetLevel()+1);
 		}
 		MyWindow->SetPos(GetGame()->GetWindowSize()/2.f);
 		std::stringstream NewText(std::stringstream::in | std::stringstream::out);

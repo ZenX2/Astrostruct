@@ -3,6 +3,7 @@
 NMap::NMap(std::string i_TileSet)
 {
 	Shader = GetGame()->GetRender()->GetShader("map");
+	OutlineShader = GetGame()->GetRender()->GetShader("normal");
 	Texture = GetGame()->GetRender()->GetTexture(i_TileSet);
 	if (Texture)
 	{
@@ -17,6 +18,16 @@ NMap::NMap(std::string i_TileSet)
 		MatrixLoc = Shader->GetUniformLocation("MVP");
 		ColorLoc = Shader->GetUniformLocation("Color");
 	}
+	if (OutlineShader != NULL)
+	{
+		OutlineColorLoc = OutlineShader->GetUniformLocation("Color");
+		OutlineMatrixLoc = OutlineShader->GetUniformLocation("MVP");
+	}
+	ViewingLevel = 1;
+}
+unsigned int NMap::GetDepth()
+{
+	return Depth;
 }
 NMap::~NMap()
 {
@@ -50,10 +61,11 @@ void NMap::Init(unsigned int i_Width, unsigned int i_Height, unsigned int i_Dept
 	Verts.resize(Depth, Foo2);
 	std::vector<glm::vec2> Bar;
 	UVs.resize(Depth, Bar);
+	Outline.resize(Depth,Foo2);
 	for (unsigned int i=0;i<Depth;i++)
 	{
-		Buffers[i] = new GLuint[2];
-		glGenBuffers(2,Buffers[i]);
+		Buffers[i] = new GLuint[3];
+		glGenBuffers(3,Buffers[i]);
 	}
 	std::vector<std::vector<NTile* > > Foo;
 	Tiles.resize(Width,Foo);
@@ -78,13 +90,34 @@ void NMap::Init(unsigned int i_Width, unsigned int i_Height, unsigned int i_Dept
 		}
 	}
 }
+void NMap::ViewLevel(int Level)
+{
+	if (Level > Depth - 1)
+	{
+		ViewingLevel = Depth-1;
+		return;
+	} else if (Level < 1)
+	{
+		ViewingLevel = 1;
+		return;
+	}
+	ViewingLevel = Level;
+}
+int NMap::GetLevel()
+{
+	return ViewingLevel;
+}
+float NMap::GetTileSize()
+{
+	return TileSize;
+}
 void NMap::GenerateBuffers()
 {
 	if (!Texture)
 	{
 		return;
 	}
-	for (unsigned int i=0;i<Depth;i++)
+	for (unsigned int i=ViewingLevel;i>0;i--)
 	{
 		if (!Changed[i])
 		{
@@ -92,18 +125,24 @@ void NMap::GenerateBuffers()
 		}
 		Verts[i].clear();
 		UVs[i].clear();
+		Outline[i].clear();
 		for (unsigned int x=0;x<Width;x++)
 		{
 			for (unsigned int y=0;y<Height;y++)
 			{
+				unsigned int ID = Tiles[x][y][i]->ID;
+				if (ID == 0)
+				{
+					continue;
+				}
 				float TS = TileSize;
 				float X = x*TS;
 				float Y = y*TS;
 				float Z = i*TS;
 				float UTW = TS/(float)TextureWidth;
 				float UTH = TS/(float)TextureHeight;
-				float UTWS = UTW*(Tiles[x][y][i]->ID%((unsigned int)(TextureWidth/TS)));
-				float UTHS = UTH*(Tiles[x][y][i]->ID/((unsigned int)(TextureHeight/TS)));
+				float UTWS = UTW*((ID-1)%((unsigned int)(TextureWidth/TS)));
+				float UTHS = UTH*((ID-1)/((unsigned int)(TextureHeight/TS)));
 				Verts[i].push_back(glm::vec3(X,Y,Z));
 				UVs[i].push_back(glm::vec2(UTWS,UTHS+UTH));
 				Verts[i].push_back(glm::vec3(X+TS,Y,Z));
@@ -112,12 +151,47 @@ void NMap::GenerateBuffers()
 				UVs[i].push_back(glm::vec2(UTWS+UTW,UTHS));
 				Verts[i].push_back(glm::vec3(X,Y+TS,Z));
 				UVs[i].push_back(glm::vec2(UTWS,UTHS));
+
+				if (!Tiles[x][y][i]->IsSolid()) //If we are open-space or a solid object, outline it!
+				{
+					continue;
+				}
+				int left = int(x)-1;
+				int right = x+1;
+				int bottom = int(y)-1;
+				int top = y+1;
+				if (left < 0 || (!Tiles[left][y][i]->IsSolid()))
+				{
+					//outline left
+					Outline[i].push_back(glm::vec3(X,Y,Z));
+					Outline[i].push_back(glm::vec3(X,Y+TS,Z));
+				}
+				if (right >= Width || (!Tiles[right][y][i]->IsSolid()))
+				{
+					//outline right
+					Outline[i].push_back(glm::vec3(X+TS,Y,Z));
+					Outline[i].push_back(glm::vec3(X+TS,Y+TS,Z));
+				}
+				if (bottom < 0 || (!Tiles[x][bottom][i]->IsSolid()))
+				{
+					//outline bottom
+					Outline[i].push_back(glm::vec3(X,Y,Z));
+					Outline[i].push_back(glm::vec3(X+TS,Y,Z));
+				}
+				if (top >= Height || (!Tiles[x][top][i]->IsSolid()))
+				{
+					//outline top
+					Outline[i].push_back(glm::vec3(X,Y+TS,Z));
+					Outline[i].push_back(glm::vec3(X+TS,Y+TS,Z));
+				}
 			}
 		}
 		glBindBuffer(GL_ARRAY_BUFFER,Buffers[i][0]);
 		glBufferData(GL_ARRAY_BUFFER,Verts[i].size()*sizeof(glm::vec3),&Verts[i][0],GL_STATIC_DRAW);
 		glBindBuffer(GL_ARRAY_BUFFER,Buffers[i][1]);
 		glBufferData(GL_ARRAY_BUFFER,UVs[i].size()*sizeof(glm::vec2),&UVs[i][0],GL_STATIC_DRAW);
+		glBindBuffer(GL_ARRAY_BUFFER,Buffers[i][2]);
+		glBufferData(GL_ARRAY_BUFFER,Outline[i].size()*sizeof(glm::vec3),&Outline[i][0],GL_STATIC_DRAW);
 		Changed[i] = false;
 	}
 }
@@ -144,7 +218,7 @@ void NMap::Draw(NCamera* View)
 		glBindTexture(GL_TEXTURE_2D,Texture->GetID());
 		glEnableClientState(GL_VERTEX_ARRAY);
 		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-		for (unsigned int i=0;i<Depth;i++)
+		for (unsigned int i=0;i<=ViewingLevel;i++)
 		{
 			glBindBuffer(GL_ARRAY_BUFFER,Buffers[i][0]);
 			glVertexPointer(3,GL_FLOAT,0,NULL);
@@ -156,8 +230,16 @@ void NMap::Draw(NCamera* View)
 		}
 		glDisable(GL_TEXTURE_2D);
 		glDisable(GL_BLEND);
-		glDisableClientState(GL_VERTEX_ARRAY);
 		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+		glColor4f(0,0,0,1);
+		for (unsigned int i=0;i<=ViewingLevel;i++)
+		{
+			glBindBuffer(GL_ARRAY_BUFFER,Buffers[i][2]);
+			glVertexPointer(3,GL_FLOAT,0,NULL);
+			
+			glDrawArrays(GL_LINES,0,Outline[i].size());
+		}
+		glDisableClientState(GL_VERTEX_ARRAY);
 		return;
 	}
 	glUseProgram(Shader->GetID());
@@ -172,7 +254,7 @@ void NMap::Draw(NCamera* View)
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glEnable(GL_TEXTURE_2D);
-	for (unsigned int i=0;i<Depth;i++)
+	for (unsigned int i=0;i<=ViewingLevel;i++)
 	{
 		glBindBuffer(GL_ARRAY_BUFFER,Buffers[i][0]);
 		glVertexAttribPointer(0,3,GL_FLOAT,GL_FALSE,0,NULL);
@@ -183,10 +265,20 @@ void NMap::Draw(NCamera* View)
 	}
 	glDisable(GL_TEXTURE_2D);
 	glDisable(GL_BLEND);
-
-	glDisableVertexAttribArray(0);
 	glDisableVertexAttribArray(1);
-	glUseProgram(0);
+
+	glUseProgram(OutlineShader->GetID());
+	glUniform4f(OutlineColorLoc,0,0,0,1);
+	glUniformMatrix4fv(OutlineMatrixLoc,1,GL_FALSE,&MVP[0][0]);
+	glLineWidth(3);
+	for (unsigned int i=0;i<=ViewingLevel;i++)
+	{
+		glBindBuffer(GL_ARRAY_BUFFER,Buffers[i][2]);
+		glVertexAttribPointer(0,3,GL_FLOAT,GL_FALSE,0,NULL);
+		
+		glDrawArrays(GL_LINES,0,Outline[i].size());
+	}
+	glDisableVertexAttribArray(0);
 }
 void NMap::Tick(double DT)
 {
@@ -202,8 +294,26 @@ void NMap::Remove()
 
 NTile::NTile()
 {
-	ID = rand()%2;
+	ID = rand()%3;
 }
 NTile::~NTile()
 {
+}
+
+bool NTile::IsSolid()
+{
+	if (ID == 2)
+	{
+		return true;
+	}
+	return false;
+}
+
+bool NTile::IsOpenSpace()
+{
+	if (!ID)
+	{
+		return true;
+	}
+	return false;
 }
