@@ -2,7 +2,7 @@
 
 NLua::NLua()
 {
-	L = lua_open();
+	L = luaL_newstate();
 	luaL_openlibs(L);
 	static const luaL_Reg BaseFunctions[] =
 	{
@@ -203,7 +203,8 @@ int Animation__index(lua_State* L)
 		if (lua_isnil(L,-1))
 		{
 			lua_pop(L,1);
-			lua_getref(L,Animation->Reference);
+			//lua_getref(L,Animation->Reference);
+			lua_rawgeti(L,LUA_REGISTRYINDEX,Animation->Reference);
 			lua_pushvalue(L,2);
 			lua_gettable(L,-2);
 		}
@@ -232,7 +233,8 @@ int Animation__newindex(lua_State* L)
 	{
 		Animation->SetName(luaL_checkstring(L,3));
 	} else {
-		lua_getref(L,Animation->Reference);
+		//lua_getref(L,Animation->Reference);
+		lua_rawgeti(L,LUA_REGISTRYINDEX,Animation->Reference);
 		lua_pushvalue(L,3);
 		lua_setfield(L,-2,luaL_checkstring(L,2));
 	}

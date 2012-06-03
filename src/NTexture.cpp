@@ -134,7 +134,8 @@ float NTexture::GetFloat(std::string i_Name)
 float NAnimation::GetFloat(std::string i_Name)
 {
 	lua_State* L = GetGame()->GetLua()->GetL();
-	lua_getref(L,Reference);
+	//lua_getref(L,Reference);
+	lua_rawgeti(L,LUA_REGISTRYINDEX,Reference);
 	lua_getfield(L,-1,i_Name.c_str());
 	if (!lua_isnumber(L,-1))
 	{

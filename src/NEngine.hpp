@@ -67,12 +67,7 @@
 #include <AL/alure.h>
 #include <physfs.h>
 #define LUA_COMPAT_MODULE
-extern "C"
-{
-	#include "lua.h"
-	#include "lualib.h"
-	#include "lauxlib.h"
-}
+#include <lua.hpp>
 
 #define Fail false
 #define Success true
