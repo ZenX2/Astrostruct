@@ -63,20 +63,6 @@ bool NRender::LoadShaders()
 
 NRender::NRender()
 {
-	/*GLuint FBO;
-	glGenFramebuffers(1,&FBO);
-	glBindFramebuffer(GL_FRAMEBUFFER,FBO);
-	GLuint Depth;
-	glGenRenderbuffers(1,&Depth);
-	glBindRenderbuffer(GL_RENDERBUFFER,Depth);
-	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, GetGame()->GetWindowWidth(), GetGame()->GetWindowHeight());
-	glFramebufferRenderbuffer(GL_FRAMEBUFFER,GL_DEPTH_ATTACHMENT,GL_RENDERBUFFER,Depth);
-	glBindRenderbuffer(GL_RENDERBUFFER,0);
-	GLuint Texture;
-	glGenTextures(1,&Texture);
-	glBindTexture(GL_TEXTURE_2D, Texture);
-	glTexImage2D(GL_TEXTURE_2D,0,GL_RGBA,GetGame()->GetWindowWidth(),GetGame()->GetWindowHeight(),0,GL_RGBA,GL_UNSIGNED_BYTE,NULL);
-	glFramebufferTexture2D(GL_FRAMEBUFFER*/
 	glBindTexture(GL_TEXTURE_2D, 0);
 	glBindFramebuffer(GL_FRAMEBUFFER,0);
 	FrameTime = 0;
@@ -97,6 +83,18 @@ NRender::NRender()
 	} else if (DesiredShader == "GL_NEAREST")
 	{
 		TextureFilter = GL_NEAREST;
+		//Unfortuneately these generate an invalid enum error in opengl, it appears gl_linear uses the mipmaps regardless.
+	//} else if (DesiredShader == "GL_NEAREST_MIPMAP_NEAREST")
+	//{
+		//TextureFilter = GL_NEAREST_MIPMAP_NEAREST;
+	//} else if (DesiredShader == "GL_LINEAR_MIPMAP_NEAREST")
+	//{
+		//TextureFilter = GL_LINEAR_MIPMAP_NEAREST;
+	//} else if (DesiredShader == "GL_LINEAR_MIPMAP_LINEAR")
+	//{
+		//TextureFilter = GL_LINEAR_MIPMAP_LINEAR;
+	} else {
+		TextureFilter = GL_LINEAR;
 	}
 	glPixelStorei(GL_UNPACK_ALIGNMENT,1);
 	glViewport(0,0,GetGame()->GetWindowWidth(),GetGame()->GetWindowHeight());
