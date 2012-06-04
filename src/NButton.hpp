@@ -62,6 +62,7 @@ public:
 	 * @brief Unallocates the object.
 	 */
 	void Remove();
+	void SetColor(glm::vec4 i_Color);
 private:
 	unsigned int TextureWidth, TextureHeight;
 	bool PressedMemory;

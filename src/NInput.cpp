@@ -1,5 +1,13 @@
 #include "NEngine.hpp"
 
+NInput::NInput()
+{
+	for (unsigned int i=0;i<KeyCount;i++)
+	{
+		Keys[i] = false;
+	}
+}
+
 void NInput::Poll()
 {
 	glfwGetMousePos(&MouseX,&MouseY);
@@ -15,12 +23,12 @@ int NInput::GetKey(int Key)
 
 bool NInput::KeyChanged(int Key)
 {
-	if (Key > 128 || Key < 0)
+	if (Key > KeyCount || Key < 0)
 	{
 		SetColor(Yellow);
 		std::cout << "INPUT WARN: ";
 		ClearColor();
-		std::cout << "Attempted to grab a key out of range!\n";
+		std::cout << "Attempted to grab key: " << Key << ", it's out of range!\n";
 		return false;
 	}
 	if (Keys[Key] != GetKey(Key))

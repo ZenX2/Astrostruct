@@ -238,9 +238,11 @@ public:
 	 * @brief Unallocates the object.
 	 */
 	void Remove();
+	void SetBorder(float i_W, float i_H);
 	~NText();
 private:
 	glm::vec2 Velocity;
+	float W,H;
 	int Mode;
 	float Width;
 	float Size;

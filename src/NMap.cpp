@@ -2,6 +2,7 @@
 
 NMap::NMap(std::string i_TileSet)
 {
+	Ready = false;
 	Shader = GetGame()->GetRender()->GetShader("map");
 	OutlineShader = GetGame()->GetRender()->GetShader("normal");
 	Texture = GetGame()->GetRender()->GetTexture(i_TileSet);
@@ -55,6 +56,12 @@ void NMap::Init(unsigned int i_Width, unsigned int i_Height, unsigned int i_Dept
 	Width = i_Width;
 	Height = i_Height;
 	Depth = i_Depth;
+	Changed.clear();
+	Buffers.clear();
+	Verts.clear();
+	UVs.clear();
+	Outline.clear();
+	Tiles.clear();
 	Changed.resize(Depth,true);
 	Buffers.resize(Depth,NULL);
 	std::vector<glm::vec3> Foo2;
@@ -89,6 +96,7 @@ void NMap::Init(unsigned int i_Width, unsigned int i_Height, unsigned int i_Dept
 			}
 		}
 	}
+	Ready = true;
 }
 void NMap::ViewLevel(int Level)
 {
@@ -113,7 +121,7 @@ float NMap::GetTileSize()
 }
 void NMap::GenerateBuffers()
 {
-	if (!Texture)
+	if (!Texture || !Ready)
 	{
 		return;
 	}
@@ -197,7 +205,7 @@ void NMap::GenerateBuffers()
 }
 void NMap::Draw(NCamera* View)
 {
-	if (!Texture)
+	if (!Texture || !Ready)
 	{
 		return;
 	}
@@ -218,7 +226,12 @@ void NMap::Draw(NCamera* View)
 		glBindTexture(GL_TEXTURE_2D,Texture->GetID());
 		glEnableClientState(GL_VERTEX_ARRAY);
 		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-		for (unsigned int i=0;i<=ViewingLevel;i++)
+		int Check = ViewingLevel - 2;
+		if (Check < 0)
+		{
+			Check = 0;
+		}
+		for (unsigned int i=Check;i<=ViewingLevel;i++)
 		{
 			glBindBuffer(GL_ARRAY_BUFFER,Buffers[i][0]);
 			glVertexPointer(3,GL_FLOAT,0,NULL);
@@ -254,7 +267,12 @@ void NMap::Draw(NCamera* View)
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glEnable(GL_TEXTURE_2D);
-	for (unsigned int i=0;i<=ViewingLevel;i++)
+	int Check = ViewingLevel - 2;
+	if (Check < 0)
+	{
+		Check = 0;
+	}
+	for (unsigned int i=Check;i<=ViewingLevel;i++)
 	{
 		glBindBuffer(GL_ARRAY_BUFFER,Buffers[i][0]);
 		glVertexAttribPointer(0,3,GL_FLOAT,GL_FALSE,0,NULL);

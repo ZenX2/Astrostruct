@@ -15,39 +15,66 @@ int main(int argc, char* argv[])
 		GetGame()->CleanUp();
 		return 1;
 	}
-	NWindow* MyWindow = GetGame()->GetScene()->AddWindow();
-	MyWindow->SetTexture("window");
-	MyWindow->SetScale(256,256);
-	MyWindow->SetPos(GetGame()->GetWindowSize()/2.f);
-	NButton* QuitButton = GetGame()->GetScene()->AddButton();
-	QuitButton->SetTexture("button");
-	QuitButton->SetParent(MyWindow);
-	QuitButton->SetScale(64,32);
-	QuitButton->SetText(_t("Quit"));
-	QuitButton->SetPos(0,-32);
-	NButton* PlayButton = GetGame()->GetScene()->AddButton();
-	PlayButton->SetTexture("button");
-	PlayButton->SetParent(MyWindow);
-	PlayButton->SetScale(64,32);
-	PlayButton->SetText(_t("Play®"));
-	PlayButton->SetPos(0,32);
 	NMap* MyMap = GetGame()->GetScene()->AddMap("grimy");
-	MyMap->Init(16,16,16);
 	NSound* CoinSound = GetGame()->GetScene()->AddSound("coin");
 	NCamera* Camera = GetGame()->GetScene()->AddCamera();
 	Camera->SetPos(glm::vec3(0,0,800));
 	GetGame()->GetRender()->SetCamera(Camera);
+	glm::vec3 WantedPosition(0,0,800);
 	NText* FPSText = GetGame()->GetScene()->AddText(_t("cousine"), _t("FPS: 0"));
 	FPSText->SetPos(0,FPSText->GetSize()/2.f);
-	FPSText->SetColor(0,0,0,1);
-	glm::vec3 WantedPosition(0,0,800);
+	FPSText->SetParent(Camera);
+	NWindow* MyWindow = GetGame()->GetScene()->AddWindow();
+	MyWindow->SetTexture("window");
+	MyWindow->SetScale(256,256);
+	MyWindow->SetPos(GetGame()->GetWindowSize()/2.f);
+	MyWindow->SetParent(Camera);
+		NButton* QuitButton = GetGame()->GetScene()->AddButton();
+		QuitButton->SetTexture("button");
+		QuitButton->SetScale(64,32);
+		QuitButton->SetText(_t("Quit"));
+		QuitButton->SetPos(0,-32);
+		QuitButton->SetParent(MyWindow);
+		NButton* PlayButton = GetGame()->GetScene()->AddButton();
+		PlayButton->SetTexture("button");
+		PlayButton->SetScale(64,32);
+		PlayButton->SetText(_t("Play"));
+		PlayButton->SetPos(0,32);
+		PlayButton->SetParent(MyWindow);
+	NWindow* InfoWindow = GetGame()->GetScene()->AddWindow();
+	InfoWindow->SetTexture("window");
+	InfoWindow->SetScale(128,256);
+	NText* InfoText = GetGame()->GetScene()->AddText(_t("cousine"), _t("This game is in very early development, but the engine framework is pretty much completed now. You can see lots of it demo'd here. Use wasd and qe to move the camera around. While escape brings back up the beginning menu."));
+	InfoText->SetBorder(128,256);
+	InfoText->SetPos(-64,108);
+	InfoText->SetSize(12);
+	InfoText->SetParent(InfoWindow);
+	InfoWindow->SetParent(Camera);
 	while(GetGame()->Running())
 	{
-		Camera->SetPos(Camera->GetPos()-(Camera->GetPos()-WantedPosition)/4.f);
+		Camera->SetPos(Camera->GetPos()-(Camera->GetPos()-WantedPosition)/8.f);
 		GetGame()->GetInput()->Poll();
 		if (PlayButton->OnRelease())
 		{
+			WantedPosition = glm::vec3(512,512,Camera->GetPos().z);
 		    CoinSound->Play();
+			PlayButton->SetColor(glm::vec4(1,1,1,0));
+			QuitButton->SetColor(glm::vec4(1,1,1,0));
+			MyWindow->SetColor(glm::vec4(1,1,1,0));
+			MyMap->Init(16,16,16);
+		}
+		if (GetGame()->GetInput()->KeyChanged(GLFW_KEY_ESC) && GetGame()->GetInput()->GetKey(GLFW_KEY_ESC))
+		{
+			if (MyWindow->GetColor().w == 0)
+			{
+				PlayButton->SetColor(glm::vec4(1,1,1,1));
+				QuitButton->SetColor(glm::vec4(1,1,1,1));
+				MyWindow->SetColor(glm::vec4(1,1,1,1));
+			} else {
+				PlayButton->SetColor(glm::vec4(1,1,1,0));
+				QuitButton->SetColor(glm::vec4(1,1,1,0));
+				MyWindow->SetColor(glm::vec4(1,1,1,0));
+			}
 		}
 		if (GetGame()->GetInput()->GetKey('W'))
 		{
@@ -79,13 +106,14 @@ int main(int argc, char* argv[])
 			MyMap->ViewLevel(MyMap->GetLevel()+1);
 		}
 		MyWindow->SetPos(GetGame()->GetWindowSize()/2.f);
+		InfoWindow->SetPos(GetGame()->GetWindowSize()-glm::vec2(64,128));
 		std::stringstream NewText(std::stringstream::in | std::stringstream::out);
 		NewText << "FPS: " << (1.f/GetGame()->GetRender()->GetFrameTime());
 		FPSText->SetText(NewText.str());
 		GetGame()->GetScene()->Tick();
 		GetGame()->GetRender()->Draw();
 		GetGame()->Poll();
-		if (GetGame()->GetInput()->GetKey(GLFW_KEY_ESC) || QuitButton->OnRelease())
+		if (QuitButton->OnRelease())
 		{
 			GetGame()->Close();
 		}

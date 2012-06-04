@@ -11,29 +11,29 @@ NCamera::NCamera()
 
 glm::mat4 NCamera::GetViewMatrix()
 {
-	UpdateMatrix();
+	UpdateCameraMatrix();
 	return ViewMatrix;
 }
 
 glm::mat4 NCamera::GetPerspViewMatrix()
 {
-	UpdateMatrix();
+	UpdateCameraMatrix();
 	return PerspViewMatrix;
 }
 
 glm::mat4 NCamera::GetOrthoMatrix()
 {
-	UpdateMatrix();
+	UpdateCameraMatrix();
 	return OrthoMatrix;
 }
 
 glm::mat4 NCamera::GetPerspMatrix()
 {
-	UpdateMatrix();
+	UpdateCameraMatrix();
 	return PerspMatrix;
 }
 
-void NCamera::UpdateMatrix()
+void NCamera::UpdateCameraMatrix()
 {
 	if (!Changed && !GetGame()->GetWindowChanged())
 	{
@@ -51,18 +51,21 @@ void NCamera::SetPos(glm::vec3 i_Position)
 {
 	Position = i_Position;
 	Changed = true;
+	UpdateMatrix();
 }
 
 void NCamera::SetScale(glm::vec3 i_Scale)
 {
 	Scale = i_Scale;
 	Changed = true;
+	UpdateMatrix();
 }
 
 void NCamera::SetAng(glm::vec3 i_Angle)
 {
 	Angle = i_Angle;
 	Changed = true;
+	UpdateMatrix();
 }
 
 void NCamera::Remove()

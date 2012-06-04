@@ -45,11 +45,7 @@ void NButton::SetTexture(std::string Name)
 
 void NButton::GenerateBuffers()
 {
-	if (!Texture)
-	{
-		return;
-	}
-	if (!Changed)
+	if (!Texture || !Changed)
 	{
 		return;
 	}
@@ -162,7 +158,7 @@ void NButton::GenerateBuffers()
 void NButton::Draw(NCamera* View)
 {
 	GenerateBuffers();
-	if (Texture == NULL)
+	if (Texture == NULL || GetColor().w == 0)
 	{
 		return;
 	}
@@ -282,11 +278,19 @@ void NButton::SetText(std::wstring Text)
 
 bool NButton::OnPressed()
 {
+	if (GetColor().w == 0)
+	{
+		return false;
+	}
     return IsPressed;
 }
 
 bool NButton::OnRelease()
 {
+	if (GetColor().w == 0)
+	{
+		return false;
+	}
     if (!IsPressed && IsChanged)
     {
 	return true;
@@ -297,4 +301,13 @@ bool NButton::OnRelease()
 void NButton::Remove()
 {
     delete (NButton*)this;
+}
+
+void NButton::SetColor(glm::vec4 i_Color)
+{
+	if (DisplayText != NULL)
+	{
+		DisplayText->SetColor(i_Color);
+	}
+	Color = i_Color;
 }

@@ -9,6 +9,8 @@
 #ifndef NAELSTROF_INPUT
 #define NAELSTROF_INPUT
 
+#define KeyCount 257
+
 /**
 * @brief Handles grabbing input and exposing it to other parts of the engine.
 */
@@ -61,10 +63,11 @@ public:
 	* @return The state of the desired mouse key.
 	*/
 	int GetMouseKey(int Key);
+	NInput();
 private:
 	int MouseX;
 	int MouseY;
-	int Keys[128];
+	bool Keys[KeyCount];
 };
 
 #endif

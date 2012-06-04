@@ -38,7 +38,7 @@ void NNode::SetPos(glm::vec3 i_Position)
 
 void NNode::SetPos(glm::vec2 i_Position)
 {
-	SetPos(glm::vec3(i_Position,GetPos().z));
+	SetPos(glm::vec3(i_Position,Position.z));
 }
 
 void NNode::SetAng(glm::vec3 i_Angle)
@@ -60,6 +60,7 @@ void NNode::SetParent(NNode* Node)
 	}
 	Parent = Node;
 	Parent->AddChild(this);
+	UpdateMatrix();
 }
 
 void NNode::AddChild(NNode* Node)
@@ -103,10 +104,9 @@ glm::mat4 NNode::GetModelMatrix()
 void NNode::UpdateMatrix()
 {
 	glm::mat4 Pos = glm::translate(glm::mat4(),Position);
-	glm::mat4 Angz = glm::rotate(glm::mat4(),Angle.z,glm::vec3(0,0,1));
-	glm::mat4 Angy = glm::rotate(glm::mat4(),Angle.y,glm::vec3(0,1,0));
-	glm::mat4 Angx = glm::rotate(glm::mat4(),Angle.x,glm::vec3(1,0,0));
-	glm::mat4 Ang = Angx*Angy*Angz;
+	glm::mat4 Ang = glm::rotate(glm::mat4(),Angle.z,glm::vec3(0,0,1));
+	Ang = glm::rotate(Ang,Angle.y,glm::vec3(0,1,0));
+	Ang = glm::rotate(Ang,Angle.x,glm::vec3(1,0,0));
 	glm::mat4 Sca = glm::scale(glm::mat4(),Scale);
 	if (Parent == NULL)
 	{
@@ -120,6 +120,15 @@ void NNode::UpdateMatrix()
 	{
 		Children[i]->UpdateMatrix();
 	}
+}
+
+NNode* NNode::GetRoot()
+{
+	if (Parent == NULL)
+	{
+		return this;
+	}
+	return Parent->GetRoot();
 }
 
 glm::mat4 NNode::GetNonScaleMatrix()

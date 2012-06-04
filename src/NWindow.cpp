@@ -155,7 +155,7 @@ void NWindow::GenerateBuffers()
 void NWindow::Draw(NCamera* View)
 {
 	GenerateBuffers();
-	if (Texture == NULL)
+	if (Texture == NULL || GetColor().w == 0)
 	{
 		return;
 	}

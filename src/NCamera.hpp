@@ -45,7 +45,7 @@ public:
 	void Remove();
 private:
 	bool Changed;
-	void UpdateMatrix();
+	void UpdateCameraMatrix();
 	glm::mat4 ViewMatrix;
 	glm::mat4 PerspViewMatrix;
 	glm::mat4 OrthoMatrix;

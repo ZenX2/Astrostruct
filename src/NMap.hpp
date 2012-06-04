@@ -63,6 +63,7 @@ public:
 	float GetTileSize();
 	unsigned int GetDepth();
 private:
+	bool Ready;
 	unsigned int ViewingLevel;
 	NShader* Shader;
 	NShader* OutlineShader;

@@ -242,12 +242,21 @@ NText::NText(std::wstring i_Face, std::wstring i_Data) : NNode()
 	Width = 0;
 	Mode = 0;
 	Velocity = glm::vec2(Rand(-10,10),Rand(-10,10));
+	W = 0;
+	H = 0;
 	if (Shader != NULL)
 	{
 		TextureLoc = Shader->GetUniformLocation("Texture");
 		MatrixLoc = Shader->GetUniformLocation("MVP");
 		ColorLoc = Shader->GetUniformLocation("Color");
 	}
+}
+
+void NText::SetBorder(float i_W, float i_H)
+{
+	W = i_W;
+	H = i_H;
+	Changed = true;
 }
 
 float NText::GetWidth()
@@ -276,6 +285,7 @@ void NText::GenerateBuffers()
 	Verts.clear();
 	UVs.clear();
 	float PenX = 0;
+	float PenY = 0;
 	for (unsigned int i=0;i<Data.size();i++)
 	{
 		NGlyph* Glyph = Face->GetGlyph(Data[i],Size);
@@ -305,10 +315,15 @@ void NText::GenerateBuffers()
 				break;
 			}
 		}
-		Verts.push_back(glm::vec2(XOff+PenX,YOff));
-		Verts.push_back(glm::vec2(XOff+PenX+X,YOff));
-		Verts.push_back(glm::vec2(XOff+PenX+X,Y+YOff));
-		Verts.push_back(glm::vec2(XOff+PenX,Y+YOff));
+		if (PenX+Glyph->AdvanceX > W && W != 0)
+		{
+			PenX = 0;
+			PenY -= Size;
+		}
+		Verts.push_back(glm::vec2(XOff+PenX,PenY+YOff));
+		Verts.push_back(glm::vec2(XOff+PenX+X,PenY+YOff));
+		Verts.push_back(glm::vec2(XOff+PenX+X,PenY+Y+YOff));
+		Verts.push_back(glm::vec2(XOff+PenX,PenY+Y+YOff));
 
 		glm::vec4 UV = Glyph->TextureRect;
 		UVs.push_back(glm::vec2(UV.x,UV.y+UV.w));
@@ -338,7 +353,7 @@ void NText::SetMode(int i_Mode)
 
 void NText::Draw(NCamera* View)
 {
-	if (Face == NULL)
+	if (Face == NULL || GetColor().w == 0)
 	{
 		return;
 	}
