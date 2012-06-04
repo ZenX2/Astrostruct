@@ -47,12 +47,12 @@ void NFace::UpdateMipmaps()
 	}
 }
 
-std::wstring NFace::GetName()
+std::string NFace::GetName()
 {
 	return Name;
 }
 
-NFace* NTextSystem::GetFace(std::wstring Name)
+NFace* NTextSystem::GetFace(std::string Name)
 {
 	for (unsigned int i=0;i<Faces.size();i++)
 	{
@@ -64,7 +64,7 @@ NFace* NTextSystem::GetFace(std::wstring Name)
 	return NULL;
 }
 
-NFace::NFace(std::wstring i_Name)
+NFace::NFace(std::string i_Name)
 {
 	Name = i_Name;
 	Face = NULL;
@@ -83,20 +83,20 @@ NFace::~NFace()
 	}
 }
 
-bool NFace::Load(std::wstring File)
+bool NFace::Load(std::string File)
 {
 	FT_Library FTLib = GetGame()->GetTextSystem()->GetFreeTypeLib();
 	if (!FTLib)
 	{
 		return Fail;
 	}
-	NFile MyFile = GetGame()->GetFileSystem()->GetFile(ToMBS(File));
+	NFile MyFile = GetGame()->GetFileSystem()->GetFile(File);
 	if (!MyFile.Good())
 	{
 		SetColor(Yellow);
 		std::cout << "FREETYPE WARN: ";
 		ClearColor();
-		std::wcout << _t("Failed to load ") << File << _t(", it doesn't exist!\n");
+		std::cout << "Failed to load " << File << ", it doesn't exist!\n";
 		return Fail;
 	}
 	FileData = new char[MyFile.Size()];
@@ -107,7 +107,7 @@ bool NFace::Load(std::wstring File)
 		SetColor(Yellow);
 		std::cout << "FREETYPE WARN: ";
 		ClearColor();
-		std::wcout << _t("Failed to load ") << File << _t(", corrupt or not a freetype-compadible font!\n");
+		std::cout << "Failed to load " << File << ", corrupt or not a freetype-compadible font!\n";
 		return Fail;
 	}
 	return Success;
@@ -230,7 +230,7 @@ GLuint NFace::GetTexture(unsigned int Size)
 	return Textures[Size]->GetTexture();
 }
 
-NText::NText(std::wstring i_Face, std::wstring i_Data) : NNode()
+NText::NText(std::string i_Face, std::wstring i_Data) : NNode()
 {
 	Face = GetGame()->GetTextSystem()->GetFace(i_Face);
 	Shader = GetGame()->GetRender()->GetShader("text");

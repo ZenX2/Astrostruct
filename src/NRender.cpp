@@ -59,14 +59,67 @@ bool NRender::LoadShaders()
 	} else {
 		delete Shader;
 	}
+	Shader = new NShader("post");
+	if (Shader->Load("shaders/post.vert","shaders/post.frag") != Fail)
+	{
+		Shaders.push_back(Shader);
+	} else {
+		delete Shader;
+	}
+}
+
+void NRender::GenerateFramebuffer()
+{
+	//Create a frame buffer that we can render too, then we can apply post effects to it.
+	if (FrameBuffer != 0)
+	{
+		glDeleteFramebuffers(1,&FrameBuffer);
+		glDeleteTextures(1,&FTexture);
+		glDeleteRenderbuffers(1,&DepthBuffer);
+	}
+	glGenFramebuffers(1,&FrameBuffer);
+	glBindFramebuffer(GL_FRAMEBUFFER, FrameBuffer);
+	glGenTextures(1,&FTexture);
+	glBindTexture(GL_TEXTURE_2D,FTexture);
+	glTexImage2D(GL_TEXTURE_2D, 0,GL_RGB, GetGame()->GetWindowWidth(), GetGame()->GetWindowHeight(), 0,GL_RGB, GL_UNSIGNED_BYTE, 0);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST); //According to the tutorial I'm following, frame buffers require bad filtering.
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glGenRenderbuffers(1,&DepthBuffer);
+	glBindRenderbuffer(GL_RENDERBUFFER,DepthBuffer);
+	glRenderbufferStorage(GL_RENDERBUFFER,GL_DEPTH_COMPONENT,GetGame()->GetWindowWidth(),GetGame()->GetWindowHeight());
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER,GL_DEPTH_ATTACHMENT,GL_RENDERBUFFER,DepthBuffer);
+	glFramebufferTexture(GL_FRAMEBUFFER,GL_COLOR_ATTACHMENT0,FTexture,0);
+	glBindTexture(GL_TEXTURE_2D, 0);
+	glBindFramebuffer(GL_FRAMEBUFFER,0);
+	//Now create the vertex buffers to draw the quad to the screen.
+	Verts.clear();
+	UVs.clear();
+	Verts.push_back(glm::vec2(-1,-1));
+	UVs.push_back(glm::vec2(0,0));
+	Verts.push_back(glm::vec2(1,-1));
+	UVs.push_back(glm::vec2(1,0));
+	Verts.push_back(glm::vec2(1,1));
+	UVs.push_back(glm::vec2(1,1));
+	Verts.push_back(glm::vec2(-1,1));
+	UVs.push_back(glm::vec2(0,1));
+	glBindBuffer(GL_ARRAY_BUFFER,VertexBuffers[0]);
+	glBufferData(GL_ARRAY_BUFFER,Verts.size()*sizeof(glm::vec2),&Verts[0],GL_STATIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER,VertexBuffers[1]);
+	glBufferData(GL_ARRAY_BUFFER,UVs.size()*sizeof(glm::vec2),&UVs[0],GL_STATIC_DRAW);
 }
 
 NRender::NRender()
 {
-	glBindTexture(GL_TEXTURE_2D, 0);
-	glBindFramebuffer(GL_FRAMEBUFFER,0);
+	glGenBuffers(2,VertexBuffers);
+	FrameBuffer = 0;
+	FTexture = 0;
+	DepthBuffer = 0;
+	GenerateFramebuffer();
 	FrameTime = 0;
 	LoadShaders();
+	PostEffect = GetShader("post");
+	TextureLoc = PostEffect->GetUniformLocation("Texture");
+	TimeLoc = PostEffect->GetUniformLocation("Time");
 	Camera = NULL;
 	VSync = false;
 	if (GetGame()->GetConfig()->GetBool("VerticalSync"))
@@ -111,6 +164,7 @@ void NRender::SetSize(glm::vec2 i_Size)
 	}
 	Size = i_Size;
 	glViewport(0,0,Size.x,Size.y);
+	GenerateFramebuffer();
 }
 
 void NRender::SetSize(float Width, float Height)
@@ -174,6 +228,7 @@ void NRender::Draw()
 	}
 	LastTime = CurTime();
 	glClearColor(0,0,0,1);
+	glBindFramebuffer(GL_FRAMEBUFFER,FrameBuffer);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	
 	if (Camera)
@@ -183,6 +238,28 @@ void NRender::Draw()
 		Camera = new NCamera();
 		GetGame()->GetScene()->Draw(Camera);
 	}
+	glBindFramebuffer(GL_FRAMEBUFFER,0);
+	glEnable(GL_TEXTURE_2D);
+	glUseProgram(PostEffect->GetID());
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D,FTexture);
+	glUniform1i(TextureLoc,0);
+	glUniform1f(TimeLoc,(float)CurTime());
+	glEnableVertexAttribArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER,VertexBuffers[0]);
+	glVertexAttribPointer(0,2,GL_FLOAT,GL_FALSE,0,NULL);
+	glEnableVertexAttribArray(1);
+	glBindBuffer(GL_ARRAY_BUFFER,VertexBuffers[1]);
+	glVertexAttribPointer(1,2,GL_FLOAT,GL_FALSE,0,NULL);
+	
+	glEnable(GL_TEXTURE_2D);
+	glDrawArrays(GL_QUADS,0,Verts.size());
+	glDisable(GL_TEXTURE_2D);
+
+	glDisableVertexAttribArray(0);
+	glDisableVertexAttribArray(1);
+	glUseProgram(0);
+
 	glfwSwapBuffers();
 	glError();
 }

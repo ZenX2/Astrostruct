@@ -21,7 +21,7 @@ int main(int argc, char* argv[])
 	Camera->SetPos(glm::vec3(0,0,800));
 	GetGame()->GetRender()->SetCamera(Camera);
 	glm::vec3 WantedPosition(0,0,800);
-	NText* FPSText = GetGame()->GetScene()->AddText(_t("cousine"), _t("FPS: 0"));
+	NText* FPSText = GetGame()->GetScene()->AddText("cousine", _t("FPS: 0"));
 	FPSText->SetPos(0,FPSText->GetSize()/2.f);
 	FPSText->SetParent(Camera);
 	NWindow* MyWindow = GetGame()->GetScene()->AddWindow();
@@ -44,7 +44,7 @@ int main(int argc, char* argv[])
 	NWindow* InfoWindow = GetGame()->GetScene()->AddWindow();
 	InfoWindow->SetTexture("window");
 	InfoWindow->SetScale(128,256);
-	NText* InfoText = GetGame()->GetScene()->AddText(_t("cousine"), _t("This game is in very early development, but the engine framework is pretty much completed now. You can see lots of it demo'd here. Use wasd and qe to move the camera around. While escape brings back up the beginning menu."));
+	NText* InfoText = GetGame()->GetScene()->AddText("cousine", _t("This game is in very early development, but the engine framework is pretty much completed now. You can see lots of it demo'd here. Use wasd and qe to move the camera around. While escape brings back up the beginning menu."));
 	InfoText->SetBorder(128,256);
 	InfoText->SetPos(-64,108);
 	InfoText->SetSize(12);

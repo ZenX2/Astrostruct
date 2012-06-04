@@ -40,7 +40,7 @@ public:
 	*
 	* @return A pointer to the newly created object.
 	*/
-	NText* AddText(std::wstring Font, std::wstring Data);
+	NText* AddText(std::string Font, std::wstring Data);
 	/**
 	 * @brief Adds a window to the scene.
 	 *

@@ -271,10 +271,8 @@ int LoadFace(lua_State* L)
 {
 	const char* Name = luaL_checkstring(L,1);
 	const char* Data = luaL_checkstring(L,2);
-	std::string sName(Name);
-	std::string sData(Data);
-	NFace* FontFace = new NFace(ToMBS(sName));
-	if (FontFace->Load(ToMBS(sData)))
+	NFace* FontFace = new NFace(Name);
+	if (FontFace->Load(Data))
 	{
 		GetGame()->GetTextSystem()->AddFace(FontFace);
 	} else {

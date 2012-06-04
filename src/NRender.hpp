@@ -183,6 +183,13 @@ public:
 	 */
 	void SetSize(float Width, float Height);
 private:
+	NShader* PostEffect;
+	void GenerateFramebuffer();
+	GLuint TextureLoc,TimeLoc;
+	GLuint VertexBuffers[2];
+	std::vector<glm::vec2> Verts;
+	std::vector<glm::vec2> UVs;
+	GLuint FrameBuffer, FTexture, DepthBuffer;
 	void glError();
 	glm::vec2 Size;
 	double FrameTime;
