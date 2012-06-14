@@ -12,7 +12,7 @@ void main()
 {
 	vec4 TranslatedVert = MVP*vec4(VertexPosition,1);
 	float FogStart = 410;
-	float FogEnd = 650;
+	float FogEnd = 655;
 	float Distance = TranslatedVert.z;
 	if (Distance<=FogStart)
 	{

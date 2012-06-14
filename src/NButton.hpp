@@ -62,7 +62,17 @@ public:
 	 * @brief Unallocates the object.
 	 */
 	void Remove();
+	/**
+	 * @brief Hooks into NNode to make our text follow color. Probably shouldn't do that, but if i encounter problems with it I'll change it.
+	 *
+	 * @param i_Color The desired color of the text and button.
+	 */
 	void SetColor(glm::vec4 i_Color);
+	/**
+	 * @brief Returns the type of the object.
+	 *
+	 * @return "Button".
+	 */
 	std::string Type();
 private:
 	unsigned int TextureWidth, TextureHeight;

@@ -245,6 +245,11 @@ public:
 	 * @param i_H The desired height of the box.
 	 */
 	void SetBorder(float i_W, float i_H);
+	/**
+	 * @brief Returns the type of the object.
+	 *
+	 * @return "Text".
+	 */
 	std::string Type();
 	~NText();
 private:

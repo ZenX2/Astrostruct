@@ -43,6 +43,7 @@
 #ifndef NAELSTROF_ENGINE
 #define NAELSTROF_ENGINE
 #include "config.h"
+#include <sys/time.h>
 #include <cstdlib>
 #include <string>
 #include <utf8.h>

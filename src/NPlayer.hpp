@@ -8,6 +8,9 @@
 #ifndef NAELSTROF_PLAYER
 #define NAELSTROF_PLAYER
 
+/**
+ * @brief The player class, this is abstracted from the entity class due to it being highly sensitive to networking.
+ */
 class NPlayer : public NNode
 {
 public:
@@ -55,8 +58,14 @@ public:
 	 * @brief Deletes the player and its draw buffers.
 	 */
 	void Remove();
+	/**
+	 * @brief Returns the type of this object.
+	 *
+	 * @return "Player"
+	 */
 	std::string Type();
 private:
+	glm::vec2 CollisionBox;
 	float Gravity;
 	bool OnGround;
 	float Friction;

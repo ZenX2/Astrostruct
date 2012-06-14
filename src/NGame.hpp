@@ -147,6 +147,11 @@ public:
 	 * @return A pointer to the map.
 	 */
 	NMap* GetMap();
+	/**
+	 * @brief Gets the current light system.
+	 *
+	 * @return A pointer to the light system.
+	 */
 	NLightSystem* GetLightSystem();
 private:
 	bool WindowChanged;

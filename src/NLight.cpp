@@ -63,10 +63,10 @@ void NLight::GenerateShadowBuffers()
 	{
 		return;
 	}
-	//if (!SChanged)
-	//{
-	//	return;
-	//}
+	if (!SChanged)
+	{
+		return;
+	}
 	Shadows.clear();
 	for (float x = -GetScale().x;x<GetScale().x;x+=GetGame()->GetMap()->GetTileSize())
 	{
@@ -128,6 +128,20 @@ void NLight::GenerateShadowBuffers()
 	glBindBuffer(GL_ARRAY_BUFFER,Buffers[2]);
 	glBufferData(GL_ARRAY_BUFFER,Shadows.size()*sizeof(glm::vec3),&Shadows[0],GL_STATIC_DRAW);
 	SChanged = false;
+}
+
+void NLight::SetPos(glm::vec3 i_Position)
+{
+	Position = i_Position;
+	SChanged = true;
+	UpdateMatrix();
+}
+
+void NLight::SetScale(glm::vec3 i_Scale)
+{
+	Scale = i_Scale;
+	SChanged = true;
+	UpdateMatrix();
 }
 
 void NLight::Draw(NCamera* View)

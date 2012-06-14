@@ -20,6 +20,7 @@ NPlayer::NPlayer()
 	Friction = 2;
 	OnGround = false;
 	Gravity = 2;
+	CollisionBox = glm::vec2(20,30);
 }
 
 NPlayer::~NPlayer()
@@ -146,9 +147,9 @@ void NPlayer::Tick(double DT)
 		OnGround = false;
 		SetVel(GetVel()-glm::vec3(0,0,Gravity));
 	}
-	for (float x=-GetScale().x*32;x<=GetScale().x*32;x+=Map->GetTileSize())
+	for (float x=-GetScale().x*CollisionBox.x;x<=GetScale().x*CollisionBox.x;x+=GetScale().x*CollisionBox.x)
 	{
-		for (float y=-GetScale().y*32;y<=GetScale().y*32;y+=Map->GetTileSize())
+		for (float y=-GetScale().y*CollisionBox.y;y<=GetScale().y*CollisionBox.y;y+=GetScale().y*CollisionBox.y)
 		{
 			NTile* Tile = Map->GetTile(GetPos()+glm::vec3(x,y,0));
 			if (!Tile || !Tile->IsSolid())
@@ -156,15 +157,15 @@ void NPlayer::Tick(double DT)
 				continue;
 			}
 			glm::vec3 TilePos = Map->TilePos(GetPos()+glm::vec3(x,y,0));
-			if (Intersects(glm::vec4(TilePos.x,TilePos.y,Map->GetTileSize(),Map->GetTileSize()),glm::vec4(GetPos().x,GetPos().y,GetScale().x*32,GetScale().y*32)))
+			if (Intersects(glm::vec4(TilePos.x,TilePos.y,Map->GetTileSize(),Map->GetTileSize()),glm::vec4(GetPos().x,GetPos().y,GetScale().x*CollisionBox.x,GetScale().y*CollisionBox.y)))
 			{
-				glm::vec2 Move = MinimumTranslation(glm::vec4(TilePos.x,TilePos.y,Map->GetTileSize(),Map->GetTileSize()),glm::vec4(GetPos().x,GetPos().y,GetScale().x*32,GetScale().y*32))/2.f;
+				glm::vec2 Move = MinimumTranslation(glm::vec4(TilePos.x,TilePos.y,Map->GetTileSize(),Map->GetTileSize()),glm::vec4(GetPos().x,GetPos().y,GetScale().x*CollisionBox.x,GetScale().y*CollisionBox.y))/2.f;
 				SetPos(GetPos()+glm::vec3(Move.x,Move.y,0));
-				if (Move.y <= 1)
+				if (fabs(Move.y) == 0)
 				{
 					Move.y = GetVel().y;
 				}
-				if (Move.x <= 1)
+				if (fabs(Move.x) == 0)
 				{
 					Move.x = GetVel().x;
 				}
@@ -177,26 +178,40 @@ void NPlayer::Tick(double DT)
 	SetPos(GetPos()+Vel);
 	if (OnGround)
 	{
-		Velocity = glm::vec3(Velocity.x*(1-DT*Friction),Velocity.y*(1-DT*Friction),Velocity.z);
+		if ((fabs(Velocity.x)+fabs(Velocity.y))/2.f<DT*Friction*40)
+		{
+			Velocity = glm::vec3(0);
+		} else {
+			Velocity = glm::vec3(Velocity.x*(1-DT*Friction),Velocity.y*(1-DT*Friction),Velocity.z);
+		}
 	}
 	//Tracer Collisions
 	glm::vec3 Normal = glm::normalize(GetPos()-PosMem);
-	for (unsigned int i=0;i<glm::length(GetPos()-PosMem);i+=2)
+	for (unsigned int i=0;i<glm::length(GetPos()-PosMem);i+=4)
 	{
 		glm::vec3 Pos = PosMem+(Normal*float(i));
 		NMap* Map = GetGame()->GetMap();
 		NTile* CTile = Map->GetTile(Pos);
 		glm::vec3 CTilePos = Map->TilePos(Pos);
-		if (CTile != NULL)
+		for (float x=-GetScale().x*CollisionBox.x;x<=GetScale().x*CollisionBox.y;x+=GetScale().x*CollisionBox.x)
 		{
-			if (!CTile->IsOpenSpace())
+			for (float y=-GetScale().y*CollisionBox.y;y<=GetScale().y*CollisionBox.y;y+=GetScale().y*CollisionBox.y)
 			{
-				if (fabs(CTilePos.z-Pos.z)<2)
+				NTile* Tile = Map->GetTile(GetPos()+glm::vec3(x,y,0));
+				if (!Tile || Tile->IsOpenSpace() || Tile->IsSolid())
 				{
-					OnGround = true;
-					SetPos(glm::vec3(GetPos().x,GetPos().y,CTilePos.z+2));
-					SetVel(glm::vec3(GetVel().x,GetVel().y,0));
-					break; //Break the tracer because we hit something!
+					continue;
+				}
+				glm::vec3 TilePos = Map->TilePos(GetPos()+glm::vec3(x,y,0));
+				if (Intersects(glm::vec4(TilePos.x,TilePos.y,Map->GetTileSize(),Map->GetTileSize()),glm::vec4(GetPos().x,GetPos().y,GetScale().x*CollisionBox.x,GetScale().y*CollisionBox.y)))
+				{
+					if (fabs(TilePos.z-Pos.z)<8)
+					{
+						OnGround = true;
+						SetPos(glm::vec3(GetPos().x,GetPos().y,TilePos.z+2));
+						SetVel(glm::vec3(GetVel().x,GetVel().y,0));
+						break; //Break the tracer because we hit something!
+					}
 				}
 			}
 		}

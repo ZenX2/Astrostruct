@@ -190,8 +190,17 @@ public:
 	 * @return The translated opengl enum.
 	 */
 	GLuint StringToEnum(std::string Name);
+	/**
+	 * @brief Pushes the current FBO into memory.
+	 */
 	void glPushFramebuffer();
+	/**
+	 * @brief Resets the current FBO to the last one that was "pushed".
+	 */
 	void glPopFramebuffer();
+	/**
+	 * @brief Ensures the currently bound frame buffer is valid, currently does nothing when it fails.
+	 */
 	void CheckFramebuffer();
 private:
 	std::vector<GLuint> FrameBufferMem;

@@ -36,6 +36,14 @@ bool Intersects(glm::vec4 ABox, glm::vec4 BBox);
  */
 glm::vec2 MinimumTranslation(glm::vec4 ABox, glm::vec4 BBox);
 
+/**
+ * @brief Checks if the given face is facing the given point. Useful for lighting.
+ *
+ * @param Point The point we are checking from. Usually the view point.
+ * @param Face Two points in a vec4 defining a 2d face.
+ *
+ * @return True if it's facing the point, false if it isn't.
+ */
 bool Facing(glm::vec2 Point, glm::vec4 Face);
 
 #endif

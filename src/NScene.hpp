@@ -81,6 +81,13 @@ public:
 	 * @return A pointer to the player created.
 	 */
 	NPlayer* AddPlayer();
+	/**
+	 * @brief Adds a light to the scene.
+	 *
+	 * @param Texture The desired texture of the light.
+	 *
+	 * @return A pointer to the light created.
+	 */
 	NLight* AddLight(std::string Texture);
 private:
 	double LastTick;

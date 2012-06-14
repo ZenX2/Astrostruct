@@ -32,6 +32,7 @@ NGame::~NGame()
 bool NGame::Init(int i_Width, int i_Height, std::string Title, int argc, char* argv[])
 {
 	//Initialize everything we can
+	srand(time(NULL));
 	SignalInterceptor = new NSignalInterceptor();
 	Width = i_Width;
 	Height = i_Height;

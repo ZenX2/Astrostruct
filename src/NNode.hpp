@@ -198,6 +198,11 @@ public:
 	 * @return A pointer to the node of the root of the parenting tree.
 	 */
 	virtual NNode* GetRoot();
+	/**
+	 * @brief Returns the type of the object, useful for segregating the generic nodes into their respective render order in NScene.
+	 *
+	 * @return "NULL".
+	 */
 	virtual std::string Type();
 	glm::vec3 Angle;
 	glm::vec4 Color;

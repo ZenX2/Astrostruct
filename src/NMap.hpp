@@ -14,8 +14,20 @@
 class NTile
 {
 public:
+	/**
+	 * @brief Initializes a tile at the specified position, useful for when you only have a pointer to a tile and need a tile next to it. It does NOT actually set the position of the tile.
+	 *
+	 * @param x The X position.
+	 * @param y The Y position.
+	 * @param z The Z position.
+	 */
 	NTile(unsigned int x,unsigned int y,unsigned int z);
 	~NTile();
+	/**
+	 * @brief Returns if a tile blocks light or not, useful for glass tiles.
+	 *
+	 * @return True if it blocks light, false if it doesn't.
+	 */
 	bool IsOpaque();
 	/**
 	 * @brief Compares the ID to static numbers to decide if the tile is solid or not, it can be overridden by SetSolid.
@@ -123,9 +135,30 @@ public:
 	 * @return The position of the tile centered around the tile's origin.
 	 */
 	glm::vec3 TilePos(glm::vec3 Pos);
+	/**
+	 * @brief Returns the tile at the location in the vector.
+	 *
+	 * @param X The X position.
+	 * @param Y The Y position.
+	 * @param Z The Z position.
+	 *
+	 * @return A pointer to the tile at the position, or NULL if one of the numbers is out of bounds.
+	 */
 	NTile* GetTile(unsigned int X, unsigned int Y, unsigned int Z);
 	bool Ready;
+	/**
+	 * @brief Returns the type of the object.
+	 *
+	 * @return "Map".
+	 */
 	std::string Type();
+	/**
+	 * @brief Returns the current level that a position resides on. Currently use to decide when to render objects or not.
+	 *
+	 * @param Pos The position.
+	 *
+	 * @return The Z level the position resides on.
+	 */
 	int GetLevel(glm::vec3 Pos);
 private:
 	unsigned int ViewingLevel;
