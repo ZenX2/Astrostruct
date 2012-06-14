@@ -311,3 +311,7 @@ void NButton::SetColor(glm::vec4 i_Color)
 	}
 	Color = i_Color;
 }
+std::string NButton::Type()
+{
+	return "Button";
+}

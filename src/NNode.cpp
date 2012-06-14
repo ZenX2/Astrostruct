@@ -9,7 +9,6 @@ NNode::NNode()
 	Parent = NULL;
 	Matrix = glm::mat4();
 	SMatrix = glm::mat4();
-	GetGame()->GetScene()->AddNode(this);
 }
 
 NNode::~NNode()
@@ -188,4 +187,8 @@ glm::vec4 NNode::GetColor()
 }
 void NNode::Remove()
 {
+}
+std::string NNode::Type()
+{
+	return "NULL";
 }

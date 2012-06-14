@@ -43,6 +43,7 @@ public:
 	 * @brief Unallocates the object.
 	 */
 	void Remove();
+	std::string Type();
 private:
 	glm::vec3 SizeMem;
 	float BorderSize;
@@ -52,7 +53,6 @@ private:
 	std::vector<glm::vec2> Verts;
 	std::vector<glm::vec2> UVs;
 	GLuint* Buffers;
-	GLuint ScreenLoc;
 	GLuint TextureLoc;
 	GLuint MatrixLoc;
 	GLuint ColorLoc;

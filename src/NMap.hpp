@@ -14,8 +14,9 @@
 class NTile
 {
 public:
-	NTile();
+	NTile(unsigned int x,unsigned int y,unsigned int z);
 	~NTile();
+	bool IsOpaque();
 	/**
 	 * @brief Compares the ID to static numbers to decide if the tile is solid or not, it can be overridden by SetSolid.
 	 *
@@ -35,6 +36,7 @@ public:
 	 * @param i_Solid True for solid, false for nothingness.
 	 */
 	void SetSolid(bool i_Solid);
+	unsigned int X,Y,Z;
 private:
 	bool ForceSolid;
 	bool Solid;
@@ -121,7 +123,10 @@ public:
 	 * @return The position of the tile centered around the tile's origin.
 	 */
 	glm::vec3 TilePos(glm::vec3 Pos);
+	NTile* GetTile(unsigned int X, unsigned int Y, unsigned int Z);
 	bool Ready;
+	std::string Type();
+	int GetLevel(glm::vec3 Pos);
 private:
 	unsigned int ViewingLevel;
 	NShader* Shader;

@@ -81,9 +81,13 @@ public:
 	 * @return A pointer to the player created.
 	 */
 	NPlayer* AddPlayer();
+	NLight* AddLight(std::string Texture);
 private:
 	double LastTick;
-	std::vector<NNode*> Nodes;
+	std::vector<NNode*> GUI;
+	std::vector<NNode*> World;
+	std::vector<NNode*> Lights;
+	std::vector<NNode*> Garbage;
 };
 
 #endif

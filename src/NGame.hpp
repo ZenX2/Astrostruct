@@ -147,9 +147,11 @@ public:
 	 * @return A pointer to the map.
 	 */
 	NMap* GetMap();
+	NLightSystem* GetLightSystem();
 private:
 	bool WindowChanged;
 	bool Run;
+	NLightSystem* LightSystem;
 	NFileSystem* FileSystem;
 	NInput* Input;
 	NScene* Scene;

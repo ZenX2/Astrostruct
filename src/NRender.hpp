@@ -190,7 +190,11 @@ public:
 	 * @return The translated opengl enum.
 	 */
 	GLuint StringToEnum(std::string Name);
+	void glPushFramebuffer();
+	void glPopFramebuffer();
+	void CheckFramebuffer();
 private:
+	std::vector<GLuint> FrameBufferMem;
 	NShader* PostEffect;
 	void GenerateFramebuffer();
 	GLuint TextureLoc,TimeLoc;

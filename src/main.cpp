@@ -51,8 +51,11 @@ int main(int argc, char* argv[])
 	InfoWindow->SetParent(Camera);
 	NPlayer* MyPlayer = GetGame()->GetScene()->AddPlayer();
 	MyPlayer->SetControl();
+	NLight* MyLight = GetGame()->GetScene()->AddLight("point");
+	MyLight->SetScale(512,512);
 	while(GetGame()->Running())
 	{
+		MyLight->SetPos(MyPlayer->GetPos());
 		WantedPosition = glm::vec3(MyPlayer->GetPos()+glm::vec3(0,0,500));
 		Camera->SetPos(Camera->GetPos()-(Camera->GetPos()-WantedPosition)/8.f);
 		GetGame()->GetInput()->Poll();
@@ -64,6 +67,13 @@ int main(int argc, char* argv[])
 			MyWindow->SetColor(glm::vec4(1,1,1,0));
 			GetGame()->GetMap()->Init(16,16,16);
 			MyPlayer->SetPos(512,512,1024);
+		}
+		if (GetGame()->GetInput()->KeyChanged('F') && GetGame()->GetInput()->GetKey('F'))
+		{
+			MyLight = GetGame()->GetScene()->AddLight("point");
+			float Size = Rand(50,512);
+			MyLight->SetScale(Size,Size);
+			MyLight->SetColor(Rand(0,1),Rand(0,1),Rand(0,1), 0.5);
 		}
 		if (GetGame()->GetInput()->KeyChanged(GLFW_KEY_ESC) && GetGame()->GetInput()->GetKey(GLFW_KEY_ESC))
 		{

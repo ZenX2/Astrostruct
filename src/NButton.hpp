@@ -63,6 +63,7 @@ public:
 	 */
 	void Remove();
 	void SetColor(glm::vec4 i_Color);
+	std::string Type();
 private:
 	unsigned int TextureWidth, TextureHeight;
 	bool PressedMemory;

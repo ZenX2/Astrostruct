@@ -198,6 +198,7 @@ public:
 	 * @return A pointer to the node of the root of the parenting tree.
 	 */
 	virtual NNode* GetRoot();
+	virtual std::string Type();
 	glm::vec3 Angle;
 	glm::vec4 Color;
 	glm::vec3 Position;

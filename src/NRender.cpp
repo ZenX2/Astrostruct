@@ -66,6 +66,27 @@ bool NRender::LoadShaders()
 	} else {
 		delete Shader;
 	}
+	Shader = new NShader("flat_textureless");
+	if (Shader->Load("shaders/flat_textureless.vert","shaders/flat_textureless.frag") != Fail)
+	{
+		Shaders.push_back(Shader);
+	} else {
+		delete Shader;
+	}
+	Shader = new NShader("flat_colorless");
+	if (Shader->Load("shaders/flat_colorless.vert","shaders/flat_colorless.frag") != Fail)
+	{
+		Shaders.push_back(Shader);
+	} else {
+		delete Shader;
+	}
+	Shader = new NShader("normal_textureless");
+	if (Shader->Load("shaders/normal_textureless.vert","shaders/normal_textureless.frag") != Fail)
+	{
+		Shaders.push_back(Shader);
+	} else {
+		delete Shader;
+	}
 }
 
 void NRender::GenerateFramebuffer()
@@ -90,6 +111,7 @@ void NRender::GenerateFramebuffer()
 	glFramebufferRenderbuffer(GL_FRAMEBUFFER,GL_DEPTH_ATTACHMENT,GL_RENDERBUFFER,DepthBuffer);
 	glFramebufferTexture(GL_FRAMEBUFFER,GL_COLOR_ATTACHMENT0,FTexture,0);
 	glBindTexture(GL_TEXTURE_2D, 0);
+	CheckFramebuffer();
 	glBindFramebuffer(GL_FRAMEBUFFER,0);
 	//Now create the vertex buffers to draw the quad to the screen.
 	Verts.clear();
@@ -461,4 +483,79 @@ GLuint NRender::StringToEnum(std::string Name)
 		//TextureFilter = GL_LINEAR_MIPMAP_LINEAR;
 	}
 	return 0;
+}
+void NRender::glPushFramebuffer()
+{
+	GLint CurrentFrameBuffer;
+	glGetIntegerv(GL_FRAMEBUFFER_BINDING,&CurrentFrameBuffer);
+	FrameBufferMem.push_back(CurrentFrameBuffer);
+}
+void NRender::glPopFramebuffer()
+{
+	if (FrameBufferMem.size()<1)
+	{
+		return;
+	}
+	glBindFramebuffer(GL_FRAMEBUFFER,FrameBufferMem.back());
+	FrameBufferMem.pop_back();
+}
+
+void NRender::CheckFramebuffer()
+{
+	GLuint Check = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+	if (Check == GL_FRAMEBUFFER_COMPLETE)
+	{
+		return;
+	}
+	SetColor(Red);
+	std::cout << "OPENGL ERROR: ";
+	ClearColor();
+	switch (Check)
+	{
+		case GL_FRAMEBUFFER_UNDEFINED:
+		{
+			std::cout << "GL_FRAMEBUFFER_UNDEFINED\n";
+			break;
+		}
+		case GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT:
+		{
+			std::cout << "GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT\n";
+			break;
+		}
+		case GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT:
+		{
+			std::cout << "GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT\n";
+			break;
+		}
+		case GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER:
+		{
+			std::cout << "GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER\n";
+			break;
+		}
+		case GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER:
+		{
+			std::cout << "GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER\n";
+			break;
+		}
+		case GL_FRAMEBUFFER_INCOMPLETE_LAYER_TARGETS:
+		{
+			std::cout << "GL_FRAMEBUFFER_INCOMPLETE_LAYER_TARGETS\n";
+			break;
+		}
+		case GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE:
+		{
+			std::cout << "GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE\n";
+			break;
+		}
+		case GL_FRAMEBUFFER_UNSUPPORTED :
+		{
+			std::cout << "GL_FRAMEBUFFER_UNSUPPORTED\n";
+			break;
+		}
+		default:
+		{
+			std::cout << "Unknown frambuffer error!\n";
+			break;
+		}
+	}
 }

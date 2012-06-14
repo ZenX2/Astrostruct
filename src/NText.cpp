@@ -544,3 +544,7 @@ NTextureNode::~NTextureNode()
 		delete Children[1];
 	}
 }
+std::string NText::Type()
+{
+	return "Text";
+}

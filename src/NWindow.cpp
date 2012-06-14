@@ -10,7 +10,6 @@ NWindow::NWindow()
 	Shader = GetGame()->GetRender()->GetShader("flat");
 	if (Shader != NULL)
 	{
-		ScreenLoc = Shader->GetUniformLocation("Screen");
 		MatrixLoc = Shader->GetUniformLocation("MVP");
 		TextureLoc = Shader->GetUniformLocation("Texture");
 		ColorLoc = Shader->GetUniformLocation("Color");
@@ -231,4 +230,8 @@ void NWindow::Tick(double DT)
 void NWindow::Remove()
 {
     delete (NWindow*)this;
+}
+std::string NWindow::Type()
+{
+	return "Window";
 }

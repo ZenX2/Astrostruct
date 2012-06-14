@@ -24,6 +24,7 @@ NGame::~NGame()
 		delete Config;
 		delete Lua;
 		delete Console;
+		delete LightSystem;
 		glfwTerminate();
 	}
 }
@@ -59,9 +60,9 @@ bool NGame::Init(int i_Width, int i_Height, std::string Title, int argc, char* a
 	int Check = 0;
 	if (Config->GetBool("Fullscreen"))
 	{
-		Check = glfwOpenWindow(Width,Height,0,0,0,0,0,0,GLFW_FULLSCREEN);
+		Check = glfwOpenWindow(Width,Height,5,6,5,0,8,8,GLFW_FULLSCREEN);
 	} else {
-		Check = glfwOpenWindow(Width,Height,0,0,0,0,0,0,GLFW_WINDOW);
+		Check = glfwOpenWindow(Width,Height,5,6,5,0,8,8,GLFW_WINDOW);
 	}
 	if (!Check)
 	{
@@ -91,8 +92,9 @@ bool NGame::Init(int i_Width, int i_Height, std::string Title, int argc, char* a
 	SoundSystem->LoadSounds();
 	TextSystem = new NTextSystem();
 	TextSystem->LoadFaces();
-	Map = new NMap(Config->GetString("MapSkin"));
+	Map = Scene->AddMap(Config->GetString("MapSkin"));
 	Console = new NConsole();
+	LightSystem = new NLightSystem();
 	Valid = true;
 	return Success;
 }
@@ -217,4 +219,9 @@ NFileSystem* NGame::GetFileSystem()
 NMap* NGame::GetMap()
 {
 	return Map;
+}
+
+NLightSystem* NGame::GetLightSystem()
+{
+	return LightSystem;
 }

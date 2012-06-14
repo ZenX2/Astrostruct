@@ -55,6 +55,7 @@ public:
 	 * @brief Deletes the player and its draw buffers.
 	 */
 	void Remove();
+	std::string Type();
 private:
 	float Gravity;
 	bool OnGround;

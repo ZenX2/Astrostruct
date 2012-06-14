@@ -43,6 +43,7 @@ public:
 	void SetAng(glm::vec3 i_Angle);
 	void SetScale(glm::vec3 i_Scale);
 	void Remove();
+	std::string Type();
 private:
 	bool Changed;
 	void UpdateCameraMatrix();

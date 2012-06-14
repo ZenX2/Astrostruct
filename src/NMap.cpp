@@ -97,7 +97,7 @@ void NMap::Init(unsigned int i_Width, unsigned int i_Height, unsigned int i_Dept
 		{
 			for (unsigned int z=0;z<Depth;z++)
 			{
-				Tiles[x][y][z] = new NTile();
+				Tiles[x][y][z] = new NTile(x,y,z);
 			}
 		}
 	}
@@ -121,6 +121,22 @@ void NMap::FixUp()
 			}
 		}
 	}
+}
+NTile* NMap::GetTile(unsigned int X, unsigned int Y, unsigned int Z)
+{
+	if (X < 0 || X >= Width)
+	{
+		return NULL;
+	}
+	if (Y < 0 || Y >= Height)
+	{
+		return NULL;
+	}
+	if (Z < 0 || Z >= Depth)
+	{
+		return NULL;
+	}
+	return Tiles[X][Y][Z];
 }
 NTile* NMap::GetTile(glm::vec3 Pos)
 {
@@ -165,6 +181,10 @@ void NMap::ViewLevel(int Level)
 int NMap::GetLevel()
 {
 	return ViewingLevel;
+}
+int NMap::GetLevel(glm::vec3 Pos)
+{
+	return floor(Pos.z/TileSize);
 }
 float NMap::GetTileSize()
 {
@@ -410,11 +430,14 @@ void NMap::Remove()
 	delete (NMap*)this;
 }
 
-NTile::NTile()
+NTile::NTile(unsigned int x, unsigned int y, unsigned int z)
 {
 	ID = rand()%3;
 	Solid = false;
 	ForceSolid = false;
+	X = x;
+	Y = y;
+	Z = z;
 }
 NTile::~NTile()
 {
@@ -441,6 +464,23 @@ bool NTile::IsSolid()
 	return false;
 }
 
+bool NTile::IsOpaque()
+{
+	if (ForceSolid)
+	{
+		if (Solid)
+		{
+			return true;
+		}
+		return false;
+	}
+	if (ID == 2)
+	{
+		return true;
+	}
+	return false;
+}
+
 bool NTile::IsOpenSpace()
 {
 	if (!ID)
@@ -448,4 +488,9 @@ bool NTile::IsOpenSpace()
 		return true;
 	}
 	return false;
+}
+
+std::string NMap::Type()
+{
+	return "Map";
 }

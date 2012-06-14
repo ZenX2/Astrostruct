@@ -36,4 +36,6 @@ bool Intersects(glm::vec4 ABox, glm::vec4 BBox);
  */
 glm::vec2 MinimumTranslation(glm::vec4 ABox, glm::vec4 BBox);
 
+bool Facing(glm::vec2 Point, glm::vec4 Face);
+
 #endif

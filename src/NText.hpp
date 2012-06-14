@@ -245,6 +245,7 @@ public:
 	 * @param i_H The desired height of the box.
 	 */
 	void SetBorder(float i_W, float i_H);
+	std::string Type();
 	~NText();
 private:
 	glm::vec2 Velocity;

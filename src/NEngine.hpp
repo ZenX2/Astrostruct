@@ -105,6 +105,7 @@
  *
  */
 #include "NMap.hpp"
+#include "NLight.hpp"
 #include "NWindow.hpp"
 #include "NButton.hpp"
 #include "NPlayer.hpp"

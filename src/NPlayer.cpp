@@ -315,3 +315,8 @@ void NPlayer::Remove()
 {
 	delete (NPlayer*)this;
 }
+
+std::string NPlayer::Type()
+{
+	return "Player";
+}

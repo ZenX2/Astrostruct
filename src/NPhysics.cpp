@@ -64,3 +64,20 @@ glm::vec2 MinimumTranslation(glm::vec4 ABox, glm::vec4 BBox)
 	}
 	return -mtd;
 }
+
+bool Facing(glm::vec2 Point, glm::vec4 Face)
+{
+	glm::vec2 Center = glm::vec2((Face.x+Face.z)/2.f,(Face.y+Face.w)/2.f);
+	float Radians = atan2(Center.x-Point.x,Center.y-Point.y);
+	glm::vec2 Direction = glm::vec2(sin(Radians),cos(Radians));
+
+	Radians = atan2(Face.x-Face.z,Face.y-Face.w)+PI/2.f;
+	glm::vec2 BDirection = glm::vec2(sin(Radians),cos(Radians));
+
+	float Difference = glm::dot(Direction,BDirection);
+	if (Difference > 0)
+	{
+		return true;
+	}
+	return false;
+}
