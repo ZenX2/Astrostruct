@@ -24,6 +24,7 @@ NPlayer::NPlayer()
 
 NPlayer::~NPlayer()
 {
+	delete Texture;
 }
 
 void NPlayer::Move(float Direction)
@@ -121,6 +122,7 @@ void NPlayer::Tick(double DT)
 		} else {
 			StopMove();
 		}
+		delete[] Pos;
 	}
 	if (Moving && OnGround)
 	{
