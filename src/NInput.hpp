@@ -63,6 +63,13 @@ public:
 	* @return The state of the desired mouse key.
 	*/
 	int GetMouseKey(int Key);
+	/**
+	 * @brief Returns info about a joystick's analog stick or triggers (puts the info into Floats). Currently has no error checking.
+	 *
+	 * @param ID Which joystick to check. (If two controllers were plugged in, each with two joysticks, ID 4 would return the second controller's second joystick.)
+	 * @param Floats A pointer to a preallocated float array.
+	 * @param NumAxes How many axes the joystick has, for example an Xbox controller's analog stick has 2 axes, but both its triggers are only one axis.
+	 */
 	void GetJoyStick(unsigned int ID, float* Floats, unsigned int NumAxes);
 	NInput();
 private:

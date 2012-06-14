@@ -75,6 +75,13 @@ public:
 	 * @return False on failure, true on success.
 	 */
 	bool Good();
+	/**
+	 * @brief Returns a lua string attached to the animation.
+	 *
+	 * @param i_Name The name of the string.
+	 *
+	 * @return The string.
+	 */
 	std::string GetString(std::string i_Name);
 	std::vector<NCachedTexture*> Frames;
 private:

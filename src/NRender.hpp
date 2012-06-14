@@ -182,6 +182,13 @@ public:
 	 * @param Height The width of the current render window.
 	 */
 	void SetSize(float Width, float Height);
+	/**
+	 * @brief Translates a string into an opengl enum, doesn't support very many at the moment. Just enough to load opengl texture filters from lua.
+	 *
+	 * @param Name The name of the opengl enum.
+	 *
+	 * @return The translated opengl enum.
+	 */
 	GLuint StringToEnum(std::string Name);
 private:
 	NShader* PostEffect;

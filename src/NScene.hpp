@@ -75,6 +75,11 @@ public:
 	 * @return A pointer to the camera.
 	 */
 	NCamera* AddCamera();
+	/**
+	 * @brief Adds a player to the scene.
+	 *
+	 * @return A pointer to the player created.
+	 */
 	NPlayer* AddPlayer();
 private:
 	double LastTick;

@@ -1,3 +1,10 @@
+/**
+ * @file NPlayer.hpp
+ * @brief Handles players, they are a special case from general entities because they need really good networking.
+ * @author Dalton Nell
+ * @version 1.0
+ * @date 2012-06-13
+ */
 #ifndef NAELSTROF_PLAYER
 #define NAELSTROF_PLAYER
 
@@ -6,13 +13,47 @@ class NPlayer : public NNode
 public:
 	NPlayer();
 	~NPlayer();
+	/**
+	 * @brief Begins to move the player in the specified direction and plays the run animation.
+	 *
+	 * @param Direction The direction in radians.
+	 */
 	void Move(float Direction);
+	/**
+	 * @brief Stops the player from moving and plays the idle animation. (Move(float Direction) persists until you call this)
+	 */
 	void StopMove();
+	/**
+	 * @brief Checks the player for collisions with the map and reacts accordingly.
+	 *
+	 * @param DT
+	 */
 	void Tick(double DT);
+	/**
+	 * @brief Sets the player's velocity.
+	 *
+	 * @param i_Velocity The desired velocity.
+	 */
 	void SetVel(glm::vec3 i_Velocity);
+	/**
+	 * @brief Returns the player's velocity.
+	 *
+	 * @return The player's velocity.
+	 */
 	glm::vec3 GetVel();
+	/**
+	 * @brief Draws the player in it's current animation state.
+	 *
+	 * @param View The camera to draw from.
+	 */
 	void Draw(NCamera* View);
+	/**
+	 * @brief Allows the player to be controlled, when multiplayer is implemented, make sure to only call this on the player the server lets you!
+	 */
 	void SetControl();
+	/**
+	 * @brief Deletes the player and its draw buffers.
+	 */
 	void Remove();
 private:
 	float Gravity;

@@ -238,6 +238,12 @@ public:
 	 * @brief Unallocates the object.
 	 */
 	void Remove();
+	/**
+	 * @brief Creates a box where the text will wrap within. (It's not very good at the moment and still need vertical text support)
+	 *
+	 * @param i_W The desired width of the box.
+	 * @param i_H The desired height of the box.
+	 */
 	void SetBorder(float i_W, float i_H);
 	~NText();
 private:

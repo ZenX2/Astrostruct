@@ -141,6 +141,11 @@ public:
 	 * @return A pointer to the filesystem.
 	 */
 	NFileSystem* GetFileSystem();
+	/**
+	 * @brief Gets the current map.
+	 *
+	 * @return A pointer to the map.
+	 */
 	NMap* GetMap();
 private:
 	bool WindowChanged;

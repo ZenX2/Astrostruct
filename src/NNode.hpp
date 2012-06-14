@@ -189,9 +189,14 @@ public:
 	 */
 	virtual glm::mat4 GetNonScaleMatrix();
 	/**
-	 * @brief Unallocates the object, this is used by NScene to unallocate all objects, regardless of what kind of object it really is. (Lots of things inherit NNode!)
+	 * @brief Unallocates the object, this is used by NScene to properly unallocate all objects, regardless of what kind of object it really is. (Lots of things inherit NNode!)
 	 */
 	virtual void Remove();
+	/**
+	 * @brief Returns the root of a parenting tree.
+	 *
+	 * @return A pointer to the node of the root of the parenting tree.
+	 */
 	virtual NNode* GetRoot();
 	glm::vec3 Angle;
 	glm::vec4 Color;
