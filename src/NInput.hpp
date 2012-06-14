@@ -63,6 +63,7 @@ public:
 	* @return The state of the desired mouse key.
 	*/
 	int GetMouseKey(int Key);
+	void GetJoyStick(unsigned int ID, float* Floats, unsigned int NumAxes);
 	NInput();
 private:
 	int MouseX;

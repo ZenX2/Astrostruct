@@ -182,6 +182,7 @@ public:
 	 * @param Height The width of the current render window.
 	 */
 	void SetSize(float Width, float Height);
+	GLuint StringToEnum(std::string Name);
 private:
 	NShader* PostEffect;
 	void GenerateFramebuffer();

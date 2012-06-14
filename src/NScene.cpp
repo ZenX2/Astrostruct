@@ -61,3 +61,7 @@ NCamera* NScene::AddCamera()
 {
 	return new NCamera();
 }
+NPlayer* NScene::AddPlayer()
+{
+	return new NPlayer();
+}

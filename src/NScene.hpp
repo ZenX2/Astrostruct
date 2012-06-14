@@ -75,6 +75,7 @@ public:
 	 * @return A pointer to the camera.
 	 */
 	NCamera* AddCamera();
+	NPlayer* AddPlayer();
 private:
 	double LastTick;
 	std::vector<NNode*> Nodes;

@@ -19,6 +19,10 @@ public:
 	bool IsSolid();
 	bool IsOpenSpace();
 	unsigned int ID;
+	void SetSolid(bool i_Solid);
+private:
+	bool ForceSolid;
+	bool Solid;
 };
 
 /**
@@ -59,11 +63,14 @@ public:
 	 */
 	void Remove();
 	void ViewLevel(int Level);
+	void FixUp();
 	int GetLevel();
 	float GetTileSize();
 	unsigned int GetDepth();
-private:
+	NTile* GetTile(glm::vec3 Pos);
+	glm::vec3 TilePos(glm::vec3 Pos);
 	bool Ready;
+private:
 	unsigned int ViewingLevel;
 	NShader* Shader;
 	NShader* OutlineShader;
@@ -76,8 +83,10 @@ private:
 	std::vector<std::vector<std::vector<NTile* > > > Tiles;
 	std::vector<GLuint*> Buffers;
 	std::vector<std::vector<glm::vec3> > Verts;
-	std::vector<std::vector<glm::vec3> > Outline;
 	std::vector<std::vector<glm::vec2> > UVs;
+	std::vector<std::vector<glm::vec3> > Outline;
+	std::vector<std::vector<glm::vec3> > BoxVerts;
+	std::vector<std::vector<glm::vec2> > BoxUVs;
 	std::vector<bool> Changed;
 	GLuint ColorLoc, MatrixLoc, TextureLoc, OutlineColorLoc, OutlineMatrixLoc;
 };

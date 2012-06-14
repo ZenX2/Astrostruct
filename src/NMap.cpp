@@ -44,6 +44,7 @@ NMap::~NMap()
 	}
 	for (unsigned int i=0;i<Depth;i++)
 	{
+		glDeleteBuffers(5,Buffers[i]);
 		delete[] Buffers[i];
 	}
 	if (Texture)
@@ -60,6 +61,8 @@ void NMap::Init(unsigned int i_Width, unsigned int i_Height, unsigned int i_Dept
 	Buffers.clear();
 	Verts.clear();
 	UVs.clear();
+	BoxVerts.clear();
+	BoxUVs.clear();
 	Outline.clear();
 	Tiles.clear();
 	Changed.resize(Depth,true);
@@ -68,11 +71,13 @@ void NMap::Init(unsigned int i_Width, unsigned int i_Height, unsigned int i_Dept
 	Verts.resize(Depth, Foo2);
 	std::vector<glm::vec2> Bar;
 	UVs.resize(Depth, Bar);
+	BoxUVs.resize(Depth, Bar);
 	Outline.resize(Depth,Foo2);
+	BoxVerts.resize(Depth,Foo2);
 	for (unsigned int i=0;i<Depth;i++)
 	{
-		Buffers[i] = new GLuint[3];
-		glGenBuffers(3,Buffers[i]);
+		Buffers[i] = new GLuint[6];
+		glGenBuffers(5,Buffers[i]);
 	}
 	std::vector<std::vector<NTile* > > Foo;
 	Tiles.resize(Width,Foo);
@@ -96,7 +101,53 @@ void NMap::Init(unsigned int i_Width, unsigned int i_Height, unsigned int i_Dept
 			}
 		}
 	}
+	FixUp();
 	Ready = true;
+}
+void NMap::FixUp()
+{
+	for (unsigned int x=0;x<Width;x++)
+	{
+		for (unsigned int y=0;y<Height;y++)
+		{
+			for (unsigned int z=0;z<Depth-1;z++)
+			{
+				NTile* Tile = Tiles[x][y][z];
+				if (Tile->IsSolid())
+				{
+					Tiles[x][y][z+1]->ID = Tile->ID;
+					Tiles[x][y][z+1]->SetSolid(false);
+				}
+			}
+		}
+	}
+}
+NTile* NMap::GetTile(glm::vec3 Pos)
+{
+	Pos = Pos-GetPos();
+	int X = floor(Pos.x/TileSize);
+	int Y = floor(Pos.y/TileSize);
+	int Z = floor(Pos.z/TileSize);
+	if (X < 0 || X >= Width)
+	{
+		return NULL;
+	}
+	if (Y < 0 || Y >= Height)
+	{
+		return NULL;
+	}
+	if (Z < 0 || Z >= Depth)
+	{
+		return NULL;
+	}
+	return Tiles[X][Y][Z];
+}
+glm::vec3 NMap::TilePos(glm::vec3 Pos)
+{
+	int X = floor(Pos.x/TileSize);
+	int Y = floor(Pos.y/TileSize);
+	int Z = floor(Pos.z/TileSize);
+	return glm::vec3(X*TileSize+TileSize/2.f,Y*TileSize+TileSize/2.f,Z*TileSize);
 }
 void NMap::ViewLevel(int Level)
 {
@@ -104,9 +155,9 @@ void NMap::ViewLevel(int Level)
 	{
 		ViewingLevel = Depth-1;
 		return;
-	} else if (Level < 1)
+	} else if (Level < 0)
 	{
-		ViewingLevel = 1;
+		ViewingLevel = 0;
 		return;
 	}
 	ViewingLevel = Level;
@@ -125,7 +176,7 @@ void NMap::GenerateBuffers()
 	{
 		return;
 	}
-	for (unsigned int i=ViewingLevel;i>0;i--)
+	for (int i=ViewingLevel;i>=0;i--)
 	{
 		if (!Changed[i])
 		{
@@ -134,6 +185,8 @@ void NMap::GenerateBuffers()
 		Verts[i].clear();
 		UVs[i].clear();
 		Outline[i].clear();
+		BoxVerts[i].clear();
+		BoxUVs[i].clear();
 		for (unsigned int x=0;x<Width;x++)
 		{
 			for (unsigned int y=0;y<Height;y++)
@@ -160,7 +213,7 @@ void NMap::GenerateBuffers()
 				Verts[i].push_back(glm::vec3(X,Y+TS,Z));
 				UVs[i].push_back(glm::vec2(UTWS,UTHS));
 
-				if (!Tiles[x][y][i]->IsSolid()) //If we are open-space or a solid object, outline it!
+				if (!Tiles[x][y][i]->IsSolid()) //If we are solid object, outline it and make sure it has a 3d version!
 				{
 					continue;
 				}
@@ -192,6 +245,41 @@ void NMap::GenerateBuffers()
 					Outline[i].push_back(glm::vec3(X,Y+TS,Z));
 					Outline[i].push_back(glm::vec3(X+TS,Y+TS,Z));
 				}
+				BoxVerts[i].push_back(glm::vec3(X,Y,Z));
+				BoxUVs[i].push_back(glm::vec2(UTWS,UTHS+UTH));
+				BoxVerts[i].push_back(glm::vec3(X+TS,Y,Z));
+				BoxUVs[i].push_back(glm::vec2(UTWS+UTW,UTHS+UTH));
+				BoxVerts[i].push_back(glm::vec3(X+TS,Y,Z+TS));
+				BoxUVs[i].push_back(glm::vec2(UTWS+UTW,UTHS));
+				BoxVerts[i].push_back(glm::vec3(X,Y,Z+TS));
+				BoxUVs[i].push_back(glm::vec2(UTWS,UTHS));
+
+				BoxVerts[i].push_back(glm::vec3(X,Y+TS,Z));
+				BoxUVs[i].push_back(glm::vec2(UTWS,UTHS+UTH));
+				BoxVerts[i].push_back(glm::vec3(X+TS,Y+TS,Z));
+				BoxUVs[i].push_back(glm::vec2(UTWS+UTW,UTHS+UTH));
+				BoxVerts[i].push_back(glm::vec3(X+TS,Y+TS,Z+TS));
+				BoxUVs[i].push_back(glm::vec2(UTWS+UTW,UTHS));
+				BoxVerts[i].push_back(glm::vec3(X,Y+TS,Z+TS));
+				BoxUVs[i].push_back(glm::vec2(UTWS,UTHS));
+
+				BoxVerts[i].push_back(glm::vec3(X,Y,Z));
+				BoxUVs[i].push_back(glm::vec2(UTWS,UTHS+UTH));
+				BoxVerts[i].push_back(glm::vec3(X,Y+TS,Z));
+				BoxUVs[i].push_back(glm::vec2(UTWS+UTW,UTHS+UTH));
+				BoxVerts[i].push_back(glm::vec3(X,Y+TS,Z+TS));
+				BoxUVs[i].push_back(glm::vec2(UTWS+UTW,UTHS));
+				BoxVerts[i].push_back(glm::vec3(X,Y,Z+TS));
+				BoxUVs[i].push_back(glm::vec2(UTWS,UTHS));
+
+				BoxVerts[i].push_back(glm::vec3(X+TS,Y,Z));
+				BoxUVs[i].push_back(glm::vec2(UTWS,UTHS+UTH));
+				BoxVerts[i].push_back(glm::vec3(X+TS,Y+TS,Z));
+				BoxUVs[i].push_back(glm::vec2(UTWS+UTW,UTHS+UTH));
+				BoxVerts[i].push_back(glm::vec3(X+TS,Y+TS,Z+TS));
+				BoxUVs[i].push_back(glm::vec2(UTWS+UTW,UTHS));
+				BoxVerts[i].push_back(glm::vec3(X+TS,Y,Z+TS));
+				BoxUVs[i].push_back(glm::vec2(UTWS,UTHS));
 			}
 		}
 		glBindBuffer(GL_ARRAY_BUFFER,Buffers[i][0]);
@@ -200,6 +288,10 @@ void NMap::GenerateBuffers()
 		glBufferData(GL_ARRAY_BUFFER,UVs[i].size()*sizeof(glm::vec2),&UVs[i][0],GL_STATIC_DRAW);
 		glBindBuffer(GL_ARRAY_BUFFER,Buffers[i][2]);
 		glBufferData(GL_ARRAY_BUFFER,Outline[i].size()*sizeof(glm::vec3),&Outline[i][0],GL_STATIC_DRAW);
+		glBindBuffer(GL_ARRAY_BUFFER,Buffers[i][3]);
+		glBufferData(GL_ARRAY_BUFFER,BoxVerts[i].size()*sizeof(glm::vec3),&BoxVerts[i][0],GL_STATIC_DRAW);
+		glBindBuffer(GL_ARRAY_BUFFER,Buffers[i][4]);
+		glBufferData(GL_ARRAY_BUFFER,BoxUVs[i].size()*sizeof(glm::vec2),&BoxUVs[i][0],GL_STATIC_DRAW);
 		Changed[i] = false;
 	}
 }
@@ -280,6 +372,15 @@ void NMap::Draw(NCamera* View)
 		glVertexAttribPointer(1,2,GL_FLOAT,GL_FALSE,0,NULL);
 		
 		glDrawArrays(GL_QUADS,0,Verts[i].size());
+		if (i != ViewingLevel)
+		{
+			glBindBuffer(GL_ARRAY_BUFFER,Buffers[i][3]);
+			glVertexAttribPointer(0,3,GL_FLOAT,GL_FALSE,0,NULL);
+			glBindBuffer(GL_ARRAY_BUFFER,Buffers[i][4]);
+			glVertexAttribPointer(1,2,GL_FLOAT,GL_FALSE,0,NULL);
+			
+			glDrawArrays(GL_QUADS,0,Verts[i].size());
+		}
 	}
 	glDisable(GL_TEXTURE_2D);
 	glDisable(GL_BLEND);
@@ -289,13 +390,10 @@ void NMap::Draw(NCamera* View)
 	glUniform4f(OutlineColorLoc,0,0,0,1);
 	glUniformMatrix4fv(OutlineMatrixLoc,1,GL_FALSE,&MVP[0][0]);
 	glLineWidth(3);
-	for (unsigned int i=0;i<=ViewingLevel;i++)
-	{
-		glBindBuffer(GL_ARRAY_BUFFER,Buffers[i][2]);
-		glVertexAttribPointer(0,3,GL_FLOAT,GL_FALSE,0,NULL);
-		
-		glDrawArrays(GL_LINES,0,Outline[i].size());
-	}
+	glBindBuffer(GL_ARRAY_BUFFER,Buffers[ViewingLevel][2]);
+	glVertexAttribPointer(0,3,GL_FLOAT,GL_FALSE,0,NULL);
+	
+	glDrawArrays(GL_LINES,0,Outline[ViewingLevel].size());
 	glDisableVertexAttribArray(0);
 }
 void NMap::Tick(double DT)
@@ -304,6 +402,8 @@ void NMap::Tick(double DT)
 	{
 		Texture->Tick(DT);
 	}
+	int Level = (GetGame()->GetRender()->GetCamera()->GetPos().z-500)/TileSize;
+	ViewLevel(Level);
 }
 void NMap::Remove()
 {
@@ -313,13 +413,27 @@ void NMap::Remove()
 NTile::NTile()
 {
 	ID = rand()%3;
+	Solid = false;
+	ForceSolid = false;
 }
 NTile::~NTile()
 {
 }
-
+void NTile::SetSolid(bool i_Solid)
+{
+	ForceSolid = true;
+	Solid = i_Solid;
+}
 bool NTile::IsSolid()
 {
+	if (ForceSolid)
+	{
+		if (Solid)
+		{
+			return true;
+		}
+		return false;
+	}
 	if (ID == 2)
 	{
 		return true;

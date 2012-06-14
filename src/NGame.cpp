@@ -15,6 +15,7 @@ NGame::~NGame()
 	delete SignalInterceptor;
 	if (Valid)
 	{
+		delete Map;
 		delete FileSystem;
 		delete Input;
 		delete Scene;
@@ -91,6 +92,7 @@ bool NGame::Init(int i_Width, int i_Height, std::string Title, int argc, char* a
 	SoundSystem->LoadSounds();
 	TextSystem = new NTextSystem();
 	TextSystem->LoadFaces();
+	Map = new NMap(Config->GetString("MapSkin"));
 	Console = new NConsole();
 	Valid = true;
 	return Success;
@@ -211,4 +213,9 @@ NTextSystem* NGame::GetTextSystem()
 NFileSystem* NGame::GetFileSystem()
 {
 	return FileSystem;
+}
+
+NMap* NGame::GetMap()
+{
+	return Map;
 }

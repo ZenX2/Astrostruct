@@ -169,8 +169,6 @@ int CreateAnimation(lua_State* L)
 			Animation->AddFrame(Field);
 		}
 	}
-	lua_newtable(L);
-	Animation->Reference = luaL_ref(L,LUA_REGISTRYINDEX);
 	GetGame()->GetRender()->AddCachedAnimation(Animation);
 	lua_pushAnimation(L,Animation);
 	return 1;
@@ -232,6 +230,13 @@ int Animation__newindex(lua_State* L)
 	} else if (!strcmp(Field,"Name"))
 	{
 		Animation->SetName(luaL_checkstring(L,3));
+	} else if (!strcmp(Field,"Filter"))
+	{
+		GLuint Enum = GetGame()->GetRender()->StringToEnum(luaL_checkstring(L,3));
+		for (unsigned int i=0;i<Animation->Frames.size();i++)
+		{
+			Animation->Frames[i]->SetFilter(Enum);
+		}
 	} else {
 		//lua_getref(L,Animation->Reference);
 		lua_rawgeti(L,LUA_REGISTRYINDEX,Animation->Reference);

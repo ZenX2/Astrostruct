@@ -12,7 +12,9 @@ std::string NAnimation::GetName()
 
 NAnimation::NAnimation()
 {
-	Reference = 0;
+	lua_State* L = GetGame()->GetLua()->GetL();
+	lua_newtable(L);
+	Reference = luaL_ref(L,LUA_REGISTRYINDEX);
 	FPS = 30;
 	Name = "NULL";
 }
@@ -23,7 +25,6 @@ NAnimation::~NAnimation()
 
 void NAnimation::AddFrame(std::string FileName)
 {
-	//Probably need to do some error checking here...
 	NCachedTexture* ID = GetGame()->GetRender()->GetCachedTexture(FileName);
 	Frames.push_back(ID);
 }
@@ -150,4 +151,26 @@ float NAnimation::GetFloat(std::string i_Name)
 	lua_pop(L,2);
 	return Number;
 }
-
+std::string NAnimation::GetString(std::string i_Name)
+{
+	lua_State* L = GetGame()->GetLua()->GetL();
+	lua_rawgeti(L,LUA_REGISTRYINDEX,Reference);
+	lua_getfield(L,-1,i_Name.c_str());
+	if (!lua_isstring(L,-1))
+	{
+		SetColor(Yellow);
+		std::cout << "LUA WARN: ";
+		ClearColor();
+		std::cout << "Tried to use variable " << i_Name << " as a string (It's not a string or doesn't exist!).\n";
+		lua_pop(L,2);
+		return "NULL";
+	}
+	const char* Text = lua_tostring(L,-1);
+	if (Text == NULL)
+	{
+		return "NULL";
+	}
+	std::string ReturnString = Text;
+	lua_pop(L,2);
+	return ReturnString;
+}

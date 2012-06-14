@@ -141,6 +141,7 @@ public:
 	 * @return A pointer to the filesystem.
 	 */
 	NFileSystem* GetFileSystem();
+	NMap* GetMap();
 private:
 	bool WindowChanged;
 	bool Run;
@@ -154,6 +155,7 @@ private:
 	NTextSystem* TextSystem;
 	NSignalInterceptor* SignalInterceptor;
 	NConsole* Console;
+	NMap* Map;
 	bool Valid;
 };
 

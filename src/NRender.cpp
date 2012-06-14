@@ -130,23 +130,9 @@ NRender::NRender()
 	LastTime= CurTime();
 	TextureFilter = GL_LINEAR;
 	std::string DesiredShader = GetGame()->GetConfig()->GetString("TextureFilter");
-	if (DesiredShader == "GL_LINEAR")
+	TextureFilter = StringToEnum(DesiredShader);
+	if (TextureFilter == 0)
 	{
-		TextureFilter = GL_LINEAR;
-	} else if (DesiredShader == "GL_NEAREST")
-	{
-		TextureFilter = GL_NEAREST;
-		//Unfortuneately these generate an invalid enum error in opengl, it appears gl_linear uses the mipmaps regardless.
-	//} else if (DesiredShader == "GL_NEAREST_MIPMAP_NEAREST")
-	//{
-		//TextureFilter = GL_NEAREST_MIPMAP_NEAREST;
-	//} else if (DesiredShader == "GL_LINEAR_MIPMAP_NEAREST")
-	//{
-		//TextureFilter = GL_LINEAR_MIPMAP_NEAREST;
-	//} else if (DesiredShader == "GL_LINEAR_MIPMAP_LINEAR")
-	//{
-		//TextureFilter = GL_LINEAR_MIPMAP_LINEAR;
-	} else {
 		TextureFilter = GL_LINEAR;
 	}
 	glPixelStorei(GL_UNPACK_ALIGNMENT,1);
@@ -453,4 +439,26 @@ NTexture* NRender::GetTexture(std::string Name)
 	ClearColor();
 	std::cout << "An unkown texture was attempted to be loaded: " << Name << "\n";
 	return NULL;
+}
+
+GLuint NRender::StringToEnum(std::string Name)
+{
+	if (Name == "GL_LINEAR")
+	{
+		return GL_LINEAR;
+	} else if (Name == "GL_NEAREST")
+	{
+		return GL_NEAREST;
+		//Unfortuneately these generate an invalid enum error in opengl, it appears gl_linear uses the mipmaps regardless.
+	//} else if (Name == "GL_NEAREST_MIPMAP_NEAREST")
+	//{
+		//TextureFilter = GL_NEAREST_MIPMAP_NEAREST;
+	//} else if (Name == "GL_LINEAR_MIPMAP_NEAREST")
+	//{
+		//TextureFilter = GL_LINEAR_MIPMAP_NEAREST;
+	//} else if (Name == "GL_LINEAR_MIPMAP_LINEAR")
+	//{
+		//TextureFilter = GL_LINEAR_MIPMAP_LINEAR;
+	}
+	return 0;
 }

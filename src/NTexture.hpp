@@ -75,9 +75,10 @@ public:
 	 * @return False on failure, true on success.
 	 */
 	bool Good();
+	std::string GetString(std::string i_Name);
+	std::vector<NCachedTexture*> Frames;
 private:
 	std::string Name;
-	std::vector<NCachedTexture*> Frames;
 };
 /**
 * @brief Abstracts OpenGL texture ID's and allows for animations of a series of images.

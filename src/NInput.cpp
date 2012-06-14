@@ -39,6 +39,27 @@ bool NInput::KeyChanged(int Key)
 	return false;
 }
 
+void NInput::GetJoyStick(unsigned int ID, float* Floats, unsigned int NumAxes)
+{
+	switch (ID)
+	{
+		case 1:
+		{
+			glfwGetJoystickPos(GLFW_JOYSTICK_1,Floats,NumAxes);
+			break;
+		}
+		case 2:
+		{
+			glfwGetJoystickPos(GLFW_JOYSTICK_2,Floats,NumAxes);
+			break;
+		}
+		default:
+		{
+			glfwGetJoystickPos(GLFW_JOYSTICK_1,Floats,NumAxes);
+		}
+	}
+}
+
 int NInput::GetMouseX()
 {
 	return MouseX;

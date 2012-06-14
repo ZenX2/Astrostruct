@@ -71,6 +71,7 @@
 
 #define Fail false
 #define Success true
+#define PI 3.14159265
 
 #include "NSignal.hpp"
 #include "NFileSystem.hpp"
@@ -106,6 +107,7 @@
 #include "NMap.hpp"
 #include "NWindow.hpp"
 #include "NButton.hpp"
+#include "NPlayer.hpp"
 #include "NScene.hpp"
 #include "NCamera.hpp"
 #include "NRender.hpp"

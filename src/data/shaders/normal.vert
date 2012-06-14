@@ -8,8 +8,8 @@ out float FogDensity;
 void main()
 {
 	vec4 TranslatedVert = MVP*vec4(VertexPosition,1);
-	float FogStart = 650;
-	float FogEnd = 900;
+	float FogStart = 480;
+	float FogEnd = 650;
 	float Distance = TranslatedVert.z;
 	if (Distance<=FogStart)
 	{

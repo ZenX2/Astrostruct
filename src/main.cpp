@@ -15,12 +15,11 @@ int main(int argc, char* argv[])
 		GetGame()->CleanUp();
 		return 1;
 	}
-	NMap* MyMap = GetGame()->GetScene()->AddMap("grimy");
 	NSound* CoinSound = GetGame()->GetScene()->AddSound("coin");
 	NCamera* Camera = GetGame()->GetScene()->AddCamera();
-	Camera->SetPos(glm::vec3(0,0,800));
+	Camera->SetPos(glm::vec3(0,0,500));
 	GetGame()->GetRender()->SetCamera(Camera);
-	glm::vec3 WantedPosition(0,0,800);
+	glm::vec3 WantedPosition(0,0,500);
 	NText* FPSText = GetGame()->GetScene()->AddText("cousine", _t("FPS: 0"));
 	FPSText->SetPos(0,FPSText->GetSize()/2.f);
 	FPSText->SetParent(Camera);
@@ -50,18 +49,21 @@ int main(int argc, char* argv[])
 	InfoText->SetSize(12);
 	InfoText->SetParent(InfoWindow);
 	InfoWindow->SetParent(Camera);
+	NPlayer* MyPlayer = GetGame()->GetScene()->AddPlayer();
+	MyPlayer->SetControl();
 	while(GetGame()->Running())
 	{
+		WantedPosition = glm::vec3(MyPlayer->GetPos()+glm::vec3(0,0,500));
 		Camera->SetPos(Camera->GetPos()-(Camera->GetPos()-WantedPosition)/8.f);
 		GetGame()->GetInput()->Poll();
 		if (PlayButton->OnRelease())
 		{
-			WantedPosition = glm::vec3(512,512,Camera->GetPos().z);
 		    CoinSound->Play();
 			PlayButton->SetColor(glm::vec4(1,1,1,0));
 			QuitButton->SetColor(glm::vec4(1,1,1,0));
 			MyWindow->SetColor(glm::vec4(1,1,1,0));
-			MyMap->Init(16,16,16);
+			GetGame()->GetMap()->Init(16,16,16);
+			MyPlayer->SetPos(512,512,1024);
 		}
 		if (GetGame()->GetInput()->KeyChanged(GLFW_KEY_ESC) && GetGame()->GetInput()->GetKey(GLFW_KEY_ESC))
 		{
@@ -75,35 +77,6 @@ int main(int argc, char* argv[])
 				QuitButton->SetColor(glm::vec4(1,1,1,0));
 				MyWindow->SetColor(glm::vec4(1,1,1,0));
 			}
-		}
-		if (GetGame()->GetInput()->GetKey('W'))
-		{
-			WantedPosition += glm::vec3(0,6,0);
-		} else if (GetGame()->GetInput()->GetKey('S'))
-		{
-			WantedPosition -= glm::vec3(0,6,0);
-		}
-		if (GetGame()->GetInput()->GetKey('A'))
-		{
-			WantedPosition -= glm::vec3(6,0,0);
-		} else if (GetGame()->GetInput()->GetKey('D'))
-		{
-			WantedPosition += glm::vec3(6,0,0);
-		}
-		if (GetGame()->GetInput()->KeyChanged('Q') && GetGame()->GetInput()->GetKey('Q'))
-		{
-			if (MyMap->GetLevel()>1)
-			{
-				WantedPosition -= glm::vec3(0,0,MyMap->GetTileSize());
-			}
-			MyMap->ViewLevel(MyMap->GetLevel()-1);
-		} else if (GetGame()->GetInput()->KeyChanged('E') && GetGame()->GetInput()->GetKey('E'))
-		{
-			if (MyMap->GetLevel()<MyMap->GetDepth()-1)
-			{
-				WantedPosition += glm::vec3(0,0,MyMap->GetTileSize());
-			}
-			MyMap->ViewLevel(MyMap->GetLevel()+1);
 		}
 		MyWindow->SetPos(GetGame()->GetWindowSize()/2.f);
 		InfoWindow->SetPos(GetGame()->GetWindowSize()-glm::vec2(64,128));
