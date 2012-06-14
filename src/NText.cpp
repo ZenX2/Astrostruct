@@ -164,7 +164,7 @@ unsigned int NTextureAtlas::GetSize()
 NGlyph* NTextureAtlas::GetGlyph(FT_Face Face, wchar_t ID)
 {
 	FT_Set_Pixel_Sizes(Face,0,Size);
-	if (ID > Glyphs.size())
+	if (ID >= Glyphs.size())
 	{
 		Glyphs.resize(ID+1,NULL);
 		FT_Load_Char(Face,ID,FT_LOAD_RENDER);

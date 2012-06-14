@@ -9,7 +9,7 @@
 #ifndef NAELSTROF_INPUT
 #define NAELSTROF_INPUT
 
-#define KeyCount 257
+#define KeyCount 512
 
 /**
 * @brief Handles grabbing input and exposing it to other parts of the engine.

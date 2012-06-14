@@ -13,6 +13,7 @@ public:
 	glm::vec3 GetVel();
 	void Draw(NCamera* View);
 	void SetControl();
+	void Remove();
 private:
 	float Gravity;
 	bool OnGround;

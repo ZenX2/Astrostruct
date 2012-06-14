@@ -308,3 +308,8 @@ void NPlayer::SetVel(glm::vec3 i_Velocity)
 {
 	Velocity = i_Velocity;
 }
+
+void NPlayer::Remove()
+{
+	delete (NPlayer*)this;
+}

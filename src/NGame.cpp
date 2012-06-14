@@ -15,7 +15,6 @@ NGame::~NGame()
 	delete SignalInterceptor;
 	if (Valid)
 	{
-		delete Map;
 		delete FileSystem;
 		delete Input;
 		delete Scene;
