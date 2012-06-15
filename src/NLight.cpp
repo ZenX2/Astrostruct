@@ -79,8 +79,7 @@ void NLight::GenerateShadowBuffers()
 			}
 			float TS = GetGame()->GetMap()->GetTileSize()/2.f;
 			glm::vec3 TPos = GetGame()->GetMap()->TilePos(GetPos()+glm::vec3(x,y,0));
-			glm::vec3* Points;
-			Points = new glm::vec3[4];
+			glm::vec3 Points[4];
 			Points[0] = TPos+glm::vec3(TS,TS,0);
 			Points[1] = TPos+glm::vec3(TS,-TS,0);
 			Points[2] = TPos+glm::vec3(-TS,-TS,0);

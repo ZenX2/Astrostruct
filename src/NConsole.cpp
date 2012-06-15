@@ -26,6 +26,7 @@ NConsole::NConsole()
 		std::cout << "CONSOLE WARN: ";
 		ClearColor();
 		std::cout << "Failed to create thread for console input!\n";
+		return;
 	}
 	SetColor(Blue);
 	std::cout << "CONSOLE INFO: ";

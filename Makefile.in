@@ -59,7 +59,9 @@ gitadd: clean
 	git add configure.ac
 	git add configure
 	git add config.doxygen
-	git add windowsbin
+	git add windowsbin/*.dll
+	git add windowsbin/*.exe
+	git add windowsbin/README
 	git add doc
 	git add install-sh
 	git add README.md
