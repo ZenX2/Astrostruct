@@ -34,7 +34,7 @@ public:
 	*
 	* @return True on success, false on failure.
 	*/
-	bool Init(int Width, int Height,std::string Title, int argc, char* argv[]);
+	bool Init(int Width, int Height,std::string Title, std::string argv);
 	/**
 	* @brief Grabs the input interface for other parts of the engine to use.
 	*

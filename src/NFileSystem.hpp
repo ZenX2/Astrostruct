@@ -65,7 +65,7 @@ public:
 	 *
 	 * @param CurrentPath The current path of the execution, usually argv[0].
 	 */
-	NFileSystem(char* CurrentPath);
+	NFileSystem(std::string CurrentPath);
 	~NFileSystem();
 	/**
 	 * @brief Gets a recursive listing of files from the specified directory.

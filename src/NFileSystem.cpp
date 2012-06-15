@@ -57,9 +57,9 @@ NFile::~NFile()
 	}
 }
 
-NFileSystem::NFileSystem(char* CurrentPath)
+NFileSystem::NFileSystem(std::string CurrentPath)
 {
-	if (!PHYSFS_init(CurrentPath))
+	if (!PHYSFS_init(CurrentPath.c_str()))
 	{
 		SetColor(Yellow);
 		std::cout << "FILESYSTEM WARN: ";

@@ -30,7 +30,7 @@ NGame::~NGame()
 	}
 }
 
-bool NGame::Init(int i_Width, int i_Height, std::string Title, int argc, char* argv[])
+bool NGame::Init(int i_Width, int i_Height, std::string Title, std::string argv)
 {
 	//Initialize everything we can
 	srand(time(NULL));
@@ -45,7 +45,7 @@ bool NGame::Init(int i_Width, int i_Height, std::string Title, int argc, char* a
 		std::cout << "GLFW failed to initialize!\n";
 		return Fail;
 	}
-	FileSystem = new NFileSystem(argv[0]);
+	FileSystem = new NFileSystem(argv);
 	Lua = new NLua();
 	Config = new NConfig("config/init.lua");
 	//Now lets load some data from our config interface

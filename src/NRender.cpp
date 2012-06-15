@@ -140,8 +140,11 @@ NRender::NRender()
 	FrameTime = 0;
 	LoadShaders();
 	PostEffect = GetShader("post");
-	TextureLoc = PostEffect->GetUniformLocation("Texture");
-	TimeLoc = PostEffect->GetUniformLocation("Time");
+	if (PostEffect)
+	{
+		TextureLoc = PostEffect->GetUniformLocation("Texture");
+		TimeLoc = PostEffect->GetUniformLocation("Time");
+	}
 	Camera = NULL;
 	VSync = false;
 	if (GetGame()->GetConfig()->GetBool("VerticalSync"))

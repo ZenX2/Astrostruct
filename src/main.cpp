@@ -1,12 +1,12 @@
 #include "NEngine.hpp"
 
-int main(int argc, char* argv[])
+int main(int argc, char** argv)
 {
 	SetColor(Blue);
 	std::cout << "ENGINE INFO: ";
 	ClearColor();
 	std::cout << "Welcome to " << PACKAGE_STRING << "! Report bugs to " << PACKAGE_BUGREPORT << "!\n";
-	if (!GetGame()->Init(512,512,"Astrostruct",argc,argv))
+	if (!GetGame()->Init(512,512,"Astrostruct",argv[0]))
 	{
 		SetColor(Red);
 		std::cout << "ENGINE ERROR: ";
