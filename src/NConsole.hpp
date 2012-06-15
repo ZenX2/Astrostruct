@@ -9,6 +9,12 @@
 #ifndef NAELSTROF_CONSOLE
 #define NAELSTROF_CONSOLE
 
+#ifdef _WIN32
+#include <windows.h>
+#else
+#include <sys/select.h> //We need select to enable async input on linux.
+#endif
+
 /**
  * @brief Program that's split into a separate thread in order to grab user input from the console.
  *

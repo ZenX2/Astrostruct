@@ -27,9 +27,9 @@ NGame::~NGame()
 		delete TextSystem;
 		delete Config;
 		delete Lua;
-		delete Console;
 		delete LightSystem;
 		delete StateMachine;
+		delete Console;
 		glfwTerminate();
 	}
 }
