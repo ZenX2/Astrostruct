@@ -364,6 +364,34 @@ GLuint NLightSystem::GetFramebuffer()
 void NLightSystem::Draw()
 {
 	CheckFBO();
+	if (Shader == NULL)
+	{
+		glEnableClientState(GL_VERTEX_ARRAY);
+		glBindBuffer(GL_ARRAY_BUFFER,VertexBuffers[0]);
+		glVertexPointer(2,GL_FLOAT,0,NULL);
+
+		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+		glBindBuffer(GL_ARRAY_BUFFER,VertexBuffers[1]);
+		glTexCoordPointer(2,GL_FLOAT,0,NULL);
+
+		glBindTexture(GL_TEXTURE_2D,FrameBufferTexture);
+
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		glMatrixMode(GL_MODELVIEW);
+		glLoadIdentity();
+
+		glEnable(GL_TEXTURE_2D);
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_DST_COLOR, GL_ZERO);
+		glDrawArrays(GL_QUADS,0,Verts.size());
+		glDisable(GL_TEXTURE_2D);
+		glDisable(GL_BLEND);
+
+		glDisableClientState(GL_VERTEX_ARRAY);
+		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+		return;
+	}
 	glEnable(GL_TEXTURE_2D);
 	glUseProgram(Shader->GetID());
 	glActiveTexture(GL_TEXTURE0);

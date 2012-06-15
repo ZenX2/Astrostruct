@@ -26,10 +26,10 @@ NGame::~NGame()
 		delete SoundSystem;
 		delete TextSystem;
 		delete Config;
+		delete Console;
 		delete Lua;
 		delete LightSystem;
 		delete StateMachine;
-		delete Console;
 		glfwTerminate();
 	}
 }
@@ -154,7 +154,7 @@ void NGame::Poll()
 		SetColor(Blue);
 		std::cout << "ENGINE INFO: ";
 		ClearColor();
-		std::cout << "Game window was closed, exiting...\n" << std::flush;
+		std::cout << "Game window was closed!\n" << std::flush;
 		Close();
 		return;
 	}

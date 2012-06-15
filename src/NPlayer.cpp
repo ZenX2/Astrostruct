@@ -36,14 +36,20 @@ NPlayer::~NPlayer()
 
 void NPlayer::Move(float Direction)
 {
-	Texture->Play("run");
+	if (Texture)
+	{
+		Texture->Play("run");
+	}
 	CurrentDirection = Direction;
 	Moving = true;
 }
 
 void NPlayer::StopMove()
 {
-	Texture->Play("idle");
+	if (Texture)
+	{
+		Texture->Play("idle");
+	}
 	Moving = false;
 }
 
@@ -216,7 +222,10 @@ void NPlayer::Tick(double DT)
 		SetVel(GetVel()-glm::vec3(0,0,Gravity));
 	}
 	//Misc
-	Texture->Tick(DT);
+	if (Texture)
+	{
+		Texture->Tick(DT);
+	}
 	NameText->SetPos(GetPos()+glm::vec3(0,20,0));
 }
 

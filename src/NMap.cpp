@@ -6,6 +6,7 @@ NMap::NMap(std::string i_TileSet)
 	Shader = GetGame()->GetRender()->GetShader("map");
 	OutlineShader = GetGame()->GetRender()->GetShader("normal");
 	Texture = GetGame()->GetRender()->GetTexture(i_TileSet);
+	TileSize = 0;
 	if (Texture)
 	{
 		TileSize = Texture->GetFloat("TileSize");

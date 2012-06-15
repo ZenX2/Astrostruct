@@ -254,6 +254,36 @@ void NRender::Draw()
 		GetGame()->GetScene()->Draw(Camera);
 	}
 	glBindFramebuffer(GL_FRAMEBUFFER,0);
+	if (PostEffect == NULL)
+	{
+		glEnableClientState(GL_VERTEX_ARRAY);
+		glBindBuffer(GL_ARRAY_BUFFER,VertexBuffers[0]);
+		glVertexPointer(2,GL_FLOAT,0,NULL);
+
+		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+		glBindBuffer(GL_ARRAY_BUFFER,VertexBuffers[1]);
+		glTexCoordPointer(2,GL_FLOAT,0,NULL);
+
+		glBindTexture(GL_TEXTURE_2D,FTexture);
+
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		glMatrixMode(GL_MODELVIEW);
+		glLoadIdentity();
+
+		glEnable(GL_TEXTURE_2D);
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_DST_COLOR, GL_ZERO);
+		glDrawArrays(GL_QUADS,0,Verts.size());
+		glDisable(GL_TEXTURE_2D);
+		glDisable(GL_BLEND);
+
+		glDisableClientState(GL_VERTEX_ARRAY);
+		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+		glfwSwapBuffers();
+		glError();
+		return;
+	}
 	glEnable(GL_TEXTURE_2D);
 	glUseProgram(PostEffect->GetID());
 	glActiveTexture(GL_TEXTURE0);
