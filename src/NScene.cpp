@@ -38,6 +38,11 @@ void NScene::Draw(NCamera* View)
 	GetGame()->GetLightSystem()->Draw();
 	for (unsigned int i=0;i<GUI.size();i++)
 	{
+		if ((bool)GUI[i]->GetFlags())
+		{
+			World.push_back(GUI[i]);
+			GUI.erase(GUI.begin()+i);
+		}
 		GUI[i]->Draw(View);
 	}
 }
@@ -125,9 +130,9 @@ NCamera* NScene::AddCamera()
 	AddNode(Camera);
 	return Camera;
 }
-NPlayer* NScene::AddPlayer()
+NPlayer* NScene::AddPlayer(std::wstring Name)
 {
-	NPlayer* Player = new NPlayer();
+	NPlayer* Player = new NPlayer(Name);
 	AddNode(Player);
 	return Player;
 }

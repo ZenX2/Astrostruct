@@ -1,6 +1,6 @@
 #include "NEngine.hpp"
 
-NPlayer::NPlayer()
+NPlayer::NPlayer(std::wstring i_Name)
 {
 	Shader = GetGame()->GetRender()->GetShader("flat");
 	if (Shader)
@@ -20,7 +20,13 @@ NPlayer::NPlayer()
 	Friction = 2;
 	OnGround = false;
 	Gravity = 2;
-	CollisionBox = glm::vec2(20,30);
+	CollisionBox = glm::vec2(16,25);
+	Name = i_Name;
+	NameText = GetGame()->GetScene()->AddText("didactgothic",Name);
+	NameText->SetPos(Position+glm::vec3(0,20,0));
+	NameText->SwapView();
+	NameText->SetMode(1);
+	NameText->SetSize(13);
 }
 
 NPlayer::~NPlayer()
@@ -135,18 +141,6 @@ void NPlayer::Tick(double DT)
 	glm::vec3 PosMem = GetPos();
 	//Collisions
 	NMap* Map = GetGame()->GetMap();
-	NTile* CTile = Map->GetTile(GetPos());
-	if (CTile != NULL)
-	{
-		if (CTile->IsOpenSpace())
-		{
-			OnGround = false;
-			SetVel(GetVel()-glm::vec3(0,0,Gravity));
-		}
-	} else {
-		OnGround = false;
-		SetVel(GetVel()-glm::vec3(0,0,Gravity));
-	}
 	for (float x=-GetScale().x*CollisionBox.x;x<=GetScale().x*CollisionBox.x;x+=GetScale().x*CollisionBox.x)
 	{
 		for (float y=-GetScale().y*CollisionBox.y;y<=GetScale().y*CollisionBox.y;y+=GetScale().y*CollisionBox.y)
@@ -186,6 +180,7 @@ void NPlayer::Tick(double DT)
 		}
 	}
 	//Tracer Collisions
+	OnGround = false;
 	glm::vec3 Normal = glm::normalize(GetPos()-PosMem);
 	for (unsigned int i=0;i<glm::length(GetPos()-PosMem);i+=4)
 	{
@@ -222,6 +217,7 @@ void NPlayer::Tick(double DT)
 	}
 	//Misc
 	Texture->Tick(DT);
+	NameText->SetPos(GetPos()+glm::vec3(0,20,0));
 }
 
 void NPlayer::GenerateBuffers()

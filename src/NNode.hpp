@@ -204,6 +204,18 @@ public:
 	 * @return "NULL".
 	 */
 	virtual std::string Type();
+	/**
+	 * @brief Gets custom data flags.
+	 *
+	 * @return Custom flags.
+	 */
+	virtual char GetFlags();
+	/**
+	 * @brief Sets the current flags. Currently used for flagging text as a world object, so the scene will move it over to the world rather than rendering it over GUI.
+	 *
+	 * @param i_Flags The desired flags.
+	 */
+	virtual void SetFlags(char i_Flags);
 	glm::vec3 Angle;
 	glm::vec4 Color;
 	glm::vec3 Position;
@@ -212,6 +224,7 @@ public:
 	glm::mat4 SMatrix;
 	NNode* Parent;
 	std::vector<NNode*> Children;
+	char Flags;
 };
 
 #endif

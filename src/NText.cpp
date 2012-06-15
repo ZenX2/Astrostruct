@@ -232,6 +232,7 @@ GLuint NFace::GetTexture(unsigned int Size)
 
 NText::NText(std::string i_Face, std::wstring i_Data) : NNode()
 {
+	Persp = false;
 	Face = GetGame()->GetTextSystem()->GetFace(i_Face);
 	Shader = GetGame()->GetRender()->GetShader("text");
 	Data = i_Data;
@@ -250,6 +251,12 @@ NText::NText(std::string i_Face, std::wstring i_Data) : NNode()
 		MatrixLoc = Shader->GetUniformLocation("MVP");
 		ColorLoc = Shader->GetUniformLocation("Color");
 	}
+}
+
+void NText::SwapView()
+{
+	Persp = !Persp;
+	SetFlags((char)Persp);
 }
 
 void NText::SetBorder(float i_W, float i_H)
@@ -392,7 +399,13 @@ void NText::Draw(NCamera* View)
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D,Face->GetTexture(Size));
 	glUniform1i(TextureLoc,0);
-	glm::mat4 MVP = View->GetOrthoMatrix()*View->GetViewMatrix()*GetModelMatrix();
+	glm::mat4 MVP;
+	if (!Persp)
+	{
+		MVP = View->GetOrthoMatrix()*View->GetViewMatrix()*GetModelMatrix();
+	} else {
+		MVP = View->GetPerspMatrix()*View->GetPerspViewMatrix()*GetModelMatrix();
+	}
 	glUniformMatrix4fv(MatrixLoc,1,GL_FALSE,&MVP[0][0]);
 	glUniform4fv(ColorLoc,1,&(GetColor()[0]));
 	glEnableVertexAttribArray(0);

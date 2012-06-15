@@ -25,6 +25,7 @@ NGame::~NGame()
 		delete Lua;
 		delete Console;
 		delete LightSystem;
+		delete StateMachine;
 		glfwTerminate();
 	}
 }
@@ -96,6 +97,7 @@ bool NGame::Init(int i_Width, int i_Height, std::string Title, int argc, char* a
 	Map = Scene->AddMap(Config->GetString("MapSkin"));
 	Console = new NConsole();
 	LightSystem = new NLightSystem();
+	StateMachine = new NStateMachine();
 	Valid = true;
 	return Success;
 }
@@ -225,4 +227,9 @@ NMap* NGame::GetMap()
 NLightSystem* NGame::GetLightSystem()
 {
 	return LightSystem;
+}
+
+NStateMachine* NGame::GetStateMachine()
+{
+	return StateMachine;
 }

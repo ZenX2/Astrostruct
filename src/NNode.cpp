@@ -9,6 +9,7 @@ NNode::NNode()
 	Parent = NULL;
 	Matrix = glm::mat4();
 	SMatrix = glm::mat4();
+	Flags = 0;
 }
 
 NNode::~NNode()
@@ -191,4 +192,12 @@ void NNode::Remove()
 std::string NNode::Type()
 {
 	return "NULL";
+}
+void NNode::SetFlags(char i_Flags)
+{
+	Flags = i_Flags;
+}
+char NNode::GetFlags()
+{
+	return Flags;
 }

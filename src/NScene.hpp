@@ -80,7 +80,7 @@ public:
 	 *
 	 * @return A pointer to the player created.
 	 */
-	NPlayer* AddPlayer();
+	NPlayer* AddPlayer(std::wstring Name);
 	/**
 	 * @brief Adds a light to the scene.
 	 *

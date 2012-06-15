@@ -115,6 +115,7 @@
 #include "NRender.hpp"
 #include "NConsole.hpp"
 #include "NLua.hpp"
+#include "NStateMachine.hpp"
 #include "NGame.hpp"
 
 static NGame* Game = new NGame();

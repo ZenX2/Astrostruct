@@ -14,3 +14,4 @@ MaxFPS = 0
 TextureFilter = "GL_LINEAR"
 -- Use this to set the default map texture
 MapSkin = "grimy"
+PlayerName = "Naelstrof"

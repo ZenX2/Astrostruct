@@ -252,6 +252,10 @@ public:
 	 */
 	std::string Type();
 	~NText();
+	/**
+	 * @brief Toggles the view from orthographic to perspective, useful for rendering text in world space.
+	 */
+	void SwapView();
 private:
 	glm::vec2 Velocity;
 	float W,H;
@@ -270,6 +274,7 @@ private:
 	bool Changed;
 	GLuint* Buffers;
 	GLuint ColorLoc,TextureLoc,MatrixLoc,ScreenLoc;
+	bool Persp;
 };
 
 /**

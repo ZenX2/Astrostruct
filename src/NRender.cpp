@@ -214,6 +214,10 @@ NShader* NRender::GetShader(std::string Name)
 
 NCamera* NRender::GetCamera()
 {
+	if (!Camera)
+	{
+		Camera = new NCamera();
+	}
 	return Camera;
 }
 

@@ -153,9 +153,11 @@ public:
 	 * @return A pointer to the light system.
 	 */
 	NLightSystem* GetLightSystem();
+	NStateMachine* GetStateMachine();
 private:
 	bool WindowChanged;
 	bool Run;
+	NStateMachine* StateMachine;
 	NLightSystem* LightSystem;
 	NFileSystem* FileSystem;
 	NInput* Input;

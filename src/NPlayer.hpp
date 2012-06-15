@@ -14,7 +14,7 @@
 class NPlayer : public NNode
 {
 public:
-	NPlayer();
+	NPlayer(std::wstring i_Name);
 	~NPlayer();
 	/**
 	 * @brief Begins to move the player in the specified direction and plays the run animation.
@@ -65,6 +65,8 @@ public:
 	 */
 	std::string Type();
 private:
+	std::wstring Name;
+	NText* NameText;
 	glm::vec2 CollisionBox;
 	float Gravity;
 	bool OnGround;
