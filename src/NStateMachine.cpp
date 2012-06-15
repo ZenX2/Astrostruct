@@ -150,6 +150,13 @@ void NGameState::Tick(double DT)
 	{
 		GetGame()->GetStateMachine()->SetState("Paused");
 	}
+	if (GetGame()->GetInput()->KeyChanged('F') && GetGame()->GetInput()->GetKey('F'))
+	{
+		Light = GetGame()->GetScene()->AddLight("point");
+		float R = Rand(150,512);
+		Light->SetScale(glm::vec3(R,R,1));
+		Light->SetColor(glm::vec4(Rand(0,1),Rand(0,1),Rand(0,1),.5));
+	}
 }
 std::string NGameState::GetName()
 {
