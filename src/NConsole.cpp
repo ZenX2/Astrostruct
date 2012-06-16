@@ -12,7 +12,6 @@ void ConsoleThread(void* arg)
 	{
 		if (WaitForSingleObject(STDIN,1000) == WAIT_TIMEOUT) //If no input has been entered in the past second, restart the loop to ensure the game is still running.
 		{
-			std::cout << "Waited!\n";
 			continue;
 		}
 		bool Valid = false;
