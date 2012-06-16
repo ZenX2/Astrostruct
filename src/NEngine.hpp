@@ -28,7 +28,7 @@
  * This is a rough drawing of how the engine works.
  * <img src="http://farmpolice.com/content/images/0Vi0rsUkohfWQZL3.png" alt="Some oogly boogly chart" />
  * Game is a global that any part of the engine can access at any time, this means if Lua is a child of Game: you'll have access to lua in every part of the engine through a simple call of GetGame()->GetLua()!<br>
- * I think it's a really elegant design for a game engine, but I have yet for someone more expiranced to prove me wrong.
+ * I think it's a really elegant design for a game engine, but I have yet for someone more experienced to prove me wrong.
  */
 
 /**

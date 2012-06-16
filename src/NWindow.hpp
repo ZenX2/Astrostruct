@@ -1,5 +1,5 @@
 /**
-* @file NGui.hpp
+* @file NWindow.hpp
 * @brief Contains all gui elements.
 * @author Dalton Nell
 * @version 1.0
