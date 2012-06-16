@@ -10,11 +10,9 @@ void ConsoleThread(void* arg)
 	FlushConsoleInputBuffer(STDIN);
 	while (GetGame()->Running())
 	{
-		DWORD Number;
-		GetNumberOfConsoleInputEvents(STDIN,&Number);
-		if (Number<=0) //If no input has been entered, sleep for .1 seconds.
+		if (WaitForSingleObject(STDIN,1000) == WAIT_TIMEOUT) //If no input has been entered in the past second, restart the loop to ensure the game is still running.
 		{
-			glfwSleep(0.1);
+			std::cout << "Waited!\n";
 			continue;
 		}
 		bool Valid = false;
