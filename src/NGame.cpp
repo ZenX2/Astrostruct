@@ -15,7 +15,6 @@ NGame::~NGame()
 	std::cout << "ENGINE INFO: ";
 	ClearColor();
 	std::cout << "Shutting down...\n" << std::flush;
-	NFreeConsole();
 	delete SignalInterceptor;
 	if (Valid)
 	{
