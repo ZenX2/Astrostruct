@@ -3,6 +3,7 @@
 
 AC_PREREQ([2.68])
 AC_INIT([astrostruct], [1.0], [naelstrof@gmail.com])
+AM_INIT_AUTOMAKE([subdir-objects])
 AC_CONFIG_SRCDIR([src/main.cpp])
 AC_CONFIG_HEADERS([src/config.h])
 
@@ -94,8 +95,7 @@ AC_HEADER_STDBOOL
 # Checks for library functions.
 AC_CHECK_FUNCS([floor sqrt])
 
-AC_CONFIG_FILES([Makefile
-                 src/Makefile])
+AC_CONFIG_FILES([Makefile])
 AC_OUTPUT
 
 echo \
