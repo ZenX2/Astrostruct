@@ -6,7 +6,7 @@ int main(int argc, char** argv)
 	std::cout << "ENGINE INFO: ";
 	ClearColor();
 	std::cout << "Welcome to " << PACKAGE_STRING << "! Report bugs to " << PACKAGE_BUGREPORT << "!\n";
-	if (!GetGame()->Init(512,512,"Astrostruct",argv[0]))
+	if (!GetGame()->Init(512,512,"Astrostruct",argc,argv))
 	{
 		SetColor(Red);
 		std::cout << "ENGINE ERROR: ";

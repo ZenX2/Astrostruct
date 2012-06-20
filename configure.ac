@@ -8,7 +8,6 @@ AC_CONFIG_HEADERS([src/config.h])
 
 # Checks for programs.
 AC_PROG_CXX
-AC_PROG_CC
 AC_PROG_INSTALL
 AC_LANG([C++])
 
@@ -60,6 +59,11 @@ AC_SEARCH_LIBS([alureInitDevice],[alure],[],[
 AC_SEARCH_LIBS([PHYSFS_init],[physfs],[],[
 	AC_CHECK_LIB([physfs],[main],[LIBS="$LIBS -lphysfs"],[
 		AC_MSG_ERROR(["Couldn't find physfs libraries!"])
+	])
+])
+AC_SEARCH_LIBS([enet_initialize],[enet],[],[
+	AC_CHECK_LIB([enet],[main],[LIBS="$LIBS -lenet -lwsock32 -lws2_32 -lwinmm"],[
+		AC_MSG_ERROR(["Couldn't find enet libraries!"])
 	])
 ])
 

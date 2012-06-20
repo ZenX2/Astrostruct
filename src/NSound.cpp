@@ -195,3 +195,8 @@ void NSound::Remove()
 {
     delete (NSound*)this;
 }
+
+std::string NSound::GetType()
+{
+	return "Sound";
+}

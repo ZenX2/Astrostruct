@@ -43,7 +43,7 @@ public:
 	 * @brief Unallocates the object.
 	 */
 	void Remove();
-	std::string Type();
+	std::string GetType();
 private:
 	glm::vec3 SizeMem;
 	float BorderSize;

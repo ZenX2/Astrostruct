@@ -73,7 +73,7 @@ public:
 	 *
 	 * @return "Button".
 	 */
-	std::string Type();
+	std::string GetType();
 private:
 	unsigned int TextureWidth, TextureHeight;
 	bool PressedMemory;

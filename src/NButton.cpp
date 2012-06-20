@@ -255,6 +255,8 @@ void NButton::Tick(double DT)
 			IsChanged = false;
 		}
 	} else {
+		PressedMemory = false;
+		IsChanged = false;
 		if (Texture)
 		{
 			Texture->Play("idle");
@@ -311,7 +313,7 @@ void NButton::SetColor(glm::vec4 i_Color)
 	}
 	Color = i_Color;
 }
-std::string NButton::Type()
+std::string NButton::GetType()
 {
 	return "Button";
 }

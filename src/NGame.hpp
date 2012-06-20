@@ -29,12 +29,11 @@ public:
 	* @param Width Desired width of the window.
 	* @param Height Desired height of the window.
 	* @param Title Desired title of the window.
-	* @param argc The amount of arguments.
-	* @param argv The arguments passed to main().
+	* @param argv The first argument of argv.
 	*
 	* @return True on success, false on failure.
 	*/
-	bool Init(int Width, int Height,std::string Title, std::string argv);
+	bool Init(int Width, int Height,std::string Title, int argc, char** argv);
 	/**
 	* @brief Grabs the input interface for other parts of the engine to use.
 	*
@@ -154,10 +153,15 @@ public:
 	 */
 	NLightSystem* GetLightSystem();
 	NStateMachine* GetStateMachine();
+	NNetwork* GetNetwork();
+	bool IsServer();
+	NPacketHandler* GetPacketHandler();
 private:
+	bool Server;
 	bool WindowChanged;
 	bool Run;
 	NStateMachine* StateMachine;
+	NPacketHandler* PacketHandler;
 	NLightSystem* LightSystem;
 	NFileSystem* FileSystem;
 	NInput* Input;
@@ -170,7 +174,7 @@ private:
 	NSignalInterceptor* SignalInterceptor;
 	NConsole* Console;
 	NMap* Map;
-	bool Valid;
+	NNetwork* Network;
 };
 
 #endif

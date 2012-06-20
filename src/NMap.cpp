@@ -3,17 +3,24 @@
 NMap::NMap(std::string i_TileSet)
 {
 	Ready = false;
+	RealTileSize = 64;
+	Width = Height = Depth = 0;
+	ViewingLevel = 1;
+	Texture = NULL;
+	if (GetGame()->IsServer())
+	{
+		return;
+	}
+	TileSize = 0;
 	Shader = GetGame()->GetRender()->GetShader("map");
 	OutlineShader = GetGame()->GetRender()->GetShader("normal");
 	Texture = GetGame()->GetRender()->GetTexture(i_TileSet);
-	TileSize = 0;
 	if (Texture)
 	{
 		TileSize = Texture->GetFloat("TileSize");
 		TextureWidth = Texture->GetSize().x;
 		TextureHeight = Texture->GetSize().y;
 	}
-	Width = Height = Depth = 0;
 	if (Shader != NULL)
 	{
 		TextureLoc = Shader->GetUniformLocation("Texture");
@@ -25,7 +32,6 @@ NMap::NMap(std::string i_TileSet)
 		OutlineColorLoc = OutlineShader->GetUniformLocation("Color");
 		OutlineMatrixLoc = OutlineShader->GetUniformLocation("MVP");
 	}
-	ViewingLevel = 1;
 }
 unsigned int NMap::GetDepth()
 {
@@ -43,14 +49,17 @@ NMap::~NMap()
 			}
 		}
 	}
-	for (unsigned int i=0;i<Depth;i++)
+	if (!GetGame()->IsServer())
 	{
-		glDeleteBuffers(5,Buffers[i]);
-		delete[] Buffers[i];
-	}
-	if (Texture)
-	{
-		delete Texture;
+		for (unsigned int i=0;i<Depth;i++)
+		{
+			glDeleteBuffers(5,Buffers[i]);
+			delete[] Buffers[i];
+		}
+		if (Texture)
+		{
+			delete Texture;
+		}
 	}
 }
 void NMap::Init(unsigned int i_Width, unsigned int i_Height, unsigned int i_Depth)
@@ -75,10 +84,13 @@ void NMap::Init(unsigned int i_Width, unsigned int i_Height, unsigned int i_Dept
 	BoxUVs.resize(Depth, Bar);
 	Outline.resize(Depth,Foo2);
 	BoxVerts.resize(Depth,Foo2);
-	for (unsigned int i=0;i<Depth;i++)
+	if (!GetGame()->IsServer())
 	{
-		Buffers[i] = new GLuint[6];
-		glGenBuffers(5,Buffers[i]);
+		for (unsigned int i=0;i<Depth;i++)
+		{
+			Buffers[i] = new GLuint[6];
+			glGenBuffers(5,Buffers[i]);
+		}
 	}
 	std::vector<std::vector<NTile* > > Foo;
 	Tiles.resize(Width,Foo);
@@ -142,9 +154,9 @@ NTile* NMap::GetTile(unsigned int X, unsigned int Y, unsigned int Z)
 NTile* NMap::GetTile(glm::vec3 Pos)
 {
 	Pos = Pos-GetPos();
-	int X = floor(Pos.x/TileSize);
-	int Y = floor(Pos.y/TileSize);
-	int Z = floor(Pos.z/TileSize);
+	int X = floor(Pos.x/RealTileSize);
+	int Y = floor(Pos.y/RealTileSize);
+	int Z = floor(Pos.z/RealTileSize);
 	if (X < 0 || X >= Width)
 	{
 		return NULL;
@@ -161,10 +173,10 @@ NTile* NMap::GetTile(glm::vec3 Pos)
 }
 glm::vec3 NMap::TilePos(glm::vec3 Pos)
 {
-	int X = floor(Pos.x/TileSize);
-	int Y = floor(Pos.y/TileSize);
-	int Z = floor(Pos.z/TileSize);
-	return glm::vec3(X*TileSize+TileSize/2.f,Y*TileSize+TileSize/2.f,Z*TileSize);
+	int X = floor(Pos.x/RealTileSize);
+	int Y = floor(Pos.y/RealTileSize);
+	int Z = floor(Pos.z/RealTileSize);
+	return glm::vec3(X*RealTileSize+RealTileSize/2.f,Y*RealTileSize+RealTileSize/2.f,Z*RealTileSize);
 }
 void NMap::ViewLevel(int Level)
 {
@@ -189,7 +201,7 @@ int NMap::GetLevel(glm::vec3 Pos)
 }
 float NMap::GetTileSize()
 {
-	return TileSize;
+	return RealTileSize;
 }
 void NMap::GenerateBuffers()
 {
@@ -419,16 +431,31 @@ void NMap::Draw(NCamera* View)
 }
 void NMap::Tick(double DT)
 {
-	if (Texture)
+	if (!GetGame()->IsServer())
 	{
-		Texture->Tick(DT);
+		if (Texture)
+		{
+			Texture->Tick(DT);
+		}
+		int Level = (GetGame()->GetRender()->GetCamera()->GetPos().z-500)/TileSize;
+		ViewLevel(Level);
 	}
-	int Level = (GetGame()->GetRender()->GetCamera()->GetPos().z-500)/TileSize;
-	ViewLevel(Level);
 }
 void NMap::Remove()
 {
 	delete (NMap*)this;
+}
+void NMap::SetChanged(int Level)
+{
+	if (Level < 0)
+	{
+		return;
+	}
+	if (Level >= Depth)
+	{
+		return;
+	}
+	Changed[Level] = true;
 }
 
 NTile::NTile(unsigned int x, unsigned int y, unsigned int z)
@@ -439,6 +466,20 @@ NTile::NTile(unsigned int x, unsigned int y, unsigned int z)
 	X = x;
 	Y = y;
 	Z = z;
+}
+NTile::NTile(unsigned int i_ID)
+{
+	ID = i_ID; 
+	Solid = false;
+	ForceSolid = false;
+	X = 0;
+	Y = 0;
+	Z = 0;
+}
+void NTile::SetID(int i_ID)
+{
+	ID = i_ID;
+	GetGame()->GetMap()->SetChanged(Z);
 }
 NTile::~NTile()
 {
@@ -491,7 +532,7 @@ bool NTile::IsOpenSpace()
 	return false;
 }
 
-std::string NMap::Type()
+std::string NMap::GetType()
 {
 	return "Map";
 }

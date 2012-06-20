@@ -2,6 +2,7 @@
 
 NNode::NNode()
 {
+	ID = 0;
 	Position = glm::vec3(0);
 	Scale = glm::vec3(1);
 	Color = glm::vec4(1);
@@ -14,8 +15,26 @@ NNode::NNode()
 
 NNode::~NNode()
 {
+	while(Children.size())
+	{
+		Children[0]->SetParent(NULL);
+		GetGame()->GetScene()->Remove(Children[0]);
+		Children.erase(Children.begin());
+	}
+	if (Parent)
+	{
+		Parent->RemoveChild(this,true);
+	}
 }
 
+void NNode::SetID(unsigned int i_ID)
+{
+	ID = i_ID;
+}
+unsigned int NNode::GetID()
+{
+	return ID;
+}
 void NNode::SetPos(float X, float Y, float Z)
 {
 	SetPos(glm::vec3(X,Y,Z));
@@ -38,7 +57,8 @@ void NNode::SetPos(glm::vec3 i_Position)
 
 void NNode::SetPos(glm::vec2 i_Position)
 {
-	SetPos(glm::vec3(i_Position,Position.z));
+	float Z = Position.z;
+	SetPos(glm::vec3(i_Position,Z));
 }
 
 void NNode::SetAng(glm::vec3 i_Angle)
@@ -54,13 +74,16 @@ void NNode::SetAng(float i_Angle)
 
 void NNode::SetParent(NNode* Node)
 {
-	if (Parent != NULL)
+	if (Parent != NULL && Node != NULL)
 	{
 		Parent->RemoveChild(this);
 	}
 	Parent = Node;
-	Parent->AddChild(this);
-	UpdateMatrix();
+	if (Node != NULL)
+	{
+		Parent->AddChild(this);
+		UpdateMatrix();
+	}
 }
 
 void NNode::AddChild(NNode* Node)
@@ -69,15 +92,19 @@ void NNode::AddChild(NNode* Node)
 	UpdateMatrix();
 }
 
-void NNode::RemoveChild(NNode* Node)
+void NNode::RemoveChild(NNode* Node, bool Removing)
 {
 	for (unsigned int i=0;i<Children.size();i++)
 	{
 		if (Children[i] == Node)
 		{
-			Children[i]->SetParent(NULL);
-			Children[i]->UpdateMatrix();
+			if (!Removing)
+			{
+				Children[i]->SetParent(NULL);
+				Children[i]->UpdateMatrix();
+			}
 			Children.erase(Children.begin()+i);
+			return;
 		}
 	}
 }
@@ -189,7 +216,7 @@ glm::vec4 NNode::GetColor()
 void NNode::Remove()
 {
 }
-std::string NNode::Type()
+std::string NNode::GetType()
 {
 	return "NULL";
 }

@@ -108,8 +108,9 @@ public:
 	* @brief Detaches the specified node from this one.
 	*
 	* @param Child The node we want to detach from.
+	* @param Removing Specifies if the node we're removing from our list is deleting itself or not.
 	*/
-	virtual void RemoveChild(NNode* Child);
+	virtual void RemoveChild(NNode* Child, bool Removing = false);
 	/**
 	* @brief Returns the parent we're attached to, or null if we don't one.
 	*
@@ -203,7 +204,7 @@ public:
 	 *
 	 * @return "NULL".
 	 */
-	virtual std::string Type();
+	virtual std::string GetType();
 	/**
 	 * @brief Gets custom data flags.
 	 *
@@ -216,6 +217,8 @@ public:
 	 * @param i_Flags The desired flags.
 	 */
 	virtual void SetFlags(char i_Flags);
+	virtual void SetID(unsigned int i_ID);
+	virtual unsigned int GetID();
 	glm::vec3 Angle;
 	glm::vec4 Color;
 	glm::vec3 Position;
@@ -225,6 +228,7 @@ public:
 	NNode* Parent;
 	std::vector<NNode*> Children;
 	char Flags;
+	unsigned int ID;
 };
 
 #endif

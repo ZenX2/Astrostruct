@@ -2,6 +2,10 @@
 
 NInput::NInput()
 {
+	if (GetGame()->IsServer())
+	{
+		return;
+	}
 	for (unsigned int i=0;i<KeyCount;i++)
 	{
 		Keys[i] = false;
@@ -10,8 +14,17 @@ NInput::NInput()
 
 void NInput::Poll()
 {
+	if (GetGame()->IsServer())
+	{
+		return;
+	}
+	HitGUI = false;
+	NCamera* Camera = GetGame()->GetRender()->GetCamera();
 	glfwGetMousePos(&MouseX,&MouseY);
 	MouseY = -MouseY+GetGame()->GetWindowHeight();
+	AWorld = glm::unProject(glm::vec3(MouseX,MouseY,0),Camera->GetPerspViewMatrix(),Camera->GetPerspMatrix(),glm::vec4(0,0,GetGame()->GetWindowWidth(),GetGame()->GetWindowHeight()));
+	BWorld = glm::unProject(glm::vec3(MouseX,MouseY,1),Camera->GetPerspViewMatrix(),Camera->GetPerspMatrix(),glm::vec4(0,0,GetGame()->GetWindowWidth(),GetGame()->GetWindowHeight()));
+
 	MouseX += GetGame()->GetRender()->GetCamera()->GetPos().x;
 	MouseY += GetGame()->GetRender()->GetCamera()->GetPos().y;
 }
@@ -70,6 +83,11 @@ int NInput::GetMouseY()
 	return MouseY;
 }
 
+glm::vec3 NInput::GetPerspMouse(float Inter)
+{
+	return AWorld+Inter*(BWorld-AWorld);
+}
+
 glm::vec2 NInput::GetMouse()
 {
 	return glm::vec2(MouseX,MouseY);
@@ -78,4 +96,12 @@ glm::vec2 NInput::GetMouse()
 int NInput::GetMouseKey(int Key)
 {
 	return glfwGetMouseButton(Key);
+}
+bool NInput::GetMouseHitGUI()
+{
+	return HitGUI;
+}
+void NInput::SetMouseHitGUI(bool Hit)
+{
+	HitGUI = Hit;
 }

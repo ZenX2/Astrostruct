@@ -42,8 +42,8 @@ void NCamera::UpdateCameraMatrix()
 	ViewMatrix = glm::translate(glm::mat4(1.f),-GetPos());
 	ViewMatrix = glm::scale(ViewMatrix,GetScale());
 	PerspViewMatrix = ViewMatrix; //Until we actually need real 3d view...
-	OrthoMatrix = glm::ortho(0.f,(float)GetGame()->GetWindowWidth(),0.f,(float)GetGame()->GetWindowHeight(),0.f,3000.f);
-	PerspMatrix = glm::perspective(45.f,float(GetGame()->GetWindowWidth())/float(GetGame()->GetWindowHeight()),32.f,3000.f);
+	OrthoMatrix = glm::ortho(0.f,(float)GetGame()->GetWindowWidth(),0.f,(float)GetGame()->GetWindowHeight(),0.f,1000.f);
+	PerspMatrix = glm::perspective(45.f,float(GetGame()->GetWindowWidth())/float(GetGame()->GetWindowHeight()),32.f,1000.f);
 	Changed = false;
 }
 
@@ -73,7 +73,7 @@ void NCamera::Remove()
 	delete (NCamera*)this;
 }
 
-std::string NCamera::Type()
+std::string NCamera::GetType()
 {
 	return "Camera";
 }

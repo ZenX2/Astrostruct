@@ -68,6 +68,7 @@
 #include <physfs.h>
 #define LUA_COMPAT_MODULE
 #include <lua.hpp>
+#include <enet/enet.h>
 
 #define Fail false
 #define Success true
@@ -107,6 +108,7 @@
 #include "NMap.hpp"
 #include "NLight.hpp"
 #include "NWindow.hpp"
+#include "NCheckbox.hpp"
 #include "NButton.hpp"
 #include "NPlayer.hpp"
 #include "NScene.hpp"
@@ -114,7 +116,9 @@
 #include "NRender.hpp"
 #include "NConsole.hpp"
 #include "NLua.hpp"
+#include "NPacket.hpp"
 #include "NStateMachine.hpp"
+#include "NNetwork.hpp"
 #include "NGame.hpp"
 
 static NGame* Game = new NGame();

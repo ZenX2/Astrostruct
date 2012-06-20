@@ -26,16 +26,19 @@ void NScene::Draw(NCamera* View)
 		World[i]->Draw(View);
 	}
 	glDisable(GL_DEPTH_TEST);
-	GetGame()->GetRender()->glPushFramebuffer();
-	glBindFramebuffer(GL_FRAMEBUFFER, GetGame()->GetLightSystem()->GetFramebuffer());
-	glClearColor(0,0,0,1);
-	glClear(GL_COLOR_BUFFER_BIT);
-	for (unsigned int i=0;i<Lights.size();i++)
+	if (!FullBright)
 	{
-		Lights[i]->Draw(View);
+		GetGame()->GetRender()->glPushFramebuffer();
+		glBindFramebuffer(GL_FRAMEBUFFER, GetGame()->GetLightSystem()->GetFramebuffer());
+		glClearColor(0,0,0,1);
+		glClear(GL_COLOR_BUFFER_BIT);
+		for (unsigned int i=0;i<Lights.size();i++)
+		{
+			Lights[i]->Draw(View);
+		}
+		GetGame()->GetRender()->glPopFramebuffer();
+		GetGame()->GetLightSystem()->Draw();
 	}
-	GetGame()->GetRender()->glPopFramebuffer();
-	GetGame()->GetLightSystem()->Draw();
 	for (unsigned int i=0;i<GUI.size();i++)
 	{
 		if ((bool)GUI[i]->GetFlags())
@@ -47,10 +50,15 @@ void NScene::Draw(NCamera* View)
 	}
 }
 
+void NScene::ToggleFullBright()
+{
+	FullBright = !FullBright;
+}
+
 void NScene::AddNode(NNode* Node)
 {
-	std::string Type = Node->Type();
-	if (Type == "Window" || Type == "Button" || Type == "Text")
+	std::string Type = Node->GetType();
+	if (Type == "Window" || Type == "Button" || Type == "Text" || Type == "Checkbox")
 	{
 		GUI.push_back(Node);
 		return;
@@ -71,10 +79,13 @@ void NScene::AddNode(NNode* Node)
 NScene::NScene()
 {
 	LastTick = CurTime();
+	ShuttingDown = false;
+	FullBright = false;
 }
 
 NScene::~NScene()
 {
+	ShuttingDown = true;
 	for (unsigned int i=0;i<GUI.size();i++)
 	{
 	    GUI[i]->Remove();
@@ -136,9 +147,95 @@ NPlayer* NScene::AddPlayer(std::wstring Name)
 	AddNode(Player);
 	return Player;
 }
+NPlayer* NScene::AddPlayer(std::string Name)
+{
+	NPlayer* Player = new NPlayer(ToMBS(Name));
+	AddNode(Player);
+	return Player;
+}
 NLight* NScene::AddLight(std::string Texture)
 {
 	NLight* Light = new NLight(Texture);
 	AddNode(Light);
 	return Light;
+}
+NCheckbox* NScene::AddCheckbox(std::string Texture)
+{
+	NCheckbox* Checkbox = new NCheckbox(Texture);
+	AddNode(Checkbox);
+	return Checkbox;
+}
+std::vector<NNode*>* NScene::GetWorld()
+{
+	return &World;
+}
+NNode* NScene::GetNodeByID(unsigned int ID)
+{
+	for (unsigned int i=0;i<World.size();i++)
+	{
+		if (World[i]->GetID() == ID)
+		{
+			return World[i];
+		}
+	}
+	return NULL;
+}
+void NScene::RemoveByID(unsigned int ID)
+{
+	for (unsigned int i=0;i<World.size();i++)
+	{
+		if (World[i]->GetID() == ID)
+		{
+			World[i]->Remove();
+			World.erase(World.begin()+i);
+			break;
+		}
+	}
+}
+void NScene::Remove(NNode* Node)
+{
+	if (ShuttingDown)
+	{
+		return;
+	}
+	std::string Type = Node->GetType();
+	if (Type == "Window" || Type == "Button" || Type == "Text")
+	{
+		for (unsigned int i=0;i<GUI.size();i++)
+		{
+			if (GUI[i] == Node)
+			{
+				GUI[i]->Remove();
+				GUI.erase(GUI.begin()+i);
+				return;
+			}
+		}
+		return;
+	}
+	if (Type == "Map" || Type == "Player")
+	{
+		for (unsigned int i=0;i<World.size();i++)
+		{
+			if (World[i] == Node)
+			{
+				World[i]->Remove();
+				World.erase(World.begin()+i);
+				return;
+			}
+		}
+		return;
+	}
+	if (Type == "Light")
+	{
+		for (unsigned int i=0;i<Lights.size();i++)
+		{
+			if (Lights[i] == Node)
+			{
+				Lights[i]->Remove();
+				Lights.erase(Lights.begin()+i);
+				return;
+			}
+		}
+		return;
+	}
 }

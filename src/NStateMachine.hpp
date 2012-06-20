@@ -36,6 +36,7 @@ public:
 	 * @return "NULL"
 	 */
 	virtual std::string GetName();
+	bool Init;
 };
 
 /**
@@ -44,7 +45,7 @@ public:
 class NStateMachine
 {
 public:
-	NStateMachine();
+	NStateMachine(std::string State);
 	~NStateMachine();
 	/**
 	 * @brief Switches the game's current states.
@@ -80,6 +81,8 @@ private:
 	NWindow* InfoWindow;
 	NButton* PlayButton;
 	NButton* QuitButton;
+	NButton* MultiButton;
+	NButton* MapButton;
 	NSound* PlaySound;
 };
 
@@ -100,4 +103,48 @@ private:
 	NLight* Light;
 };
 
+class NServerState : public NState
+{
+public:
+	NServerState();
+	~NServerState();
+	void OnEnter();
+	void OnExit();
+	std::string GetName();
+	void Tick(double DT);
+private:
+};
+
+class NOnlineState : public NState
+{
+public:
+	NOnlineState();
+	~NOnlineState();
+	void OnEnter();
+	void OnExit();
+	std::string GetName();
+	void Tick(double DT);
+private:
+};
+
+class NMapState : public NState
+{
+public:
+	NMapState();
+	~NMapState();
+	void OnEnter();
+	void OnExit();
+	std::string GetName();
+	void Tick(double DT);
+private:
+	NWindow* Window;
+	NButton* Increase;
+	NButton* Decrease;
+	NCheckbox* CheckBox;
+	NText* Text;
+	NText* CheckText;
+	NWindow* OtherWindow;
+	NText* ChangingText;
+	int CurrentTile;
+};
 #endif

@@ -71,11 +71,16 @@ public:
 	 * @param NumAxes How many axes the joystick has, for example an Xbox controller's analog stick has 2 axes, but both its triggers are only one axis.
 	 */
 	void GetJoyStick(unsigned int ID, float* Floats, unsigned int NumAxes);
+	glm::vec3 GetPerspMouse(float Inter);
+	bool GetMouseHitGUI();
+	void SetMouseHitGUI(bool Hit);
 	NInput();
 private:
+	glm::vec3 AWorld,BWorld;
 	int MouseX;
 	int MouseY;
 	bool Keys[KeyCount];
+	bool HitGUI;
 };
 
 #endif

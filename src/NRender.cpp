@@ -110,8 +110,8 @@ void NRender::GenerateFramebuffer()
 	glRenderbufferStorage(GL_RENDERBUFFER,GL_DEPTH_COMPONENT,GetGame()->GetWindowWidth(),GetGame()->GetWindowHeight());
 	glFramebufferRenderbuffer(GL_FRAMEBUFFER,GL_DEPTH_ATTACHMENT,GL_RENDERBUFFER,DepthBuffer);
 	glFramebufferTexture(GL_FRAMEBUFFER,GL_COLOR_ATTACHMENT0,FTexture,0);
-	glBindTexture(GL_TEXTURE_2D, 0);
 	CheckFramebuffer();
+	glBindTexture(GL_TEXTURE_2D, 0);
 	glBindFramebuffer(GL_FRAMEBUFFER,0);
 	//Now create the vertex buffers to draw the quad to the screen.
 	Verts.clear();
@@ -132,6 +132,10 @@ void NRender::GenerateFramebuffer()
 
 NRender::NRender()
 {
+	if (GetGame()->IsServer())
+	{
+		return;
+	}
 	glGenBuffers(2,VertexBuffers);
 	FrameBuffer = 0;
 	FTexture = 0;
@@ -231,6 +235,10 @@ void NRender::SetCamera(NCamera* i_Camera)
 
 void NRender::Draw()
 {
+	if (GetGame()->IsServer())
+	{
+		return;
+	}
 	double TimeDiff = CurTime()-LastTime;
 	FrameTime = TimeDiff;
 	if (MaxFPS != 0)

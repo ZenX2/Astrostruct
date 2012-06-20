@@ -63,14 +63,15 @@ void NLight::GenerateShadowBuffers()
 	{
 		return;
 	}
-	if (!SChanged)
+	if (!SChanged && !GetParent())
 	{
 		return;
 	}
 	Shadows.clear();
-	for (float x = -GetScale().x;x<GetScale().x;x+=GetGame()->GetMap()->GetTileSize())
+	float Max = std::max(GetScale().x, GetScale().y);
+	for (float x = -Max;x<Max;x+=GetGame()->GetMap()->GetTileSize())
 	{
-		for (float y = -GetScale().y;y<GetScale().y;y+=GetGame()->GetMap()->GetTileSize())
+		for (float y = -Max;y<Max;y+=GetGame()->GetMap()->GetTileSize())
 		{
 			NTile* Tile = GetGame()->GetMap()->GetTile(GetPos()+glm::vec3(x,y,0));
 			if (Tile == NULL || !Tile->IsOpaque())
@@ -416,7 +417,7 @@ void NLightSystem::Draw()
 	glUseProgram(0);
 }
 
-std::string NLight::Type()
+std::string NLight::GetType()
 {
 	return "Light";
 }

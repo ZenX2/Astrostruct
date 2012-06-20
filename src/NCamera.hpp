@@ -66,7 +66,7 @@ public:
 	 *
 	 * @return "Camera".
 	 */
-	std::string Type();
+	std::string GetType();
 private:
 	bool Changed;
 	void UpdateCameraMatrix();

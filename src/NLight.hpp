@@ -54,7 +54,7 @@ public:
 	 *
 	 * @return "Light".
 	 */
-	std::string Type();
+	std::string GetType();
 private:
 	void DrawLight(NCamera* View);
 	void DrawShadow(NCamera* View);

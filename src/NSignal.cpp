@@ -4,15 +4,6 @@ void SignalHandler(int Signal)
 {
 	switch (Signal)
 	{
-		case SIGINT:
-		{
-			SetColor(Blue);
-			std::cout << "SIGNAL INFO: ";
-			ClearColor();
-			std::cout << "Recieved signal " << SignalToString(Signal) << ": exiting...\n";
-			GetGame()->Close();
-			break;
-		}
 		case SIGSEGV:
 		{
 			SetColor(Red);
@@ -40,8 +31,8 @@ void SignalHandler(int Signal)
 		}
 		case SIGABRT:
 		{
-			SetColor(Yellow);
-			std::cout << "SIGNAL WARN: ";
+			SetColor(Red);
+			std::cout << "SIGNAL ERROR: ";
 			ClearColor();
 			std::cout << "Recieved signal " << SignalToString(Signal) << ": something wants us to terminate because they're mad, unfortunately I should comply...\n";
 			GetGame()->Close();
@@ -91,7 +82,6 @@ NSignalInterceptor::NSignalInterceptor()
 	signal(SIGABRT,SignalHandler);
 	signal(SIGFPE,SignalHandler);
 	signal(SIGILL,SignalHandler);
-	signal(SIGINT,SignalHandler);
 	signal(SIGSEGV,SignalHandler);
 	signal(SIGTERM,SignalHandler);
 }
@@ -101,7 +91,6 @@ NSignalInterceptor::~NSignalInterceptor()
 	signal(SIGABRT,SIG_DFL);
 	signal(SIGFPE,SIG_DFL);
 	signal(SIGILL,SIG_DFL);
-	signal(SIGINT,SIG_DFL);
 	signal(SIGSEGV,SIG_DFL);
 	signal(SIGTERM,SIG_DFL);
 }

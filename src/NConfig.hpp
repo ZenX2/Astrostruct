@@ -19,7 +19,7 @@ public:
 	*
 	* @param i_File The lua file.
 	*/
-	NConfig(std::string i_File);
+	NConfig(std::string i_Folder);
 	~NConfig();
 	/**
 	* @brief Finds a variable loaded into lua and returns it.
@@ -46,7 +46,7 @@ public:
 	*/
 	bool GetBool(std::string Name);
 private:
-	std::string File;
+	std::string Folder;
 };
 
 #endif

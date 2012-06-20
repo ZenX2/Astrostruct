@@ -2,17 +2,8 @@
 
 NPlayer::NPlayer(std::wstring i_Name)
 {
-	Shader = GetGame()->GetRender()->GetShader("flat");
-	if (Shader)
-	{
-		TextureLoc = Shader->GetUniformLocation("Texture");
-		MatrixLoc = Shader->GetUniformLocation("MVP");
-		ColorLoc = Shader->GetUniformLocation("Color");
-	}
 	Velocity = glm::vec3(0);
 	Speed = 200;
-	glGenBuffers(2,Buffers);
-	Texture = GetGame()->GetRender()->GetTexture("human");
 	Changed = true;
 	Moving = false;
 	CurrentDirection = 0;
@@ -22,23 +13,53 @@ NPlayer::NPlayer(std::wstring i_Name)
 	Gravity = 2;
 	CollisionBox = glm::vec2(16,25);
 	Name = i_Name;
+	HasSetWantedPosition = false;
+	if (GetGame()->IsServer())
+	{
+		return;
+	}
+	glGenBuffers(2,Buffers);
+	Texture = GetGame()->GetRender()->GetTexture("human");
+	Shader = GetGame()->GetRender()->GetShader("flat");
+	if (Shader)
+	{
+		TextureLoc = Shader->GetUniformLocation("Texture");
+		MatrixLoc = Shader->GetUniformLocation("MVP");
+		ColorLoc = Shader->GetUniformLocation("Color");
+	}
 	NameText = GetGame()->GetScene()->AddText("didactgothic",Name);
 	NameText->SetPos(Position+glm::vec3(0,20,0));
 	NameText->SwapView();
 	NameText->SetMode(1);
 	NameText->SetSize(13);
+	NameText->SetParent(this);
 }
 
 NPlayer::~NPlayer()
 {
-	delete Texture;
+	if (GetGame()->IsServer())
+	{
+		return;
+	}
+	if (Texture)
+	{
+		delete Texture;
+	}
+}
+
+std::string NPlayer::GetName()
+{
+	return ToMBS(Name);
 }
 
 void NPlayer::Move(float Direction)
 {
-	if (Texture)
+	if (!GetGame()->IsServer())
 	{
-		Texture->Play("run");
+		if (Texture)
+		{
+			Texture->Play("run");
+		}
 	}
 	CurrentDirection = Direction;
 	Moving = true;
@@ -46,9 +67,12 @@ void NPlayer::Move(float Direction)
 
 void NPlayer::StopMove()
 {
-	if (Texture)
+	if (!GetGame()->IsServer())
 	{
-		Texture->Play("idle");
+		if (Texture)
+		{
+			Texture->Play("idle");
+		}
 	}
 	Moving = false;
 }
@@ -56,6 +80,9 @@ void NPlayer::StopMove()
 void NPlayer::SetControl()
 {
 	Controlled = true;
+	NLight* Light = GetGame()->GetScene()->AddLight("point");
+	Light->SetScale(glm::vec3(256,256,1));
+	Light->SetParent(this);
 }
 
 void NPlayer::Tick(double DT)
@@ -63,6 +90,14 @@ void NPlayer::Tick(double DT)
 	if (!GetGame()->GetMap()->Ready)
 	{
 		return;
+	}
+	// Networking
+	if (HasSetWantedPosition)
+	{
+		if (glm::distance(WantedPosition,GetPos()) > GetGame()->GetMap()->GetTileSize())
+		{
+			SetPos(GetPos()+(WantedPosition-GetPos())*(1.f-float(DT*50)));
+		}
 	}
 	// Movement
 	if (Controlled)
@@ -222,11 +257,13 @@ void NPlayer::Tick(double DT)
 		SetVel(GetVel()-glm::vec3(0,0,Gravity));
 	}
 	//Misc
-	if (Texture)
+	if (!GetGame()->IsServer())
 	{
-		Texture->Tick(DT);
+		if (Texture)
+		{
+			Texture->Tick(DT);
+		}
 	}
-	NameText->SetPos(GetPos()+glm::vec3(0,20,0));
 }
 
 void NPlayer::GenerateBuffers()
@@ -336,7 +373,33 @@ void NPlayer::Remove()
 	delete (NPlayer*)this;
 }
 
-std::string NPlayer::Type()
+std::string NPlayer::GetType()
 {
 	return "Player";
+}
+
+float NPlayer::GetDirection()
+{
+	return CurrentDirection;
+}
+
+bool NPlayer::GetMoving()
+{
+	return Moving;
+}
+
+void NPlayer::SetWantedPosition(glm::vec3 Pos)
+{
+	HasSetWantedPosition = true;
+	WantedPosition = Pos;
+}
+
+void NPlayer::SetDirection(float Direction)
+{
+	CurrentDirection = Direction;
+}
+
+void NPlayer::SetMoving(bool i_Moving)
+{
+	Moving = i_Moving;
 }

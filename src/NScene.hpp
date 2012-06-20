@@ -89,12 +89,21 @@ public:
 	 * @return A pointer to the light created.
 	 */
 	NLight* AddLight(std::string Texture);
+	NPlayer* AddPlayer(std::string Name);
+	NCheckbox* AddCheckbox(std::string Texture);
+	std::vector<NNode*>* GetWorld();
+	NNode* GetNodeByID(unsigned int ID);
+	void RemoveByID(unsigned int ID);
+	void Remove(NNode* Node);
+	void ToggleFullBright();
 private:
 	double LastTick;
 	std::vector<NNode*> GUI;
 	std::vector<NNode*> World;
 	std::vector<NNode*> Lights;
 	std::vector<NNode*> Garbage;
+	bool ShuttingDown;
+	bool FullBright;
 };
 
 #endif

@@ -250,7 +250,7 @@ public:
 	 *
 	 * @return "Text".
 	 */
-	std::string Type();
+	std::string GetType();
 	~NText();
 	/**
 	 * @brief Toggles the view from orthographic to perspective, useful for rendering text in world space.

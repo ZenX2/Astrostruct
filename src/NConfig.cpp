@@ -1,11 +1,11 @@
 #include "NEngine.hpp"
 
-NConfig::NConfig(std::string i_File)
+NConfig::NConfig(std::string i_Folder)
 {
 	lua_State* L = GetGame()->GetLua()->GetL();
 	lua_getglobal(L,"_G");
-	File = i_File;
-	GetGame()->GetLua()->DoFile(File);
+	Folder = i_Folder;
+	GetGame()->GetLua()->DoFolder(i_Folder);
 }
 
 NConfig::~NConfig()
@@ -22,7 +22,7 @@ float NConfig::GetFloat(std::string Name)
 		SetColor(Yellow);
 		std::cout << "CONFIG WARN: ";
 		ClearColor();
-		std::cout << "Tried to use variable " << Name << " as a number (It's not a number!). Does it exist in " << File << "?\n";
+		std::cout << "Tried to use variable " << Name << " as a number (It's not a number!). Does it exist in " << Folder << "?\n";
 		lua_pop(L,2);
 		return 0;
 	}
@@ -41,7 +41,7 @@ std::string NConfig::GetString(std::string Name)
 		SetColor(Yellow);
 		std::cout << "CONFIG WARN: ";
 		ClearColor();
-		std::cout << "Tried to use variable " << Name << " as a string (It's not a string!). Does it exist in " << File << "?\n";
+		std::cout << "Tried to use variable " << Name << " as a string (It's not a string!). Does it exist in " << Folder << "?\n";
 		lua_pop(L,2);
 		return "NULL";
 	}
@@ -65,7 +65,7 @@ bool NConfig::GetBool(std::string Name)
 		SetColor(Yellow);
 		std::cout << "CONFIG WARN: ";
 		ClearColor();
-		std::cout << "Tried to use variable " << Name << " as a boolean (It's not a boolean!). Does it exist in " << File << "?\n";
+		std::cout << "Tried to use variable " << Name << " as a boolean (It's not a boolean!). Does it exist in " << Folder << "?\n";
 		lua_pop(L,2);
 		return false;
 	}

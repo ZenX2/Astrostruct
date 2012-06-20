@@ -222,6 +222,10 @@ void NWindow::Draw(NCamera* View)
 
 void NWindow::Tick(double DT)
 {
+	if (Intersects(glm::vec4(GetPos().x,GetPos().y,GetScale().x,GetScale().y),GetGame()->GetInput()->GetMouse()))
+	{
+		GetGame()->GetInput()->SetMouseHitGUI(true);
+	}
 	if (Texture)
 	{
 		Texture->Tick(DT);
@@ -231,7 +235,7 @@ void NWindow::Remove()
 {
     delete (NWindow*)this;
 }
-std::string NWindow::Type()
+std::string NWindow::GetType()
 {
 	return "Window";
 }

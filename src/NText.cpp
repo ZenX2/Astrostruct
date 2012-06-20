@@ -557,7 +557,7 @@ NTextureNode::~NTextureNode()
 		delete Children[1];
 	}
 }
-std::string NText::Type()
+std::string NText::GetType()
 {
 	return "Text";
 }

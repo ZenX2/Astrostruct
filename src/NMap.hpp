@@ -22,6 +22,7 @@ public:
 	 * @param z The Z position.
 	 */
 	NTile(unsigned int x,unsigned int y,unsigned int z);
+	NTile(unsigned int i_ID);
 	~NTile();
 	/**
 	 * @brief Returns if a tile blocks light or not, useful for glass tiles.
@@ -48,6 +49,7 @@ public:
 	 * @param i_Solid True for solid, false for nothingness.
 	 */
 	void SetSolid(bool i_Solid);
+	void SetID(int i_ID);
 	unsigned int X,Y,Z;
 private:
 	bool ForceSolid;
@@ -151,7 +153,7 @@ public:
 	 *
 	 * @return "Map".
 	 */
-	std::string Type();
+	std::string GetType();
 	/**
 	 * @brief Returns the current level that a position resides on. Currently use to decide when to render objects or not.
 	 *
@@ -160,7 +162,9 @@ public:
 	 * @return The Z level the position resides on.
 	 */
 	int GetLevel(glm::vec3 Pos);
+	void SetChanged(int Level);
 private:
+	float RealTileSize;
 	unsigned int ViewingLevel;
 	NShader* Shader;
 	NShader* OutlineShader;

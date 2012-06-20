@@ -5,8 +5,8 @@ NGame::NGame()
 	Width = 0;
 	Height = 0;
 	Run = true;
-	Valid = false;
 	WindowChanged = true;
+	Server = false;
 }
 
 NGame::~NGame()
@@ -14,27 +14,63 @@ NGame::~NGame()
 	SetColor(Blue);
 	std::cout << "ENGINE INFO: ";
 	ClearColor();
-	std::cout << "Shutting down...\n" << std::flush;
+	std::cout << "Shutting down...\n";
 	delete SignalInterceptor;
-	if (Valid)
+	delete FileSystem;
+	delete Scene;
+	delete Console;
+	delete Config;
+	delete Lua;
+	delete Network;
+	delete StateMachine;
+	delete Input;
+	delete Render;
+	delete PacketHandler;
+	if (!Server)
 	{
-		delete FileSystem;
-		delete Input;
-		delete Scene;
-		delete Render;
 		delete SoundSystem;
 		delete TextSystem;
-		delete Config;
-		delete Console;
-		delete Lua;
 		delete LightSystem;
-		delete StateMachine;
-		glfwTerminate();
 	}
+	glfwTerminate();
 }
 
-bool NGame::Init(int i_Width, int i_Height, std::string Title, std::string argv)
+bool NGame::Init(int i_Width, int i_Height, std::string Title, int argc, char** argv)
 {
+	for (unsigned int i=0;i<argc;i++)
+	{
+		std::string Option = argv[i];
+		if (Option == "-s")
+		{
+			Server = true;
+		}
+	}
+	if (Server)
+	{
+		srand(time(NULL));
+		SignalInterceptor = new NSignalInterceptor();
+		if (!glfwInit())
+		{
+			SetColor(Red);
+			std::cout << "ENGINE ERROR: ";
+			ClearColor();
+			std::cout << "GLFW failed to initialize!\n";
+			return Fail;
+		}
+		FileSystem = new NFileSystem(argv[0]);
+		Lua = new NLua();
+		Config = new NConfig("config");
+		Scene = new NScene();
+		Map = Scene->AddMap(Config->GetString("MapSkin"));
+		StateMachine = new NStateMachine("Serving");
+		Network = new NNetwork();
+		Network->CreateServer();
+		Input = new NInput();
+		Render = new NRender();
+		Console = new NConsole();
+		PacketHandler = new NPacketHandler();
+		return Success;
+	}
 	//Initialize everything we can
 	srand(time(NULL));
 	SignalInterceptor = new NSignalInterceptor();
@@ -48,9 +84,9 @@ bool NGame::Init(int i_Width, int i_Height, std::string Title, std::string argv)
 		std::cout << "GLFW failed to initialize!\n";
 		return Fail;
 	}
-	FileSystem = new NFileSystem(argv);
+	FileSystem = new NFileSystem(argv[0]);
 	Lua = new NLua();
-	Config = new NConfig("config/init.lua");
+	Config = new NConfig("config");
 	//Now lets load some data from our config interface
 	NewWidth = Config->GetFloat("Width");
 	NewHeight = Config->GetFloat("Height");
@@ -100,8 +136,9 @@ bool NGame::Init(int i_Width, int i_Height, std::string Title, std::string argv)
 	Map = Scene->AddMap(Config->GetString("MapSkin"));
 	Console = new NConsole();
 	LightSystem = new NLightSystem();
-	StateMachine = new NStateMachine();
-	Valid = true;
+	StateMachine = new NStateMachine("Paused");
+	Network = new NNetwork();
+	PacketHandler = new NPacketHandler();
 	return Success;
 }
 
@@ -147,6 +184,10 @@ glm::vec2 NGame::GetWindowSize()
 
 void NGame::Poll()
 {
+	if (Server)
+	{
+		return;
+	}
 	//If the window closes, end the game!
 	if (!glfwGetWindowParam(GLFW_OPENED))
 	{
@@ -235,4 +276,18 @@ NLightSystem* NGame::GetLightSystem()
 NStateMachine* NGame::GetStateMachine()
 {
 	return StateMachine;
+}
+
+bool NGame::IsServer()
+{
+	return Server;
+}
+
+NNetwork* NGame::GetNetwork()
+{
+	return Network;
+}
+NPacketHandler* NGame::GetPacketHandler()
+{
+	return PacketHandler;
 }

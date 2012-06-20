@@ -63,8 +63,16 @@ public:
 	 *
 	 * @return "Player"
 	 */
-	std::string Type();
+	std::string GetType();
+	std::string GetName();
+	float GetDirection();
+	bool GetMoving();
+	void SetWantedPosition(glm::vec3 Pos);
+	void SetDirection(float Direction);
+	void SetMoving(bool i_Moving);
 private:
+	glm::vec3 WantedPosition;
+	bool HasSetWantedPosition;
 	std::wstring Name;
 	NText* NameText;
 	glm::vec2 CollisionBox;
