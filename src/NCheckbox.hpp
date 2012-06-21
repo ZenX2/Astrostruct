@@ -29,7 +29,17 @@ public:
 	*/
 	void Draw(NCamera* View);
 	void Tick(double DT);
+	/**
+	 * @brief Returns if the box has been checked or not.
+	 *
+	 * @return True if it's checked, false if it isn't.
+	 */
 	bool IsChecked();
+	/**
+	 * @brief Sets if the checkbox is checked or not and sets it's animations accordingly.
+	 *
+	 * @param Check True if we want it checked, false otherwise.
+	 */
 	void SetCheck(bool Check);
 	/**
 	 * @brief Unallocates the object.

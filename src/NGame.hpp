@@ -152,9 +152,29 @@ public:
 	 * @return A pointer to the light system.
 	 */
 	NLightSystem* GetLightSystem();
+	/**
+	 * @brief Returns a pointer to the state machine.
+	 *
+	 * @return A pointer to the state machine.
+	 */
 	NStateMachine* GetStateMachine();
+	/**
+	 * @brief Gets a pointer to the network interface.
+	 *
+	 * @return A pointer to the network interface.
+	 */
 	NNetwork* GetNetwork();
+	/**
+	 * @brief returns if the game is running as a server or not.
+	 *
+	 * @return True if it is, false if it isn't.
+	 */
 	bool IsServer();
+	/**
+	 * @brief Returns the packet handler.
+	 *
+	 * @return A pointer to the packet handler.
+	 */
 	NPacketHandler* GetPacketHandler();
 private:
 	bool Server;

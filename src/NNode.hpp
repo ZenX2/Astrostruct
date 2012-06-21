@@ -217,7 +217,17 @@ public:
 	 * @param i_Flags The desired flags.
 	 */
 	virtual void SetFlags(char i_Flags);
+	/**
+	 * @brief Sets the ID of the object, currently used for networking.
+	 *
+	 * @param i_ID The desired ID.
+	 */
 	virtual void SetID(unsigned int i_ID);
+	/**
+	 * @brief Returns the ID of the object.
+	 *
+	 * @return The current ID.
+	 */
 	virtual unsigned int GetID();
 	glm::vec3 Angle;
 	glm::vec4 Color;

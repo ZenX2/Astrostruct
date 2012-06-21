@@ -22,6 +22,11 @@ public:
 	 * @param z The Z position.
 	 */
 	NTile(unsigned int x,unsigned int y,unsigned int z);
+	/**
+	 * @brief Generates a quick tile that can be used to test if it's solid by default or whatever.
+	 *
+	 * @param i_ID The desired ID of the tile.
+	 */
 	NTile(unsigned int i_ID);
 	~NTile();
 	/**
@@ -49,6 +54,11 @@ public:
 	 * @param i_Solid True for solid, false for nothingness.
 	 */
 	void SetSolid(bool i_Solid);
+	/**
+	 * @brief Sets the ID of the tile and tells the map to regenerate itself.
+	 *
+	 * @param i_ID The desired ID of the tile.
+	 */
 	void SetID(int i_ID);
 	unsigned int X,Y,Z;
 private:
@@ -162,6 +172,11 @@ public:
 	 * @return The Z level the position resides on.
 	 */
 	int GetLevel(glm::vec3 Pos);
+	/**
+	 * @brief Sets the level to a changed state, in which the vertex buffers would be regenerated for.
+	 *
+	 * @param Level The level we want to regenerate.
+	 */
 	void SetChanged(int Level);
 private:
 	float RealTileSize;

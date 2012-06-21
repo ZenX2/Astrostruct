@@ -64,11 +64,41 @@ public:
 	 * @return "Player"
 	 */
 	std::string GetType();
+	/**
+	 * @brief Returns the name of the player.
+	 *
+	 * @return The name of the player.
+	 */
 	std::string GetName();
+	/**
+	 * @brief Returns the current direction the player is trying to move towards.
+	 *
+	 * @return The current direciton.
+	 */
 	float GetDirection();
+	/**
+	 * @brief Returns if the player is moving or not.
+	 *
+	 * @return True if the player is trying to move, false if not.
+	 */
 	bool GetMoving();
+	/**
+	 * @brief Sets the player's wanted position, used in networking to interpolate the player to it's real position on the server.
+	 *
+	 * @param Pos The desired position.
+	 */
 	void SetWantedPosition(glm::vec3 Pos);
+	/**
+	 * @brief Sets the direction of the player.
+	 *
+	 * @param Direction The desired direction.
+	 */
 	void SetDirection(float Direction);
+	/**
+	 * @brief Sets if the player is moving or not.
+	 *
+	 * @param i_Moving True if moving, false if not.
+	 */
 	void SetMoving(bool i_Moving);
 private:
 	glm::vec3 WantedPosition;
