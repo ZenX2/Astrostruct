@@ -71,44 +71,39 @@ void NPauseState::OnEnter()
 {
 	if (!Init)
 	{
-		Window = GetGame()->GetScene()->AddWindow();
-		Window->SetTexture("window");
+		Window = GetGame()->GetScene()->AddWindow("window");
 		Window->SetScale(256,256);
 		Window->SetPos(GetGame()->GetWindowSize()/2.f);
 		Window->SetParent(GetGame()->GetRender()->GetCamera());
-		QuitButton = GetGame()->GetScene()->AddButton();
-		QuitButton->SetTexture("button");
+		QuitButton = GetGame()->GetScene()->AddButton("button");
 		QuitButton->SetScale(150,32);
 		QuitButton->SetText(_t("Quit"));
 		QuitButton->SetPos(0,-48);
 		QuitButton->SetParent(Window);
-		PlayButton = GetGame()->GetScene()->AddButton();
-		PlayButton->SetTexture("button");
+		PlayButton = GetGame()->GetScene()->AddButton("button");
 		PlayButton->SetScale(150,32);
 		PlayButton->SetText(_t("Play"));
 		PlayButton->SetPos(0,-16);
 		PlayButton->SetParent(Window);
-		MultiButton = GetGame()->GetScene()->AddButton();
-		MultiButton->SetTexture("button");
+		MultiButton = GetGame()->GetScene()->AddButton("button");
 		MultiButton->SetScale(150,32);
 		MultiButton->SetText(_t("Play Online"));
 		MultiButton->SetPos(0,16);
 		MultiButton->SetParent(Window);
-		MapButton = GetGame()->GetScene()->AddButton();
-		MapButton->SetTexture("button");
+		MapButton = GetGame()->GetScene()->AddButton("button");
 		MapButton->SetScale(150,32);
 		MapButton->SetText(_t("Make new map"));
 		MapButton->SetPos(0,48);
 		MapButton->SetParent(Window);
-		InfoWindow = GetGame()->GetScene()->AddWindow();
-		InfoWindow->SetTexture("window");
+		InfoWindow = GetGame()->GetScene()->AddWindow("window");
 		InfoWindow->SetScale(128,256);
+		InfoWindow->SetPos(GetGame()->GetWindowSize()-glm::vec2(64,128));
+		InfoWindow->SetParent(GetGame()->GetRender()->GetCamera());
 		InfoText = GetGame()->GetScene()->AddText("cousine", _t("This game is in very early development, but the engine framework is pretty much completed now. You can see lots of it demo'd here. Use wasd and qe to move the camera around. While escape brings back up the beginning menu."));
 		InfoText->SetBorder(128,256);
 		InfoText->SetPos(-64,108);
 		InfoText->SetSize(12);
 		InfoText->SetParent(InfoWindow);
-		InfoWindow->SetParent(GetGame()->GetRender()->GetCamera());
 		PlaySound = GetGame()->GetScene()->AddSound("coin");
 		Init = true;
 	}
@@ -256,9 +251,9 @@ void NOnlineState::Tick(double DT)
 		{
 			case ENET_EVENT_TYPE_DISCONNECT:
 			{
-				SetColor(Yellow);
+				NTerminal::SetColor(Yellow);
 				std::cout << "SERVER WARN: ";
-				ClearColor();
+				NTerminal::ClearColor();
 				std::cout << "Disconnected from host!\n";
 				GetGame()->GetStateMachine()->SetState("Paused");
 				break;
@@ -316,9 +311,9 @@ void NServerState::Tick(double DT)
 			{
 				char Buffer[64];
 				enet_address_get_host_ip(&Event.peer->address,Buffer,64);
-				SetColor(Blue);
+				NTerminal::SetColor(Blue);
 				std::cout << "SERVER INFO: ";
-				ClearColor();
+				NTerminal::ClearColor();
 				std::cout << "Client connected from " << Buffer << " on port " << Event.peer->address.port << ".\n";
 				Event.peer->data = new unsigned int[1];
 				*(unsigned int*)Event.peer->data = 0;
@@ -329,17 +324,17 @@ void NServerState::Tick(double DT)
 				unsigned int* ID = (unsigned int*)Event.peer->data;
 				if (ID != 0)
 				{
-					SetColor(Blue);
+					NTerminal::SetColor(Blue);
 					std::cout << "SERVER INFO: ";
-					ClearColor();
+					NTerminal::ClearColor();
 					NPlayer* Player = (NPlayer*)GetGame()->GetScene()->GetNodeByID(*ID);
 					std::cout << Player->GetName() << " left the game.\n";
 					GetGame()->GetPacketHandler()->RemovePlayer(*ID);
 					GetGame()->GetScene()->Remove(Player);
 				} else {
-					SetColor(Blue);
+					NTerminal::SetColor(Blue);
 					std::cout << "SERVER INFO: ";
-					ClearColor();
+					NTerminal::ClearColor();
 					std::cout << "A client has disconnected.\n";
 				}
 				delete[] (unsigned int*)Event.peer->data;
@@ -356,9 +351,9 @@ void NServerState::Tick(double DT)
 			}
 			case ENET_EVENT_TYPE_NONE:
 			{
-				SetColor(Blue);
+				NTerminal::SetColor(Blue);
 				std::cout << "SERVER INFO: ";
-				ClearColor();
+				NTerminal::ClearColor();
 				std::cout << "aw damn we still got nothin'...\n";
 				glfwSleep(1);
 				break;
@@ -384,19 +379,21 @@ void NMapState::OnEnter()
 	if (!Init)
 	{
 		NCamera* Camera = GetGame()->GetRender()->GetCamera();
-		Camera->SetPos(glm::vec3(1024,1024,500));
-		GetGame()->GetMap()->Init(32,32,6);
+		Camera->SetPos(glm::vec3(512,512,500));
+		WantedPosition = glm::vec3(512,512,500);
+		GetGame()->GetMap()->Init(16,16,6);
+		MapDim[0] = 16;
+		MapDim[1] = 16;
+		MapDim[2] = 6;
 		GetGame()->GetScene()->ToggleFullBright();
-		Window = GetGame()->GetScene()->AddWindow();
-		Window->SetTexture("window");
+		Window = GetGame()->GetScene()->AddWindow("window");
 		Window->SetScale(128,128);
 		Window->SetPos(64,64);
 		Window->SetParent(Camera);
-		OtherWindow = GetGame()->GetScene()->AddWindow();
-		OtherWindow->SetTexture("window");
-		OtherWindow->SetScale(128,80);
+		OtherWindow = GetGame()->GetScene()->AddWindow("window");
+		OtherWindow->SetScale(128,100);
 		OtherWindow->SetParent(Camera);
-		OtherWindow->SetPos(glm::vec3(GetGame()->GetWindowWidth()-64,40,0));
+		OtherWindow->SetPos(glm::vec3(GetGame()->GetWindowWidth()-64,50,0));
 		CheckBox = GetGame()->GetScene()->AddCheckbox("checkbox");
 		CheckBox->SetScale(16,16);
 		CheckBox->SetPos(glm::vec3(-16,-12,0));
@@ -405,14 +402,20 @@ void NMapState::OnEnter()
 		CheckText->SetSize(12);
 		CheckText->SetPos(glm::vec3(20,3,0));
 		CheckText->SetParent(CheckBox);
-		Increase = GetGame()->GetScene()->AddButton();
-		Increase->SetTexture("button");
+		OCheckBox = GetGame()->GetScene()->AddCheckbox("checkbox");
+		OCheckBox->SetScale(16,16);
+		OCheckBox->SetPos(glm::vec3(-16,-32,0));
+		OCheckBox->SetParent(OtherWindow);
+		OCheckText = GetGame()->GetScene()->AddText("cousine",_t("Opaque"));
+		OCheckText->SetSize(12);
+		OCheckText->SetPos(glm::vec3(20,-16,0));
+		OCheckText->SetParent(CheckBox);
+		Increase = GetGame()->GetScene()->AddButton("button");
 		Increase->SetScale(16,16);
 		Increase->SetText(_t(">"));
 		Increase->SetPos(64-16,12);
 		Increase->SetParent(OtherWindow);
-		Decrease = GetGame()->GetScene()->AddButton();
-		Decrease->SetTexture("button");
+		Decrease = GetGame()->GetScene()->AddButton("button");
 		Decrease->SetScale(16,16);
 		Decrease->SetText(_t("<"));
 		Decrease->SetPos(-64+16,12);
@@ -429,14 +432,16 @@ void NMapState::OnEnter()
 		Text->SetParent(Camera);
 		Init = true;
 		CurrentTile = 0;
+		Light = NULL;
 	}
+	SaveWindow = NULL;
 }
 void NMapState::OnExit()
 {
 }
 void NMapState::Tick(double DT)
 {
-	OtherWindow->SetPos(glm::vec3(GetGame()->GetWindowWidth()-64,32,0));
+	OtherWindow->SetPos(glm::vec3(GetGame()->GetWindowWidth()-64,50,0));
 	if (Increase->OnRelease())
 	{
 		CurrentTile++;
@@ -450,6 +455,7 @@ void NMapState::Tick(double DT)
 		ChangingText->SetText(Stream.str());
 		NTile Tile(CurrentTile);
 		CheckBox->SetCheck(Tile.IsSolid());
+		OCheckBox->SetCheck(Tile.IsOpaque());
 	}
 	if (Decrease->OnRelease())
 	{
@@ -463,41 +469,205 @@ void NMapState::Tick(double DT)
 		ChangingText->SetText(Stream.str());
 		NTile Tile(CurrentTile);
 		CheckBox->SetCheck(Tile.IsSolid());
+		OCheckBox->SetCheck(Tile.IsOpaque());
 	}
-	NCamera* Camera = GetGame()->GetRender()->GetCamera();
+	if (GetGame()->GetInput()->KeyChanged(GLFW_KEY_ESC) && GetGame()->GetInput()->GetKey(GLFW_KEY_ESC))
+	{
+		if (SaveWindow)
+		{
+			GetGame()->GetScene()->Remove(SaveWindow);
+			SaveWindow = NULL;
+		} else {
+			SaveWindow = GetGame()->GetScene()->AddWindow("window");
+			SaveWindow->SetScale(256,256);
+			SaveWindow->SetPos(GetGame()->GetWindowSize()/2.f);
+			SaveWindow->SetParent(GetGame()->GetRender()->GetCamera());
+			Input = GetGame()->GetScene()->AddTextInput("textbox");
+			Input->SetScale(200,24);
+			Input->SetPos(0,80);
+			Input->GetText()->SetMultiline(false);
+			Input->SetText(_t("MapName"));
+			Input->SetParent(SaveWindow);
+			SaveButton = GetGame()->GetScene()->AddButton("button");
+			SaveButton->SetScale(64,32);
+			SaveButton->SetText(_t("Save"));
+			SaveButton->SetPos(0,32);
+			SaveButton->SetParent(SaveWindow);
+			LoadButton = GetGame()->GetScene()->AddButton("button");
+			LoadButton->SetScale(64,32);
+			LoadButton->SetText(_t("Load"));
+			LoadButton->SetPos(0,0);
+			LoadButton->SetParent(SaveWindow);
+			MapIncrease[0] = GetGame()->GetScene()->AddButton("button");
+			MapIncrease[0]->SetScale(16,16);
+			MapIncrease[0]->SetPos(64,-64);
+			MapIncrease[0]->SetText(_t(">"));
+			MapIncrease[0]->SetParent(SaveWindow);
+			MapIncrease[1] = GetGame()->GetScene()->AddButton("button");
+			MapIncrease[1]->SetScale(16,16);
+			MapIncrease[1]->SetPos(64,-82);
+			MapIncrease[1]->SetText(_t(">"));
+			MapIncrease[1]->SetParent(SaveWindow);
+			MapIncrease[2] = GetGame()->GetScene()->AddButton("button");
+			MapIncrease[2]->SetScale(16,16);
+			MapIncrease[2]->SetPos(64,-100);
+			MapIncrease[2]->SetText(_t(">"));
+			MapIncrease[2]->SetParent(SaveWindow);
+
+			MapDecrease[0] = GetGame()->GetScene()->AddButton("button");
+			MapDecrease[0]->SetScale(16,16);
+			MapDecrease[0]->SetPos(-64,-64);
+			MapDecrease[0]->SetText(_t("<"));
+			MapDecrease[0]->SetParent(SaveWindow);
+			MapDecrease[1] = GetGame()->GetScene()->AddButton("button");
+			MapDecrease[1]->SetScale(16,16);
+			MapDecrease[1]->SetPos(-64,-82);
+			MapDecrease[1]->SetText(_t("<"));
+			MapDecrease[1]->SetParent(SaveWindow);
+			MapDecrease[2] = GetGame()->GetScene()->AddButton("button");
+			MapDecrease[2]->SetScale(16,16);
+			MapDecrease[2]->SetPos(-64,-100);
+			MapDecrease[2]->SetText(_t("<"));
+			MapDecrease[2]->SetParent(SaveWindow);
+
+			MapDim[0] = GetGame()->GetMap()->GetWidth();
+			MapDim[1] = GetGame()->GetMap()->GetHeight();
+			MapDim[2] = GetGame()->GetMap()->GetDepth();
+			std::wstringstream String;
+			String << "Width: " << MapDim[0];
+			Dimensions[0] = GetGame()->GetScene()->AddText("cousine",String.str());
+			Dimensions[0]->SetPos(0,-64);
+			Dimensions[0]->SetSize(16);
+			Dimensions[0]->SetMode(1);
+			Dimensions[0]->SetParent(SaveWindow);
+			std::wstringstream Stringh;
+			Stringh << "Height: " << MapDim[1];
+			Dimensions[1] = GetGame()->GetScene()->AddText("cousine",Stringh.str());
+			Dimensions[1]->SetPos(0,-82);
+			Dimensions[1]->SetSize(16);
+			Dimensions[1]->SetMode(1);
+			Dimensions[1]->SetParent(SaveWindow);
+			std::wstringstream Stringd;
+			Stringd << "Depth: " << MapDim[2];
+			Dimensions[2] = GetGame()->GetScene()->AddText("cousine",Stringd.str());
+			Dimensions[2]->SetPos(0,-100);
+			Dimensions[2]->SetSize(16);
+			Dimensions[2]->SetMode(1);
+			Dimensions[2]->SetParent(SaveWindow);
+			Apply = GetGame()->GetScene()->AddButton("button");
+			Apply->SetText(_t("Apply"));
+			Apply->GetText()->SetSize(14);
+			Apply->SetScale(64,16);
+			Apply->SetPos(0,-120);
+			Apply->SetParent(SaveWindow);
+			NText* TempText = GetGame()->GetScene()->AddText("cousine",_t("Map dimensions"));
+			TempText->SetMode(1);
+			TempText->SetPos(0,-34);
+			TempText->SetSize(16);
+			TempText->SetParent(SaveWindow);
+		}
+	}
+	if (SaveWindow)
+	{
+		SaveWindow->SetPos(GetGame()->GetWindowSize()/2.f);
+		if (SaveButton->OnRelease())
+		{
+			GetGame()->GetMap()->Save(ToMBS(Input->GetEnteredText()));
+		}
+		if (LoadButton->OnRelease())
+		{
+			GetGame()->GetMap()->Load(ToMBS(Input->GetEnteredText()));
+		}
+		if (Apply->OnRelease())
+		{
+			GetGame()->GetMap()->Init(MapDim[0],MapDim[1],MapDim[2]);
+		}
+		for (unsigned int i=0;i<3;i++)
+		{
+			if (MapDecrease[i]->OnRelease())
+			{
+				MapDim[i]--;
+				if (MapDim[i] < 0)
+				{
+					MapDim[i] = 0;
+				}
+				std::wstringstream Stream;
+				switch(i)
+				{
+					case 0: Stream << "Width: "; break;
+					case 1: Stream << "Height: "; break;
+					case 2: Stream << "Depth: "; break;
+				}
+				Stream << MapDim[i];
+				Dimensions[i]->SetText(Stream.str());
+			}
+			if (MapIncrease[i]->OnRelease())
+			{
+				MapDim[i]++;
+				std::wstringstream Stream;
+				switch(i)
+				{
+					case 0: Stream << "Width: "; break;
+					case 1: Stream << "Height: "; break;
+					case 2: Stream << "Depth: "; break;
+				}
+				Stream << MapDim[i];
+				Dimensions[i]->SetText(Stream.str());
+			}
+		}
+	}
 	if (GetGame()->GetInput()->KeyChanged('F') && GetGame()->GetInput()->GetKey('F'))
 	{
 		GetGame()->GetScene()->ToggleFullBright();
+		if (!Light)
+		{
+			Light = GetGame()->GetScene()->AddLight("point");
+			Light->SetScale(glm::vec3(512,512,1));
+		} else {
+			GetGame()->GetScene()->Remove(Light);
+			Light = NULL;
+		}
 	}
+	if (Light)
+	{
+		Light->SetPos(GetGame()->GetInput()->GetPerspMouse(.45));
+	}
+	if (GetGame()->GetInput()->KeyChanged(1) && GetGame()->GetInput()->GetMouseKey(1))
+	{
+		Light = GetGame()->GetScene()->AddLight("point");
+		Light->SetScale(glm::vec3(512,512,1));
+	}
+	NCamera* Camera = GetGame()->GetRender()->GetCamera();
+	Camera->SetPos(Camera->GetPos()+((WantedPosition-Camera->GetPos()))*float(DT*2.5));
 	if (GetGame()->GetInput()->KeyChanged('Q') && GetGame()->GetInput()->GetKey('Q'))
 	{
 		if (GetGame()->GetMap()->GetLevel() < GetGame()->GetMap()->GetDepth()-1)
 		{
-			Camera->SetPos(Camera->GetPos()+glm::vec3(0,0,GetGame()->GetMap()->GetTileSize()));
+			WantedPosition += glm::vec3(0,0,GetGame()->GetMap()->GetTileSize());
 		}
 	}
 	if (GetGame()->GetInput()->KeyChanged('E') && GetGame()->GetInput()->GetKey('E'))
 	{
 		if (GetGame()->GetMap()->GetLevel() > 0)
 		{
-			Camera->SetPos(Camera->GetPos()-glm::vec3(0,0,GetGame()->GetMap()->GetTileSize()));
+			WantedPosition -= glm::vec3(0,0,GetGame()->GetMap()->GetTileSize());
 		}
 	}
 	if (GetGame()->GetInput()->GetKey('W'))
 	{
-		Camera->SetPos(Camera->GetPos()+glm::vec3(0,200,0)*float(DT));
+		WantedPosition += glm::vec3(0,300,0)*float(DT);
 	}
 	if (GetGame()->GetInput()->GetKey('S'))
 	{
-		Camera->SetPos(Camera->GetPos()-glm::vec3(0,200,0)*float(DT));
+		WantedPosition -= glm::vec3(0,300,0)*float(DT);
 	}
 	if (GetGame()->GetInput()->GetKey('A'))
 	{
-		Camera->SetPos(Camera->GetPos()-glm::vec3(200,0,0)*float(DT));
+		WantedPosition -= glm::vec3(300,0,0)*float(DT);
 	}
 	if (GetGame()->GetInput()->GetKey('D'))
 	{
-		Camera->SetPos(Camera->GetPos()+glm::vec3(200,0,0)*float(DT));
+		WantedPosition += glm::vec3(300,0,0)*float(DT);
 	}
 	if (GetGame()->GetInput()->GetMouseKey(0) && !GetGame()->GetInput()->GetMouseHitGUI())
 	{
@@ -506,6 +676,7 @@ void NMapState::Tick(double DT)
 		{
 			Tile->SetID(CurrentTile);
 			Tile->SetSolid(CheckBox->IsChecked());
+			Tile->SetOpaque(OCheckBox->IsChecked());
 		}
 	}
 }

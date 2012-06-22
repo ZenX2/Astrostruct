@@ -1,6 +1,6 @@
 #include "NEngine.hpp"
 
-NButton::NButton()
+NButton::NButton(std::string i_Texture)
 {
 	BorderSize = 0;
 	Texture = NULL;
@@ -20,6 +20,13 @@ NButton::NButton()
 	PressedMemory = false;
 	TextureWidth = 0;
 	TextureHeight = 0;
+	Texture = GetGame()->GetRender()->GetTexture(i_Texture);
+	if (Texture)
+	{
+		TextureWidth = Texture->GetSize().x;
+		TextureHeight = Texture->GetSize().y;
+		BorderSize = Texture->GetFloat("BorderSize");
+	}
 }
 
 NButton::~NButton()
@@ -32,17 +39,10 @@ NButton::~NButton()
 	}
 }
 
-void NButton::SetTexture(std::string Name)
+NText* NButton::GetText()
 {
-	Texture = GetGame()->GetRender()->GetTexture(Name);
-	if (Texture)
-	{
-		TextureWidth = Texture->GetSize().x;
-		TextureHeight = Texture->GetSize().y;
-		BorderSize = Texture->GetFloat("BorderSize");
-	}
+	return DisplayText;
 }
-
 void NButton::GenerateBuffers()
 {
 	if (!Texture || !Changed)

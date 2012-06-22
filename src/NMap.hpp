@@ -54,6 +54,7 @@ public:
 	 * @param i_Solid True for solid, false for nothingness.
 	 */
 	void SetSolid(bool i_Solid);
+	void SetOpaque(bool i_Opaque);
 	/**
 	 * @brief Sets the ID of the tile and tells the map to regenerate itself.
 	 *
@@ -64,6 +65,8 @@ public:
 private:
 	bool ForceSolid;
 	bool Solid;
+	bool ForceOpaque;
+	bool Opaque;
 };
 
 /**
@@ -178,7 +181,12 @@ public:
 	 * @param Level The level we want to regenerate.
 	 */
 	void SetChanged(int Level);
+	bool Save(std::string Name);
+	bool Load(std::string Name);
+	unsigned int GetWidth();
+	unsigned int GetHeight();
 private:
+	unsigned int DepthMem;
 	float RealTileSize;
 	unsigned int ViewingLevel;
 	NShader* Shader;

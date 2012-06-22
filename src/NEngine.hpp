@@ -109,6 +109,7 @@
 #include "NLight.hpp"
 #include "NWindow.hpp"
 #include "NCheckbox.hpp"
+#include "NTextInput.hpp"
 #include "NButton.hpp"
 #include "NPlayer.hpp"
 #include "NScene.hpp"

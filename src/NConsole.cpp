@@ -63,9 +63,9 @@ void ConsoleThread(void* arg)
 		lua_State* L = GetGame()->GetLua()->GetL();
 		if (luaL_dostring(L,Line.c_str()))
 		{
-			SetColor(Yellow);
+			NTerminal::SetColor(Yellow);
 			std::cout << "LUA WARN: ";
-			ClearColor();
+			NTerminal::ClearColor();
 			std::cout << lua_tostring(L, -1) << "\n" << std::flush;
 		}
 		Line.clear();
@@ -86,9 +86,9 @@ void ConsoleThread(void* arg)
 		FD_SET(STDIN, &ReadFDS);
 		if (select(STDIN+1,&ReadFDS,NULL,NULL,&TimeOut) == -1) // Use select to ensure we don't get stuck on cin.
 		{
-			SetColor(Red);
+			NTerminal::SetColor(Red);
 			std::cout << "CONSOLE ERROR: ";
-			ClearColor();
+			NTerminal::ClearColor();
 			std::cout << "Select failed to asyncronously grab input!\n";
 			return;	
 		}
@@ -102,9 +102,9 @@ void ConsoleThread(void* arg)
 		lua_State* L = GetGame()->GetLua()->GetL();
 		if (luaL_dostring(L,Line.c_str()))
 		{
-			SetColor(Yellow);
+			NTerminal::SetColor(Yellow);
 			std::cout << "LUA WARN: ";
-			ClearColor();
+			NTerminal::ClearColor();
 			std::cout << lua_tostring(L, -1) << "\n";
 		}
 	}
@@ -116,15 +116,15 @@ NConsole::NConsole()
 	Thread = glfwCreateThread(ConsoleThread,NULL);
 	if (Thread<0)
 	{
-		SetColor(Yellow);
+		NTerminal::SetColor(Yellow);
 		std::cout << "CONSOLE WARN: ";
-		ClearColor();
+		NTerminal::ClearColor();
 		std::cout << "Failed to create thread for console input!\n";
 		return;
 	}
-	SetColor(Blue);
+	NTerminal::SetColor(Blue);
 	std::cout << "CONSOLE INFO: ";
-	ClearColor();
+	NTerminal::ClearColor();
 	std::cout << "Console is ready for input, it runs raw lua calls; type help() if you want more info!\n";
 }
 

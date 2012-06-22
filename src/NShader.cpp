@@ -65,12 +65,12 @@ bool NShader::Load(std::string VertexFilePath, std::string FragmentFilePath)
 	GLuint FragmentShaderID = glCreateShader(GL_FRAGMENT_SHADER);
 	//Read the Vertex shader into memory from the file
 	char* VertexShaderCode;
-	NFile VertexShaderStream = GetGame()->GetFileSystem()->GetFile(VertexFilePath);
+	NFile VertexShaderStream = GetGame()->GetFileSystem()->GetFile(VertexFilePath,false);
 	if (!VertexShaderStream.Good())
 	{
-		SetColor(Yellow);
+		NTerminal::SetColor(Yellow);
 		std::cout << "SHADER WARN: ";
-		ClearColor();
+		NTerminal::ClearColor();
 		std::cout << "Failed to load " << VertexFilePath << "!\n";
 		glDeleteShader(VertexShaderID);
 		glDeleteShader(FragmentShaderID);
@@ -80,12 +80,12 @@ bool NShader::Load(std::string VertexFilePath, std::string FragmentFilePath)
 	VertexShaderStream.Read(VertexShaderCode,VertexShaderStream.Size());
 	//Now do the same with the fragment shader
 	char* FragmentShaderCode;
-	NFile FragmentShaderStream = GetGame()->GetFileSystem()->GetFile(FragmentFilePath);
+	NFile FragmentShaderStream = GetGame()->GetFileSystem()->GetFile(FragmentFilePath,false);
 	if (!FragmentShaderStream.Good())
 	{
-		SetColor(Yellow);
+		NTerminal::SetColor(Yellow);
 		std::cout << "SHADER WARN: " ;
-		ClearColor();
+		NTerminal::ClearColor();
 		std::cout << "Failed to load " << FragmentFilePath << "!\n";
 		glDeleteShader(VertexShaderID);
 		glDeleteShader(FragmentShaderID);
@@ -95,9 +95,9 @@ bool NShader::Load(std::string VertexFilePath, std::string FragmentFilePath)
 	FragmentShaderStream.Read(FragmentShaderCode,FragmentShaderStream.Size());
 
 	//Now compile the vertex shader
-	SetColor(Blue);
+	NTerminal::SetColor(Blue);
 	std::cout << "SHADER INFO: ";
-	ClearColor();
+	NTerminal::ClearColor();
 	std::cout << "Compiling shader " << VertexFilePath << "\n";
 	std::string Conversion;
 	Conversion.append(VertexShaderCode,VertexShaderStream.Size());
@@ -119,13 +119,13 @@ bool NShader::Load(std::string VertexFilePath, std::string FragmentFilePath)
 		{
 			VertexShaderErrorMessage[VertexShaderErrorMessage.size()-2] = '\0';
 		}
-		SetColor(Blue);
+		NTerminal::SetColor(Blue);
 		std::cout << "SHADER INFO: ";
-		ClearColor();
+		NTerminal::ClearColor();
 		std::cout << (char*)&VertexShaderErrorMessage[0] << "\n";
-		SetColor(Yellow);
+		NTerminal::SetColor(Yellow);
 		std::cout << "SHADER WARN: ";
-		ClearColor();
+		NTerminal::ClearColor();
 		std::cout << "Failed to compile " << VertexFilePath << "\n";
 		glDeleteShader(VertexShaderID);
 		glDeleteShader(FragmentShaderID);
@@ -133,9 +133,9 @@ bool NShader::Load(std::string VertexFilePath, std::string FragmentFilePath)
 	}
 
 	//Same for the fragment shader
-	SetColor(Blue);
+	NTerminal::SetColor(Blue);
 	std::cout << "SHADER INFO: ";
-	ClearColor();
+	NTerminal::ClearColor();
 	std::cout << "Compiling shader " << FragmentFilePath << "\n";
 	Conversion.clear();
 	Conversion.append(FragmentShaderCode,FragmentShaderStream.Size());
@@ -154,13 +154,13 @@ bool NShader::Load(std::string VertexFilePath, std::string FragmentFilePath)
 		{
 			FragmentShaderErrorMessage[FragmentShaderErrorMessage.size()-2] = '\0';
 		}
-		SetColor(Blue);
+		NTerminal::SetColor(Blue);
 		std::cout << "SHADER INFO: ";
-		ClearColor();
+		NTerminal::ClearColor();
 		std::cout << (char*)&FragmentShaderErrorMessage[0] << "\n";
-		SetColor(Yellow);
+		NTerminal::SetColor(Yellow);
 		std::cout << "SHADER WARN: ";
-		ClearColor();
+		NTerminal::ClearColor();
 		std::cout << "Failed to compile " << FragmentFilePath << "\n";
 		glDeleteShader(VertexShaderID);
 		glDeleteShader(FragmentShaderID);
@@ -168,9 +168,9 @@ bool NShader::Load(std::string VertexFilePath, std::string FragmentFilePath)
 	}
 
 	//Then create and link the program
-	SetColor(Blue);
+	NTerminal::SetColor(Blue);
 	std::cout << "SHADER INFO: ";
-	ClearColor();
+	NTerminal::ClearColor();
 	std::cout << "Linking program \"" << Name << "\"\n";
 	glAttachShader(ProgramID, VertexShaderID);
 	glAttachShader(ProgramID, FragmentShaderID);
@@ -188,9 +188,9 @@ bool NShader::Load(std::string VertexFilePath, std::string FragmentFilePath)
 			ProgramErrorMessage[ProgramErrorMessage.size()-2] = '\0';
 		}
 		std::cout << &ProgramErrorMessage[0] << "\n";
-		SetColor(Yellow);
+		NTerminal::SetColor(Yellow);
 		std::cout << "SHADER WARN: ";
-		ClearColor();
+		NTerminal::ClearColor();
 		std::cout << "Failed to link program!\n";
 		glDeleteShader(VertexShaderID);
 		glDeleteShader(FragmentShaderID);

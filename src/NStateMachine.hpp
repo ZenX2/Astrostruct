@@ -137,12 +137,26 @@ public:
 	std::string GetName();
 	void Tick(double DT);
 private:
+	glm::vec3 WantedPosition;
+	bool ShowWindow;
 	NWindow* Window;
+	NWindow* SaveWindow;
+	NButton* MapIncrease[3];
+	NButton* MapDecrease[3];
+	NText* Dimensions[3];
+	unsigned int MapDim[3];
 	NButton* Increase;
 	NButton* Decrease;
+	NButton* SaveButton;
+	NButton* Apply;
+	NButton* LoadButton;
+	NTextInput* Input;
 	NCheckbox* CheckBox;
+	NCheckbox* OCheckBox;
 	NText* Text;
+	NLight* Light;
 	NText* CheckText;
+	NText* OCheckText;
 	NWindow* OtherWindow;
 	NText* ChangingText;
 	int CurrentTile;

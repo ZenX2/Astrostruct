@@ -18,15 +18,9 @@
 class NWindow : public NNode
 {
 public:
-	NWindow();
+	NWindow(std::string i_Texture);
 	~NWindow();
 	NTexture* Texture;
-	/**
-	* @brief Sets the texture that this "window" will display.
-	*
-	* @param Name The name of the texture. (not filepath!)
-	*/
-	void SetTexture(std::string Name);
 	/**
 	* @brief Draws the scaled, rotated, translated texture onto screen.
 	*

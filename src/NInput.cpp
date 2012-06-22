@@ -1,7 +1,29 @@
 #include "NEngine.hpp"
 
+void GLFWCALL NStringInput(int character, int action)
+{
+	if (action == GLFW_RELEASE)
+	{
+		return;
+	}
+	GetGame()->GetInput()->PushStringInput(character);
+}
+void GLFWCALL NKeyInput(int character, int action)
+{
+	if (action == GLFW_RELEASE)
+	{
+		return;
+	}
+	if (character == GLFW_KEY_BACKSPACE)
+	{
+		GetGame()->GetInput()->PushStringInput(character);
+	}
+}
+
 NInput::NInput()
 {
+	Focus = false;
+	HitGUI = false;
 	if (GetGame()->IsServer())
 	{
 		return;
@@ -10,6 +32,9 @@ NInput::NInput()
 	{
 		Keys[i] = false;
 	}
+	glfwSetCharCallback(NStringInput);
+	glfwSetKeyCallback(NKeyInput);
+	glfwEnable(GLFW_KEY_REPEAT);
 }
 
 void NInput::Poll()
@@ -27,21 +52,51 @@ void NInput::Poll()
 
 	MouseX += GetGame()->GetRender()->GetCamera()->GetPos().x;
 	MouseY += GetGame()->GetRender()->GetCamera()->GetPos().y;
+	if (Focus) //Make sure we can't trap focus permanently
+	{
+		if (glfwGetKey(GLFW_KEY_ESC) == GLFW_PRESS || glfwGetKey(GLFW_KEY_ENTER))
+		{
+			Focus = false;
+		}
+	} else {
+		StringInput.clear();
+	}
 }
 
-int NInput::GetKey(int Key)
+bool NInput::GetKey(int Key)
 {
-	return glfwGetKey(Key);
+	if (Focus)
+	{
+		return false;
+	}
+	if (glfwGetKey(Key) == GLFW_PRESS)
+	{
+		return true;
+	}
+	return false;
 }
 
 bool NInput::KeyChanged(int Key)
 {
+	if (Focus)
+	{
+		return false;
+	}
 	if (Key > KeyCount || Key < 0)
 	{
-		SetColor(Yellow);
+		NTerminal::SetColor(Yellow);
 		std::cout << "INPUT WARN: ";
-		ClearColor();
+		NTerminal::ClearColor();
 		std::cout << "Attempted to grab key: " << Key << ", it's out of range!\n";
+		return false;
+	}
+	if (Key<10)
+	{
+		if (Keys[Key] != GetMouseKey(Key))
+		{
+			Keys[Key] = GetMouseKey(Key);
+			return true;
+		}
 		return false;
 	}
 	if (Keys[Key] != GetKey(Key))
@@ -104,4 +159,22 @@ bool NInput::GetMouseHitGUI()
 void NInput::SetMouseHitGUI(bool Hit)
 {
 	HitGUI = Hit;
+}
+void NInput::SetFocus(bool i_Focus)
+{
+	Focus = i_Focus;
+}
+bool NInput::GetFocus()
+{
+	return Focus;
+}
+void NInput::PushStringInput(int String)
+{
+	StringInput.push_back(String);
+}
+std::vector<int> NInput::GetStringInput()
+{
+	std::vector<int> String = StringInput;
+	StringInput.clear();
+	return String;
 }

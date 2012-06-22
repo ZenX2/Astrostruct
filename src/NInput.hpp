@@ -11,6 +11,9 @@
 
 #define KeyCount 512
 
+void GLFWCALL NStringInput(int character, int action);
+void GLFWCALL NKeyInput(int character, int action);
+
 /**
 * @brief Handles grabbing input and exposing it to other parts of the engine.
 */
@@ -28,7 +31,7 @@ public:
 	*
 	* @return The key state.
 	*/
-	int GetKey(int Key);
+	bool GetKey(int Key);
 	/**
 	* @brief Returns the current X position of the mouse.
 	*
@@ -74,13 +77,19 @@ public:
 	glm::vec3 GetPerspMouse(float Inter);
 	bool GetMouseHitGUI();
 	void SetMouseHitGUI(bool Hit);
+	void SetFocus(bool i_Focus);
+	bool GetFocus();
 	NInput();
+	void PushStringInput(int String);
+	std::vector<int> GetStringInput();
 private:
+	std::vector<int> StringInput;
 	glm::vec3 AWorld,BWorld;
 	int MouseX;
 	int MouseY;
 	bool Keys[KeyCount];
 	bool HitGUI;
+	bool Focus;
 };
 
 #endif

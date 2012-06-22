@@ -4,9 +4,9 @@ NTextSystem::NTextSystem()
 {
 	if (FT_Init_FreeType(&FTLib))
 	{
-		SetColor(Yellow);
+		NTerminal::SetColor(Yellow);
 		std::cout << "FREETYPE WARN: ";
-		ClearColor();
+		NTerminal::ClearColor();
 		std::cout << "FreeType failed to initialize!\n";
 		FTLib = NULL;
 	}
@@ -90,12 +90,12 @@ bool NFace::Load(std::string File)
 	{
 		return Fail;
 	}
-	NFile MyFile = GetGame()->GetFileSystem()->GetFile(File);
+	NFile MyFile = GetGame()->GetFileSystem()->GetFile(File,false);
 	if (!MyFile.Good())
 	{
-		SetColor(Yellow);
+		NTerminal::SetColor(Yellow);
 		std::cout << "FREETYPE WARN: ";
-		ClearColor();
+		NTerminal::ClearColor();
 		std::cout << "Failed to load " << File << ", it doesn't exist!\n";
 		return Fail;
 	}
@@ -104,9 +104,9 @@ bool NFace::Load(std::string File)
 	if (FT_New_Memory_Face(FTLib,(const unsigned char*)FileData,MyFile.Size(),0,&Face))
 	{
 		delete[] FileData;
-		SetColor(Yellow);
+		NTerminal::SetColor(Yellow);
 		std::cout << "FREETYPE WARN: ";
-		ClearColor();
+		NTerminal::ClearColor();
 		std::cout << "Failed to load " << File << ", corrupt or not a freetype-compadible font!\n";
 		return Fail;
 	}
@@ -227,29 +227,43 @@ NGlyph* NFace::GetGlyph(wchar_t ID, unsigned int Size)
 
 GLuint NFace::GetTexture(unsigned int Size)
 {
+	if (Textures.size()<=Size)
+	{
+		Textures.resize(Size+1,NULL);
+	}
+	if (Textures[Size] == NULL)
+	{
+		Textures[Size] = new NTextureAtlas(Face,Size);
+	}
 	return Textures[Size]->GetTexture();
 }
 
 NText::NText(std::string i_Face, std::wstring i_Data) : NNode()
 {
+	Multiline = true;
 	Persp = false;
 	Face = GetGame()->GetTextSystem()->GetFace(i_Face);
-	Shader = GetGame()->GetRender()->GetShader("text");
 	Data = i_Data;
 	Changed = true;
-	Buffers = new GLuint[2];
-	glGenBuffers(2,Buffers);
+	glGenBuffers(3,Buffers);
 	Size = 32;
 	Width = 0;
 	Mode = 0;
 	Velocity = glm::vec2(Rand(-10,10),Rand(-10,10));
 	W = 0;
 	H = 0;
+	Shader = GetGame()->GetRender()->GetShader("text");
 	if (Shader != NULL)
 	{
 		TextureLoc = Shader->GetUniformLocation("Texture");
 		MatrixLoc = Shader->GetUniformLocation("MVP");
 		ColorLoc = Shader->GetUniformLocation("Color");
+	}
+	MaskShader = GetGame()->GetRender()->GetShader("flat_textureless");
+	if (MaskShader != NULL)
+	{
+		MMatrixLoc = Shader->GetUniformLocation("MVP");
+		MColorLoc = Shader->GetUniformLocation("Color");
 	}
 }
 
@@ -291,14 +305,69 @@ void NText::GenerateBuffers()
 	}
 	Verts.clear();
 	UVs.clear();
+	std::vector<glm::vec2> Word;
+	std::vector<glm::vec2> UVWord;
 	float PenX = 0;
 	float PenY = 0;
+	if (!Multiline)
+	{
+		float Offset = 0;
+		for (unsigned int i=0;i<Data.size();i++)
+		{
+			NGlyph* Glyph = Face->GetGlyph(Data[i],Size);
+			if (Glyph == NULL)
+			{
+				continue;
+			}
+			Offset += Glyph->AdvanceX;
+		}
+		Offset -= W;
+		if (Offset > 0)
+		{
+			PenX -= Offset;
+		}
+	}
+	Width = 0;
+	if (Mode == 1 || Mode == 2)
+	{
+		for (unsigned int i=0;i<Data.size();i++)
+		{
+			NGlyph* Glyph = Face->GetGlyph(Data[i],Size);
+			if (Glyph == NULL)
+			{
+				continue;
+			}
+			Width += Glyph->AdvanceX;
+		}
+	}
 	for (unsigned int i=0;i<Data.size();i++)
 	{
 		NGlyph* Glyph = Face->GetGlyph(Data[i],Size);
 		if (Glyph == NULL)
 		{
 			continue;
+		}
+		if (Data[i] == ' ' && W != 0)
+		{
+			float TempX = PenX;
+			for (unsigned int o=i+1;o<Data.size();o++)
+			{
+				NGlyph* GlyphCheck = Face->GetGlyph(Data[o],Size);
+				TempX += GlyphCheck->AdvanceX;
+				if (Data[o] == ' ')
+				{
+					break;
+				}
+			}
+			if (TempX > W)
+			{
+				if (Multiline)
+				{
+					PenX = 0;
+					PenY -= Size;
+				}
+				continue;
+			}
 		}
 		float X = Glyph->BitmapWidth;
 		float Y = Glyph->BitmapHeight;
@@ -322,15 +391,18 @@ void NText::GenerateBuffers()
 				break;
 			}
 		}
-		if (PenX+Glyph->AdvanceX > W && W != 0)
+		if (Multiline)
 		{
-			PenX = 0;
-			PenY -= Size;
+			if (W != 0 && PenX+Glyph->AdvanceX > W )
+			{
+					PenX = 0;
+					PenY -= Size;
+			}
 		}
-		Verts.push_back(glm::vec2(XOff+PenX,PenY+YOff));
-		Verts.push_back(glm::vec2(XOff+PenX+X,PenY+YOff));
-		Verts.push_back(glm::vec2(XOff+PenX+X,PenY+Y+YOff));
-		Verts.push_back(glm::vec2(XOff+PenX,PenY+Y+YOff));
+		Verts.push_back(glm::vec2(PenX+XOff,PenY+YOff));
+		Verts.push_back(glm::vec2(PenX+XOff+X,PenY+YOff));
+		Verts.push_back(glm::vec2(PenX+XOff+X,Y+PenY+YOff));
+		Verts.push_back(glm::vec2(PenX+XOff,Y+PenY+YOff));
 
 		glm::vec4 UV = Glyph->TextureRect;
 		UVs.push_back(glm::vec2(UV.x,UV.y+UV.w));
@@ -339,16 +411,18 @@ void NText::GenerateBuffers()
 		UVs.push_back(glm::vec2(UV.x,UV.y));
 		PenX += Glyph->AdvanceX;
 	}
+	Mask.push_back(glm::vec2(0,Size/2.f));
+	Mask.push_back(glm::vec2(W,Size/2.f));
+	Mask.push_back(glm::vec2(W,-H+Size));
+	Mask.push_back(glm::vec2(0,-H+Size));
 	Changed = false;
-	if (Width == 0 && Mode != 0)
-	{
-		Changed = true;
-	}
 	Width = PenX;
 	glBindBuffer(GL_ARRAY_BUFFER,Buffers[0]);
 	glBufferData(GL_ARRAY_BUFFER,Verts.size()*sizeof(glm::vec2),&Verts[0],GL_STATIC_DRAW);
 	glBindBuffer(GL_ARRAY_BUFFER,Buffers[1]);
 	glBufferData(GL_ARRAY_BUFFER,UVs.size()*sizeof(glm::vec2),&UVs[0],GL_STATIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER,Buffers[2]);
+	glBufferData(GL_ARRAY_BUFFER,Mask.size()*sizeof(glm::vec2),&Mask[0],GL_STATIC_DRAW);
 	Face->UpdateMipmaps();
 }
 
@@ -357,8 +431,67 @@ void NText::SetMode(int i_Mode)
 	Mode = i_Mode;
 	Changed = true;
 }
-
 void NText::Draw(NCamera* View)
+{
+	if (W<=0)
+	{
+		DrawText(View);
+		return;
+	}
+	glClear(GL_STENCIL_BUFFER_BIT);
+	glEnable(GL_STENCIL_TEST);
+	glStencilFunc(GL_ALWAYS,0x1,0x1);
+	glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
+	DrawMask(View);
+	glStencilFunc(GL_EQUAL,0x1,0x1);
+	glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+	DrawText(View);
+	glDisable(GL_STENCIL_TEST);
+}
+
+void NText::DrawMask(NCamera* View)
+{
+	if (GetColor().w == 0)
+	{
+		return;
+	}
+	GenerateBuffers();
+	if (MaskShader == NULL)
+	{
+		glEnableClientState(GL_VERTEX_ARRAY);
+		glBindBuffer(GL_ARRAY_BUFFER,Buffers[2]);
+		glVertexPointer(2,GL_FLOAT,0,NULL);
+
+		glMatrixMode(GL_PROJECTION);
+		glLoadMatrixf(&View->GetPerspMatrix()[0][0]);
+		glMatrixMode(GL_MODELVIEW);
+		glm::mat4 MVP = View->GetViewMatrix();
+		glLoadMatrixf(&MVP[0][0]);
+
+		glColor4f(1,1,1,1);
+		glDrawArrays(GL_QUADS,0,Mask.size());
+
+		glDisableClientState(GL_VERTEX_ARRAY);
+		return;
+	}
+	glUseProgram(MaskShader->GetID());
+	glm::mat4 MVP = View->GetOrthoMatrix()*View->GetViewMatrix()*GetModelMatrix();
+	glUniformMatrix4fv(MMatrixLoc,1,GL_FALSE,&MVP[0][0]);
+	glUniform4f(MColorLoc,0,0,0,0);
+	glEnableVertexAttribArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER,Buffers[2]);
+	glVertexAttribPointer(0,2,GL_FLOAT,GL_FALSE,0,NULL);
+	
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glDrawArrays(GL_QUADS,0,Mask.size());
+	glDisable(GL_BLEND);
+
+	glDisableVertexAttribArray(0);
+	glUseProgram(0);
+}
+
+void NText::DrawText(NCamera* View)
 {
 	if (Face == NULL || GetColor().w == 0)
 	{
@@ -429,8 +562,7 @@ void NText::Draw(NCamera* View)
 
 NText::~NText()
 {
-	glDeleteBuffers(2,Buffers);
-	delete[] Buffers;
+	glDeleteBuffers(3,Buffers);
 }
 
 NGlyph::~NGlyph()
@@ -560,4 +692,12 @@ NTextureNode::~NTextureNode()
 std::string NText::GetType()
 {
 	return "Text";
+}
+void NText::SetMultiline(bool i_Multiline)
+{
+	Multiline = i_Multiline;
+}
+bool NText::GetMultiline()
+{
+	return Multiline;
 }

@@ -1,6 +1,6 @@
 #include "NEngine.hpp"
 
-NWindow::NWindow()
+NWindow::NWindow(std::string i_Texture)
 {
 	SizeMem = glm::vec3(0);
 	Texture = NULL;
@@ -14,6 +14,11 @@ NWindow::NWindow()
 		TextureLoc = Shader->GetUniformLocation("Texture");
 		ColorLoc = Shader->GetUniformLocation("Color");
 	}
+	Texture = GetGame()->GetRender()->GetTexture(i_Texture);
+	if (Texture)
+	{
+		BorderSize = Texture->GetFloat("BorderSize");
+	}
 }
 
 NWindow::~NWindow()
@@ -25,16 +30,6 @@ NWindow::~NWindow()
 		delete Texture;
 	}
 }
-
-void NWindow::SetTexture(std::string Name)
-{
-	Texture = GetGame()->GetRender()->GetTexture(Name);
-	if (Texture)
-	{
-		BorderSize = Texture->GetFloat("BorderSize");
-	}
-}
-
 void NWindow::GenerateBuffers()
 {
 	if (!Texture)

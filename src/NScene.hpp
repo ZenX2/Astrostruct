@@ -46,13 +46,13 @@ public:
 	 *
 	 * @return A pointer to the new window.
 	 */
-	NWindow* AddWindow();
+	NWindow* AddWindow(std::string Texture);
 	/**
 	 * @brief Adds a button to the scene.
 	 *
 	 * @return A pointer to the new button.
 	 */
-	NButton* AddButton();
+	NButton* AddButton(std::string Texture);
 	/**
 	 * @brief Adds a sound to the scene.
 	 *
@@ -91,6 +91,7 @@ public:
 	NLight* AddLight(std::string Texture);
 	NPlayer* AddPlayer(std::string Name);
 	NCheckbox* AddCheckbox(std::string Texture);
+	NTextInput* AddTextInput(std::string Texture);
 	std::vector<NNode*>* GetWorld();
 	NNode* GetNodeByID(unsigned int ID);
 	void RemoveByID(unsigned int ID);

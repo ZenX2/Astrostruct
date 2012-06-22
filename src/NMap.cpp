@@ -2,6 +2,7 @@
 
 NMap::NMap(std::string i_TileSet)
 {
+	DepthMem = 0;
 	Ready = false;
 	RealTileSize = 64;
 	Width = Height = Depth = 0;
@@ -64,6 +65,7 @@ NMap::~NMap()
 }
 void NMap::Init(unsigned int i_Width, unsigned int i_Height, unsigned int i_Depth)
 {
+	DepthMem = 0;
 	Width = i_Width;
 	Height = i_Height;
 	Depth = i_Depth;
@@ -76,6 +78,10 @@ void NMap::Init(unsigned int i_Width, unsigned int i_Height, unsigned int i_Dept
 	Outline.clear();
 	Tiles.clear();
 	Changed.resize(Depth,true);
+	for (unsigned int i=0;i<Buffers.size();i++)
+	{
+		delete[] Buffers[i];
+	}
 	Buffers.resize(Depth,NULL);
 	std::vector<glm::vec3> Foo2;
 	Verts.resize(Depth, Foo2);
@@ -84,14 +90,6 @@ void NMap::Init(unsigned int i_Width, unsigned int i_Height, unsigned int i_Dept
 	BoxUVs.resize(Depth, Bar);
 	Outline.resize(Depth,Foo2);
 	BoxVerts.resize(Depth,Foo2);
-	if (!GetGame()->IsServer())
-	{
-		for (unsigned int i=0;i<Depth;i++)
-		{
-			Buffers[i] = new GLuint[6];
-			glGenBuffers(5,Buffers[i]);
-		}
-	}
 	std::vector<std::vector<NTile* > > Foo;
 	Tiles.resize(Width,Foo);
 	for (unsigned int i=0;i<Width;i++)
@@ -130,6 +128,7 @@ void NMap::FixUp()
 				{
 					Tiles[x][y][z+1]->ID = Tile->ID;
 					Tiles[x][y][z+1]->SetSolid(false);
+					Tiles[x][y][z+1]->SetOpaque(false);
 				}
 			}
 		}
@@ -208,6 +207,15 @@ void NMap::GenerateBuffers()
 	if (!Texture || !Ready)
 	{
 		return;
+	}
+	if (DepthMem != Depth)
+	{
+		for (unsigned int i=0;i<Depth;i++)
+		{
+			Buffers[i] = new GLuint[6];
+			glGenBuffers(5,Buffers[i]);
+		}
+		DepthMem = Depth;
 	}
 	for (int i=ViewingLevel;i>=0;i--)
 	{
@@ -437,7 +445,7 @@ void NMap::Tick(double DT)
 		{
 			Texture->Tick(DT);
 		}
-		int Level = (GetGame()->GetRender()->GetCamera()->GetPos().z-500)/TileSize;
+		int Level = round((GetGame()->GetRender()->GetCamera()->GetPos().z-500)/TileSize);
 		ViewLevel(Level);
 	}
 }
@@ -463,6 +471,8 @@ NTile::NTile(unsigned int x, unsigned int y, unsigned int z)
 	ID = rand()%3;
 	Solid = false;
 	ForceSolid = false;
+	Opaque = false;
+	ForceOpaque = false;
 	X = x;
 	Y = y;
 	Z = z;
@@ -472,6 +482,8 @@ NTile::NTile(unsigned int i_ID)
 	ID = i_ID; 
 	Solid = false;
 	ForceSolid = false;
+	Opaque = false;
+	ForceOpaque = false;
 	X = 0;
 	Y = 0;
 	Z = 0;
@@ -488,6 +500,11 @@ void NTile::SetSolid(bool i_Solid)
 {
 	ForceSolid = true;
 	Solid = i_Solid;
+}
+void NTile::SetOpaque(bool i_Opaque)
+{
+	ForceOpaque = true;
+	Opaque = i_Opaque;
 }
 bool NTile::IsSolid()
 {
@@ -508,9 +525,9 @@ bool NTile::IsSolid()
 
 bool NTile::IsOpaque()
 {
-	if (ForceSolid)
+	if (ForceOpaque)
 	{
-		if (Solid)
+		if (Opaque)
 		{
 			return true;
 		}
@@ -535,4 +552,84 @@ bool NTile::IsOpenSpace()
 std::string NMap::GetType()
 {
 	return "Map";
+}
+
+bool NMap::Save(std::string Name)
+{
+	NFile File = GetGame()->GetFileSystem()->GetFile("maps/"+Name+".map", true);
+	if (!File.Good())
+	{
+		NTerminal::SetColor(Red);
+		std::cout << "MAP ERROR: ";
+		NTerminal::ClearColor();
+		std::cout << "Failed to save map maps/" << Name << ".map!\n";
+		return Fail;
+	}
+	File.Write(&Width,sizeof(unsigned int));
+	File.Write(&Height,sizeof(unsigned int));
+	File.Write(&Depth,sizeof(unsigned int));
+	for (unsigned int x=0;x<Width;x++)
+	{
+		for (unsigned int y=0;y<Height;y++)
+		{
+			for (unsigned int z=0;z<Depth;z++)
+			{
+				File.Write(&(Tiles[x][y][z]->ID),sizeof(unsigned int));
+				bool Solid = Tiles[x][y][z]->IsSolid();
+				File.Write(&(Solid),sizeof(bool));
+				bool Opaque = Tiles[x][y][z]->IsOpaque();
+				File.Write(&(Opaque),sizeof(bool));
+			}
+		}
+	}
+	NTerminal::SetColor(Blue);
+	std::cout << "MAP INFO: ";
+	NTerminal::ClearColor();
+	std::cout << "Successfully saved map maps/" << Name << ".map.\n";
+	return Success;
+}
+
+bool NMap::Load(std::string Name)
+{
+	NFile File = GetGame()->GetFileSystem()->GetFile("maps/"+Name+".map",false);
+	if (!File.Good())
+	{
+		NTerminal::SetColor(Red);
+		std::cout << "MAP ERROR: ";
+		NTerminal::ClearColor();
+		std::cout << "Failed to load map maps/" << Name << ".map!\n";
+		return Fail;
+	}
+	File.Read(&Width,sizeof(unsigned int));
+	File.Read(&Height,sizeof(unsigned int));
+	File.Read(&Depth,sizeof(unsigned int));
+	Init(Width,Height,Depth);
+	for (unsigned int x=0;x<Width;x++)
+	{
+		for (unsigned int y=0;y<Height;y++)
+		{
+			for (unsigned int z=0;z<Depth;z++)
+			{
+				File.Read(&(Tiles[x][y][z]->ID),sizeof(unsigned int));
+				bool Solid;
+				File.Read(&Solid,sizeof(bool));
+				Tiles[x][y][z]->SetSolid(Solid);
+				bool Opaque;
+				File.Read(&(Opaque),sizeof(bool));
+			}
+		}
+	}
+	NTerminal::SetColor(Blue);
+	std::cout << "MAP INFO: ";
+	NTerminal::ClearColor();
+	std::cout << "Successfully loaded map maps/" << Name << ".map.\n";
+	return Success;
+}
+unsigned int NMap::GetWidth()
+{
+	return Width;
+}
+unsigned int NMap::GetHeight()
+{
+	return Height;
 }

@@ -8,6 +8,8 @@
 #ifndef NAELSTROF_LUA
 #define NAELSTROF_LUA
 
+int MapLoad(lua_State* L);
+int MapSave(lua_State* L);
 /**
 * @brief Used in lua to include other files.
 *

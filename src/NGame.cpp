@@ -11,9 +11,9 @@ NGame::NGame()
 
 NGame::~NGame()
 {
-	SetColor(Blue);
+	NTerminal::SetColor(Blue);
 	std::cout << "ENGINE INFO: ";
-	ClearColor();
+	NTerminal::ClearColor();
 	std::cout << "Shutting down...\n";
 	delete SignalInterceptor;
 	delete FileSystem;
@@ -51,9 +51,9 @@ bool NGame::Init(int i_Width, int i_Height, std::string Title, int argc, char** 
 		SignalInterceptor = new NSignalInterceptor();
 		if (!glfwInit())
 		{
-			SetColor(Red);
+			NTerminal::SetColor(Red);
 			std::cout << "ENGINE ERROR: ";
-			ClearColor();
+			NTerminal::ClearColor();
 			std::cout << "GLFW failed to initialize!\n";
 			return Fail;
 		}
@@ -78,9 +78,9 @@ bool NGame::Init(int i_Width, int i_Height, std::string Title, int argc, char** 
 	Height = i_Height;
 	if (!glfwInit())
 	{
-		SetColor(Red);
+		NTerminal::SetColor(Red);
 		std::cout << "ENGINE ERROR: ";
-		ClearColor();
+		NTerminal::ClearColor();
 		std::cout << "GLFW failed to initialize!\n";
 		return Fail;
 	}
@@ -107,9 +107,9 @@ bool NGame::Init(int i_Width, int i_Height, std::string Title, int argc, char** 
 	}
 	if (!Check)
 	{
-		SetColor(Red);
+		NTerminal::SetColor(Red);
 		std::cout << "ENGINE ERROR: ";
-		ClearColor();
+		NTerminal::ClearColor();
 		std::cout << "GLFW failed to open a window!\n";
 		glfwTerminate();
 		return Fail;
@@ -117,9 +117,9 @@ bool NGame::Init(int i_Width, int i_Height, std::string Title, int argc, char** 
 	glfwSetWindowTitle(Title.c_str());
 	if (glewInit() != GLEW_OK)
 	{
-		SetColor(Red);
+		NTerminal::SetColor(Red);
 		std::cout << "ENGINE ERROR: ";
-		ClearColor();
+		NTerminal::ClearColor();
 		std::cout << "GLEW failed to initialize!\n";
 		glfwTerminate();
 		return Fail;
@@ -191,9 +191,9 @@ void NGame::Poll()
 	//If the window closes, end the game!
 	if (!glfwGetWindowParam(GLFW_OPENED))
 	{
-		SetColor(Blue);
+		NTerminal::SetColor(Blue);
 		std::cout << "ENGINE INFO: ";
-		ClearColor();
+		NTerminal::ClearColor();
 		std::cout << "Game window was closed!\n" << std::flush;
 		Close();
 		return;

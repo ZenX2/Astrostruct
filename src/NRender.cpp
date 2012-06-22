@@ -110,7 +110,16 @@ void NRender::GenerateFramebuffer()
 	glRenderbufferStorage(GL_RENDERBUFFER,GL_DEPTH_COMPONENT,GetGame()->GetWindowWidth(),GetGame()->GetWindowHeight());
 	glFramebufferRenderbuffer(GL_FRAMEBUFFER,GL_DEPTH_ATTACHMENT,GL_RENDERBUFFER,DepthBuffer);
 	glFramebufferTexture(GL_FRAMEBUFFER,GL_COLOR_ATTACHMENT0,FTexture,0);
+	glGenRenderbuffers(1,&StencilBuffer);
+	glBindRenderbuffer(GL_RENDERBUFFER,StencilBuffer);
+	glRenderbufferStorage(GL_RENDERBUFFER,GL_DEPTH_STENCIL,GetGame()->GetWindowWidth(),GetGame()->GetWindowHeight());
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER,GL_DEPTH_ATTACHMENT,GL_RENDERBUFFER,StencilBuffer);
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER,GL_STENCIL_ATTACHMENT,GL_RENDERBUFFER,StencilBuffer);
+
 	CheckFramebuffer();
+	glClearColor(1,1,1,1);
+	glClearStencil(0);
+	glClear(GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 	glBindTexture(GL_TEXTURE_2D, 0);
 	glBindFramebuffer(GL_FRAMEBUFFER,0);
 	//Now create the vertex buffers to draw the quad to the screen.
@@ -332,9 +341,9 @@ void NRender::glError()
 			case GL_INVALID_FRAMEBUFFER_OPERATION: 	ErrorString = "GL_INVALID_FRAMEBUFFER_OPERATION"; break;
 			default: 								ErrorString = "UNKOWN_ERROR"; break;
 		}
-		SetColor(Yellow);
+		NTerminal::SetColor(Yellow);
 		std::cout << "RENDER WARN: ";
-		ClearColor();
+		NTerminal::ClearColor();
 		std::cout << "OpenGL reported an error: " << ErrorString << ".\n";
 		Error = glGetError();
 	}
@@ -414,12 +423,12 @@ NCachedTexture::NCachedTexture(std::string i_Name)
 	Height = 0;
 	Name = i_Name;
 	int Channels;
-	NFile File = GetGame()->GetFileSystem()->GetFile(Name);
+	NFile File = GetGame()->GetFileSystem()->GetFile(Name,false);
 	if (!File.Good())
 	{
-		SetColor(Yellow);
+		NTerminal::SetColor(Yellow);
 		std::cout << "TEXTURE WARN: ";
-		ClearColor();
+		NTerminal::ClearColor();
 		std::cout << "Couldn't load " << Name << " as a texture, it doesn't exist!\n";
 		return;
 	}
@@ -491,9 +500,9 @@ NTexture* NRender::GetTexture(std::string Name)
 		{
 			if (!Textures[i]->Good())
 			{
-				SetColor(Yellow);
+				NTerminal::SetColor(Yellow);
 				std::cout << "RENDER WARN: ";
-				ClearColor();
+				NTerminal::ClearColor();
 				std::cout << "A bad texture was attempted to be loaded: " << Name << "!\n";
 				return NULL;
 			}
@@ -501,9 +510,9 @@ NTexture* NRender::GetTexture(std::string Name)
 			return NewTexture;
 		}
 	}
-	SetColor(Yellow);
+	NTerminal::SetColor(Yellow);
 	std::cout << "RENDER WARN: ";
-	ClearColor();
+	NTerminal::ClearColor();
 	std::cout << "An unkown texture was attempted to be loaded: " << Name << "\n";
 	return NULL;
 }
@@ -552,9 +561,9 @@ void NRender::CheckFramebuffer()
 	{
 		return;
 	}
-	SetColor(Red);
+	NTerminal::SetColor(Red);
 	std::cout << "OPENGL ERROR: ";
-	ClearColor();
+	NTerminal::ClearColor();
 	switch (Check)
 	{
 		case GL_FRAMEBUFFER_UNDEFINED:

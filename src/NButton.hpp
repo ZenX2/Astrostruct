@@ -19,15 +19,9 @@
 class NButton : public NNode
 {
 public:
-	NButton();
+	NButton(std::string i_Texture);
 	~NButton();
 	NTexture* Texture;
-	/**
-	* @brief Sets the desired texture of this button.
-	*
-	* @param Name The name of the texture. (Not the file path!).
-	*/
-	void SetTexture(std::string Name);
 	/**
 	* @brief Draws the button.
 	*
@@ -74,6 +68,7 @@ public:
 	 * @return "Button".
 	 */
 	std::string GetType();
+	NText* GetText();
 private:
 	unsigned int TextureWidth, TextureHeight;
 	bool PressedMemory;

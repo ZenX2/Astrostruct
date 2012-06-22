@@ -28,4 +28,5 @@ main_SOURCES = src/main.cpp \
 			   src/NText.cpp \
 			   src/NTexture.cpp \
 			   src/NUnicode.cpp \
-			   src/NWindow.cpp
+			   src/NWindow.cpp \
+			   src/NTextInput.cpp

@@ -256,7 +256,12 @@ public:
 	 * @brief Toggles the view from orthographic to perspective, useful for rendering text in world space.
 	 */
 	void SwapView();
+	void SetMultiline(bool i_Multiline);
+	bool GetMultiline();
 private:
+	bool Multiline;
+	void DrawText(NCamera* View);
+	void DrawMask(NCamera* View);
 	glm::vec2 Velocity;
 	float W,H;
 	int Mode;
@@ -267,13 +272,16 @@ private:
 	*/
 	void GenerateBuffers();
 	NShader* Shader;
+	NShader* MaskShader;
 	NFace* Face;
 	std::wstring Data;
 	std::vector<glm::vec2> Verts;
 	std::vector<glm::vec2> UVs;
+	std::vector<glm::vec2> Mask;
 	bool Changed;
-	GLuint* Buffers;
-	GLuint ColorLoc,TextureLoc,MatrixLoc,ScreenLoc;
+	GLuint Buffers[3];
+	GLuint ColorLoc,TextureLoc,MatrixLoc;
+	GLuint MColorLoc,MMatrixLoc;
 	bool Persp;
 };
 

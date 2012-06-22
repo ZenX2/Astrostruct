@@ -80,7 +80,7 @@ am_main_OBJECTS = src/main.$(OBJEXT) src/NButton.$(OBJEXT) \
 	src/NSignal.$(OBJEXT) src/NSound.$(OBJEXT) \
 	src/NStateMachine.$(OBJEXT) src/NText.$(OBJEXT) \
 	src/NTexture.$(OBJEXT) src/NUnicode.$(OBJEXT) \
-	src/NWindow.$(OBJEXT)
+	src/NWindow.$(OBJEXT) src/NTextInput.$(OBJEXT)
 main_OBJECTS = $(am_main_OBJECTS)
 main_LDADD = $(LDADD)
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)/src
@@ -233,7 +233,8 @@ main_SOURCES = src/main.cpp \
 			   src/NText.cpp \
 			   src/NTexture.cpp \
 			   src/NUnicode.cpp \
-			   src/NWindow.cpp
+			   src/NWindow.cpp \
+			   src/NTextInput.cpp
 
 all: all-am
 
@@ -386,6 +387,8 @@ src/NUnicode.$(OBJEXT): src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
 src/NWindow.$(OBJEXT): src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
+src/NTextInput.$(OBJEXT): src/$(am__dirstamp) \
+	src/$(DEPDIR)/$(am__dirstamp)
 main$(EXEEXT): $(main_OBJECTS) $(main_DEPENDENCIES) $(EXTRA_main_DEPENDENCIES) 
 	@rm -f main$(EXEEXT)
 	$(CXXLINK) $(main_OBJECTS) $(main_LDADD) $(LIBS)
@@ -417,6 +420,7 @@ mostlyclean-compile:
 	-rm -f src/NSound.$(OBJEXT)
 	-rm -f src/NStateMachine.$(OBJEXT)
 	-rm -f src/NText.$(OBJEXT)
+	-rm -f src/NTextInput.$(OBJEXT)
 	-rm -f src/NTexture.$(OBJEXT)
 	-rm -f src/NUnicode.$(OBJEXT)
 	-rm -f src/NWindow.$(OBJEXT)
@@ -450,6 +454,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/NSound.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/NStateMachine.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/NText.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/NTextInput.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/NTexture.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/NUnicode.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/NWindow.Po@am__quote@

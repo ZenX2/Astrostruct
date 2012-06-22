@@ -86,9 +86,9 @@ void NTexture::Play(std::string i_Name)
 			return;
 		}
 	}
-	SetColor(Yellow);
+	NTerminal::SetColor(Yellow);
 	std::cout << "TEXTURE WARN: ";
-	ClearColor();
+	NTerminal::ClearColor();
 	std::cout << "Animation " << i_Name << " not found in texture " << Name << "\n";
 }
 
@@ -140,9 +140,9 @@ float NAnimation::GetFloat(std::string i_Name)
 	lua_getfield(L,-1,i_Name.c_str());
 	if (!lua_isnumber(L,-1))
 	{
-		SetColor(Yellow);
+		NTerminal::SetColor(Yellow);
 		std::cout << "LUA WARN: ";
-		ClearColor();
+		NTerminal::ClearColor();
 		std::cout << "Tried to use variable " << i_Name << " as a number (It's not a number or doesn't exist!).\n";
 		lua_pop(L,2);
 		return 0;
@@ -158,9 +158,9 @@ std::string NAnimation::GetString(std::string i_Name)
 	lua_getfield(L,-1,i_Name.c_str());
 	if (!lua_isstring(L,-1))
 	{
-		SetColor(Yellow);
+		NTerminal::SetColor(Yellow);
 		std::cout << "LUA WARN: ";
-		ClearColor();
+		NTerminal::ClearColor();
 		std::cout << "Tried to use variable " << i_Name << " as a string (It's not a string or doesn't exist!).\n";
 		lua_pop(L,2);
 		return "NULL";

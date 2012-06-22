@@ -98,11 +98,11 @@ public:
 	 * @brief Draws a textured quad to screen with the FBO.
 	 */
 	void Draw();
-private:
 	/**
 	 * @brief Regenerates our FBO when the screen changes size for us.
 	 */
 	void CheckFBO();
+private:
 	NShader* Shader;
 	GLuint TextureLoc;
 	GLuint VertexBuffers[2];

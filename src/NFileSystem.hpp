@@ -18,8 +18,9 @@ public:
 	 * @brief Attempts to open a file handle to the specified file, use Good() to figure out if it succeeded or not.
 	 *
 	 * @param i_File The path to the file.
+	 * @param Writing if we want to write to the file or not.
 	 */
-	NFile(std::string i_File);
+	NFile(std::string i_File, bool Writing);
 	~NFile();
 	/**
 	 * @brief Returns the size in bytes of the file.
@@ -35,7 +36,8 @@ public:
 	 *
 	 * @return The amount of bytes successfully read into the buffer.
 	 */
-	unsigned int Read(void* Buffer, unsigned int Size);
+	int Read(void* Buffer, unsigned int Size);
+	int Write(void* Buffer, unsigned int Size);
 	/**
 	 * @brief Sets the current read position to the origin+Pos of the file.
 	 *
@@ -50,8 +52,11 @@ public:
 	bool Good();
 private:
 	PHYSFS_file* File;
+	std::string FileName;
 	bool Exists;
 	bool Eof;
+	bool Writeable;
+	bool Writing;
 };
 
 /**
@@ -82,7 +87,7 @@ public:
 	 *
 	 * @return A file handle to the file.
 	 */
-	NFile GetFile(std::string File);
+	NFile GetFile(std::string File, bool Writable);
 };
 
 #endif

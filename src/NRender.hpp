@@ -210,7 +210,7 @@ private:
 	GLuint VertexBuffers[2];
 	std::vector<glm::vec2> Verts;
 	std::vector<glm::vec2> UVs;
-	GLuint FrameBuffer, FTexture, DepthBuffer;
+	GLuint FrameBuffer, FTexture, DepthBuffer, StencilBuffer;
 	void glError();
 	glm::vec2 Size;
 	double FrameTime;

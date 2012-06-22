@@ -253,9 +253,9 @@ void NPacket::Merge()
 			Player->SetControl();
 			GetGame()->GetPacketHandler()->SetPlayer(Player);
 		}
-		SetColor(Blue);
+		NTerminal::SetColor(Blue);
 		std::cout << "PACKET INFO: ";
-		ClearColor();
+		NTerminal::ClearColor();
 		std::cout << Player->GetName() << " has joined the game!\n";
 	}
 	for (unsigned int i=0;i<DisconnectPlayerCount;i++)
@@ -288,9 +288,9 @@ void NPacket::Merge()
 	}
 	for (unsigned int i=0;i<IntroductionCount;i++)
 	{
-		SetColor(Blue);
+		NTerminal::SetColor(Blue);
 		std::cout << "PACKET INFO: ";
-		ClearColor();
+		NTerminal::ClearColor();
 		std::cout << Introductions[i].Name << " has joined the game!\n";
 		NPlayer* Player = GetGame()->GetScene()->AddPlayer(std::string(Introductions[i].Name));
 		Player->SetID(GetGame()->GetPacketHandler()->GetActivePlayers()->size()+1);
@@ -306,17 +306,17 @@ void NPacket::Merge()
 		{
 			case '0':
 			{
-				SetColor(Blue);
+				NTerminal::SetColor(Blue);
 				std::cout << "SERVER INFO: ";
-				ClearColor();
+				NTerminal::ClearColor();
 				std::cout << "Server accepted our introduction!\n";
 				break;
 			}
 			default:
 			{
-				SetColor(Red);
+				NTerminal::SetColor(Red);
 				std::cout << "SERVER ERROR: ";
-				ClearColor();
+				NTerminal::ClearColor();
 				std::cout << "Recieved an unkown response from the server! Packet could be garbled or someone's out of date!\n";
 				break;
 			}

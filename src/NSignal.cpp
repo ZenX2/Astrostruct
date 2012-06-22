@@ -6,52 +6,52 @@ void SignalHandler(int Signal)
 	{
 		case SIGSEGV:
 		{
-			SetColor(Red);
+			NTerminal::SetColor(Red);
 			std::cout << "SIGNAL ERROR: ";
-			ClearColor();
+			NTerminal::ClearColor();
 			std::cout << "Recieved signal " << SignalToString(Signal) << ": please use valgrind to get some debug info and send bug reports!\n";
 			exit(1);
 			break;
 		}
 		case SIGFPE:
 		{
-			SetColor(Yellow);
+			NTerminal::SetColor(Yellow);
 			std::cout << "SIGNAL WARN: ";
-			ClearColor();
+			NTerminal::ClearColor();
 			std::cout << "Recieved signal " << SignalToString(Signal) << ": aw damn we divided by zero or something dumb like that. Not sure how well things will run from here!\n";
 			break;
 		}
 		case SIGILL:
 		{
-			SetColor(Yellow);
+			NTerminal::SetColor(Yellow);
 			std::cout << "SIGNAL WARN: ";
-			ClearColor();
+			NTerminal::ClearColor();
 			std::cout << "Recieved signal " << SignalToString(Signal) << ": uh oh, this could be due to code corruption or memory corruption. Or we could be attempting to execute raw data. Not sure how well things will run from here!\n";
 			break;
 		}
 		case SIGABRT:
 		{
-			SetColor(Red);
+			NTerminal::SetColor(Red);
 			std::cout << "SIGNAL ERROR: ";
-			ClearColor();
+			NTerminal::ClearColor();
 			std::cout << "Recieved signal " << SignalToString(Signal) << ": something wants us to terminate because they're mad, unfortunately I should comply...\n";
 			GetGame()->Close();
 			break;
 		}
 		case SIGTERM:
 		{
-			SetColor(Blue);
+			NTerminal::SetColor(Blue);
 			std::cout << "SIGNAL INFO: ";
-			ClearColor();
+			NTerminal::ClearColor();
 			std::cout << "Recieved signal " << SignalToString(Signal) << ": exiting...\n";
 			GetGame()->Close();
 			break;
 		}
 		default:
 		{
-			SetColor(Yellow);
+			NTerminal::SetColor(Yellow);
 			std::cout << "SIGNAL WARN: ";
-			ClearColor();
+			NTerminal::ClearColor();
 			std::cout << "Recieved unhandled signal: " << SignalToString(Signal) << "\n";
 			break;
 		}

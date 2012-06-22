@@ -6,9 +6,9 @@ NSoundSystem::NSoundSystem()
 	const char** DeviceNames = alureGetDeviceNames(true,&Count);
 	for (unsigned int i=0;i<Count;i++)
 	{
-		SetColor(Blue);
+		NTerminal::SetColor(Blue);
 		std::cout << "ALURE INFO: ";
-		ClearColor();
+		NTerminal::ClearColor();
 		std::cout << " Found device: " << DeviceNames[i] << "\n";
 	}
 	bool Found = false;
@@ -16,9 +16,9 @@ NSoundSystem::NSoundSystem()
 	{
 		if (alureInitDevice(DeviceNames[0],NULL) != AL_FALSE)
 		{
-			SetColor(Blue);
+			NTerminal::SetColor(Blue);
 			std::cout << "ALURE INFO: ";
-			ClearColor();
+			NTerminal::ClearColor();
 			std::cout << " Using device: " << DeviceNames[0] << "\n";
 			Found = true;
 			break;
@@ -26,9 +26,9 @@ NSoundSystem::NSoundSystem()
 	}
 	if (!Found)
 	{
-		SetColor(Yellow);
+		NTerminal::SetColor(Yellow);
 		std::cout << "ALURE WARN: ";
-		ClearColor();
+		NTerminal::ClearColor();
 		std::cout << "Failed to use any of the devices!!\n";
 		alureFreeDeviceNames(DeviceNames);
 		return;
@@ -90,9 +90,9 @@ bool NSoundData::Load(std::string FileName)
 	ALenum Error = alGetError(); //Ensure all errors are cleared before making alure load the sound file, else it won't load.
 	while (Error != AL_NO_ERROR)
 	{
-		SetColor(Yellow);
+		NTerminal::SetColor(Yellow);
 		std::cout << "OPENAL WARN: ";
-		ClearColor();
+		NTerminal::ClearColor();
 		switch(Error)
 		{
 			case AL_INVALID_NAME:
@@ -128,12 +128,12 @@ bool NSoundData::Load(std::string FileName)
 		}
 		Error = alGetError();
 	}
-	NFile File = GetGame()->GetFileSystem()->GetFile(FileName);
+	NFile File = GetGame()->GetFileSystem()->GetFile(FileName,false);
 	if (!File.Good())
 	{
-		SetColor(Yellow);
+		NTerminal::SetColor(Yellow);
 		std::cout << "SOUND WARN: ";
-		ClearColor();
+		NTerminal::ClearColor();
 		std::cout << "Failed to open " << FileName << " as a sound file, it doesn't exist!\n";
 		return Fail;
 	}
@@ -143,9 +143,9 @@ bool NSoundData::Load(std::string FileName)
 	delete[] Data;
 	if (ID == AL_NONE)
 	{
-		SetColor(Yellow);
+		NTerminal::SetColor(Yellow);
 		std::cout << "SOUND WARN: ";
-		ClearColor();
+		NTerminal::ClearColor();
 		std::cout << "Failed to open " << FileName << " as a sound file for reason: " << alureGetErrorString() << "!\n";
 		return Fail;
 	}

@@ -38,6 +38,8 @@ void NScene::Draw(NCamera* View)
 		}
 		GetGame()->GetRender()->glPopFramebuffer();
 		GetGame()->GetLightSystem()->Draw();
+	} else {
+		GetGame()->GetLightSystem()->CheckFBO();
 	}
 	for (unsigned int i=0;i<GUI.size();i++)
 	{
@@ -58,7 +60,7 @@ void NScene::ToggleFullBright()
 void NScene::AddNode(NNode* Node)
 {
 	std::string Type = Node->GetType();
-	if (Type == "Window" || Type == "Button" || Type == "Text" || Type == "Checkbox")
+	if (Type == "Window" || Type == "Button" || Type == "Text" || Type == "Checkbox" || Type == "TextInput")
 	{
 		GUI.push_back(Node);
 		return;
@@ -111,15 +113,15 @@ NText* NScene::AddText(std::string Font, std::wstring Data)
 	return Text;
 }
 
-NWindow* NScene::AddWindow()
+NWindow* NScene::AddWindow(std::string Texture)
 {
-	NWindow* Window = new NWindow();
+	NWindow* Window = new NWindow(Texture);
 	AddNode(Window);
 	return Window;
 }
-NButton* NScene::AddButton()
+NButton* NScene::AddButton(std::string Texture)
 {
-	NButton* Button = new NButton();
+	NButton* Button = new NButton(Texture);
 	AddNode(Button);
 	return Button;
 }
@@ -165,6 +167,12 @@ NCheckbox* NScene::AddCheckbox(std::string Texture)
 	AddNode(Checkbox);
 	return Checkbox;
 }
+NTextInput* NScene::AddTextInput(std::string Texture)
+{
+	NTextInput* TextInput = new NTextInput(Texture);
+	AddNode(TextInput);
+	return TextInput;
+}
 std::vector<NNode*>* NScene::GetWorld()
 {
 	return &World;
@@ -199,7 +207,7 @@ void NScene::Remove(NNode* Node)
 		return;
 	}
 	std::string Type = Node->GetType();
-	if (Type == "Window" || Type == "Button" || Type == "Text")
+	if (Type == "Window" || Type == "Button" || Type == "Text" || Type == "TextInput")
 	{
 		for (unsigned int i=0;i<GUI.size();i++)
 		{
