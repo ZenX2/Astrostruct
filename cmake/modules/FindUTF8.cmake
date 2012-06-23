@@ -1,0 +1,6 @@
+find_path(UTF8_INCLUDE_DIR utf8.h)
+if (UTF8_INCLUDE_DIR)
+	set(UTF8_FOUND true)
+else ()
+	set(UTF8_FOUND false)
+endif()

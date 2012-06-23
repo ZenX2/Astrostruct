@@ -1,0 +1,1 @@
+You can generate documentation by building the custom target "docs" using cmake.
