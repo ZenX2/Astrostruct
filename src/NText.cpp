@@ -623,6 +623,9 @@ void NText::Remove()
 
 NTextureNode::NTextureNode(glm::vec4 i_Rect)
 {
+    Parent = NULL;
+    Children[0] = NULL;
+    Children[1] = NULL;
     Rect = i_Rect;
     HasChildren = false;
     HasImage = false;

@@ -451,6 +451,7 @@ bool NCachedTexture::Good()
 
 NCachedTexture::NCachedTexture(std::string i_Name, GLuint i_ID)
 {
+    IsGood = true;
     Name = i_Name;
     ID = i_ID;
     glBindTexture(GL_TEXTURE_2D,ID);

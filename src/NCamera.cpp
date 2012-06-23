@@ -2,6 +2,7 @@
 
 NCamera::NCamera()
 {
+    Zoom = 1.f;
     OrthoMatrix = glm::mat4(1.f);
     PerspMatrix = glm::mat4(1.f);
     ViewMatrix = glm::mat4(1.f);

@@ -218,7 +218,6 @@ private:
     GLuint TextureFilter;
     float MaxFPS;
     double LastTime;
-    unsigned int FPS;
     std::vector<NShader*> Shaders;
     std::vector<NCachedTexture*> CachedTextures;
     std::vector<NTexture*> Textures;

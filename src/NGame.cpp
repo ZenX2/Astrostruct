@@ -2,11 +2,28 @@
 
 NGame::NGame()
 {
+    NewWidth = 0;
+    NewHeight = 0;
     Width = 0;
     Height = 0;
     Run = true;
     WindowChanged = true;
     Server = false;
+    StateMachine = NULL;
+    PacketHandler = NULL;
+    LightSystem = NULL;
+    FileSystem = NULL;
+    Input = NULL;
+    Scene = NULL;
+    Render = NULL;
+    Lua = NULL;
+    Config = NULL;
+    SoundSystem = NULL;
+    TextSystem = NULL;
+    SignalInterceptor = NULL;
+    Console = NULL;
+    Map = NULL;
+    Network = NULL;
 }
 
 NGame::~NGame()
