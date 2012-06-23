@@ -53,11 +53,11 @@ public:
      * @brief Plays the sound from the ALSource.
      */
     void Play();
-	/**
-	 * @brief Unallocates the object.
-	 */
+    /**
+     * @brief Unallocates the object.
+     */
     void Remove();
-	std::string GetType();
+    std::string GetType();
 private:
     ALuint ID;
 };

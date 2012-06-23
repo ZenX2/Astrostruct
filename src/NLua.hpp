@@ -40,32 +40,32 @@ int Quit(lua_State* L);
 class NLua
 {
 public:
-	NLua();
-	~NLua();
-	/**
-	* @brief Gets the lua state.
-	*
-	* @return The lua state.
-	*/
-	lua_State* GetL();
-	/**
-	* @brief Reads a lua file into lua, if there's errors it will output them.
-	*
-	* @param File The path to the lua file.
-	*
-	* @return False on failure, true on success.
-	*/
-	bool DoFile(std::string File);
-	/**
-	 * @brief Recursviely searches a folder for files preceded by '.lua' and runs them through lua.
-	 *
-	 * @param Folder The desired folder to search through.
-	 *
-	 * @return True on success, false if an error occured in one of the lua files.
-	 */
-	bool DoFolder(std::string Folder);
+    NLua();
+    ~NLua();
+    /**
+    * @brief Gets the lua state.
+    *
+    * @return The lua state.
+    */
+    lua_State* GetL();
+    /**
+    * @brief Reads a lua file into lua, if there's errors it will output them.
+    *
+    * @param File The path to the lua file.
+    *
+    * @return False on failure, true on success.
+    */
+    bool DoFile(std::string File);
+    /**
+     * @brief Recursviely searches a folder for files preceded by '.lua' and runs them through lua.
+     *
+     * @param Folder The desired folder to search through.
+     *
+     * @return True on success, false if an error occured in one of the lua files.
+     */
+    bool DoFolder(std::string Folder);
 private:
-	lua_State* L;
+    lua_State* L;
 };
 /**
 * @brief Lua function to load textures into memory.

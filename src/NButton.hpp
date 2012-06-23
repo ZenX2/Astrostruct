@@ -19,73 +19,73 @@
 class NButton : public NNode
 {
 public:
-	NButton(std::string i_Texture);
-	~NButton();
-	NTexture* Texture;
-	/**
-	* @brief Draws the button.
-	*
-	* @param View The camera view matrix, might not be used in the future.
-	*/
-	void Draw(NCamera* View);
-	/**
-	 * @brief Checks if the mouse is hovering or clicking on the button and reacts accordingly.
-	 *
-	 * @param DT The delta time.
-	 */
-	void Tick(double DT);
-	/**
-	 * @brief Sets the text of the button, and creates it if it doens't exist.
-	 *
-	 * @param Text The desired display text.
-	 */
-	void SetText(std::wstring Text);
-	/**
-	 * @brief Returns if the button has been pressed.
-	 *
-	 * @return True if the button is currently pressed, false if it's not.
-	 */
-	bool OnPressed();
-	/**
-	 * @brief Returns if the button has just been released.
-	 *
-	 * @return True if the button has just barely been released, false if it hasn't.
-	 */
-	bool OnRelease();
-	/**
-	 * @brief Unallocates the object.
-	 */
-	void Remove();
-	/**
-	 * @brief Hooks into NNode to make our text follow color. Probably shouldn't do that, but if i encounter problems with it I'll change it.
-	 *
-	 * @param i_Color The desired color of the text and button.
-	 */
-	void SetColor(glm::vec4 i_Color);
-	/**
-	 * @brief Returns the type of the object.
-	 *
-	 * @return "Button".
-	 */
-	std::string GetType();
-	NText* GetText();
+    NButton(std::string i_Texture);
+    ~NButton();
+    NTexture* Texture;
+    /**
+    * @brief Draws the button.
+    *
+    * @param View The camera view matrix, might not be used in the future.
+    */
+    void Draw(NCamera* View);
+    /**
+     * @brief Checks if the mouse is hovering or clicking on the button and reacts accordingly.
+     *
+     * @param DT The delta time.
+     */
+    void Tick(double DT);
+    /**
+     * @brief Sets the text of the button, and creates it if it doens't exist.
+     *
+     * @param Text The desired display text.
+     */
+    void SetText(std::wstring Text);
+    /**
+     * @brief Returns if the button has been pressed.
+     *
+     * @return True if the button is currently pressed, false if it's not.
+     */
+    bool OnPressed();
+    /**
+     * @brief Returns if the button has just been released.
+     *
+     * @return True if the button has just barely been released, false if it hasn't.
+     */
+    bool OnRelease();
+    /**
+     * @brief Unallocates the object.
+     */
+    void Remove();
+    /**
+     * @brief Hooks into NNode to make our text follow color. Probably shouldn't do that, but if i encounter problems with it I'll change it.
+     *
+     * @param i_Color The desired color of the text and button.
+     */
+    void SetColor(glm::vec4 i_Color);
+    /**
+     * @brief Returns the type of the object.
+     *
+     * @return "Button".
+     */
+    std::string GetType();
+    NText* GetText();
 private:
-	unsigned int TextureWidth, TextureHeight;
-	bool PressedMemory;
-	bool IsPressed;
-	bool IsChanged;
-	bool Changed;
-	float BorderSize;
-	NText* DisplayText;
-	NShader* Shader;
-	void GenerateBuffers();
-	std::vector<glm::vec2> Verts;
-	std::vector<glm::vec2> UVs;
-	GLuint* Buffers;
-	GLuint ScreenLoc;
-	GLuint TextureLoc;
-	GLuint MatrixLoc;
-	GLuint ColorLoc;
+    unsigned int TextureWidth, TextureHeight;
+    bool PressedMemory;
+    bool IsPressed;
+    bool IsChanged;
+    bool Changed;
+    float BorderSize;
+    NText* DisplayText;
+    NShader* Shader;
+    void GenerateBuffers();
+    std::vector<glm::vec2> Verts;
+    std::vector<glm::vec2> UVs;
+    GLuint* Buffers;
+    GLuint ScreenLoc;
+    GLuint TextureLoc;
+    GLuint MatrixLoc;
+    GLuint ColorLoc;
 };
 
 /*@}*/

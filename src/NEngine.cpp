@@ -2,17 +2,17 @@
 
 NGame* GetGame()
 {
-	return Game;
+    return Game;
 }
 
 double CurTime()
 {
-	return glfwGetTime();
+    return glfwGetTime();
 }
 
 float Rand(float Min, float Max)
 {
-	float Difference = Max-Min;
-	float X = (float(rand())/float(RAND_MAX))*Difference;
-	return Min+X;
+    float Difference = Max-Min;
+    float X = (float(rand())/float(RAND_MAX))*Difference;
+    return Min+X;
 }

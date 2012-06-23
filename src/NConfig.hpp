@@ -14,39 +14,39 @@
 class NConfig
 {
 public:
-	/**
-	* @brief Reads the file through lua to read configuration variables.
-	*
-	* @param i_File The lua file.
-	*/
-	NConfig(std::string i_Folder);
-	~NConfig();
-	/**
-	* @brief Finds a variable loaded into lua and returns it.
-	*
-	* @param Name The name of the variable.
-	*
-	* @return The value of the variable.
-	*/
-	float GetFloat(std::string Name);
-	/**
-	* @brief Finds a variable loaded into lua and returns it.
-	*
-	* @param Name The name of the variable.
-	*
-	* @return The value of the variable.
-	*/
-	std::string GetString(std::string Name);
-	/**
-	* @brief Finds a variable loaded into lua and returns it.
-	*
-	* @param Name The name of the variable.
-	*
-	* @return The value of the variable.
-	*/
-	bool GetBool(std::string Name);
+    /**
+    * @brief Reads the file through lua to read configuration variables.
+    *
+    * @param i_File The lua file.
+    */
+    NConfig(std::string i_Folder);
+    ~NConfig();
+    /**
+    * @brief Finds a variable loaded into lua and returns it.
+    *
+    * @param Name The name of the variable.
+    *
+    * @return The value of the variable.
+    */
+    float GetFloat(std::string Name);
+    /**
+    * @brief Finds a variable loaded into lua and returns it.
+    *
+    * @param Name The name of the variable.
+    *
+    * @return The value of the variable.
+    */
+    std::string GetString(std::string Name);
+    /**
+    * @brief Finds a variable loaded into lua and returns it.
+    *
+    * @param Name The name of the variable.
+    *
+    * @return The value of the variable.
+    */
+    bool GetBool(std::string Name);
 private:
-	std::string Folder;
+    std::string Folder;
 };
 
 #endif

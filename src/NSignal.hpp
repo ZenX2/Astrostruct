@@ -28,14 +28,14 @@ std::string SignalToString(int Signal);
 class NSignalInterceptor
 {
 public:
-	/**
-	 * @brief Reroutes all signals to SignalHandler(int).
-	 */
-	NSignalInterceptor();
-	/**
-	 * @brief Routes all signals back to their default functions.
-	 */
-	~NSignalInterceptor();
+    /**
+     * @brief Reroutes all signals to SignalHandler(int).
+     */
+    NSignalInterceptor();
+    /**
+     * @brief Routes all signals back to their default functions.
+     */
+    ~NSignalInterceptor();
 };
 
 #endif

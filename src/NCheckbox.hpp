@@ -19,52 +19,52 @@
 class NCheckbox : public NNode
 {
 public:
-	NCheckbox(std::string i_Texture);
-	~NCheckbox();
-	NTexture* Texture;
-	/**
-	* @brief Draws the button.
-	*
-	* @param View The camera view matrix, might not be used in the future.
-	*/
-	void Draw(NCamera* View);
-	void Tick(double DT);
-	/**
-	 * @brief Returns if the box has been checked or not.
-	 *
-	 * @return True if it's checked, false if it isn't.
-	 */
-	bool IsChecked();
-	/**
-	 * @brief Sets if the checkbox is checked or not and sets it's animations accordingly.
-	 *
-	 * @param Check True if we want it checked, false otherwise.
-	 */
-	void SetCheck(bool Check);
-	/**
-	 * @brief Unallocates the object.
-	 */
-	void Remove();
-	/**
-	 * @brief Returns the type of the object.
-	 *
-	 * @return "Checkbox".
-	 */
-	std::string GetType();
+    NCheckbox(std::string i_Texture);
+    ~NCheckbox();
+    NTexture* Texture;
+    /**
+    * @brief Draws the button.
+    *
+    * @param View The camera view matrix, might not be used in the future.
+    */
+    void Draw(NCamera* View);
+    void Tick(double DT);
+    /**
+     * @brief Returns if the box has been checked or not.
+     *
+     * @return True if it's checked, false if it isn't.
+     */
+    bool IsChecked();
+    /**
+     * @brief Sets if the checkbox is checked or not and sets it's animations accordingly.
+     *
+     * @param Check True if we want it checked, false otherwise.
+     */
+    void SetCheck(bool Check);
+    /**
+     * @brief Unallocates the object.
+     */
+    void Remove();
+    /**
+     * @brief Returns the type of the object.
+     *
+     * @return "Checkbox".
+     */
+    std::string GetType();
 private:
-	bool Changed;
-	bool Pressed;
-	bool PressedMemory;
-	bool Checked;
-	NShader* Shader;
-	void GenerateBuffers();
-	std::vector<glm::vec2> Verts;
-	std::vector<glm::vec2> UVs;
-	GLuint* Buffers;
-	GLuint ScreenLoc;
-	GLuint TextureLoc;
-	GLuint MatrixLoc;
-	GLuint ColorLoc;
+    bool Changed;
+    bool Pressed;
+    bool PressedMemory;
+    bool Checked;
+    NShader* Shader;
+    void GenerateBuffers();
+    std::vector<glm::vec2> Verts;
+    std::vector<glm::vec2> UVs;
+    GLuint* Buffers;
+    GLuint ScreenLoc;
+    GLuint TextureLoc;
+    GLuint MatrixLoc;
+    GLuint ColorLoc;
 };
 
 /*@}*/

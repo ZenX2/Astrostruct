@@ -27,17 +27,17 @@
 
 namespace NTerminal
 {
-	/**
-	* @brief Sets the color of text output.
-	*
-	* @param Color The specific color as an int: (1)Red, (2)Green, (3)Yellow, (4)Blue.
-	*/
-	void SetColor(unsigned int Color);
-	/**
-	* @brief Resets color output to normal color.
-	*/
-	void ClearColor();
-	/*@}*/
+    /**
+    * @brief Sets the color of text output.
+    *
+    * @param Color The specific color as an int: (1)Red, (2)Green, (3)Yellow, (4)Blue.
+    */
+    void SetColor(unsigned int Color);
+    /**
+    * @brief Resets color output to normal color.
+    */
+    void ClearColor();
+    /*@}*/
 }
 
 #endif

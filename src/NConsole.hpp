@@ -28,16 +28,16 @@ void ConsoleThread(void* arg);
 class NConsole
 {
 public:
-	/**
-	 * @brief Creates the ConsoleThread() thread.
-	 */
-	NConsole();
-	/**
-	 * @brief Destroys the Consolethread() thread.
-	 */
-	~NConsole();
+    /**
+     * @brief Creates the ConsoleThread() thread.
+     */
+    NConsole();
+    /**
+     * @brief Destroys the Consolethread() thread.
+     */
+    ~NConsole();
 private:
-	GLFWthread Thread;
+    GLFWthread Thread;
 };
 
 #endif
