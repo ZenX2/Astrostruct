@@ -6,7 +6,7 @@ A multi-platform, open-source, highly-modifiable, multi-player, space-themed, ro
 How do I play it?
 --------------------
 
-Run CMake inside of the ./cmake folder using your favorite os. It will generate a binary ready for use inside the folder ./bin.
+Use cmake to generate the game binaries in your favorite os, then play the game!
 
 I want to use your code as a learning resource!
 -----------------------------------------------
