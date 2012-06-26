@@ -1,3 +1,3 @@
-Static = Animation("textures/lights/point.png")
+local Static = Animation("textures/lights/point.png")
 Static.Name = "idle"
 LoadTexture("point",Static)

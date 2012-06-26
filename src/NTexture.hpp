@@ -84,7 +84,10 @@ public:
      */
     std::string GetString(std::string i_Name);
     std::vector<NCachedTexture*> Frames;
+    void AddNumber(std::string i_Name, float Number);
 private:
+    std::vector<std::string> NumberNames;
+    std::vector<float> Numbers;
     std::string Name;
 };
 /**

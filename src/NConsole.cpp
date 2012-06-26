@@ -75,16 +75,17 @@ void ConsoleThread(void* arg)
 #else
 void ConsoleThread(void* arg)
 {
-    struct timeval TimeOut;
-    fd_set ReadFDS;
-    const int STDIN = 0;
     while (GetGame()->Running())
     {
+        const int STDIN = 0;
+        struct timeval TimeOut;
+        fd_set ReadFDS;
         TimeOut.tv_sec = 1; //Wait exactly one second to timeout.
         TimeOut.tv_usec = 0;
         FD_ZERO(&ReadFDS); //Set up ReadFDS to eat stdin
         FD_SET(STDIN, &ReadFDS);
-        if (select(STDIN+1,&ReadFDS,NULL,NULL,&TimeOut) == -1) // Use select to ensure we don't get stuck on cin.
+        int Check = select(STDIN+1,&ReadFDS,NULL,NULL,&TimeOut);
+        if (Check == -1 || Check == 1) // Use select to make sure we don't get stuck on getline().
         {
             NTerminal::SetColor(Red);
             std::cout << "CONSOLE ERROR: ";

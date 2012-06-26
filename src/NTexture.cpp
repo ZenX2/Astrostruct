@@ -134,43 +134,22 @@ float NTexture::GetFloat(std::string i_Name)
 
 float NAnimation::GetFloat(std::string i_Name)
 {
-    lua_State* L = GetGame()->GetLua()->GetL();
-    //lua_getref(L,Reference);
-    lua_rawgeti(L,LUA_REGISTRYINDEX,Reference);
-    lua_getfield(L,-1,i_Name.c_str());
-    if (!lua_isnumber(L,-1))
+    for (unsigned int i=0;i<NumberNames.size();i++)
     {
-        NTerminal::SetColor(Yellow);
-        std::cout << "LUA WARN: ";
-        NTerminal::ClearColor();
-        std::cout << "Tried to use variable " << i_Name << " as a number (It's not a number or doesn't exist!).\n";
-        lua_pop(L,2);
-        return 0;
+        if (NumberNames[i] == i_Name)
+        {
+            return Numbers[i];
+        }
     }
-    float Number = lua_tonumber(L,-1);
-    lua_pop(L,2);
-    return Number;
+    NTerminal::SetColor(Yellow);
+    std::cout << "LUA WARN: ";
+    NTerminal::ClearColor();
+    std::cout << "Tried to access " << i_Name << " as a number! (It's not a number or doesn't exist!)\n";
+    return 0;
 }
-std::string NAnimation::GetString(std::string i_Name)
+
+void NAnimation::AddNumber(std::string i_Name, float Number)
 {
-    lua_State* L = GetGame()->GetLua()->GetL();
-    lua_rawgeti(L,LUA_REGISTRYINDEX,Reference);
-    lua_getfield(L,-1,i_Name.c_str());
-    if (!lua_isstring(L,-1))
-    {
-        NTerminal::SetColor(Yellow);
-        std::cout << "LUA WARN: ";
-        NTerminal::ClearColor();
-        std::cout << "Tried to use variable " << i_Name << " as a string (It's not a string or doesn't exist!).\n";
-        lua_pop(L,2);
-        return "NULL";
-    }
-    const char* Text = lua_tostring(L,-1);
-    if (Text == NULL)
-    {
-        return "NULL";
-    }
-    std::string ReturnString = Text;
-    lua_pop(L,2);
-    return ReturnString;
+    NumberNames.push_back(i_Name);
+    Numbers.push_back(Number);
 }

@@ -16,6 +16,7 @@ NLua::NLua()
     };
     lua_getglobal(L,"_G");
     luaL_register(L, NULL, BaseFunctions);
+    lua_pop(L,1);
 }
 
 NLua::~NLua()
@@ -185,42 +186,6 @@ int CreateAnimation(lua_State* L)
     return 1;
 }
 
-int Animation__index(lua_State* L)
-{
-    NAnimation* Animation = lua_toAnimation(L,1);
-    if (Animation == NULL)
-    {
-        lua_Debug ar1;
-        lua_getstack(L,1,&ar1);
-        lua_getinfo(L,"fl",&ar1);
-        lua_Debug ar2;
-        lua_getinfo(L,">S",&ar2);
-        lua_pushfstring(L, "%s:%d: attempt to index a NULL Animation", ar2.short_src, ar1.currentline);
-        return lua_error(L);
-    }
-    std::string Field = luaL_checkstring(L,2);
-    if (Field == "FPS")
-    {
-        lua_pushnumber(L,Animation->FPS);
-    } else if (Field == "Name")
-    {
-        lua_pushstring(L,Animation->GetName().c_str());
-    } else {
-        lua_getmetatable(L,1);
-        lua_pushvalue(L,2);
-        lua_gettable(L,-2);
-        if (lua_isnil(L,-1))
-        {
-            lua_pop(L,1);
-            //lua_getref(L,Animation->Reference);
-            lua_rawgeti(L,LUA_REGISTRYINDEX,Animation->Reference);
-            lua_pushvalue(L,2);
-            lua_gettable(L,-2);
-        }
-    }
-    return 1;
-}
-
 int Animation__newindex(lua_State* L)
 {
     NAnimation* Animation = lua_toAnimation(L,1);
@@ -249,10 +214,10 @@ int Animation__newindex(lua_State* L)
             Animation->Frames[i]->SetFilter(Enum);
         }
     } else {
-        //lua_getref(L,Animation->Reference);
-        lua_rawgeti(L,LUA_REGISTRYINDEX,Animation->Reference);
-        lua_pushvalue(L,3);
-        lua_setfield(L,-2,luaL_checkstring(L,2));
+        if (lua_isnumber(L,3))
+        {
+            Animation->AddNumber(Field,luaL_checknumber(L,3));
+        }
     }
     return 0;
 }
@@ -276,8 +241,8 @@ int LoadSound(lua_State* L)
     NSoundData* Data = new NSoundData(Name);
     if (!Data->Load(DataDir))
     {
-    delete Data;
-    return 0;
+        delete Data;
+        return 0;
     }
     GetGame()->GetSoundSystem()->AddSoundData(Data);
     return 0;

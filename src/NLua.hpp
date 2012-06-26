@@ -76,14 +76,6 @@ private:
 */
 int CreateAnimation(lua_State* L);
 /**
-* @brief AnimationBase __index function for lua.
-*
-* @param L The lua state.
-*
-* @return 1
-*/
-int Animation__index(lua_State* L);
-/**
 * @brief AnimationBase __newindex function for lua.
 *
 * @param L The lua state.

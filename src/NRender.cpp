@@ -18,7 +18,6 @@ void NRender::LoadTextures()
         luaL_newmetatable(L,"AnimationBase");
     }
     static const luaL_Reg AnimationMethods[] = {
-        {"__index",Animation__index},
         {"__newindex",Animation__newindex},
         {NULL,NULL}
     };

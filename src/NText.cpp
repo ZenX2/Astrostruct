@@ -303,6 +303,10 @@ void NText::GenerateBuffers()
     {
         return;
     }
+    if (!Face)
+    {
+        return;
+    }
     Verts.clear();
     UVs.clear();
     std::vector<glm::vec2> Word;
@@ -433,6 +437,10 @@ void NText::SetMode(int i_Mode)
 }
 void NText::Draw(NCamera* View)
 {
+    if (!Face)
+    {
+        return;
+    }
     if (W<=0)
     {
         DrawText(View);
