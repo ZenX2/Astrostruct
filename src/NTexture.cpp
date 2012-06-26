@@ -12,9 +12,6 @@ std::string NAnimation::GetName()
 
 NAnimation::NAnimation()
 {
-    lua_State* L = GetGame()->GetLua()->GetL();
-    lua_newtable(L);
-    Reference = luaL_ref(L,LUA_REGISTRYINDEX);
     FPS = 30;
     Name = "NULL";
 }

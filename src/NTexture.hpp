@@ -30,10 +30,6 @@ public:
     void AddFrame(std::string FileName);
     float FPS;
     /**
-    * @brief This is a lua reference to this AnimationBase object's class. It's used to store variables that don't exist in the Animation class itself.
-    */
-    int Reference;
-    /**
     * @brief Gets the texture ID based on time passed.
     *
     * @param Time The current time.
