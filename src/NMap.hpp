@@ -62,6 +62,8 @@ public:
      */
     void SetID(int i_ID);
     unsigned int X,Y,Z;
+    NLight* Light;
+    bool IsLight();
 private:
     bool ForceSolid;
     bool Solid;
@@ -82,6 +84,7 @@ public:
      */
     NMap(std::string i_TileSet);
     ~NMap();
+    void DeInit();
     /**
      * @brief Creates a grid of the specified size and fills it with random tiles.
      *
@@ -164,9 +167,9 @@ public:
     /**
      * @brief Returns the type of the object.
      *
-     * @return "Map".
+     * @return Map.
      */
-    std::string GetType();
+    NodeType GetType();
     /**
      * @brief Returns the current level that a position resides on. Currently use to decide when to render objects or not.
      *
@@ -185,6 +188,7 @@ public:
     bool Load(std::string Name);
     unsigned int GetWidth();
     unsigned int GetHeight();
+    unsigned int GetTileCount();
 private:
     unsigned int DepthMem;
     float RealTileSize;

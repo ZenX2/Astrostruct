@@ -387,8 +387,8 @@ void NMapState::OnEnter()
         MapDim[2] = 6;
         GetGame()->GetScene()->ToggleFullBright();
         Window = GetGame()->GetScene()->AddWindow("window");
-        Window->SetScale(128,128);
-        Window->SetPos(64,64);
+        Window->SetScale(128,150);
+        Window->SetPos(64,75);
         Window->SetParent(Camera);
         OtherWindow = GetGame()->GetScene()->AddWindow("window");
         OtherWindow->SetScale(128,100);
@@ -400,16 +400,16 @@ void NMapState::OnEnter()
         CheckBox->SetParent(OtherWindow);
         CheckText = GetGame()->GetScene()->AddText("cousine",_t("Solid"));
         CheckText->SetSize(12);
-        CheckText->SetPos(glm::vec3(20,3,0));
-        CheckText->SetParent(CheckBox);
+        CheckText->SetPos(glm::vec3(0,-10,0));
+        CheckText->SetParent(OtherWindow);
         OCheckBox = GetGame()->GetScene()->AddCheckbox("checkbox");
         OCheckBox->SetScale(16,16);
         OCheckBox->SetPos(glm::vec3(-16,-32,0));
         OCheckBox->SetParent(OtherWindow);
         OCheckText = GetGame()->GetScene()->AddText("cousine",_t("Opaque"));
         OCheckText->SetSize(12);
-        OCheckText->SetPos(glm::vec3(20,-16,0));
-        OCheckText->SetParent(CheckBox);
+        OCheckText->SetPos(glm::vec3(0,-30,0));
+        OCheckText->SetParent(OtherWindow);
         Increase = GetGame()->GetScene()->AddButton("button");
         Increase->SetScale(16,16);
         Increase->SetText(_t(">"));
@@ -425,27 +425,71 @@ void NMapState::OnEnter()
         ChangingText->SetMode(1);
         ChangingText->SetPos(0,16);
         ChangingText->SetParent(OtherWindow);
-        Text = GetGame()->GetScene()->AddText("cousine",_t("Welcome to the map editor! Use the WASD keys to move on the current level, and QE to change levels. You can also press F to toggle fullbright."));
+        Text = GetGame()->GetScene()->AddText("cousine",_t("Welcome to the map editor! Use the WASD keys move and arrowkeys to change levels. You can also press F to toggle fullbright as well as QE to quick change tiles."));
         Text->SetSize(12);
-        Text->SetBorder(128,128);
-        Text->SetPos(0,110);
-        Text->SetParent(Camera);
+        Text->SetBorder(128,150);
+        Text->SetPos(-64,75-18);
+        Text->SetParent(Window);
         Init = true;
         CurrentTile = 0;
-        Light = NULL;
+        HWindow = GetGame()->GetScene()->AddWindow("highlight");
+        HWindow->SetScale(128,128);
+        HWindow->SetLayer(1); // Place it into the world
+        HWindow->SwapView();
+        Bg = GetGame()->GetScene()->AddWindow("space");
+        unsigned int W = GetGame()->GetWindowWidth();
+        unsigned int H = GetGame()->GetWindowHeight();
+        if (W > H) 
+        {
+            Bg->SetScale(glm::vec3(W,W,1));
+        } else {
+            Bg->SetScale(glm::vec3(H,H,1));
+        }
+        Bg->SetLayer(0); // Place it into space.
+        Bg->SetUI(false);
+        Bg->SetParent(Camera);
+        Bg->SetPos(GetGame()->GetWindowSize()/2.f);
     }
     SaveWindow = NULL;
 }
 void NMapState::OnExit()
 {
+    GetGame()->GetScene()->RemoveByType(NodeStar);
+    if (Init)
+    {
+        GetGame()->GetMap()->DeInit();
+        GetGame()->GetScene()->Remove(HWindow);
+        GetGame()->GetScene()->Remove(Window);
+        GetGame()->GetScene()->Remove(OtherWindow);
+        GetGame()->GetScene()->Remove(Bg);
+        if (SaveWindow)
+        {
+            GetGame()->GetScene()->Remove(SaveWindow);
+        }
+        Init = false;
+    }
 }
 void NMapState::Tick(double DT)
 {
+    unsigned int W = GetGame()->GetWindowWidth();
+    unsigned int H = GetGame()->GetWindowHeight();
+    if (W > H) 
+    {
+        Bg->SetScale(glm::vec3(W,W,1));
+    } else {
+        Bg->SetScale(glm::vec3(H,H,1));
+    }
+    Bg->SetPos(GetGame()->GetWindowSize()/2.f);
+    std::vector<NNode*>* Stars = GetGame()->GetScene()->GetLayer(0);
+    while(Stars->size()<(W+H)/20)
+    {
+        GetGame()->GetScene()->AddStar();
+    }
     OtherWindow->SetPos(glm::vec3(GetGame()->GetWindowWidth()-64,50,0));
-    if (Increase->OnRelease())
+    if (Increase->OnRelease() || (GetGame()->GetInput()->KeyChanged('E') && GetGame()->GetInput()->GetKey('E')))
     {
         CurrentTile++;
-        if (CurrentTile>2)
+        if (CurrentTile>GetGame()->GetMap()->GetTileCount())
         {
             CurrentTile = 0;
         }
@@ -457,12 +501,12 @@ void NMapState::Tick(double DT)
         CheckBox->SetCheck(Tile.IsSolid());
         OCheckBox->SetCheck(Tile.IsOpaque());
     }
-    if (Decrease->OnRelease())
+    if (Decrease->OnRelease() || (GetGame()->GetInput()->KeyChanged('Q') && GetGame()->GetInput()->GetKey('Q')))
     {
         CurrentTile--;
         if (CurrentTile<0)
         {
-            CurrentTile = 2;
+            CurrentTile = GetGame()->GetMap()->GetTileCount();
         }
         std::wstringstream Stream; Stream << "Tile: ";
         Stream << CurrentTile;
@@ -484,20 +528,25 @@ void NMapState::Tick(double DT)
             SaveWindow->SetParent(GetGame()->GetRender()->GetCamera());
             Input = GetGame()->GetScene()->AddTextInput("textbox");
             Input->SetScale(200,24);
-            Input->SetPos(0,80);
+            Input->SetPos(0,100);
             Input->GetText()->SetMultiline(false);
             Input->SetText(_t("MapName"));
             Input->SetParent(SaveWindow);
             SaveButton = GetGame()->GetScene()->AddButton("button");
             SaveButton->SetScale(64,32);
             SaveButton->SetText(_t("Save"));
-            SaveButton->SetPos(0,32);
+            SaveButton->SetPos(0,62);
             SaveButton->SetParent(SaveWindow);
             LoadButton = GetGame()->GetScene()->AddButton("button");
             LoadButton->SetScale(64,32);
             LoadButton->SetText(_t("Load"));
-            LoadButton->SetPos(0,0);
+            LoadButton->SetPos(0,30);
             LoadButton->SetParent(SaveWindow);
+            QuitButton = GetGame()->GetScene()->AddButton("button");
+            QuitButton->SetScale(64,32);
+            QuitButton->SetText(_t("Quit"));
+            QuitButton->SetPos(0,-2);
+            QuitButton->SetParent(SaveWindow);
             MapIncrease[0] = GetGame()->GetScene()->AddButton("button");
             MapIncrease[0]->SetScale(16,16);
             MapIncrease[0]->SetPos(64,-64);
@@ -578,6 +627,11 @@ void NMapState::Tick(double DT)
         {
             GetGame()->GetMap()->Load(ToMBS(Input->GetEnteredText()));
         }
+        if (QuitButton->OnRelease())
+        {
+            GetGame()->GetStateMachine()->SetState("Paused");
+            return;
+        }
         if (Apply->OnRelease())
         {
             GetGame()->GetMap()->Init(MapDim[0],MapDim[1],MapDim[2]);
@@ -619,56 +673,53 @@ void NMapState::Tick(double DT)
     if (GetGame()->GetInput()->KeyChanged('F') && GetGame()->GetInput()->GetKey('F'))
     {
         GetGame()->GetScene()->ToggleFullBright();
-        if (!Light)
-        {
-            Light = GetGame()->GetScene()->AddLight("point");
-            Light->SetScale(glm::vec3(512,512,1));
-        } else {
-            GetGame()->GetScene()->Remove(Light);
-            Light = NULL;
-        }
     }
-    if (Light)
+    if (!GetGame()->GetScene()->GetFullBright())
     {
-        Light->SetPos(GetGame()->GetInput()->GetPerspMouse(.45));
-    }
-    if (GetGame()->GetInput()->KeyChanged(1) && GetGame()->GetInput()->GetMouseKey(1))
-    {
-        Light = GetGame()->GetScene()->AddLight("point");
-        Light->SetScale(glm::vec3(512,512,1));
+        HWindow->SetColor(glm::vec4(0,0,0,0));
+    } else {
+        HWindow->SetColor(glm::vec4(1,1,1,1));
     }
     NCamera* Camera = GetGame()->GetRender()->GetCamera();
-    Camera->SetPos(Camera->GetPos()+((WantedPosition-Camera->GetPos()))*float(DT*2.5));
-    if (GetGame()->GetInput()->KeyChanged('Q') && GetGame()->GetInput()->GetKey('Q'))
+    float Multi = DT*5;
+    if (Multi <= 1)
     {
-        if (GetGame()->GetMap()->GetLevel() < GetGame()->GetMap()->GetDepth()-1)
+        Camera->SetPos(Camera->GetPos()+((WantedPosition-Camera->GetPos()))*float(DT*5));
+    } else {
+        Camera->SetPos(WantedPosition);
+    }
+    if (GetGame()->GetInput()->KeyChanged(GLFW_KEY_UP) && GetGame()->GetInput()->GetKey(GLFW_KEY_UP))
+    {
+        if (GetGame()->GetMap()->GetLevel(WantedPosition-glm::vec3(0,0,500)) < GetGame()->GetMap()->GetDepth()-1)
         {
             WantedPosition += glm::vec3(0,0,GetGame()->GetMap()->GetTileSize());
         }
     }
-    if (GetGame()->GetInput()->KeyChanged('E') && GetGame()->GetInput()->GetKey('E'))
+    if (GetGame()->GetInput()->KeyChanged(GLFW_KEY_DOWN) && GetGame()->GetInput()->GetKey(GLFW_KEY_DOWN))
     {
-        if (GetGame()->GetMap()->GetLevel() > 0)
+        if (GetGame()->GetMap()->GetLevel(WantedPosition-glm::vec3(0,0,500)) > 0)
         {
             WantedPosition -= glm::vec3(0,0,GetGame()->GetMap()->GetTileSize());
         }
     }
     if (GetGame()->GetInput()->GetKey('W'))
     {
-        WantedPosition += glm::vec3(0,300,0)*float(DT);
+        WantedPosition += glm::vec3(0,500,0)*float(DT);
     }
     if (GetGame()->GetInput()->GetKey('S'))
     {
-        WantedPosition -= glm::vec3(0,300,0)*float(DT);
+        WantedPosition -= glm::vec3(0,500,0)*float(DT);
     }
     if (GetGame()->GetInput()->GetKey('A'))
     {
-        WantedPosition -= glm::vec3(300,0,0)*float(DT);
+        WantedPosition -= glm::vec3(500,0,0)*float(DT);
     }
     if (GetGame()->GetInput()->GetKey('D'))
     {
-        WantedPosition += glm::vec3(300,0,0)*float(DT);
+        WantedPosition += glm::vec3(500,0,0)*float(DT);
     }
+    glm::vec3 TilePos = GetGame()->GetMap()->TilePos(GetGame()->GetInput()->GetPerspMouse(.45));
+    HWindow->SetPos(TilePos);
     if (GetGame()->GetInput()->GetMouseKey(0) && !GetGame()->GetInput()->GetMouseHitGUI())
     {
         NTile* Tile = GetGame()->GetMap()->GetTile(GetGame()->GetInput()->GetPerspMouse(.45));
@@ -677,6 +728,15 @@ void NMapState::Tick(double DT)
             Tile->SetID(CurrentTile);
             Tile->SetSolid(CheckBox->IsChecked());
             Tile->SetOpaque(OCheckBox->IsChecked());
+            if (Tile->IsLight())
+            {
+                if (!Tile->Light)
+                {
+                    Tile->Light = GetGame()->GetScene()->AddLight("point");
+                    Tile->Light->SetScale(glm::vec3(712,712,1));
+                    Tile->Light->SetPos(TilePos);
+                }
+            }
         }
     }
 }

@@ -65,9 +65,9 @@ public:
     /**
      * @brief Returns the type of the object.
      *
-     * @return "Button".
+     * @return Button.
      */
-    std::string GetType();
+    NodeType GetType();
     NText* GetText();
 private:
     unsigned int TextureWidth, TextureHeight;

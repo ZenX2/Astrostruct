@@ -37,7 +37,9 @@ public:
      * @brief Unallocates the object.
      */
     void Remove();
-    std::string GetType();
+    NodeType GetType();
+    void SwapView();
+    void SetUI(bool i_UI);
 private:
     glm::vec3 SizeMem;
     float BorderSize;
@@ -50,6 +52,8 @@ private:
     GLuint TextureLoc;
     GLuint MatrixLoc;
     GLuint ColorLoc;
+    bool Persp;
+    bool UI;
 };
 
 /*@}*/

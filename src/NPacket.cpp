@@ -64,11 +64,11 @@ NPacket::NPacket(NPlayer* Player)
 NPacket::NPacket()
 {
     PlayerCount = 0;
-    std::vector<NNode*>* World = GetGame()->GetScene()->GetWorld();
+    std::vector<NNode*>* World = GetGame()->GetScene()->GetLayer(1); // Grab everything that's in the world
     for (unsigned int i=0;i<World->size();i++)
     {
         NNode* Node = (*World)[i];
-        if (Node->GetType() == "Player")
+        if (Node->GetType() == NodePlayer)
         {
             Players.push_back(NPacketPlayer((NPlayer*)Node));
             PlayerCount++;

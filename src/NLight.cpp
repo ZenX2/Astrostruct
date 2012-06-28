@@ -417,9 +417,9 @@ void NLightSystem::Draw()
     glUseProgram(0);
 }
 
-std::string NLight::GetType()
+NodeType NLight::GetType()
 {
-    return "Light";
+    return NodeLight;
 }
 
 void NLight::Remove()

@@ -50,8 +50,8 @@ void NInput::Poll()
     AWorld = glm::unProject(glm::vec3(MouseX,MouseY,0),Camera->GetPerspViewMatrix(),Camera->GetPerspMatrix(),glm::vec4(0,0,GetGame()->GetWindowWidth(),GetGame()->GetWindowHeight()));
     BWorld = glm::unProject(glm::vec3(MouseX,MouseY,1),Camera->GetPerspViewMatrix(),Camera->GetPerspMatrix(),glm::vec4(0,0,GetGame()->GetWindowWidth(),GetGame()->GetWindowHeight()));
 
-    MouseX += GetGame()->GetRender()->GetCamera()->GetPos().x;
-    MouseY += GetGame()->GetRender()->GetCamera()->GetPos().y;
+    MouseX += GetGame()->GetRender()->GetCamera()->GetRealPos().x;
+    MouseY += GetGame()->GetRender()->GetCamera()->GetRealPos().y;
     if (Focus) //Make sure we can't trap focus permanently
     {
         if (glfwGetKey(GLFW_KEY_ESC) == GLFW_PRESS || glfwGetKey(GLFW_KEY_ENTER))

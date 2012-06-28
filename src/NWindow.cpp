@@ -2,6 +2,8 @@
 
 NWindow::NWindow(std::string i_Texture)
 {
+    UI = true;
+    Persp = false;
     SizeMem = glm::vec3(0);
     Texture = NULL;
     Changed = true;
@@ -193,7 +195,13 @@ void NWindow::Draw(NCamera* View)
         glBindTexture(GL_TEXTURE_2D,Texture->GetID());
     }
     glUniform1i(TextureLoc,0);
-    glm::mat4 MVP = View->GetOrthoMatrix()*View->GetViewMatrix()*GetModelMatrix();
+    glm::mat4 MVP;
+    if (Persp)
+    {
+        MVP = View->GetPerspMatrix()*View->GetPerspViewMatrix()*GetModelMatrix();
+    } else {
+        MVP = View->GetOrthoMatrix()*View->GetViewMatrix()*GetModelMatrix();
+    }
     glUniformMatrix4fv(MatrixLoc,1,GL_FALSE,&MVP[0][0]);
     glUniform4fv(ColorLoc,1,&(GetColor()[0]));
     glEnableVertexAttribArray(0);
@@ -217,7 +225,15 @@ void NWindow::Draw(NCamera* View)
 
 void NWindow::Tick(double DT)
 {
-    if (Intersects(glm::vec4(GetPos().x,GetPos().y,GetScale().x,GetScale().y),GetGame()->GetInput()->GetMouse()))
+    if (!UI)
+    {
+        if (Texture)
+        {
+            Texture->Tick(DT);
+        }
+        return;
+    }
+    if (Intersects(glm::vec4(GetRealPos().x,GetRealPos().y,GetScale().x,GetScale().y),GetGame()->GetInput()->GetMouse()))
     {
         GetGame()->GetInput()->SetMouseHitGUI(true);
     }
@@ -230,7 +246,15 @@ void NWindow::Remove()
 {
     delete (NWindow*)this;
 }
-std::string NWindow::GetType()
+NodeType NWindow::GetType()
 {
-    return "Window";
+    return NodeWindow;
+}
+void NWindow::SwapView()
+{
+    Persp = !Persp;
+}
+void NWindow::SetUI(bool i_UI)
+{
+    UI = i_UI;
 }

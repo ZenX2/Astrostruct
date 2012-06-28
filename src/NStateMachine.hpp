@@ -150,15 +150,17 @@ private:
     NButton* SaveButton;
     NButton* Apply;
     NButton* LoadButton;
+    NButton* QuitButton;
     NTextInput* Input;
     NCheckbox* CheckBox;
     NCheckbox* OCheckBox;
     NText* Text;
-    NLight* Light;
     NText* CheckText;
     NText* OCheckText;
+    NWindow* Bg;
     NWindow* OtherWindow;
     NText* ChangingText;
     int CurrentTile;
+    NWindow* HWindow;
 };
 #endif

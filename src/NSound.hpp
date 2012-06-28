@@ -57,7 +57,7 @@ public:
      * @brief Unallocates the object.
      */
     void Remove();
-    std::string GetType();
+    NodeType GetType();
 private:
     ALuint ID;
 };

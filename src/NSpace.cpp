@@ -1,39 +1,41 @@
 #include "NEngine.hpp"
 
-NCheckbox::NCheckbox(std::string i_Texture)
+NStar::NStar()
 {
-    Pressed = false;
-    PressedMemory = false;
+    Texture = NULL;
     Changed = true;
     Buffers = new GLuint[2];
     glGenBuffers(2,Buffers);
     Shader = GetGame()->GetRender()->GetShader("flat");
-    Checked = false;
     if (Shader != NULL)
     {
         MatrixLoc = Shader->GetUniformLocation("MVP");
         TextureLoc = Shader->GetUniformLocation("Texture");
         ColorLoc = Shader->GetUniformLocation("Color");
     }
-    Texture = GetGame()->GetRender()->GetTexture(i_Texture);
+    Texture = GetGame()->GetRender()->GetTexture("star");
+    if (Texture)
+    {
+        unsigned int AnimationCount = Texture->GetAnimationCount();
+        Texture->Play(rand()%AnimationCount);
+    }
+    float Size = Rand(5,32);
+    SetScale(glm::vec3(Size,Size,1));
+    //float Rot = Rand(0,360);
+    //SetAng(glm::vec3(0,0,Rot));
+    SetParent(GetGame()->GetRender()->GetCamera());
+    SetPos(glm::vec3(GetGame()->GetWindowWidth()+GetScale().x,Rand(0,GetGame()->GetWindowHeight()),0));
 }
 
-NCheckbox::~NCheckbox()
+NStar::~NStar()
 {
-    glDeleteBuffers(2,Buffers);
-    delete[] Buffers;
     if (Texture)
     {
         delete Texture;
     }
 }
 
-void NCheckbox::SetCheck(bool Check)
-{
-    Checked = Check;
-}
-
-void NCheckbox::GenerateBuffers()
+void NStar::GenerateBuffers()
 {
     if (!Texture || !Changed)
     {
@@ -56,7 +58,7 @@ void NCheckbox::GenerateBuffers()
     Changed = false;
 }
 
-void NCheckbox::Draw(NCamera* View)
+void NStar::Draw(NCamera* View)
 {
     GenerateBuffers();
     if (Texture == NULL || GetColor().w == 0)
@@ -125,46 +127,20 @@ void NCheckbox::Draw(NCamera* View)
     glUseProgram(0);
 }
 
-void NCheckbox::Tick(double DT)
+void NStar::Tick(double DT)
 {
-    if (Intersects(glm::vec4(GetRealPos().x,GetRealPos().y,GetScale().x,GetScale().y),GetGame()->GetInput()->GetMouse()))
+    if (Texture)
     {
-        if (GetGame()->GetInput()->GetMouseKey(0))
-        {
-            Pressed = true;
-        } else if (PressedMemory != Pressed && Pressed == true)
-        {
-            Checked = !Checked;
-            PressedMemory = Pressed;
-        }
-        if (Checked)
-        {
-            Texture->Play("checked_active");
-        } else {
-            Texture->Play("unchecked_active");
-        }
-    } else {
-        PressedMemory = Pressed = false;
-        if (Checked)
-        {
-            Texture->Play("checked_idle");
-        } else {
-            Texture->Play("idle");
-        }
+        Texture->Tick(DT);
+    }
+    SetPos(GetPos()-glm::vec3(GetScale().x*DT,0,0));
+    if (GetPos().x+GetScale().x/2.f < 0)
+    {
+        GetGame()->GetScene()->Remove(this);
     }
 }
 
-bool NCheckbox::IsChecked()
+NodeType NStar::GetType()
 {
-    return Checked;
-}
-
-void NCheckbox::Remove()
-{
-    delete (NCheckbox*)this;
-}
-
-NodeType NCheckbox::GetType()
-{
-    return NodeCheckbox;
+    return NodeStar;
 }

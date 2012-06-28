@@ -33,9 +33,9 @@ public:
     /**
      * @brief Returns the type of the object.
      *
-     * @return "TextInput".
+     * @return TextInput.
      */
-    std::string GetType();
+    NodeType GetType();
     NText* GetText();
     void SetText(std::wstring Text);
     std::wstring GetEnteredText();

@@ -52,9 +52,10 @@ public:
     /**
      * @brief Returns the type of the object.
      *
-     * @return "Light".
+     * @return Light.
      */
-    std::string GetType();
+    NodeType GetType();
+    bool SChanged;
 private:
     void DrawLight(NCamera* View);
     void DrawShadow(NCamera* View);
@@ -62,7 +63,6 @@ private:
     NShader* Shader;
     NShader* ShadowShader;
     bool Changed;
-    bool SChanged;
     void GenerateLightBuffers();
     void GenerateShadowBuffers();
     std::vector<glm::vec2> Verts;

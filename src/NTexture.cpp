@@ -150,3 +150,17 @@ void NAnimation::AddNumber(std::string i_Name, float Number)
     NumberNames.push_back(i_Name);
     Numbers.push_back(Number);
 }
+
+unsigned int NTexture::GetAnimationCount()
+{
+    return Animations.size();
+}
+
+void NTexture::Play(unsigned int i_ID)
+{
+    if (i_ID >= Animations.size())
+    {
+        PlayingAnimation = Animations.size()-1;
+    }
+    PlayingAnimation = i_ID;
+}

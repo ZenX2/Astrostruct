@@ -63,6 +63,26 @@ NMap::~NMap()
         }
     }
 }
+void NMap::DeInit()
+{
+    Width = 0;
+    Height = 0;
+    Depth = 0;
+    Changed.clear();
+    Verts.clear();
+    UVs.clear();
+    BoxVerts.clear();
+    BoxUVs.clear();
+    Outline.clear();
+    Tiles.clear();
+    for (unsigned int i=0;i<Buffers.size();i++)
+    {
+        delete[] Buffers[i];
+    }
+    Buffers.clear();
+    Ready = false;
+}
+
 void NMap::Init(unsigned int i_Width, unsigned int i_Height, unsigned int i_Depth)
 {
     DepthMem = 0;
@@ -70,7 +90,6 @@ void NMap::Init(unsigned int i_Width, unsigned int i_Height, unsigned int i_Dept
     Height = i_Height;
     Depth = i_Depth;
     Changed.clear();
-    Buffers.clear();
     Verts.clear();
     UVs.clear();
     BoxVerts.clear();
@@ -82,6 +101,7 @@ void NMap::Init(unsigned int i_Width, unsigned int i_Height, unsigned int i_Dept
     {
         delete[] Buffers[i];
     }
+    Buffers.clear();
     Buffers.resize(Depth,NULL);
     std::vector<glm::vec3> Foo2;
     Verts.resize(Depth, Foo2);
@@ -112,7 +132,6 @@ void NMap::Init(unsigned int i_Width, unsigned int i_Height, unsigned int i_Dept
             }
         }
     }
-    FixUp();
     Ready = true;
 }
 void NMap::FixUp()
@@ -121,14 +140,14 @@ void NMap::FixUp()
     {
         for (unsigned int y=0;y<Height;y++)
         {
-            for (unsigned int z=0;z<Depth-1;z++)
+            for (unsigned int z=0;z<Depth;z++)
             {
                 NTile* Tile = Tiles[x][y][z];
-                if (Tile->IsSolid())
+                if (Tile->IsLight() && !Tile->Light)
                 {
-                    Tiles[x][y][z+1]->ID = Tile->ID;
-                    Tiles[x][y][z+1]->SetSolid(false);
-                    Tiles[x][y][z+1]->SetOpaque(false);
+                    Tile->Light = GetGame()->GetScene()->AddLight("point");
+                    Tile->Light->SetScale(glm::vec3(712,712,1));
+                    Tile->Light->SetPos(glm::vec3(x*RealTileSize+RealTileSize/2.f,y*RealTileSize+RealTileSize/2.f,z*RealTileSize));
                 }
             }
         }
@@ -175,6 +194,27 @@ glm::vec3 NMap::TilePos(glm::vec3 Pos)
     int X = floor(Pos.x/RealTileSize);
     int Y = floor(Pos.y/RealTileSize);
     int Z = floor(Pos.z/RealTileSize);
+    if (X < 0)
+    {
+        X = 0;
+    } else if (X >= Width)
+    {
+        X = Width-1;
+    }
+    if (Y < 0)
+    {
+        Y = 0;
+    } else if (Y >= Height)
+    {
+        Y = Height-1;
+    }
+    if (Z < 0)
+    {
+        Z = 0;
+    } else if (Z >= Depth)
+    {
+        Z = Depth-1;
+    }
     return glm::vec3(X*RealTileSize+RealTileSize/2.f,Y*RealTileSize+RealTileSize/2.f,Z*RealTileSize);
 }
 void NMap::ViewLevel(int Level)
@@ -420,7 +460,7 @@ void NMap::Draw(NCamera* View)
             glBindBuffer(GL_ARRAY_BUFFER,Buffers[i][4]);
             glVertexAttribPointer(1,2,GL_FLOAT,GL_FALSE,0,NULL);
             
-            glDrawArrays(GL_QUADS,0,Verts[i].size());
+            glDrawArrays(GL_QUADS,0,BoxVerts[i].size());
         }
     }
     glDisable(GL_TEXTURE_2D);
@@ -468,7 +508,7 @@ void NMap::SetChanged(int Level)
 
 NTile::NTile(unsigned int x, unsigned int y, unsigned int z)
 {
-    ID = rand()%3;
+    ID = 0;
     Solid = false;
     ForceSolid = false;
     Opaque = false;
@@ -476,6 +516,7 @@ NTile::NTile(unsigned int x, unsigned int y, unsigned int z)
     X = x;
     Y = y;
     Z = z;
+    Light = NULL;
 }
 NTile::NTile(unsigned int i_ID)
 {
@@ -487,10 +528,12 @@ NTile::NTile(unsigned int i_ID)
     X = 0;
     Y = 0;
     Z = 0;
+    Light = NULL;
 }
 void NTile::SetID(int i_ID)
 {
     ID = i_ID;
+    GetGame()->GetScene()->UpdateLights();
     GetGame()->GetMap()->SetChanged(Z);
 }
 NTile::~NTile()
@@ -498,11 +541,19 @@ NTile::~NTile()
 }
 void NTile::SetSolid(bool i_Solid)
 {
+    if (IsSolid() == i_Solid)
+    {
+        return;
+    }
     ForceSolid = true;
     Solid = i_Solid;
 }
 void NTile::SetOpaque(bool i_Opaque)
 {
+    if (IsOpaque() == i_Opaque)
+    {
+        return;
+    }
     ForceOpaque = true;
     Opaque = i_Opaque;
 }
@@ -516,9 +567,10 @@ bool NTile::IsSolid()
         }
         return false;
     }
-    if (ID == 2)
+    switch (ID)
     {
-        return true;
+        case 2: return true;
+        case 3: return true;
     }
     return false;
 }
@@ -533,9 +585,18 @@ bool NTile::IsOpaque()
         }
         return false;
     }
-    if (ID == 2)
+    switch (ID)
     {
-        return true;
+        case 2: return true;
+    }
+    return false;
+}
+
+bool NTile::IsLight()
+{
+    switch(ID)
+    {
+        case 4: return true;
     }
     return false;
 }
@@ -549,9 +610,9 @@ bool NTile::IsOpenSpace()
     return false;
 }
 
-std::string NMap::GetType()
+NodeType NMap::GetType()
 {
-    return "Map";
+    return NodeMap;
 }
 
 bool NMap::Save(std::string Name)
@@ -623,6 +684,8 @@ bool NMap::Load(std::string Name)
     std::cout << "MAP INFO: ";
     NTerminal::ClearColor();
     std::cout << "Successfully loaded map maps/" << Name << ".map.\n";
+    GetGame()->GetScene()->RemoveByType(NodeLight);
+    FixUp();
     return Success;
 }
 unsigned int NMap::GetWidth()
@@ -632,4 +695,8 @@ unsigned int NMap::GetWidth()
 unsigned int NMap::GetHeight()
 {
     return Height;
+}
+unsigned int NMap::GetTileCount()
+{
+    return 4;
 }

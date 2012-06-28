@@ -10,7 +10,6 @@ NNode::NNode()
     Parent = NULL;
     Matrix = glm::mat4();
     SMatrix = glm::mat4();
-    Flags = 0;
 }
 
 NNode::~NNode()
@@ -114,12 +113,17 @@ glm::vec3 NNode::GetAng()
     return Angle;
 }
 
-glm::vec3 NNode::GetPos()
+glm::vec3 NNode::GetRealPos()
 {
     if (Parent)
     {
-        return Parent->GetPos()+Position;
+        return Parent->GetRealPos()+Position;
     }
+    return Position;
+}
+
+glm::vec3 NNode::GetPos()
+{
     return Position;
 }
 
@@ -216,15 +220,11 @@ glm::vec4 NNode::GetColor()
 void NNode::Remove()
 {
 }
-std::string NNode::GetType()
+NodeType NNode::GetType()
 {
-    return "NULL";
+    return NodeNone;
 }
-void NNode::SetFlags(char i_Flags)
+void NNode::SetLayer(unsigned int Layer)
 {
-    Flags = i_Flags;
-}
-char NNode::GetFlags()
-{
-    return Flags;
+    GetGame()->GetScene()->SwapLayer(this,Layer);
 }

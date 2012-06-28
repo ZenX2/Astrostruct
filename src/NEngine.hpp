@@ -105,15 +105,16 @@
  * These classes collaborate together to create a skinnable gui system.
  *
  */
-#include "NMap.hpp"
+#include "NSpace.hpp"
 #include "NLight.hpp"
+#include "NMap.hpp"
 #include "NWindow.hpp"
 #include "NCheckbox.hpp"
 #include "NTextInput.hpp"
 #include "NButton.hpp"
 #include "NPlayer.hpp"
-#include "NScene.hpp"
 #include "NCamera.hpp"
+#include "NScene.hpp"
 #include "NRender.hpp"
 #include "NConsole.hpp"
 #include "NLua.hpp"

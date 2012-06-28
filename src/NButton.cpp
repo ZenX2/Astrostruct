@@ -232,7 +232,7 @@ void NButton::Tick(double DT)
         Texture->Tick(DT);
     }
     glm::vec2 MP = GetGame()->GetInput()->GetMouse();
-    if (Intersects(glm::vec4(GetPos().x,GetPos().y,GetScale().x,GetScale().y),MP))
+    if (Intersects(glm::vec4(GetRealPos().x,GetRealPos().y,GetScale().x,GetScale().y),MP))
     {
         if (GetGame()->GetInput()->GetMouseKey(0))
         {
@@ -313,7 +313,7 @@ void NButton::SetColor(glm::vec4 i_Color)
     }
     Color = i_Color;
 }
-std::string NButton::GetType()
+NodeType NButton::GetType()
 {
-    return "Button";
+    return NodeButton;
 }

@@ -61,9 +61,9 @@ public:
     /**
      * @brief Returns the type of this object.
      *
-     * @return "Player"
+     * @return Player.
      */
-    std::string GetType();
+    NodeType GetType();
     /**
      * @brief Returns the name of the player.
      *

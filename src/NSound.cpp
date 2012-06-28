@@ -196,7 +196,7 @@ void NSound::Remove()
     delete (NSound*)this;
 }
 
-std::string NSound::GetType()
+NodeType NSound::GetType()
 {
-    return "Sound";
+    return NodeSound;
 }

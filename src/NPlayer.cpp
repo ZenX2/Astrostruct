@@ -30,6 +30,7 @@ NPlayer::NPlayer(std::wstring i_Name)
     NameText = GetGame()->GetScene()->AddText("didactgothic",Name);
     NameText->SetPos(Position+glm::vec3(0,20,0));
     NameText->SwapView();
+    NameText->SetLayer(1); // Put it into the world
     NameText->SetMode(1);
     NameText->SetSize(13);
     NameText->SetParent(this);
@@ -373,9 +374,9 @@ void NPlayer::Remove()
     delete (NPlayer*)this;
 }
 
-std::string NPlayer::GetType()
+NodeType NPlayer::GetType()
 {
-    return "Player";
+    return NodePlayer;
 }
 
 float NPlayer::GetDirection()

@@ -248,9 +248,9 @@ public:
     /**
      * @brief Returns the type of the object.
      *
-     * @return "Text".
+     * @return Text
      */
-    std::string GetType();
+    NodeType GetType();
     ~NText();
     /**
      * @brief Toggles the view from orthographic to perspective, useful for rendering text in world space.

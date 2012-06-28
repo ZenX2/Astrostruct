@@ -9,6 +9,22 @@
 #ifndef NAELSTROF_NODE
 #define NAELSTROF_NODE
 
+enum NodeType
+{
+    NodeNone,
+    NodeText,
+    NodeSound,
+    NodeButton,
+    NodeWindow,
+    NodeMap,
+    NodeCheckbox,
+    NodeTextInput,
+    NodeCamera,
+    NodeLight,
+    NodePlayer,
+    NodeStar
+};
+
 class NCamera;
 
 /**
@@ -37,6 +53,7 @@ public:
     * @return The position in a glm::vec3.
     */
     virtual glm::vec3 GetPos();
+    virtual glm::vec3 GetRealPos();
     /**
     * @brief Sets the position of the object.
     *
@@ -204,19 +221,7 @@ public:
      *
      * @return "NULL".
      */
-    virtual std::string GetType();
-    /**
-     * @brief Gets custom data flags.
-     *
-     * @return Custom flags.
-     */
-    virtual char GetFlags();
-    /**
-     * @brief Sets the current flags. Currently used for flagging text as a world object, so the scene will move it over to the world rather than rendering it over GUI.
-     *
-     * @param i_Flags The desired flags.
-     */
-    virtual void SetFlags(char i_Flags);
+    virtual NodeType GetType();
     /**
      * @brief Sets the ID of the object, currently used for networking.
      *
@@ -229,6 +234,7 @@ public:
      * @return The current ID.
      */
     virtual unsigned int GetID();
+    virtual void SetLayer(unsigned int Layer);
     glm::vec3 Angle;
     glm::vec4 Color;
     glm::vec3 Position;
@@ -237,7 +243,6 @@ public:
     glm::mat4 SMatrix;
     NNode* Parent;
     std::vector<NNode*> Children;
-    char Flags;
     unsigned int ID;
 };
 

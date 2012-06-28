@@ -270,7 +270,6 @@ NText::NText(std::string i_Face, std::wstring i_Data) : NNode()
 void NText::SwapView()
 {
     Persp = !Persp;
-    SetFlags((char)Persp);
 }
 
 void NText::SetBorder(float i_W, float i_H)
@@ -700,9 +699,9 @@ NTextureNode::~NTextureNode()
         delete Children[1];
     }
 }
-std::string NText::GetType()
+NodeType NText::GetType()
 {
-    return "Text";
+    return NodeText;
 }
 void NText::SetMultiline(bool i_Multiline)
 {

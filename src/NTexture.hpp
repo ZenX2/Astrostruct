@@ -127,6 +127,7 @@ public:
     * @param i_Name The name of the animation.
     */
     void Play(std::string i_Name);
+    void Play(unsigned int i_ID);
     /**
     * @brief Moves the texture forward in time by DT.
     *
@@ -153,6 +154,7 @@ public:
      * @return False on failure, true on success.
      */
     bool Good();
+    unsigned int GetAnimationCount();
 private:
     bool GoodCheck;
     bool IsGood;

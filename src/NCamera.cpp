@@ -74,7 +74,7 @@ void NCamera::Remove()
     delete (NCamera*)this;
 }
 
-std::string NCamera::GetType()
+NodeType NCamera::GetType()
 {
-    return "Camera";
+    return NodeCamera;
 }

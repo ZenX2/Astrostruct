@@ -64,9 +64,9 @@ public:
     /**
      * @brief Returns the type of the object.
      *
-     * @return "Camera".
+     * @return NodeCamera.
      */
-    std::string GetType();
+    NodeType GetType();
 private:
     bool Changed;
     void UpdateCameraMatrix();

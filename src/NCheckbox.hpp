@@ -48,9 +48,9 @@ public:
     /**
      * @brief Returns the type of the object.
      *
-     * @return "Checkbox".
+     * @return Checkbox.
      */
-    std::string GetType();
+    NodeType GetType();
 private:
     bool Changed;
     bool Pressed;

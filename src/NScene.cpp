@@ -4,26 +4,25 @@ void NScene::Tick()
 {
     double DT = CurTime()-LastTick;
     LastTick = CurTime();
-    for (unsigned int i=0;i<GUI.size();i++)
+    for (unsigned int i=0;i<Layers.size();i++)
     {
-        GUI[i]->Tick(DT);
-    }
-    for (unsigned int i=0;i<World.size();i++)
-    {
-        World[i]->Tick(DT);
-    }
-    for (unsigned int i=0;i<Lights.size();i++)
-    {
-        Lights[i]->Tick(DT);
+        for (unsigned int o=0;o<Layers[i].size();o++)
+        {
+            Layers[i][o]->Tick(DT);
+        }
     }
 }
 
 void NScene::Draw(NCamera* View)
 {
-    glEnable(GL_DEPTH_TEST);
-    for (unsigned int i=0;i<World.size();i++)
+    for (unsigned int i=0;i<Layers[0].size();i++)
     {
-        World[i]->Draw(View);
+        Layers[0][i]->Draw(View);
+    }
+    glEnable(GL_DEPTH_TEST);
+    for (unsigned int i=0;i<Layers[1].size();i++)
+    {
+        Layers[1][i]->Draw(View);
     }
     glDisable(GL_DEPTH_TEST);
     if (!FullBright)
@@ -32,23 +31,18 @@ void NScene::Draw(NCamera* View)
         glBindFramebuffer(GL_FRAMEBUFFER, GetGame()->GetLightSystem()->GetFramebuffer());
         glClearColor(0,0,0,1);
         glClear(GL_COLOR_BUFFER_BIT);
-        for (unsigned int i=0;i<Lights.size();i++)
+        for (unsigned int i=0;i<Layers[2].size();i++)
         {
-            Lights[i]->Draw(View);
+            Layers[2][i]->Draw(View);
         }
         GetGame()->GetRender()->glPopFramebuffer();
         GetGame()->GetLightSystem()->Draw();
     } else {
         GetGame()->GetLightSystem()->CheckFBO();
     }
-    for (unsigned int i=0;i<GUI.size();i++)
+    for (unsigned int i=0;i<Layers[3].size();i++)
     {
-        if ((bool)GUI[i]->GetFlags())
-        {
-            World.push_back(GUI[i]);
-            GUI.erase(GUI.begin()+i);
-        }
-        GUI[i]->Draw(View);
+        Layers[3][i]->Draw(View);
     }
 }
 
@@ -59,23 +53,30 @@ void NScene::ToggleFullBright()
 
 void NScene::AddNode(NNode* Node)
 {
-    std::string Type = Node->GetType();
-    if (Type == "Window" || Type == "Button" || Type == "Text" || Type == "Checkbox" || Type == "TextInput")
+    NodeType Type = Node->GetType();
+    switch(Type)
     {
-        GUI.push_back(Node);
-        return;
+        //Space
+        case NodeStar:      Layers[0].push_back(Node); return;
+
+        //World
+        case NodeMap:       Layers[1].push_back(Node); return;
+        case NodePlayer:    Layers[1].push_back(Node); return;
+
+        //Lights
+        case NodeLight:     Layers[2].push_back(Node); return;
+
+        //GUI
+        case NodeWindow:    Layers[3].push_back(Node); return;
+        case NodeButton:    Layers[3].push_back(Node); return;
+        case NodeText:      Layers[3].push_back(Node); return;
+        case NodeCheckbox:  Layers[3].push_back(Node); return;
+        case NodeTextInput: Layers[3].push_back(Node); return;
+
+        case NodeCamera:    Layers[4].push_back(Node); return;
+        case NodeSound:     Layers[4].push_back(Node); return;
     }
-    if (Type == "Map" || Type == "Player")
-    {
-        World.push_back(Node);
-        return;
-    }
-    if (Type == "Light")
-    {
-        Lights.push_back(Node);
-        return;
-    }
-    Garbage.push_back(Node);
+    delete Node;
 }
 
 NScene::NScene()
@@ -83,26 +84,19 @@ NScene::NScene()
     LastTick = CurTime();
     ShuttingDown = false;
     FullBright = false;
+    std::vector<NNode*> Temp;
+    Layers.resize(6, Temp);
 }
 
 NScene::~NScene()
 {
     ShuttingDown = true;
-    for (unsigned int i=0;i<GUI.size();i++)
+    for (unsigned int i=0;i<Layers.size();i++)
     {
-        GUI[i]->Remove();
-    }
-    for (unsigned int i=0;i<World.size();i++)
-    {
-        World[i]->Remove();
-    }
-    for (unsigned int i=0;i<Lights.size();i++)
-    {
-        Lights[i]->Remove();
-    }
-    for (unsigned int i=0;i<Garbage.size();i++)
-    {
-        Garbage[i]->Remove();
+        for (unsigned int o=0;o<Layers[i].size();o++)
+        {
+            Layers[i][o]->Remove();
+        }
     }
 }
 
@@ -173,30 +167,42 @@ NTextInput* NScene::AddTextInput(std::string Texture)
     AddNode(TextInput);
     return TextInput;
 }
-std::vector<NNode*>* NScene::GetWorld()
+NStar* NScene::AddStar()
 {
-    return &World;
+    NStar* Star = new NStar();
+    AddNode(Star);
+    return Star;
+}
+std::vector<NNode*>* NScene::GetLayer(unsigned int Layer)
+{
+    return &Layers[Layer];
 }
 NNode* NScene::GetNodeByID(unsigned int ID)
 {
-    for (unsigned int i=0;i<World.size();i++)
+    for (unsigned int i=0;i<Layers.size();i++)
     {
-        if (World[i]->GetID() == ID)
+        for (unsigned int o=0;o<Layers[i].size();o++)
         {
-            return World[i];
+            if (Layers[i][o]->GetID() == ID)
+            {
+                return Layers[i][o];
+            }
         }
     }
     return NULL;
 }
 void NScene::RemoveByID(unsigned int ID)
 {
-    for (unsigned int i=0;i<World.size();i++)
+    for (unsigned int i=0;i<Layers.size();i++)
     {
-        if (World[i]->GetID() == ID)
+        for (unsigned int o=0;o<Layers[i].size();o++)
         {
-            World[i]->Remove();
-            World.erase(World.begin()+i);
-            break;
+            if (Layers[i][o]->GetID() == ID)
+            {
+                Layers[i][o]->Remove();
+                Layers[i].erase(Layers[i].begin()+o);
+                break;
+            }
         }
     }
 }
@@ -206,44 +212,71 @@ void NScene::Remove(NNode* Node)
     {
         return;
     }
-    std::string Type = Node->GetType();
-    if (Type == "Window" || Type == "Button" || Type == "Text" || Type == "TextInput")
+    for (unsigned int i=0;i<Layers.size();i++)
     {
-        for (unsigned int i=0;i<GUI.size();i++)
+        for (unsigned int o=0;o<Layers[i].size();o++)
         {
-            if (GUI[i] == Node)
+            if (Layers[i][o] == Node)
             {
-                GUI[i]->Remove();
-                GUI.erase(GUI.begin()+i);
-                return;
+                delete Node;
+                Layers[i].erase(Layers[i].begin()+o);
             }
         }
-        return;
-    }
-    if (Type == "Map" || Type == "Player")
-    {
-        for (unsigned int i=0;i<World.size();i++)
-        {
-            if (World[i] == Node)
-            {
-                World[i]->Remove();
-                World.erase(World.begin()+i);
-                return;
-            }
-        }
-        return;
-    }
-    if (Type == "Light")
-    {
-        for (unsigned int i=0;i<Lights.size();i++)
-        {
-            if (Lights[i] == Node)
-            {
-                Lights[i]->Remove();
-                Lights.erase(Lights.begin()+i);
-                return;
-            }
-        }
-        return;
     }
 }
+bool NScene::GetFullBright()
+{
+    return FullBright;
+}
+void NScene::RemoveByType(NodeType Type)
+{
+    if (ShuttingDown)
+    {
+        return;
+    }
+    for (unsigned int i=0;i<Layers.size();i++)
+    {
+        for (unsigned int o=0;o<Layers[i].size();o++)
+        {
+            if (Layers[i][o]->GetType() == Type)
+            {
+                Layers[i][o]->Remove();
+                Layers[i].erase(Layers[i].begin()+o);
+            }
+        }
+    }
+}
+void NScene::UpdateLights()
+{
+    for (unsigned int i=0;i<Layers.size();i++)
+    {
+        for (unsigned int o=0;o<Layers[i].size();o++)
+        {
+            if (Layers[i][o]->GetType() == NodeLight)
+            {
+                NLight* Light = (NLight*)Layers[i][o];
+                Light->SChanged = true;
+            }
+        }
+    }
+}
+void NScene::SwapLayer(NNode* Node, unsigned int Layer)
+{
+    for (unsigned int i=0;i<Layers.size();i++)
+    {
+        if (i == Layer)
+        {
+            continue;
+        }
+        for (unsigned int o=0;o<Layers[i].size();o++)
+        {
+            if (Layers[i][o] == Node)
+            {
+                Layers[Layer].push_back(Node);
+                Layers[i].erase(Layers[i].begin()+o);
+                return;
+            }
+        }
+    }
+}
+    

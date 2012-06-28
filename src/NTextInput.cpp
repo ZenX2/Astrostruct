@@ -262,7 +262,7 @@ void NTextInput::Tick(double DT)
     }
     if (GetGame()->GetInput()->GetMouseKey(0))
     {
-        if (Intersects(glm::vec4(GetPos().x,GetPos().y,GetScale().x,GetScale().y),GetGame()->GetInput()->GetMouse()))
+        if (Intersects(glm::vec4(GetRealPos().x,GetRealPos().y,GetScale().x,GetScale().y),GetGame()->GetInput()->GetMouse()))
         {
             GetGame()->GetInput()->SetFocus(true);
             DisplayCursor = true;
@@ -317,7 +317,7 @@ void NTextInput::Remove()
     delete (NTextInput*)this;
 }
 
-std::string NTextInput::GetType()
+NodeType NTextInput::GetType()
 {
-    return "TextInput";
+    return NodeTextInput;
 }
