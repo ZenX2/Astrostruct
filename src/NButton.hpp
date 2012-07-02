@@ -81,7 +81,7 @@ private:
     void GenerateBuffers();
     std::vector<glm::vec2> Verts;
     std::vector<glm::vec2> UVs;
-    GLuint* Buffers;
+    GLuint Buffers[2];
     GLuint ScreenLoc;
     GLuint TextureLoc;
     GLuint MatrixLoc;

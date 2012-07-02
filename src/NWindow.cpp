@@ -7,7 +7,6 @@ NWindow::NWindow(std::string i_Texture)
     SizeMem = glm::vec3(0);
     Texture = NULL;
     Changed = true;
-    Buffers = new GLuint[2];
     glGenBuffers(2,Buffers);
     Shader = GetGame()->GetRender()->GetShader("flat");
     if (Shader != NULL)
@@ -26,7 +25,6 @@ NWindow::NWindow(std::string i_Texture)
 NWindow::~NWindow()
 {
     glDeleteBuffers(2,Buffers);
-    delete[] Buffers;
     if (Texture)
     {
         delete Texture;

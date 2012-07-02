@@ -99,6 +99,7 @@ public:
     void RemoveByID(unsigned int ID);
     void Remove(NNode* Node);
     void ToggleFullBright();
+    void SetFullBright(bool Bright);
     bool GetFullBright();
     void RemoveByType(NodeType Type);
     void UpdateLights();

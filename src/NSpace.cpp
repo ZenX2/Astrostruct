@@ -4,7 +4,6 @@ NStar::NStar()
 {
     Texture = NULL;
     Changed = true;
-    Buffers = new GLuint[2];
     glGenBuffers(2,Buffers);
     Shader = GetGame()->GetRender()->GetShader("flat");
     if (Shader != NULL)
@@ -143,4 +142,9 @@ void NStar::Tick(double DT)
 NodeType NStar::GetType()
 {
     return NodeStar;
+}
+
+void NStar::Remove()
+{
+    delete (NStar*)this;
 }

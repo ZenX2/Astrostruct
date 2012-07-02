@@ -65,6 +65,16 @@ NMap::~NMap()
 }
 void NMap::DeInit()
 {
+    for (unsigned int x=0;x<Width;x++)
+    {
+        for (unsigned int y=0;y<Height;y++)
+        {
+            for (unsigned int z=0;z<Depth;z++)
+            {
+                delete Tiles[x][y][z];
+            }
+        }
+    }
     Width = 0;
     Height = 0;
     Depth = 0;
@@ -146,8 +156,11 @@ void NMap::FixUp()
                 if (Tile->IsLight() && !Tile->Light)
                 {
                     Tile->Light = GetGame()->GetScene()->AddLight("point");
-                    Tile->Light->SetScale(glm::vec3(712,712,1));
+                    Tile->Light->SetScale(glm::vec3(850,850,1));
                     Tile->Light->SetPos(glm::vec3(x*RealTileSize+RealTileSize/2.f,y*RealTileSize+RealTileSize/2.f,z*RealTileSize));
+                } else if (!Tile->IsLight() && Tile->Light)
+                {
+                    GetGame()->GetScene()->Remove(Tile->Light);
                 }
             }
         }

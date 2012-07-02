@@ -218,8 +218,9 @@ void NScene::Remove(NNode* Node)
         {
             if (Layers[i][o] == Node)
             {
-                delete Node;
+                Node->Remove();
                 Layers[i].erase(Layers[i].begin()+o);
+                return;
             }
         }
     }
@@ -242,6 +243,7 @@ void NScene::RemoveByType(NodeType Type)
             {
                 Layers[i][o]->Remove();
                 Layers[i].erase(Layers[i].begin()+o);
+                o--;
             }
         }
     }
@@ -280,3 +282,7 @@ void NScene::SwapLayer(NNode* Node, unsigned int Layer)
     }
 }
     
+void NScene::SetFullBright(bool Bright)
+{
+    FullBright = Bright;
+}

@@ -5,7 +5,6 @@ NButton::NButton(std::string i_Texture)
     BorderSize = 0;
     Texture = NULL;
     Changed = true;
-    Buffers = new GLuint[2];
     glGenBuffers(2,Buffers);
     Shader = GetGame()->GetRender()->GetShader("flat");
     DisplayText = NULL;
@@ -32,7 +31,6 @@ NButton::NButton(std::string i_Texture)
 NButton::~NButton()
 {
     glDeleteBuffers(2,Buffers);
-    delete[] Buffers;
     if (Texture)
     {
         delete Texture;

@@ -385,7 +385,7 @@ void NMapState::OnEnter()
         MapDim[0] = 16;
         MapDim[1] = 16;
         MapDim[2] = 6;
-        GetGame()->GetScene()->ToggleFullBright();
+        GetGame()->GetScene()->SetFullBright(true);
         Window = GetGame()->GetScene()->AddWindow("window");
         Window->SetScale(128,150);
         Window->SetPos(64,75);
@@ -728,15 +728,7 @@ void NMapState::Tick(double DT)
             Tile->SetID(CurrentTile);
             Tile->SetSolid(CheckBox->IsChecked());
             Tile->SetOpaque(OCheckBox->IsChecked());
-            if (Tile->IsLight())
-            {
-                if (!Tile->Light)
-                {
-                    Tile->Light = GetGame()->GetScene()->AddLight("point");
-                    Tile->Light->SetScale(glm::vec3(712,712,1));
-                    Tile->Light->SetPos(TilePos);
-                }
-            }
+            GetGame()->GetMap()->FixUp();
         }
     }
 }

@@ -138,10 +138,6 @@ float NAnimation::GetFloat(std::string i_Name)
             return Numbers[i];
         }
     }
-    NTerminal::SetColor(Yellow);
-    std::cout << "LUA WARN: ";
-    NTerminal::ClearColor();
-    std::cout << "Tried to access " << i_Name << " as a number! (It's not a number or doesn't exist!)\n";
     return 0;
 }
 
