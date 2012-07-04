@@ -94,6 +94,11 @@ void ConsoleThread(void* arg)
         //If we have some input, run it right through lua.
         std::string Line;
         getline(std::cin,Line);
+        if (Line.length() == 0)
+        {
+            GetGame()->GetLog()->Send("CONSOLE",0,"Failed to asyncronously grab input! Shutting down console...");
+            return; 
+        }
         lua_State* L = GetGame()->GetLua()->GetL();
         if (luaL_dostring(L,Line.c_str()))
         {
