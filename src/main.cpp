@@ -2,19 +2,12 @@
 
 int main(int argc, char** argv)
 {
-    NTerminal::SetColor(Blue);
-    std::cout << "ENGINE INFO: ";
-    NTerminal::ClearColor();
-    std::cout << "Welcome to " << PACKAGE_STRING << "! Report bugs to " << PACKAGE_BUGREPORT << "!\n";
     if (!GetGame()->Init(512,512,"Astrostruct",argc,argv))
     {
-        NTerminal::SetColor(Red);
-        std::cout << "ENGINE ERROR: ";
-        NTerminal::ClearColor();
-        std::cout << "Failed to initialize the game!\n";
         GetGame()->CleanUp();
         return 1;
     }
+    GetGame()->GetLog()->Send("ENGINE",2,std::string("Welcome to ") + PACKAGE_STRING + "! Report bugs to " + PACKAGE_BUGREPORT + "!");
     while(GetGame()->Running())
     {
         GetGame()->GetStateMachine()->Tick();

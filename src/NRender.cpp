@@ -327,6 +327,7 @@ void NRender::Draw()
 
 void NRender::glError()
 {
+    unsigned int ErrorCount = 0;
     GLenum Error = glGetError();
     while (Error != GL_NO_ERROR)
     {
@@ -340,11 +341,13 @@ void NRender::glError()
             case GL_INVALID_FRAMEBUFFER_OPERATION:  ErrorString = "GL_INVALID_FRAMEBUFFER_OPERATION"; break;
             default:                                ErrorString = "UNKOWN_ERROR"; break;
         }
-        NTerminal::SetColor(Yellow);
-        std::cout << "RENDER WARN: ";
-        NTerminal::ClearColor();
-        std::cout << "OpenGL reported an error: " << ErrorString << ".\n";
+        GetGame()->GetLog()->Send("RENDER",1,std::string("OpenGL reported an error: ") + ErrorString + ".");
         Error = glGetError();
+        ErrorCount++;
+        if (ErrorCount > 10)
+        {
+            GetGame()->GetLog()->Send("RENDER",0,"OpenGL is reporting too many errors! Submit a bug report please!");
+        }
     }
 }
 
@@ -425,10 +428,7 @@ NCachedTexture::NCachedTexture(std::string i_Name)
     NFile File = GetGame()->GetFileSystem()->GetFile(Name,false);
     if (!File.Good())
     {
-        NTerminal::SetColor(Yellow);
-        std::cout << "TEXTURE WARN: ";
-        NTerminal::ClearColor();
-        std::cout << "Couldn't load " << Name << " as a texture, it doesn't exist!\n";
+        GetGame()->GetLog()->Send("TEXTURE",1,std::string("Couldn't load ") + Name + " as a texture, it doesn't exist!");
         return;
     }
     char* ImageData = new char[File.Size()];
@@ -500,20 +500,14 @@ NTexture* NRender::GetTexture(std::string Name)
         {
             if (!Textures[i]->Good())
             {
-                NTerminal::SetColor(Yellow);
-                std::cout << "RENDER WARN: ";
-                NTerminal::ClearColor();
-                std::cout << "A bad texture was attempted to be loaded: " << Name << "!\n";
+                GetGame()->GetLog()->Send("TEXTURE",1,std::string("Something requested to use texture ") + Name + ", it is a bad texture!");
                 return NULL;
             }
             NTexture* NewTexture = new NTexture(Textures[i]);
             return NewTexture;
         }
     }
-    NTerminal::SetColor(Yellow);
-    std::cout << "RENDER WARN: ";
-    NTerminal::ClearColor();
-    std::cout << "An unkown texture was attempted to be loaded: " << Name << "\n";
+    GetGame()->GetLog()->Send("TEXTURE",1,std::string("Something requested to use texture ") + Name + ", it doesn't exist!");
     return NULL;
 }
 
@@ -561,55 +555,54 @@ void NRender::CheckFramebuffer()
     {
         return;
     }
-    NTerminal::SetColor(Red);
-    std::cout << "OPENGL ERROR: ";
-    NTerminal::ClearColor();
+    std::stringstream Message;
     switch (Check)
     {
         case GL_FRAMEBUFFER_UNDEFINED:
         {
-            std::cout << "GL_FRAMEBUFFER_UNDEFINED\n";
+            Message << "GL_FRAMEBUFFER_UNDEFINED";
             break;
         }
         case GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT:
         {
-            std::cout << "GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT\n";
+            Message << "GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT";
             break;
         }
         case GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT:
         {
-            std::cout << "GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT\n";
+            Message << "GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT";
             break;
         }
         case GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER:
         {
-            std::cout << "GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER\n";
+            Message << "GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER";
             break;
         }
         case GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER:
         {
-            std::cout << "GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER\n";
+            Message << "GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER";
             break;
         }
         case GL_FRAMEBUFFER_INCOMPLETE_LAYER_TARGETS:
         {
-            std::cout << "GL_FRAMEBUFFER_INCOMPLETE_LAYER_TARGETS\n";
+            Message << "GL_FRAMEBUFFER_INCOMPLETE_LAYER_TARGETS";
             break;
         }
         case GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE:
         {
-            std::cout << "GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE\n";
+            Message << "GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE";
             break;
         }
-        case GL_FRAMEBUFFER_UNSUPPORTED :
+        case GL_FRAMEBUFFER_UNSUPPORTED:
         {
-            std::cout << "GL_FRAMEBUFFER_UNSUPPORTED\n";
+            Message << "GL_FRAMEBUFFER_UNSUPPORTED";
             break;
         }
         default:
         {
-            std::cout << "Unknown frambuffer error!\n";
+            Message << "Unknown frambuffer error!";
             break;
         }
     }
+    GetGame()->GetLog()->Send("RENDER",0,Message.str());
 }

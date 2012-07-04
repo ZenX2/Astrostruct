@@ -251,10 +251,7 @@ void NOnlineState::Tick(double DT)
         {
             case ENET_EVENT_TYPE_DISCONNECT:
             {
-                NTerminal::SetColor(Yellow);
-                std::cout << "SERVER WARN: ";
-                NTerminal::ClearColor();
-                std::cout << "Disconnected from host!\n";
+                GetGame()->GetLog()->Send("SERVER",1,"Disconnected from host!");
                 GetGame()->GetStateMachine()->SetState("Paused");
                 break;
             }
@@ -311,10 +308,9 @@ void NServerState::Tick(double DT)
             {
                 char Buffer[64];
                 enet_address_get_host_ip(&Event.peer->address,Buffer,64);
-                NTerminal::SetColor(Blue);
-                std::cout << "SERVER INFO: ";
-                NTerminal::ClearColor();
-                std::cout << "Client connected from " << Buffer << " on port " << Event.peer->address.port << ".\n";
+                std::stringstream Message;
+                Message << "Client connected from " << Buffer << " on port " << Event.peer->address.port << ".";
+                GetGame()->GetLog()->Send("SERVER",2,Message.str());
                 Event.peer->data = new unsigned int[1];
                 *(unsigned int*)Event.peer->data = 0;
                 break;
@@ -324,18 +320,12 @@ void NServerState::Tick(double DT)
                 unsigned int* ID = (unsigned int*)Event.peer->data;
                 if (ID != 0)
                 {
-                    NTerminal::SetColor(Blue);
-                    std::cout << "SERVER INFO: ";
-                    NTerminal::ClearColor();
                     NPlayer* Player = (NPlayer*)GetGame()->GetScene()->GetNodeByID(*ID);
-                    std::cout << Player->GetName() << " left the game.\n";
+                    GetGame()->GetLog()->Send("SERVER",2,Player->GetName() + " left the game.");
                     GetGame()->GetPacketHandler()->RemovePlayer(*ID);
                     GetGame()->GetScene()->Remove(Player);
                 } else {
-                    NTerminal::SetColor(Blue);
-                    std::cout << "SERVER INFO: ";
-                    NTerminal::ClearColor();
-                    std::cout << "A client has disconnected.\n";
+                    GetGame()->GetLog()->Send("SERVER",2,"A client has disconnected.");
                 }
                 delete[] (unsigned int*)Event.peer->data;
                 break;
@@ -351,10 +341,7 @@ void NServerState::Tick(double DT)
             }
             case ENET_EVENT_TYPE_NONE:
             {
-                NTerminal::SetColor(Blue);
-                std::cout << "SERVER INFO: ";
-                NTerminal::ClearColor();
-                std::cout << "aw damn we still got nothin'...\n";
+                GetGame()->GetLog()->Send("SERVER",2,"Alex: I downloaded the whole packet, and they have been chasing us ever since.");
                 glfwSleep(1);
                 break;
             }

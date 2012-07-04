@@ -6,30 +6,21 @@ NSoundSystem::NSoundSystem()
     const char** DeviceNames = alureGetDeviceNames(true,&Count);
     for (unsigned int i=0;i<Count;i++)
     {
-        NTerminal::SetColor(Blue);
-        std::cout << "ALURE INFO: ";
-        NTerminal::ClearColor();
-        std::cout << " Found device: " << DeviceNames[i] << "\n";
+        GetGame()->GetLog()->Send("ALURE",2,std::string("Found device: ") + DeviceNames[i] + ".");
     }
     bool Found = false;
     for (unsigned int i=0;i<Count;i++)
     {
         if (alureInitDevice(DeviceNames[0],NULL) != AL_FALSE)
         {
-            NTerminal::SetColor(Blue);
-            std::cout << "ALURE INFO: ";
-            NTerminal::ClearColor();
-            std::cout << " Using device: " << DeviceNames[0] << "\n";
+            GetGame()->GetLog()->Send("ALURE",2,std::string("Using device: ") + DeviceNames[0] + ".");
             Found = true;
             break;
         }
     }
     if (!Found)
     {
-        NTerminal::SetColor(Yellow);
-        std::cout << "ALURE WARN: ";
-        NTerminal::ClearColor();
-        std::cout << "Failed to use any of the devices!!\n";
+        GetGame()->GetLog()->Send("ALURE",0,"Failed to use any sound devices!");
         alureFreeDeviceNames(DeviceNames);
         return;
     }
@@ -87,54 +78,50 @@ NSoundData::NSoundData(std::string i_Name)
 
 bool NSoundData::Load(std::string FileName)
 {
+    std::stringstream Message;
     ALenum Error = alGetError(); //Ensure all errors are cleared before making alure load the sound file, else it won't load.
     while (Error != AL_NO_ERROR)
     {
-        NTerminal::SetColor(Yellow);
-        std::cout << "OPENAL WARN: ";
-        NTerminal::ClearColor();
         switch(Error)
         {
             case AL_INVALID_NAME:
             {
-                std::cout << "Invalid name parameter\n";
+                Message << "Invalid name parameter";
                 break;
             }
             case AL_INVALID_ENUM:
             {
-                std::cout << "Invalid parameter\n";
+                Message << "Invalid parameter";
                 break;
             }
             case AL_INVALID_VALUE:
             {
-                std::cout << "Invalid enum parameter value\n";
+                Message << "Invalid enum parameter value";
                 break;
             }
             case AL_INVALID_OPERATION:
             {
-                std::cout << "Illegal call\n";
+                Message << "Illegal call";
                 break;
             }
             case AL_OUT_OF_MEMORY:
             {
-                std::cout << "Unable to allocate memory\n";
+                Message << "Unable to allocate memory";
                 break;
             }
             default:
             {
-                std::cout << "Unkown error\n";
+                Message << "Unkown error";
                 break;
             }
         }
         Error = alGetError();
     }
+    GetGame()->GetLog()->Send("OPENAL",1,Message.str());
     NFile File = GetGame()->GetFileSystem()->GetFile(FileName,false);
     if (!File.Good())
     {
-        NTerminal::SetColor(Yellow);
-        std::cout << "SOUND WARN: ";
-        NTerminal::ClearColor();
-        std::cout << "Failed to open " << FileName << " as a sound file, it doesn't exist!\n";
+        GetGame()->GetLog()->Send("ALURE",1,"Failed to open " + FileName + " as a sound file, it doesn't exist!");
         return Fail;
     }
     unsigned char* Data = new unsigned char[File.Size()];
@@ -143,10 +130,7 @@ bool NSoundData::Load(std::string FileName)
     delete[] Data;
     if (ID == AL_NONE)
     {
-        NTerminal::SetColor(Yellow);
-        std::cout << "SOUND WARN: ";
-        NTerminal::ClearColor();
-        std::cout << "Failed to open " << FileName << " as a sound file for reason: " << alureGetErrorString() << "!\n";
+        GetGame()->GetLog()->Send("ALURE",1,"Failed to open " + FileName + " as a sound file for reason: " + alureGetErrorString() + "!");
         return Fail;
     }
     return Success;

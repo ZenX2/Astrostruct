@@ -176,10 +176,12 @@ public:
      * @return A pointer to the packet handler.
      */
     NPacketHandler* GetPacketHandler();
+    NLog* GetLog();
 private:
     bool Server;
     bool WindowChanged;
     bool Run;
+    NLog* Log;
     NStateMachine* StateMachine;
     NPacketHandler* PacketHandler;
     NLightSystem* LightSystem;

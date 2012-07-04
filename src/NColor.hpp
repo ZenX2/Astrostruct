@@ -14,23 +14,31 @@
 
 #ifdef _WIN32
     #include <windows.h>
-    #define Red 12
-    #define Green 10
-    #define Yellow 14
-    #define Blue 9
-#else
-    #define Red 1
-    #define Green 2
-    #define Yellow 3
-    #define Blue 4
 #endif
 
 namespace NTerminal
 {
+    #ifdef _WIN32
+        enum Color
+        {
+            Red = 12,
+            Green = 10,
+            Yellow = 14,
+            Blue = 9
+        };
+    #else
+        enum Color
+        {
+            Red = 1,
+            Green,
+            Yellow,
+            Blue
+        };
+    #endif
     /**
     * @brief Sets the color of text output.
     *
-    * @param Color The specific color as an int: (1)Red, (2)Green, (3)Yellow, (4)Blue.
+    * @param Color The specific color as an enum: Red, Green, Yellow, and Blue.
     */
     void SetColor(unsigned int Color);
     /**

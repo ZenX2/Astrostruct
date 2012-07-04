@@ -12,6 +12,7 @@ NLua::NLua()
         {"exit",Quit},
         {"load",MapLoad},
         {"save",MapSave},
+        {"print",Print},
         {NULL,NULL}
     };
     lua_getglobal(L,"_G");
@@ -26,10 +27,7 @@ NLua::~NLua()
 
 int Quit(lua_State* L)
 {
-    NTerminal::SetColor(Blue);
-    std::cout << "LUA INFO: ";
-    NTerminal::ClearColor();
-    std::cout << "Recieved a command to exit!\n";
+    GetGame()->GetLog()->Send("LUA",2,"Recieved a command to exit!");
     GetGame()->Close();
 }
 
@@ -37,39 +35,14 @@ int ConsoleHelp(lua_State* L)
 {
     lua_getglobal(L,"_G");
     lua_getfield(L,-1,"_VERSION");
-    NTerminal::SetColor(Blue);
-    std::cout << "CONSOLE INFO: ";
-    NTerminal::ClearColor();
-    std::cout << "Hello from " << luaL_checkstring(L,-1) << "!\n";
-    NTerminal::SetColor(Blue);
-    std::cout << "CONSOLE INFO: ";
-    NTerminal::ClearColor();
-    std::cout << "This console is ran using lua!\n";
-    NTerminal::SetColor(Blue);
-    std::cout << "CONSOLE INFO: ";
-    NTerminal::ClearColor();
-    std::cout << "Run any lua commands by typing them here!\n";
-    NTerminal::SetColor(Blue);
-    std::cout << "CONSOLE INFO: ";
-    NTerminal::ClearColor();
-    std::cout << "Here are some examples:\n";
-    NTerminal::SetColor(Blue);
-    std::cout << "CONSOLE INFO: ";
-    NTerminal::ClearColor();
-    std::cout << "quit()\t\t\texits the program\n";
-    NTerminal::SetColor(Blue);
-    std::cout << "CONSOLE INFO: ";
-    NTerminal::ClearColor();
-    std::cout << "print(\"Hello world!\")\tprints Hello world! to cout\n";
-    NTerminal::SetColor(Blue);
-    std::cout << "CONSOLE INFO: ";
-    NTerminal::ClearColor();
-    std::cout << "load(\"Map\")\t\tLoads the current map from maps/Map.map\n";
-    NTerminal::SetColor(Blue);
-    std::cout << "CONSOLE INFO: ";
-    NTerminal::ClearColor();
-    std::cout << "save(\"Map\")\t\tSaves the current map to maps/Map.map\n";
-    std::cout << std::flush;
+    GetGame()->GetLog()->Send("LUA",2,std::string("Hello from ") + luaL_checkstring(L,-1) + "!");
+    GetGame()->GetLog()->Send("LUA",2,"This console is ran using lua!");
+    GetGame()->GetLog()->Send("LUA",2,"Run any lua commands by typing them here!");
+    GetGame()->GetLog()->Send("LUA",2,"Here are some examples:");
+    GetGame()->GetLog()->Send("LUA",2,"quit()\t\t\tExits the program.");
+    GetGame()->GetLog()->Send("LUA",2,"print(\"Hello world!\")\tPrints 'Hello world!'.");
+    GetGame()->GetLog()->Send("LUA",2,"load(\"Map\")\t\tLoads the map maps/Map.map.");
+    GetGame()->GetLog()->Send("LUA",2,"save(\"Map\")\t\tSaves the current map to maps/Map.map.");
     lua_pop(L,2);
 }
 
@@ -91,10 +64,7 @@ bool NLua::DoFile(std::string FileName)
     NFile File = GetGame()->GetFileSystem()->GetFile(FileName,false);
     if (!File.Good())
     {
-        NTerminal::SetColor(Yellow);
-        std::cout << "LUA WARN: ";
-        NTerminal::ClearColor();
-        std::cout << "Could not do file " << FileName << ", it doesn't exist!\n";
+        GetGame()->GetLog()->Send("LUA",1,std::string("Could not do file ") + FileName + ", it doesn't exist!");
         return false;
     }
     char* FileData = new char[File.Size()+1];
@@ -103,10 +73,7 @@ bool NLua::DoFile(std::string FileName)
     if (luaL_dostring(L,FileData))
     {
         delete[] FileData;
-        NTerminal::SetColor(Yellow);
-        std::cout << "LUA WARN: ";
-        NTerminal::ClearColor();
-        std::cout << lua_tostring(L, -1) << "\n";
+        GetGame()->GetLog()->Send("LUA",1,lua_tostring(L,-1));
         return Fail;
     }
     delete[] FileData;
@@ -115,10 +82,7 @@ bool NLua::DoFile(std::string FileName)
 
 bool NLua::DoFolder(std::string Folder)
 {
-    NTerminal::SetColor(Blue);
-    std::cout << "LUA INFO: ";
-    NTerminal::ClearColor();
-    std::cout << "Scanning " << Folder << " for lua files...\n";
+    GetGame()->GetLog()->Send("LUA",2,std::string("Scanning ") + Folder + " for lua files...");
     std::string ParentFolder = Folder;
     bool Result = Success;
     std::vector<std::string> Files = GetGame()->GetFileSystem()->GetFiles(Folder);
@@ -126,10 +90,7 @@ bool NLua::DoFolder(std::string Folder)
     {
         if (Files[i].find(".lua")!=std::string::npos && Files[i][Files[i].length()-1] == 'a')
         {
-            NTerminal::SetColor(Blue);
-            std::cout << "LUA INFO: ";
-            NTerminal::ClearColor();
-            std::cout << "Found " << Files[i] << "\n";
+            GetGame()->GetLog()->Send("LUA",2,std::string("Executing ") + Files[i] + ".");
             Result = (DoFile(Files[i]) && Result);
         }
     }
@@ -276,3 +237,29 @@ int MapSave(lua_State* L)
     return 0;
 }
 
+int Print(lua_State* L) //Grabbed this from http://www.lua.org/source/5.1/lbaselib.c.html#luaB_print
+{
+    std::stringstream Message;
+    int n = lua_gettop(L);  /* number of arguments */
+    int i;
+    lua_getglobal(L, "tostring");
+    for (i=1; i<=n; i++) {
+        const char *s;
+        lua_pushvalue(L, -1);  /* function to be called */
+        lua_pushvalue(L, i);   /* value to print */
+        lua_call(L, 1, 1);
+        s = lua_tostring(L, -1);  /* get result */
+        if (s == NULL)
+        {
+            return luaL_error(L, LUA_QL("tostring") " must return a string to " LUA_QL("print"));
+        }
+        if (i>1)
+        {
+            Message << "\t";
+        }
+        Message << s;
+        lua_pop(L, 1);  /* pop result */
+    }
+    GetGame()->GetLog()->Send("LUA",2,Message.str());
+    return 0;
+}

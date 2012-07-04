@@ -63,10 +63,7 @@ void ConsoleThread(void* arg)
         lua_State* L = GetGame()->GetLua()->GetL();
         if (luaL_dostring(L,Line.c_str()))
         {
-            NTerminal::SetColor(Yellow);
-            std::cout << "LUA WARN: ";
-            NTerminal::ClearColor();
-            std::cout << lua_tostring(L, -1) << "\n" << std::flush;
+            GetGame()->GetLog()->Send("LUA",1,lua_tostring(L,-1));
         }
         Line.clear();
         FlushConsoleInputBuffer(STDIN);
@@ -85,12 +82,9 @@ void ConsoleThread(void* arg)
         FD_ZERO(&ReadFDS); //Set up ReadFDS to eat stdin
         FD_SET(STDIN, &ReadFDS);
         int Check = select(STDIN+1,&ReadFDS,NULL,NULL,&TimeOut);
-        if (Check == -1 || Check == 1) // Use select to make sure we don't get stuck on getline().
+        if (Check == -1) // Use select to make sure we don't get stuck on getline().
         {
-            NTerminal::SetColor(Red);
-            std::cout << "CONSOLE ERROR: ";
-            NTerminal::ClearColor();
-            std::cout << "Select failed to asyncronously grab input!\n";
+            GetGame()->GetLog()->Send("CONSOLE",0,"Failed to asyncronously grab input! Shutting down console...");
             return; 
         }
         if (!FD_ISSET(STDIN,&ReadFDS)) // If we don't have any input ready for us, restart the loop!
@@ -103,10 +97,7 @@ void ConsoleThread(void* arg)
         lua_State* L = GetGame()->GetLua()->GetL();
         if (luaL_dostring(L,Line.c_str()))
         {
-            NTerminal::SetColor(Yellow);
-            std::cout << "LUA WARN: ";
-            NTerminal::ClearColor();
-            std::cout << lua_tostring(L, -1) << "\n";
+            GetGame()->GetLog()->Send("LUA",1,lua_tostring(L,-1));
         }
     }
 }
@@ -117,16 +108,10 @@ NConsole::NConsole()
     Thread = glfwCreateThread(ConsoleThread,NULL);
     if (Thread<0)
     {
-        NTerminal::SetColor(Yellow);
-        std::cout << "CONSOLE WARN: ";
-        NTerminal::ClearColor();
-        std::cout << "Failed to create thread for console input!\n";
+        GetGame()->GetLog()->Send("CONSOLE",0,"Failed to create a thread for console input!");
         return;
     }
-    NTerminal::SetColor(Blue);
-    std::cout << "CONSOLE INFO: ";
-    NTerminal::ClearColor();
-    std::cout << "Console is ready for input, it runs raw lua calls; type help() if you want more info!\n";
+    GetGame()->GetLog()->Send("CONSOLE",2,"Console is ready for input, it runs raw lua calls; type help() if you want more info!");
 }
 
 NConsole::~NConsole()

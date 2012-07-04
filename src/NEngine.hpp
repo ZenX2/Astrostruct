@@ -74,6 +74,7 @@
 #define Success true
 #define PI 3.14159265
 
+#include "NLog.hpp"
 #include "NSignal.hpp"
 #include "NFileSystem.hpp"
 #include "NPhysics.hpp"

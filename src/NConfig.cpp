@@ -19,10 +19,7 @@ float NConfig::GetFloat(std::string Name)
     lua_getfield(L,-1,Name.c_str());
     if (!lua_isnumber(L,-1))
     {
-        NTerminal::SetColor(Yellow);
-        std::cout << "CONFIG WARN: ";
-        NTerminal::ClearColor();
-        std::cout << "Tried to use variable " << Name << " as a number (It's not a number!). Does it exist in " << Folder << "?\n";
+        GetGame()->GetLog()->Send("CONFIG",1,std::string("Tried to use variable ") + Name + " as a number (It's not a number!). Does it exist in " + Folder + "?");
         lua_pop(L,2);
         return 0;
     }
@@ -38,10 +35,7 @@ std::string NConfig::GetString(std::string Name)
     lua_getfield(L,-1,Name.c_str());
     if (!lua_isstring(L,-1))
     {
-        NTerminal::SetColor(Yellow);
-        std::cout << "CONFIG WARN: ";
-        NTerminal::ClearColor();
-        std::cout << "Tried to use variable " << Name << " as a string (It's not a string!). Does it exist in " << Folder << "?\n";
+        GetGame()->GetLog()->Send("CONFIG",1,std::string("Tried to use variable ") + Name + " as a string (It's not a string!). Does it exist in " + Folder + "?");
         lua_pop(L,2);
         return "NULL";
     }
@@ -62,10 +56,7 @@ bool NConfig::GetBool(std::string Name)
     lua_getfield(L,-1,Name.c_str());
     if (!lua_isboolean(L,-1))
     {
-        NTerminal::SetColor(Yellow);
-        std::cout << "CONFIG WARN: ";
-        NTerminal::ClearColor();
-        std::cout << "Tried to use variable " << Name << " as a boolean (It's not a boolean!). Does it exist in " << Folder << "?\n";
+        GetGame()->GetLog()->Send("CONFIG",1,std::string("Tried to use variable ") + Name + " as a boolean (It's not a boolean!). Does it exist in " + Folder + "?");
         lua_pop(L,2);
         return false;
     }

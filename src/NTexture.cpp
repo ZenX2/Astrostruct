@@ -83,10 +83,7 @@ void NTexture::Play(std::string i_Name)
             return;
         }
     }
-    NTerminal::SetColor(Yellow);
-    std::cout << "TEXTURE WARN: ";
-    NTerminal::ClearColor();
-    std::cout << "Animation " << i_Name << " not found in texture " << Name << "\n";
+    GetGame()->GetLog()->Send("TEXTURE",1,"Animation " + i_Name + " not found in texture " + Name + ".");
 }
 
 bool NTexture::Good()

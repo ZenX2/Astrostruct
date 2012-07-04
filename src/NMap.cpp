@@ -633,10 +633,7 @@ bool NMap::Save(std::string Name)
     NFile File = GetGame()->GetFileSystem()->GetFile("maps/"+Name+".map", true);
     if (!File.Good())
     {
-        NTerminal::SetColor(Red);
-        std::cout << "MAP ERROR: ";
-        NTerminal::ClearColor();
-        std::cout << "Failed to save map maps/" << Name << ".map!\n";
+        GetGame()->GetLog()->Send("MAP",0,std::string("Failed to save map 'maps/") + Name + ".map!");
         return Fail;
     }
     File.Write(&Width,sizeof(unsigned int));
@@ -656,10 +653,7 @@ bool NMap::Save(std::string Name)
             }
         }
     }
-    NTerminal::SetColor(Blue);
-    std::cout << "MAP INFO: ";
-    NTerminal::ClearColor();
-    std::cout << "Successfully saved map maps/" << Name << ".map.\n";
+    GetGame()->GetLog()->Send("MAP",2,std::string("Successfully saved map 'maps/") + Name + ".map!");
     return Success;
 }
 
@@ -668,10 +662,7 @@ bool NMap::Load(std::string Name)
     NFile File = GetGame()->GetFileSystem()->GetFile("maps/"+Name+".map",false);
     if (!File.Good())
     {
-        NTerminal::SetColor(Red);
-        std::cout << "MAP ERROR: ";
-        NTerminal::ClearColor();
-        std::cout << "Failed to load map maps/" << Name << ".map!\n";
+        GetGame()->GetLog()->Send("MAP",0,std::string("Failed to save map 'maps/") + Name + ".map!");
         return Fail;
     }
     File.Read(&Width,sizeof(unsigned int));
@@ -693,11 +684,7 @@ bool NMap::Load(std::string Name)
             }
         }
     }
-    NTerminal::SetColor(Blue);
-    std::cout << "MAP INFO: ";
-    NTerminal::ClearColor();
-    std::cout << "Successfully loaded map maps/" << Name << ".map.\n";
-    GetGame()->GetScene()->RemoveByType(NodeLight);
+    GetGame()->GetLog()->Send("MAP",2,std::string("Successfully loaded map 'maps/") + Name + ".map!");
     FixUp();
     return Success;
 }

@@ -34,6 +34,7 @@ int ConsoleHelp(lua_State* L);
  * @return 0
  */
 int Quit(lua_State* L);
+int Print(lua_State* L);
 /**
 * @brief Class that initializes and exposes lua to the rest of the engine.
 */

@@ -6,53 +6,37 @@ void SignalHandler(int Signal)
     {
         case SIGSEGV:
         {
-            NTerminal::SetColor(Red);
-            std::cout << "SIGNAL ERROR: ";
-            NTerminal::ClearColor();
-            std::cout << "Recieved signal " << SignalToString(Signal) << ": please use valgrind to get some debug info and send bug reports!\n";
+            GetGame()->GetLog()->Send("SIGNAL",0,"Recieved signal " + SignalToString(Signal) + ": please use valgrind to get some debug info and send bug reports!");
             exit(1);
             break;
         }
         case SIGFPE:
         {
-            NTerminal::SetColor(Yellow);
-            std::cout << "SIGNAL WARN: ";
-            NTerminal::ClearColor();
-            std::cout << "Recieved signal " << SignalToString(Signal) << ": aw damn we divided by zero or something dumb like that. Not sure how well things will run from here!\n";
+            GetGame()->GetLog()->Send("SIGNAL",0,"Recieved signal " + SignalToString(Signal) + ": aw damn we divided by zero or something dumb like that. We must exit now :(");
+            exit(1);
             break;
         }
         case SIGILL:
         {
-            NTerminal::SetColor(Yellow);
-            std::cout << "SIGNAL WARN: ";
-            NTerminal::ClearColor();
-            std::cout << "Recieved signal " << SignalToString(Signal) << ": uh oh, this could be due to code corruption or memory corruption. Or we could be attempting to execute raw data. Not sure how well things will run from here!\n";
+            GetGame()->GetLog()->Send("SIGNAL",0,"Recieved signal " + SignalToString(Signal) + ": uh oh, this could be due to code corruption or memory corruption. Or we could be attempting to execute raw data. Run for your life!");
+            exit(1);
             break;
         }
         case SIGABRT:
         {
-            NTerminal::SetColor(Red);
-            std::cout << "SIGNAL ERROR: ";
-            NTerminal::ClearColor();
-            std::cout << "Recieved signal " << SignalToString(Signal) << ": something wants us to terminate because they're mad, unfortunately I should comply...\n";
+            GetGame()->GetLog()->Send("SIGNAL",0,"Recieved signal " + SignalToString(Signal) + ": something wants us to terminate because they're mad, unfortunately I have to comply. :(");
             GetGame()->Close();
             break;
         }
         case SIGTERM:
         {
-            NTerminal::SetColor(Blue);
-            std::cout << "SIGNAL INFO: ";
-            NTerminal::ClearColor();
-            std::cout << "Recieved signal " << SignalToString(Signal) << ": exiting...\n";
+            GetGame()->GetLog()->Send("SIGNAL",1,"Recieved signal " + SignalToString(Signal) + ": exiting...");
             GetGame()->Close();
             break;
         }
         default:
         {
-            NTerminal::SetColor(Yellow);
-            std::cout << "SIGNAL WARN: ";
-            NTerminal::ClearColor();
-            std::cout << "Recieved unhandled signal: " << SignalToString(Signal) << "\n";
+            GetGame()->GetLog()->Send("SIGNAL",1,"Recieved unknown signal " + SignalToString(Signal) + ". Not sure what I should do about it, so I'll happily do nothing!");
             break;
         }
     }

@@ -84,10 +84,9 @@ bool NInput::KeyChanged(int Key)
     }
     if (Key > KeyCount || Key < 0)
     {
-        NTerminal::SetColor(Yellow);
-        std::cout << "INPUT WARN: ";
-        NTerminal::ClearColor();
-        std::cout << "Attempted to grab key: " << Key << ", it's out of range!\n";
+        std::stringstream Message;
+        Message << "Attempted to grab key: " << Key << ", it's out of rang!";
+        GetGame()->GetLog()->Send("INPUT",1,Message.str());
         return false;
     }
     if (Key<10)

@@ -4,10 +4,7 @@ NNetwork::NNetwork()
 {
     if (enet_initialize())
     {
-        NTerminal::SetColor(Red);
-        std::cout << "NETWORK ERROR: ";
-        NTerminal::ClearColor();
-        std::cout << "Failed to initialize enet!\n";
+        GetGame()->GetLog()->Send("NETWORK",0,"Failed to initialize enet!");
     }
     Server = NULL;
     PlayerSlots = 0;
@@ -24,17 +21,13 @@ bool NNetwork::CreateServer()
     Address.host = ENET_HOST_ANY;
     Address.port = GetGame()->GetConfig()->GetFloat("Port");
     PlayerSlots = GetGame()->GetConfig()->GetFloat("PlayerSlots");
-    NTerminal::SetColor(Blue);
-    std::cout << "NETWORK INFO: ";
-    NTerminal::ClearColor();
-    std::cout << "Creating server on port " << Address.port << " with " << PlayerSlots << " player slots.\n";
+    std::stringstream Message;
+    Message << "Creating server on port " << Address.port << " with " << PlayerSlots << " player slots.\n";
+    GetGame()->GetLog()->Send("NETWORK",2,Message.str());
     Server = enet_host_create(&Address,PlayerSlots,2,0,0);
     if (!Server)
     {
-        NTerminal::SetColor(Red);
-        std::cout << "NETWORK ERROR: ";
-        NTerminal::ClearColor();
-        std::cout << "Failed to create server!\n";
+        GetGame()->GetLog()->Send("NETWORK",0,"Failed to create server!");
         return Fail;
     }
     return Success;
@@ -49,10 +42,7 @@ bool NNetwork::CreateClient()
     Client = enet_host_create(NULL,1,2,0,0);
     if (!Client)
     {
-        NTerminal::SetColor(Red);
-        std::cout << "NETWORK ERROR: ";
-        NTerminal::ClearColor();
-        std::cout << "Failed to create client!\n";
+        GetGame()->GetLog()->Send("NETWORK",0,"Failed to create client!");
         return Fail;
     }
     return Success;
@@ -66,10 +56,7 @@ bool NNetwork::PollEvent(ENetEvent* Event)
     }
     if (Server && Client)
     {
-        NTerminal::SetColor(Yellow);
-        std::cout << "NETWORK WARN: ";
-        NTerminal::ClearColor();
-        std::cout << "We have a server and client running on the same host! Assuming we're a server...\n";
+        GetGame()->GetLog()->Send("NETWORK",1,"We have a server and client running on the same host! Assuming we're a server...");
         enet_host_destroy(Client);
         Client = NULL;
     }
@@ -83,10 +70,7 @@ bool NNetwork::PollEvent(ENetEvent* Event)
         }
         if (Check < 0)
         {
-            NTerminal::SetColor(Red);
-            std::cout << "NETWORK ERROR: ";
-            NTerminal::ClearColor();
-            std::cout << "Failed to poll for events!\n";
+            GetGame()->GetLog()->Send("NETWORK",0,"Failed to poll for events!");
         }
         return false;
     }
@@ -97,10 +81,7 @@ bool NNetwork::PollEvent(ENetEvent* Event)
     }
     if (Check < 0)
     {
-        NTerminal::SetColor(Red);
-        std::cout << "NETWORK ERROR: ";
-        NTerminal::ClearColor();
-        std::cout << "Failed to poll for events!\n";
+        GetGame()->GetLog()->Send("NETWORK",0,"Failed to poll for events!");
     }
     return false;
 }
@@ -132,25 +113,22 @@ bool NNetwork::Connect(std::string i_HostName, unsigned int Port)
     Host = enet_host_connect(Client,&Address,2,0);
     if (!Host)
     {
-        NTerminal::SetColor(Red);
-        std::cout << "NETWORK ERROR: ";
-        NTerminal::ClearColor();
-        std::cout << "Failed to connect to host " << HostName << " on port " << Port << "!\n";
+        std::stringstream Message;
+        Message << "Failed to connect to host " << HostName << " on port " << Port << "!";
+        GetGame()->GetLog()->Send("NETWORK",0,Message.str());
         return Fail;
     }
     ENetEvent Event;
     if (enet_host_service(Client, &Event, 2500) > 0 && Event.type == ENET_EVENT_TYPE_CONNECT)
     {
-        NTerminal::SetColor(Blue);
-        std::cout << "NETWORK INFO: ";
-        NTerminal::ClearColor();
-        std::cout << "Successfully connected to " << HostName << " on port " << Port << ".\n";
+        std::stringstream Message;
+        Message << "Successfully connected to " << HostName << " on port " << Port << ".";
+        GetGame()->GetLog()->Send("NETWORK",2,Message.str());
         return Success;
     } else {
-        NTerminal::SetColor(Red);
-        std::cout << "NETWORK ERROR: ";
-        NTerminal::ClearColor();
-        std::cout << "Failed to connect to host " << HostName << " on port " << Port << "!\n";
+        std::stringstream Message;
+        Message << "Failed to connect to host " << HostName << " on port " << Port << "!";
+        GetGame()->GetLog()->Send("NETWORK",0,Message.str());
         Host = NULL;
         return Fail;
     }
@@ -175,19 +153,13 @@ void NNetwork::Disconnect()
             }
             case ENET_EVENT_TYPE_DISCONNECT:
             {
-                NTerminal::SetColor(Blue);
-                std::cout << "NETWORK INFO: ";
-                NTerminal::ClearColor();
-                std::cout << "Succesfully disconnected with " << HostName << "\n";
+                GetGame()->GetLog()->Send("NETWORK",2,std::string("Successfully disconnected with ") + HostName + ".");
                 Host = NULL;
                 return;
             }
         }
     }
-    NTerminal::SetColor(Yellow);
-    std::cout << "NETWORK WARN: ";
-    NTerminal::ClearColor();
-    std::cout << "Server didn't respond to disconnect!\n";
+    GetGame()->GetLog()->Send("NETWORK",1,"Server didn't respond to disconnect!");
     enet_peer_reset(Host);
     Host = NULL;
 }

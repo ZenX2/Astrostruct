@@ -80,7 +80,8 @@ set(source
     src/NTexture.cpp
     src/NUnicode.cpp
     src/NWindow.cpp
-    src/NSpace.cpp)
+    src/NSpace.cpp
+    src/NLog.cpp)
 
 # GAME
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmakemodules")

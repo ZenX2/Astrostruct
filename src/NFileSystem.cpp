@@ -18,10 +18,9 @@ NFile::NFile(std::string i_File, bool i_Writing)
     } else {
         std::string Directory = i_File.substr(0,i_File.find_last_of('/'));
         PHYSFS_setWriteDir(("data/"+Directory).c_str());
-        NTerminal::SetColor(Blue);
-        std::cout << "FILESYSTEM INFO: ";
-        NTerminal::ClearColor();
-        std::cout << "Setting write directory to " << Directory << ".\n";
+
+        GetGame()->GetLog()->Send("FILESYS",2,std::string("Setting write directory to ") + Directory + ".");
+
         std::string FileN = i_File.substr(i_File.find_last_of('/'));
         FileN = FileN.substr(1);
         File = PHYSFS_openWrite(FileN.c_str());
@@ -46,10 +45,7 @@ int NFile::Read(void* Buffer, unsigned int Size)
     int Readed = PHYSFS_read(File,Buffer,1,Size);
     if (Readed < Size || Readed == -1)
     {
-        NTerminal::SetColor(Red);
-        std::cout << "FILESYSTEM ERROR: ";
-        NTerminal::ClearColor();
-        std::cout << "Had trouble reading file " << FileName << ". PHYSFS reported error: " << PHYSFS_getLastError() << "!\n";
+        GetGame()->GetLog()->Send("FILESYS",0,std::string("Had trouble reading file ") + FileName + ". PHYSFS reported error: " + PHYSFS_getLastError() + "!");
     }
     if (PHYSFS_eof(File))
     {
@@ -67,10 +63,7 @@ int NFile::Write(void* Buffer, unsigned int Size)
     int Written = PHYSFS_write(File,Buffer,1,Size);
     if (Written < Size || Written == -1)
     {
-        NTerminal::SetColor(Red);
-        std::cout << "FILESYSTEM ERROR: ";
-        NTerminal::ClearColor();
-        std::cout << "Had trouble writing to file " << FileName << ". PHYSFS reported error: " << PHYSFS_getLastError() << "!\n";
+        GetGame()->GetLog()->Send("FILESYS",0,std::string("Had trouble writing to file ") + FileName + ". PHYSFS reported error: " + PHYSFS_getLastError() + "!");
         Writeable = false;
     }
     return Written;
@@ -105,27 +98,21 @@ NFileSystem::NFileSystem(std::string CurrentPath)
 {
     if (!PHYSFS_init(CurrentPath.c_str()))
     {
-        NTerminal::SetColor(Yellow);
-        std::cout << "FILESYSTEM WARN: ";
-        NTerminal::ClearColor();
-        std::cout << "PHYSFS encountered an error: " << PHYSFS_getLastError() << "\n";
+        GetGame()->GetLog()->Send("FILESYS",0,std::string("PHYSFS encountered an error while initializing: ") + PHYSFS_getLastError());
         return;
     }
     PHYSFS_permitSymbolicLinks(false);
     std::string Path = PHYSFS_getBaseDir();
     PHYSFS_addToSearchPath((Path+"data").c_str(),0);
-    NTerminal::SetColor(Blue);
-    std::cout << "FILESYSTEM INFO: ";
-    NTerminal::ClearColor();
-    std::cout << "Supported archives are: ";
     const PHYSFS_ArchiveInfo** Listing = PHYSFS_supportedArchiveTypes();
     unsigned int i=0;
+    std::stringstream Archives;
     while (Listing[i] != NULL)
     {
-        std::cout << Listing[i]->extension << " ";
+        Archives << Listing[i]->extension << " ";
         i++;
     }
-    std::cout << "\n";
+    GetGame()->GetLog()->Send("FILESYS",2,std::string("Supported archives are: ") + Archives.str());
 }
 
 NFileSystem::~NFileSystem()

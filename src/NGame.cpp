@@ -24,14 +24,12 @@ NGame::NGame()
     Console = NULL;
     Map = NULL;
     Network = NULL;
+    Log = NULL;
 }
 
 NGame::~NGame()
 {
-    NTerminal::SetColor(Blue);
-    std::cout << "ENGINE INFO: ";
-    NTerminal::ClearColor();
-    std::cout << "Shutting down...\n";
+    Log->Send("ENGINE",2,"Shutting down...");
     delete SignalInterceptor;
     delete FileSystem;
     delete Scene;
@@ -43,6 +41,7 @@ NGame::~NGame()
     delete Input;
     delete Render;
     delete PacketHandler;
+    delete Log;
     if (!Server)
     {
         delete SoundSystem;
@@ -64,14 +63,12 @@ bool NGame::Init(int i_Width, int i_Height, std::string Title, int argc, char** 
     }
     if (Server)
     {
-        srand(time(NULL));
+        Log = new NLog();
         SignalInterceptor = new NSignalInterceptor();
+        srand(time(NULL));
         if (!glfwInit())
         {
-            NTerminal::SetColor(Red);
-            std::cout << "ENGINE ERROR: ";
-            NTerminal::ClearColor();
-            std::cout << "GLFW failed to initialize!\n";
+            Log->Send("ENGINE",0,"GLFW failed to initialize!");
             return Fail;
         }
         FileSystem = new NFileSystem(argv[0]);
@@ -89,16 +86,14 @@ bool NGame::Init(int i_Width, int i_Height, std::string Title, int argc, char** 
         return Success;
     }
     //Initialize everything we can
-    srand(time(NULL));
+    Log = new NLog();
     SignalInterceptor = new NSignalInterceptor();
+    srand(time(NULL));
     Width = i_Width;
     Height = i_Height;
     if (!glfwInit())
     {
-        NTerminal::SetColor(Red);
-        std::cout << "ENGINE ERROR: ";
-        NTerminal::ClearColor();
-        std::cout << "GLFW failed to initialize!\n";
+        Log->Send("ENGINE",0,"GLFW failed to initialize!");
         return Fail;
     }
     FileSystem = new NFileSystem(argv[0]);
@@ -124,20 +119,14 @@ bool NGame::Init(int i_Width, int i_Height, std::string Title, int argc, char** 
     }
     if (!Check)
     {
-        NTerminal::SetColor(Red);
-        std::cout << "ENGINE ERROR: ";
-        NTerminal::ClearColor();
-        std::cout << "GLFW failed to open a window!\n";
+        Log->Send("ENGINE",0,"GLFW failed to open a window!");
         glfwTerminate();
         return Fail;
     }
     glfwSetWindowTitle(Title.c_str());
     if (glewInit() != GLEW_OK)
     {
-        NTerminal::SetColor(Red);
-        std::cout << "ENGINE ERROR: ";
-        NTerminal::ClearColor();
-        std::cout << "GLEW failed to initialize!\n";
+        Log->Send("ENGINE",0,"GLEW failed to initialize!");
         glfwTerminate();
         return Fail;
     }
@@ -208,10 +197,7 @@ void NGame::Poll()
     //If the window closes, end the game!
     if (!glfwGetWindowParam(GLFW_OPENED))
     {
-        NTerminal::SetColor(Blue);
-        std::cout << "ENGINE INFO: ";
-        NTerminal::ClearColor();
-        std::cout << "Game window was closed!\n" << std::flush;
+        Log->Send("ENGINE",2,"Game window was closed!");
         Close();
         return;
     }
@@ -307,4 +293,8 @@ NNetwork* NGame::GetNetwork()
 NPacketHandler* NGame::GetPacketHandler()
 {
     return PacketHandler;
+}
+NLog* NGame::GetLog()
+{
+    return Log;
 }

@@ -4,10 +4,7 @@ NTextSystem::NTextSystem()
 {
     if (FT_Init_FreeType(&FTLib))
     {
-        NTerminal::SetColor(Yellow);
-        std::cout << "FREETYPE WARN: ";
-        NTerminal::ClearColor();
-        std::cout << "FreeType failed to initialize!\n";
+        GetGame()->GetLog()->Send("FREETYPE",1,"FreeType failed to initialize!");
         FTLib = NULL;
     }
 }
@@ -93,10 +90,7 @@ bool NFace::Load(std::string File)
     NFile MyFile = GetGame()->GetFileSystem()->GetFile(File,false);
     if (!MyFile.Good())
     {
-        NTerminal::SetColor(Yellow);
-        std::cout << "FREETYPE WARN: ";
-        NTerminal::ClearColor();
-        std::cout << "Failed to load " << File << ", it doesn't exist!\n";
+        GetGame()->GetLog()->Send("FREETYPE",1,"Failed to load " + File + ", it doesn't exist!");
         return Fail;
     }
     FileData = new char[MyFile.Size()];
@@ -104,10 +98,7 @@ bool NFace::Load(std::string File)
     if (FT_New_Memory_Face(FTLib,(const unsigned char*)FileData,MyFile.Size(),0,&Face))
     {
         delete[] FileData;
-        NTerminal::SetColor(Yellow);
-        std::cout << "FREETYPE WARN: ";
-        NTerminal::ClearColor();
-        std::cout << "Failed to load " << File << ", corrupt or not a freetype-compadible font!\n";
+        GetGame()->GetLog()->Send("FREETYPE",1,"Failed to load " + File + " as a font, it's either corrupt or not a FreeType-compatible format!");
         return Fail;
     }
     return Success;
