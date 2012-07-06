@@ -48,11 +48,16 @@ public:
      */
     virtual void Draw(NCamera* View);
     /**
-    * @brief Gets the postition of the object.
+    * @brief Gets the postition of the object set from SetPos().
     *
     * @return The position in a glm::vec3.
     */
     virtual glm::vec3 GetPos();
+    /**
+     * @brief Returns the real position of the object by adding together all of it's parent's positions. Doesn't do anything with angles quite yet though.
+     *
+     * @return The real position in a glm::vec3.
+     */
     virtual glm::vec3 GetRealPos();
     /**
     * @brief Sets the position of the object.
@@ -234,6 +239,11 @@ public:
      * @return The current ID.
      */
     virtual unsigned int GetID();
+    /**
+     * @brief Moves the node to the specified layer so the render order changes.
+     *
+     * @param Layer The desired layer number. (0-4)
+     */
     virtual void SetLayer(unsigned int Layer);
     glm::vec3 Angle;
     glm::vec4 Color;

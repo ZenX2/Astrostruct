@@ -16,6 +16,11 @@
 class NTextInput : public NNode
 {
 public:
+    /**
+     * @brief Generates a text box with the given texture.
+     *
+     * @param i_Texture The name of the desired texture.
+     */
     NTextInput(std::string i_Texture);
     ~NTextInput();
     NTexture* Texture;
@@ -25,6 +30,11 @@ public:
     * @param View The camera view matrix, might not be used in the future.
     */
     void Draw(NCamera* View);
+    /**
+     * @brief Moves the text box forward in time, making a cursor blink and eat new input.
+     *
+     * @param DT Time passed since last execution.
+     */
     void Tick(double DT);
     /**
      * @brief Unallocates the object.
@@ -36,8 +46,23 @@ public:
      * @return TextInput.
      */
     NodeType GetType();
+    /**
+     * @brief Returns the text object we're using, useful for changing it's color or size.
+     *
+     * @return A pointer to the text object.
+     */
     NText* GetText();
+    /**
+     * @brief Sets the text currently entered into the box.
+     *
+     * @param Text The desired text entered.
+     */
     void SetText(std::wstring Text);
+    /**
+     * @brief Returns the text currently entered in the box.
+     *
+     * @return The currently entered text.
+     */
     std::wstring GetEnteredText();
 private:
     std::wstring RealText;

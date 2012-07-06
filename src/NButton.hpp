@@ -69,12 +69,17 @@ public:
      */
     NodeType GetType();
     NText* GetText();
+    void SetToggleable(bool i_Toggleable);
+    void SetToggle(bool i_Toggled);
+    bool GetToggle();
 private:
+    bool Toggled;
     unsigned int TextureWidth, TextureHeight;
     bool PressedMemory;
     bool IsPressed;
     bool IsChanged;
     bool Changed;
+    bool Toggleable;
     float BorderSize;
     NText* DisplayText;
     NShader* Shader;

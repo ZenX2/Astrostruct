@@ -378,39 +378,39 @@ void NMapState::OnEnter()
         Window->SetPos(64,75);
         Window->SetParent(Camera);
         OtherWindow = GetGame()->GetScene()->AddWindow("window");
-        OtherWindow->SetScale(128,100);
+        OtherWindow->SetScale(128,150);
         OtherWindow->SetParent(Camera);
-        OtherWindow->SetPos(glm::vec3(GetGame()->GetWindowWidth()-64,50,0));
+        OtherWindow->SetPos(glm::vec3(GetGame()->GetWindowWidth()-64,75,0));
         CheckBox = GetGame()->GetScene()->AddCheckbox("checkbox");
         CheckBox->SetScale(16,16);
-        CheckBox->SetPos(glm::vec3(-16,-12,0));
+        CheckBox->SetPos(glm::vec3(-16,13+15,0));
         CheckBox->SetParent(OtherWindow);
         CheckText = GetGame()->GetScene()->AddText("cousine",_t("Solid"));
         CheckText->SetSize(12);
-        CheckText->SetPos(glm::vec3(0,-10,0));
+        CheckText->SetPos(glm::vec3(0,15+15,0));
         CheckText->SetParent(OtherWindow);
         OCheckBox = GetGame()->GetScene()->AddCheckbox("checkbox");
         OCheckBox->SetScale(16,16);
-        OCheckBox->SetPos(glm::vec3(-16,-32,0));
+        OCheckBox->SetPos(glm::vec3(-16,-7+15,0));
         OCheckBox->SetParent(OtherWindow);
         OCheckText = GetGame()->GetScene()->AddText("cousine",_t("Opaque"));
         OCheckText->SetSize(12);
-        OCheckText->SetPos(glm::vec3(0,-30,0));
+        OCheckText->SetPos(glm::vec3(0,-5+15,0));
         OCheckText->SetParent(OtherWindow);
         Increase = GetGame()->GetScene()->AddButton("button");
         Increase->SetScale(16,16);
         Increase->SetText(_t(">"));
-        Increase->SetPos(64-16,12);
+        Increase->SetPos(64-16,37+15);
         Increase->SetParent(OtherWindow);
         Decrease = GetGame()->GetScene()->AddButton("button");
         Decrease->SetScale(16,16);
         Decrease->SetText(_t("<"));
-        Decrease->SetPos(-64+16,12);
+        Decrease->SetPos(-64+16,37+15);
         Decrease->SetParent(OtherWindow);
         ChangingText = GetGame()->GetScene()->AddText("cousine",_t("Tile: 0"));
         ChangingText->SetSize(16);
         ChangingText->SetMode(1);
-        ChangingText->SetPos(0,16);
+        ChangingText->SetPos(0,56);
         ChangingText->SetParent(OtherWindow);
         Text = GetGame()->GetScene()->AddText("cousine",_t("Welcome to the map editor! Use the WASD keys move and arrowkeys to change levels. You can also press F to toggle fullbright as well as QE to quick change tiles."));
         Text->SetSize(12);
@@ -436,6 +436,41 @@ void NMapState::OnEnter()
         Bg->SetUI(false);
         Bg->SetParent(Camera);
         Bg->SetPos(GetGame()->GetWindowSize()/2.f);
+
+        SlopeUp = GetGame()->GetScene()->AddButton("button");
+        SlopeUp->SetScale(16,16);
+        SlopeUp->SetText(_t("^"));
+        SlopeUp->SetPos(0,-8);
+        SlopeUp->SetToggleable(true);
+        SlopeUp->SetParent(OtherWindow);
+
+        SlopeDown = GetGame()->GetScene()->AddButton("button");
+        SlopeDown->SetScale(16,16);
+        SlopeDown->SetText(_t("v"));
+        SlopeDown->SetPos(0,-40);
+        SlopeDown->SetToggleable(true);
+        SlopeDown->SetParent(OtherWindow);
+
+        SlopeRight = GetGame()->GetScene()->AddButton("button");
+        SlopeRight->SetScale(16,16);
+        SlopeRight->SetText(_t(">"));
+        SlopeRight->SetPos(16,-24);
+        SlopeRight->SetToggleable(true);
+        SlopeRight->SetParent(OtherWindow);
+
+        SlopeLeft = GetGame()->GetScene()->AddButton("button");
+        SlopeLeft->SetScale(16,16);
+        SlopeLeft->SetText(_t("<"));
+        SlopeLeft->SetPos(-16,-24);
+        SlopeLeft->SetToggleable(true);
+        SlopeLeft->SetParent(OtherWindow);
+
+        SlopeOff = GetGame()->GetScene()->AddButton("button");
+        SlopeOff->SetScale(16,16);
+        SlopeOff->SetText(_t("o"));
+        SlopeOff->SetPos(0,-24);
+        SlopeOff->SetToggleable(true);
+        SlopeOff->SetParent(OtherWindow);
     }
     SaveWindow = NULL;
 }
@@ -458,6 +493,41 @@ void NMapState::OnExit()
 }
 void NMapState::Tick(double DT)
 {
+    if (SlopeUp->OnPressed() && SlopeUp->GetToggle())
+    {
+        SlopeDown->SetToggle(false);
+        SlopeRight->SetToggle(false);
+        SlopeLeft->SetToggle(false);
+        SlopeOff->SetToggle(false);
+    }
+    if (SlopeLeft->OnPressed() && SlopeLeft->GetToggle())
+    {
+        SlopeUp->SetToggle(false);
+        SlopeDown->SetToggle(false);
+        SlopeRight->SetToggle(false);
+        SlopeOff->SetToggle(false);
+    }
+    if (SlopeRight->OnPressed() && SlopeRight->GetToggle())
+    {
+        SlopeUp->SetToggle(false);
+        SlopeDown->SetToggle(false);
+        SlopeLeft->SetToggle(false);
+        SlopeOff->SetToggle(false);
+    }
+    if (SlopeDown->OnPressed() && SlopeDown->GetToggle())
+    {
+        SlopeUp->SetToggle(false);
+        SlopeRight->SetToggle(false);
+        SlopeLeft->SetToggle(false);
+        SlopeOff->SetToggle(false);
+    }
+    if (SlopeOff->OnPressed() && SlopeOff->GetToggle())
+    {
+        SlopeUp->SetToggle(false);
+        SlopeRight->SetToggle(false);
+        SlopeLeft->SetToggle(false);
+        SlopeDown->SetToggle(false);
+    }
     unsigned int W = GetGame()->GetWindowWidth();
     unsigned int H = GetGame()->GetWindowHeight();
     if (W > H) 
@@ -715,6 +785,22 @@ void NMapState::Tick(double DT)
             Tile->SetID(CurrentTile);
             Tile->SetSolid(CheckBox->IsChecked());
             Tile->SetOpaque(OCheckBox->IsChecked());
+            if (SlopeUp->GetToggle())
+            {
+                Tile->SetSlope(SlopeNorth);
+            } else if (SlopeDown->GetToggle())
+            {
+                Tile->SetSlope(SlopeSouth);
+            } else if (SlopeRight->GetToggle())
+            {
+                Tile->SetSlope(SlopeEast);
+            } else if (SlopeLeft->GetToggle())
+            {
+                Tile->SetSlope(SlopeWest);
+            } else {
+                SlopeOff->SetToggle(true);
+                Tile->SetSlope(SlopeNone);
+            }
             GetGame()->GetMap()->FixUp();
         }
     }

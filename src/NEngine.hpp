@@ -78,7 +78,7 @@
 #include "NSignal.hpp"
 #include "NFileSystem.hpp"
 #include "NPhysics.hpp"
-/** @defgroup TerminalColor
+/** @defgroup TerminalColor TerminalColor
  *
  * Colors incoming terminal text into several predefined colors. Currently only supports linux (and maybe mac).
  *
@@ -88,20 +88,20 @@
 #include "NInput.hpp"
 #include "NNode.hpp"
 #include "NShader.hpp"
-/** @defgroup TextSystem
+/** @defgroup TextSystem TextSystem
  *
  * These classes collaborate together to create a somewhat optimal text rendering system.
  *
  */
 #include "NText.hpp"
-/** @defgroup SoundSystem
+/** @defgroup SoundSystem SoundSystem
  *
  * These classes collaborate together to create sounds.
  *
  */
 #include "NSound.hpp"
 #include "NTexture.hpp"
-/** @defgroup GuiSystem
+/** @defgroup GuiSystem GuiSystem
  *
  * These classes collaborate together to create a skinnable gui system.
  *

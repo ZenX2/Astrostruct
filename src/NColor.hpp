@@ -45,7 +45,7 @@ namespace NTerminal
     * @brief Resets color output to normal color.
     */
     void ClearColor();
-    /*@}*/
 }
+/*@}*/
 
 #endif

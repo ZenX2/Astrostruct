@@ -80,6 +80,12 @@ public:
      */
     std::string GetString(std::string i_Name);
     std::vector<NCachedTexture*> Frames;
+    /**
+     * @brief Caches a number into memory using a name. Set using lua because I couldn't get lua to chache it for me.
+     *
+     * @param i_Name The name of the number.
+     * @param Number The value of the number as a float.
+     */
     void AddNumber(std::string i_Name, float Number);
 private:
     std::vector<std::string> NumberNames;
@@ -127,6 +133,11 @@ public:
     * @param i_Name The name of the animation.
     */
     void Play(std::string i_Name);
+    /**
+     * @brief Plays an animation based on it's ID, useful for playing random animations.
+     *
+     * @param i_ID The desired ID of the animation to play.
+     */
     void Play(unsigned int i_ID);
     /**
     * @brief Moves the texture forward in time by DT.
@@ -154,6 +165,11 @@ public:
      * @return False on failure, true on success.
      */
     bool Good();
+    /**
+     * @brief Gets the amount of animations the texture has, useful for playing a random animation.
+     *
+     * @return The number of animations.
+     */
     unsigned int GetAnimationCount();
 private:
     bool GoodCheck;

@@ -2,6 +2,8 @@
 
 NButton::NButton(std::string i_Texture)
 {
+    Toggled = false;
+    Toggleable = false;
     BorderSize = 0;
     Texture = NULL;
     Changed = true;
@@ -260,6 +262,17 @@ void NButton::Tick(double DT)
             Texture->Play("idle");
         }
     }
+    if (Toggleable)
+    {
+        if (IsPressed && IsChanged)
+        {
+            Toggled = !Toggled;
+        }
+        if (Toggled)
+        {
+            Texture->Play("pressed");
+        }
+    }
 }
 
 void NButton::SetText(std::wstring Text)
@@ -314,4 +327,16 @@ void NButton::SetColor(glm::vec4 i_Color)
 NodeType NButton::GetType()
 {
     return NodeButton;
+}
+void NButton::SetToggleable(bool i_Toggleable)
+{
+    Toggleable = i_Toggleable;
+}
+bool NButton::GetToggle()
+{
+    return Toggled;
+}
+void NButton::SetToggle(bool i_Toggled)
+{
+    Toggled = i_Toggled;
 }

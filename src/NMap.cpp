@@ -161,6 +161,7 @@ void NMap::FixUp()
                 } else if (!Tile->IsLight() && Tile->Light)
                 {
                     GetGame()->GetScene()->Remove(Tile->Light);
+                    Tile->Light = NULL;
                 }
             }
         }
@@ -290,24 +291,78 @@ void NMap::GenerateBuffers()
                 {
                     continue;
                 }
-                float TS = TileSize;
+                float TS = RealTileSize;
                 float X = x*TS;
                 float Y = y*TS;
                 float Z = i*TS;
                 float UTW = TS/(float)TextureWidth;
                 float UTH = TS/(float)TextureHeight;
-                float UTWS = UTW*((ID-1)%((unsigned int)(TextureWidth/TS)));
-                float UTHS = UTH*((ID-1)/((unsigned int)(TextureHeight/TS)));
-                Verts[i].push_back(glm::vec3(X,Y,Z));
-                UVs[i].push_back(glm::vec2(UTWS,UTHS+UTH));
-                Verts[i].push_back(glm::vec3(X+TS,Y,Z));
-                UVs[i].push_back(glm::vec2(UTWS+UTW,UTHS+UTH));
-                Verts[i].push_back(glm::vec3(X+TS,Y+TS,Z));
-                UVs[i].push_back(glm::vec2(UTWS+UTW,UTHS));
-                Verts[i].push_back(glm::vec3(X,Y+TS,Z));
-                UVs[i].push_back(glm::vec2(UTWS,UTHS));
-
-                if (!Tiles[x][y][i]->IsSolid()) //If we are solid object, outline it and make sure it has a 3d version!
+                float UTWS = UTW*((ID-1)%((unsigned int)(TextureWidth/TileSize)));
+                float UTHS = UTH*((ID-1)/((unsigned int)(TextureHeight/TileSize)));
+                switch(Tiles[x][y][i]->GetSlope())
+                {
+                    case SlopeNone:
+                    {
+                        Verts[i].push_back(glm::vec3(X,Y,Z));
+                        UVs[i].push_back(glm::vec2(UTWS,UTHS+UTH));
+                        Verts[i].push_back(glm::vec3(X+TS,Y,Z));
+                        UVs[i].push_back(glm::vec2(UTWS+UTW,UTHS+UTH));
+                        Verts[i].push_back(glm::vec3(X+TS,Y+TS,Z));
+                        UVs[i].push_back(glm::vec2(UTWS+UTW,UTHS));
+                        Verts[i].push_back(glm::vec3(X,Y+TS,Z));
+                        UVs[i].push_back(glm::vec2(UTWS,UTHS));
+                        break;
+                    }
+                    case SlopeNorth:
+                    {
+                        Verts[i].push_back(glm::vec3(X,Y,Z));
+                        UVs[i].push_back(glm::vec2(UTWS,UTHS+UTH));
+                        Verts[i].push_back(glm::vec3(X+TS,Y,Z));
+                        UVs[i].push_back(glm::vec2(UTWS+UTW,UTHS+UTH));
+                        Verts[i].push_back(glm::vec3(X+TS,Y+TS,Z+TS));
+                        UVs[i].push_back(glm::vec2(UTWS+UTW,UTHS));
+                        Verts[i].push_back(glm::vec3(X,Y+TS,Z+TS));
+                        UVs[i].push_back(glm::vec2(UTWS,UTHS));
+                        break;
+                    }
+                    case SlopeEast:
+                    {
+                        Verts[i].push_back(glm::vec3(X,Y,Z));
+                        UVs[i].push_back(glm::vec2(UTWS,UTHS+UTH));
+                        Verts[i].push_back(glm::vec3(X+TS,Y,Z+TS));
+                        UVs[i].push_back(glm::vec2(UTWS+UTW,UTHS+UTH));
+                        Verts[i].push_back(glm::vec3(X+TS,Y+TS,Z+TS));
+                        UVs[i].push_back(glm::vec2(UTWS+UTW,UTHS));
+                        Verts[i].push_back(glm::vec3(X,Y+TS,Z));
+                        UVs[i].push_back(glm::vec2(UTWS,UTHS));
+                        break;
+                    }
+                    case SlopeSouth:
+                    {
+                        Verts[i].push_back(glm::vec3(X,Y,Z+TS));
+                        UVs[i].push_back(glm::vec2(UTWS,UTHS+UTH));
+                        Verts[i].push_back(glm::vec3(X+TS,Y,Z+TS));
+                        UVs[i].push_back(glm::vec2(UTWS+UTW,UTHS+UTH));
+                        Verts[i].push_back(glm::vec3(X+TS,Y+TS,Z));
+                        UVs[i].push_back(glm::vec2(UTWS+UTW,UTHS));
+                        Verts[i].push_back(glm::vec3(X,Y+TS,Z));
+                        UVs[i].push_back(glm::vec2(UTWS,UTHS));
+                        break;
+                    }
+                    case SlopeWest:
+                    {
+                        Verts[i].push_back(glm::vec3(X,Y,Z+TS));
+                        UVs[i].push_back(glm::vec2(UTWS,UTHS+UTH));
+                        Verts[i].push_back(glm::vec3(X+TS,Y,Z));
+                        UVs[i].push_back(glm::vec2(UTWS+UTW,UTHS+UTH));
+                        Verts[i].push_back(glm::vec3(X+TS,Y+TS,Z));
+                        UVs[i].push_back(glm::vec2(UTWS+UTW,UTHS));
+                        Verts[i].push_back(glm::vec3(X,Y+TS,Z+TS));
+                        UVs[i].push_back(glm::vec2(UTWS,UTHS));
+                        break;
+                    }
+                }
+                if (!Tiles[x][y][i]->IsSolid() || Tiles[x][y][i]->GetSlope() != SlopeNone) //If we are solid object, outline it and make sure it has a 3d version!
                 {
                     continue;
                 }
@@ -521,6 +576,7 @@ void NMap::SetChanged(int Level)
 
 NTile::NTile(unsigned int x, unsigned int y, unsigned int z)
 {
+    Slope = SlopeNone;
     ID = 0;
     Solid = false;
     ForceSolid = false;
@@ -533,6 +589,7 @@ NTile::NTile(unsigned int x, unsigned int y, unsigned int z)
 }
 NTile::NTile(unsigned int i_ID)
 {
+    Slope = SlopeNone;
     ID = i_ID; 
     Solid = false;
     ForceSolid = false;
@@ -551,6 +608,10 @@ void NTile::SetID(int i_ID)
 }
 NTile::~NTile()
 {
+    if (Light)
+    {
+        GetGame()->GetScene()->Remove(Light);
+    }
 }
 void NTile::SetSolid(bool i_Solid)
 {
@@ -650,6 +711,8 @@ bool NMap::Save(std::string Name)
                 File.Write(&(Solid),sizeof(bool));
                 bool Opaque = Tiles[x][y][z]->IsOpaque();
                 File.Write(&(Opaque),sizeof(bool));
+                TileSlope Slope = Tiles[x][y][z]->GetSlope();
+                File.Write(&(Slope),sizeof(TileSlope));
             }
         }
     }
@@ -668,6 +731,7 @@ bool NMap::Load(std::string Name)
     File.Read(&Width,sizeof(unsigned int));
     File.Read(&Height,sizeof(unsigned int));
     File.Read(&Depth,sizeof(unsigned int));
+    DeInit();
     Init(Width,Height,Depth);
     for (unsigned int x=0;x<Width;x++)
     {
@@ -681,6 +745,9 @@ bool NMap::Load(std::string Name)
                 Tiles[x][y][z]->SetSolid(Solid);
                 bool Opaque;
                 File.Read(&(Opaque),sizeof(bool));
+                TileSlope Slope;
+                File.Read(&(Slope),sizeof(TileSlope));
+                Tiles[x][y][z]->SetSlope(Slope);
             }
         }
     }
@@ -699,4 +766,12 @@ unsigned int NMap::GetHeight()
 unsigned int NMap::GetTileCount()
 {
     return 4;
+}
+void NTile::SetSlope(TileSlope i_Slope)
+{
+    Slope = i_Slope;
+}
+TileSlope NTile::GetSlope()
+{
+    return Slope;
 }

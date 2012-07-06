@@ -18,6 +18,11 @@
 class NWindow : public NNode
 {
 public:
+    /**
+     * @brief Creates a window with the specified texture.
+     *
+     * @param i_Texture The desired texture name.
+     */
     NWindow(std::string i_Texture);
     ~NWindow();
     NTexture* Texture;
@@ -37,8 +42,21 @@ public:
      * @brief Unallocates the object.
      */
     void Remove();
+    /**
+     * @brief Returns the type of the node.
+     *
+     * @return NodeWindow.
+     */
     NodeType GetType();
+    /**
+     * @brief Swaps the view matrix from orthographic to perspective and vise-versa.
+     */
     void SwapView();
+    /**
+     * @brief Sets if this window should block mouse clicks. When the mouse is "blocked" by a UI element, it will only affect other UI elements. Rather than the world.
+     *
+     * @param i_UI True to block the mouse, false otherwise.
+     */
     void SetUI(bool i_UI);
 private:
     glm::vec3 SizeMem;

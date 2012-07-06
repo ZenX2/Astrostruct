@@ -149,6 +149,11 @@ private:
     NButton* Decrease;
     NButton* SaveButton;
     NButton* Apply;
+    NButton* SlopeUp;
+    NButton* SlopeDown;
+    NButton* SlopeRight;
+    NButton* SlopeLeft;
+    NButton* SlopeOff;
     NButton* LoadButton;
     NButton* QuitButton;
     NTextInput* Input;

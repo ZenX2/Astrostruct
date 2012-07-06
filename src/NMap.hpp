@@ -8,6 +8,15 @@
 #ifndef NAELSTROF_MAP
 #define NAELSTROF_MAP
 
+enum TileSlope
+{
+    SlopeNone,
+    SlopeNorth,
+    SlopeEast,
+    SlopeSouth,
+    SlopeWest
+};
+
 /**
  * @brief A single unit in the map, can be walls, floor, empty space, anything map specific.
  */
@@ -63,8 +72,26 @@ public:
     void SetID(int i_ID);
     unsigned int X,Y,Z;
     NLight* Light;
+    /**
+     * @brief Returns if the tile is meant to emit light.
+     *
+     * @return True if it is, false otherwise.
+     */
     bool IsLight();
+    /**
+     * @brief Returns the current slope of the tile.
+     *
+     * @return A TileSlope enum.
+     */
+    TileSlope GetSlope();
+    /**
+     * @brief Sets the slope of the tile.
+     *
+     * @param i_Slope The desired slope of the tile as a TileSlope enum.
+     */
+    void SetSlope(TileSlope i_Slope);
 private:
+    TileSlope Slope;
     bool ForceSolid;
     bool Solid;
     bool ForceOpaque;
@@ -184,10 +211,39 @@ public:
      * @param Level The level we want to regenerate.
      */
     void SetChanged(int Level);
+    /**
+     * @brief Saves the current map using the specified name to maps/Name.map.
+     *
+     * @param Name The desired name of the map.
+     *
+     * @return True on success, false otherwise.
+     */
     bool Save(std::string Name);
+    /**
+     * @brief Loads the map using the specified name from maps/Name.map.
+     *
+     * @param Name The desired name of the map we want to load.
+     *
+     * @return True on success, false if there was a problem.
+     */
     bool Load(std::string Name);
+    /**
+     * @brief Returns the width of the map.
+     *
+     * @return The width of the map.
+     */
     unsigned int GetWidth();
+    /**
+     * @brief Returns the height of the map.
+     *
+     * @return The height of the map.
+     */
     unsigned int GetHeight();
+    /**
+     * @brief Returns how many tiles should exist in a texture skin.
+     *
+     * @return Currently, 4.
+     */
     unsigned int GetTileCount();
 private:
     unsigned int DepthMem;

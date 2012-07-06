@@ -176,6 +176,11 @@ public:
      * @return A pointer to the packet handler.
      */
     NPacketHandler* GetPacketHandler();
+    /**
+     * @brief Returns a pointer to the logging system.
+     *
+     * @return A pointer to the logging system.
+     */
     NLog* GetLog();
 private:
     bool Server;
