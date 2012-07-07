@@ -425,7 +425,7 @@ NCachedTexture::NCachedTexture(std::string i_Name)
     Height = 0;
     Name = i_Name;
     int Channels;
-    NFile File = GetGame()->GetFileSystem()->GetFile(Name,false);
+    NReadFile File = GetGame()->GetFileSystem()->GetReadFile(Name);
     if (!File.Good())
     {
         GetGame()->GetLog()->Send("TEXTURE",1,std::string("Couldn't load ") + Name + " as a texture, it doesn't exist!");

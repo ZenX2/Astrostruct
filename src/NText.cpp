@@ -87,7 +87,7 @@ bool NFace::Load(std::string File)
     {
         return Fail;
     }
-    NFile MyFile = GetGame()->GetFileSystem()->GetFile(File,false);
+    NReadFile MyFile = GetGame()->GetFileSystem()->GetReadFile(File);
     if (!MyFile.Good())
     {
         GetGame()->GetLog()->Send("FREETYPE",1,"Failed to load " + File + ", it doesn't exist!");

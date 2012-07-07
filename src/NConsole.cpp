@@ -61,6 +61,7 @@ void ConsoleThread(void* arg)
             continue;
         }
         lua_State* L = GetGame()->GetLua()->GetL();
+        GetGame()->GetLog()->Log(Line);
         if (luaL_dostring(L,Line.c_str()))
         {
             GetGame()->GetLog()->Send("LUA",1,lua_tostring(L,-1));
@@ -99,6 +100,7 @@ void ConsoleThread(void* arg)
             GetGame()->GetLog()->Send("CONSOLE",0,"Failed to asyncronously grab input! Shutting down console...");
             return; 
         }
+        GetGame()->GetLog()->Log(Line);
         lua_State* L = GetGame()->GetLua()->GetL();
         if (luaL_dostring(L,Line.c_str()))
         {

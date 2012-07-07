@@ -61,7 +61,7 @@ int Include(lua_State* L)
 
 bool NLua::DoFile(std::string FileName)
 {
-    NFile File = GetGame()->GetFileSystem()->GetFile(FileName,false);
+    NReadFile File = GetGame()->GetFileSystem()->GetReadFile(FileName);
     if (!File.Good())
     {
         GetGame()->GetLog()->Send("LUA",1,std::string("Could not do file ") + FileName + ", it doesn't exist!");

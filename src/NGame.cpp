@@ -41,13 +41,13 @@ NGame::~NGame()
     delete Input;
     delete Render;
     delete PacketHandler;
-    delete Log;
     if (!Server)
     {
         delete SoundSystem;
         delete TextSystem;
         delete LightSystem;
     }
+    delete Log;
     glfwTerminate();
 }
 
@@ -63,17 +63,17 @@ bool NGame::Init(int i_Width, int i_Height, std::string Title, int argc, char** 
     }
     if (Server)
     {
-        Log = new NLog();
-        SignalInterceptor = new NSignalInterceptor();
         srand(time(NULL));
+        FileSystem = new NFileSystem(argv[0]);
+        Log = new NLog();
         if (!glfwInit())
         {
             Log->Send("ENGINE",0,"GLFW failed to initialize!");
             return Fail;
         }
-        FileSystem = new NFileSystem(argv[0]);
         Lua = new NLua();
         Config = new NConfig("config");
+        SignalInterceptor = new NSignalInterceptor();
         Scene = new NScene();
         Map = Scene->AddMap(Config->GetString("MapSkin"));
         StateMachine = new NStateMachine("Serving");
@@ -86,9 +86,12 @@ bool NGame::Init(int i_Width, int i_Height, std::string Title, int argc, char** 
         return Success;
     }
     //Initialize everything we can
-    Log = new NLog();
-    SignalInterceptor = new NSignalInterceptor();
     srand(time(NULL));
+    FileSystem = new NFileSystem(argv[0]);
+    Log = new NLog();
+    Lua = new NLua();
+    Config = new NConfig("config");
+    SignalInterceptor = new NSignalInterceptor();
     Width = i_Width;
     Height = i_Height;
     if (!glfwInit())
@@ -97,8 +100,6 @@ bool NGame::Init(int i_Width, int i_Height, std::string Title, int argc, char** 
         return Fail;
     }
     FileSystem = new NFileSystem(argv[0]);
-    Lua = new NLua();
-    Config = new NConfig("config");
     //Now lets load some data from our config interface
     NewWidth = Config->GetFloat("Width");
     NewHeight = Config->GetFloat("Height");

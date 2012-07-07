@@ -118,7 +118,7 @@ bool NSoundData::Load(std::string FileName)
         Error = alGetError();
     }
     GetGame()->GetLog()->Send("OPENAL",1,Message.str());
-    NFile File = GetGame()->GetFileSystem()->GetFile(FileName,false);
+    NReadFile File = GetGame()->GetFileSystem()->GetReadFile(FileName);
     if (!File.Good())
     {
         GetGame()->GetLog()->Send("ALURE",1,"Failed to open " + FileName + " as a sound file, it doesn't exist!");

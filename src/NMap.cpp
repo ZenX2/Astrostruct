@@ -691,7 +691,7 @@ NodeType NMap::GetType()
 
 bool NMap::Save(std::string Name)
 {
-    NFile File = GetGame()->GetFileSystem()->GetFile("maps/"+Name+".map", true);
+    NWriteFile File = GetGame()->GetFileSystem()->GetWriteFile("maps/"+Name+".map");
     if (!File.Good())
     {
         GetGame()->GetLog()->Send("MAP",0,std::string("Failed to save map 'maps/") + Name + ".map!");
@@ -722,7 +722,7 @@ bool NMap::Save(std::string Name)
 
 bool NMap::Load(std::string Name)
 {
-    NFile File = GetGame()->GetFileSystem()->GetFile("maps/"+Name+".map",false);
+    NReadFile File = GetGame()->GetFileSystem()->GetReadFile("maps/"+Name+".map");
     if (!File.Good())
     {
         GetGame()->GetLog()->Send("MAP",0,std::string("Failed to save map 'maps/") + Name + ".map!");

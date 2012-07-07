@@ -65,7 +65,7 @@ bool NShader::Load(std::string VertexFilePath, std::string FragmentFilePath)
     GLuint FragmentShaderID = glCreateShader(GL_FRAGMENT_SHADER);
     //Read the Vertex shader into memory from the file
     char* VertexShaderCode;
-    NFile VertexShaderStream = GetGame()->GetFileSystem()->GetFile(VertexFilePath,false);
+    NReadFile VertexShaderStream = GetGame()->GetFileSystem()->GetReadFile(VertexFilePath);
     if (!VertexShaderStream.Good())
     {
         GetGame()->GetLog()->Send("SHADER",1,"Failed to load " + VertexFilePath + "!");
@@ -77,7 +77,7 @@ bool NShader::Load(std::string VertexFilePath, std::string FragmentFilePath)
     VertexShaderStream.Read(VertexShaderCode,VertexShaderStream.Size());
     //Now do the same with the fragment shader
     char* FragmentShaderCode;
-    NFile FragmentShaderStream = GetGame()->GetFileSystem()->GetFile(FragmentFilePath,false);
+    NReadFile FragmentShaderStream = GetGame()->GetFileSystem()->GetReadFile(FragmentFilePath);
     if (!FragmentShaderStream.Good())
     {
         GetGame()->GetLog()->Send("SHADER",1,"Failed to load " + FragmentFilePath + "!");

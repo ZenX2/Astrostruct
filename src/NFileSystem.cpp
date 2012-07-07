@@ -1,33 +1,40 @@
 #include "NEngine.hpp"
 
-NFile::NFile(std::string i_File, bool i_Writing)
+NReadFile::NReadFile()
 {
-    Writeable = true;
-    Eof = false;
-    Writing = i_Writing;
-    if (!PHYSFS_exists(i_File.c_str()) && !Writing)
+    File = NULL;
+}
+NReadFile::NReadFile(std::string Path)
+{
+    Open = false;
+    File = NULL;
+    Exists = PHYSFS_exists(Path.c_str());
+    if (Exists)
     {
-        Exists = false;
-        return;
-    }
-    Exists = true;
-    FileName = i_File;
-    if (!Writing)
-    {
-        File = PHYSFS_openRead(i_File.c_str());
-    } else {
-        std::string Directory = i_File.substr(0,i_File.find_last_of('/'));
-        PHYSFS_setWriteDir(("data/"+Directory).c_str());
-
-        GetGame()->GetLog()->Send("FILESYS",2,std::string("Setting write directory to ") + Directory + ".");
-
-        std::string FileN = i_File.substr(i_File.find_last_of('/'));
-        FileN = FileN.substr(1);
-        File = PHYSFS_openWrite(FileN.c_str());
+        File = PHYSFS_openRead(Path.c_str());
+        if (!File)
+        {
+            GetGame()->GetLog()->Send("FILESYS",0,Path+": "+PHYSFS_getLastError());
+        }
+        Eof = PHYSFS_eof(File);
+        Open = true;
     }
 }
+NReadFile::~NReadFile()
+{
+    Close();
+}
 
-unsigned int NFile::Size()
+unsigned int NReadFile::Read(void* Buffer, unsigned int Size)
+{
+    if (!Good())
+    {
+        return 0;
+    }
+    return PHYSFS_read(File,Buffer,1,Size);
+}
+
+unsigned int NReadFile::Size()
 {
     if (!Exists)
     {
@@ -36,69 +43,66 @@ unsigned int NFile::Size()
     return PHYSFS_fileLength(File);
 }
 
-int NFile::Read(void* Buffer, unsigned int Size)
+void NReadFile::Close()
+{
+    PHYSFS_close(File);
+    Open = false;
+}
+
+bool NReadFile::Good()
+{
+    return (Open && Exists && !Eof && File);
+}
+
+NWriteFile::NWriteFile()
+{
+    File = NULL;
+}
+NWriteFile::NWriteFile(std::string Path)
+{
+    File = NULL;
+    std::string Directory = Path.substr(0,Path.find_last_of('/'));
+    PHYSFS_setWriteDir(("data/"+Directory).c_str());
+    std::string FileName = Path.substr(Path.find_last_of('/'));
+    FileName = FileName.substr(1);
+    File = PHYSFS_openWrite(FileName.c_str());
+    if (!File)
+    {
+        GetGame()->GetLog()->Send("FILESYS",0,Path+": "+PHYSFS_getLastError());
+    }
+    Open = true;
+}
+
+NWriteFile::~NWriteFile()
+{
+    Close();
+}
+
+void NWriteFile::Close()
+{
+    PHYSFS_close(File);
+    Open = false;
+}
+
+bool NWriteFile::Good()
+{
+    return (Open && File);
+}
+
+unsigned int NWriteFile::Write(void* Buffer, unsigned int Size)
 {
     if (!Good())
     {
         return 0;
     }
-    int Readed = PHYSFS_read(File,Buffer,1,Size);
-    if (Readed < Size || Readed == -1)
-    {
-        GetGame()->GetLog()->Send("FILESYS",0,std::string("Had trouble reading file ") + FileName + ". PHYSFS reported error: " + PHYSFS_getLastError() + "!");
-    }
-    if (PHYSFS_eof(File))
-    {
-        Eof = true;
-    }
-    return Readed;
+    return PHYSFS_write(File,Buffer,1,Size);
 }
 
-int NFile::Write(void* Buffer, unsigned int Size)
-{
-    if (!Good())
-    {
-        return 0;
-    }
-    int Written = PHYSFS_write(File,Buffer,1,Size);
-    if (Written < Size || Written == -1)
-    {
-        GetGame()->GetLog()->Send("FILESYS",0,std::string("Had trouble writing to file ") + FileName + ". PHYSFS reported error: " + PHYSFS_getLastError() + "!");
-        Writeable = false;
-    }
-    return Written;
-}
-
-void NFile::Seek(unsigned int Pos)
-{
-    if (!Exists)
-    {
-        return;
-    }
-    PHYSFS_seek(File,Pos);
-}
-
-bool NFile::Good()
-{
-    if (!Writing)
-    {
-        return (!Eof && Exists && Writeable);
-    }
-    return (Writeable);
-}
-
-NFile::~NFile()
-{
-    if (Exists)
-    {
-        PHYSFS_close(File);
-    }
-}
 NFileSystem::NFileSystem(std::string CurrentPath)
 {
     if (!PHYSFS_init(CurrentPath.c_str()))
     {
-        GetGame()->GetLog()->Send("FILESYS",0,std::string("PHYSFS encountered an error while initializing: ") + PHYSFS_getLastError());
+        //GetGame()->GetLog()->Send("FILESYS",0,std::string("PHYSFS encountered an error while initializing: ") + PHYSFS_getLastError());
         return;
     }
     PHYSFS_permitSymbolicLinks(false);
@@ -112,7 +116,7 @@ NFileSystem::NFileSystem(std::string CurrentPath)
         Archives << Listing[i]->extension << " ";
         i++;
     }
-    GetGame()->GetLog()->Send("FILESYS",2,std::string("Supported archives are: ") + Archives.str());
+    //GetGame()->GetLog()->Send("FILESYS",2,std::string("Supported archives are: ") + Archives.str());
 }
 
 NFileSystem::~NFileSystem()
@@ -141,7 +145,12 @@ std::vector<std::string> NFileSystem::GetFiles(std::string Directory)
     return Files;
 }
 
-NFile NFileSystem::GetFile(std::string File, bool Writable)
+NReadFile NFileSystem::GetReadFile(std::string File)
 {
-    return NFile(File.c_str(),Writable);
+    return NReadFile(File);
+}
+
+NWriteFile NFileSystem::GetWriteFile(std::string File)
+{
+    return NWriteFile(File);
 }
