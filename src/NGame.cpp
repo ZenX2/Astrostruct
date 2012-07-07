@@ -75,7 +75,7 @@ bool NGame::Init(int i_Width, int i_Height, std::string Title, int argc, char** 
         Config = new NConfig("config");
         SignalInterceptor = new NSignalInterceptor();
         Scene = new NScene();
-        Map = Scene->AddMap(Config->GetString("MapSkin"));
+        Map = new NMap(Config->GetString("MapSkin"));
         StateMachine = new NStateMachine("Serving");
         Network = new NNetwork();
         Network->CreateServer();
@@ -140,7 +140,7 @@ bool NGame::Init(int i_Width, int i_Height, std::string Title, int argc, char** 
     SoundSystem->LoadSounds();
     TextSystem = new NTextSystem();
     TextSystem->LoadFaces();
-    Map = Scene->AddMap(Config->GetString("MapSkin"));
+    Map = new NMap(Config->GetString("MapSkin"));
     Console = new NConsole();
     LightSystem = new NLightSystem();
     StateMachine = new NStateMachine("Paused");

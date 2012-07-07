@@ -1,6 +1,6 @@
 #include "NEngine.hpp"
 
-NLight::NLight(std::string i_Texture)
+NLight::NLight(std::string i_Texture) : NNode(NodeLight)
 {
     Changed = true;
     SChanged = true;

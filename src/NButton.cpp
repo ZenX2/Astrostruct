@@ -1,6 +1,6 @@
 #include "NEngine.hpp"
 
-NButton::NButton(std::string i_Texture)
+NButton::NButton(std::string i_Texture) : NNode(NodeButton)
 {
     Toggled = false;
     Toggleable = false;
@@ -279,7 +279,7 @@ void NButton::SetText(std::wstring Text)
 {
     if (DisplayText == NULL)
     {
-        DisplayText = GetGame()->GetScene()->AddText("didactgothic",Text);
+        DisplayText = new NText("didactgothic",Text);
         DisplayText->SetMode(1);
         DisplayText->SetSize(GetScale().y/1.3);
         DisplayText->SetParent(this);

@@ -1,6 +1,6 @@
 #include "NEngine.hpp"
 
-NCheckbox::NCheckbox(std::string i_Texture)
+NCheckbox::NCheckbox(std::string i_Texture) : NNode(NodeCheckbox)
 {
     Pressed = false;
     PressedMemory = false;

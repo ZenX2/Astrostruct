@@ -246,7 +246,7 @@ void NPacket::Merge()
         {
             continue;
         }
-        NPlayer* Player = GetGame()->GetScene()->AddPlayer(NewPlayers[i].Name);
+        NPlayer* Player = new NPlayer(ToMBS(std::string(NewPlayers[i].Name)));
         Player->SetID(NewPlayers[i].ID);
         if (Player->GetName() == GetGame()->GetConfig()->GetString("PlayerName"))
         {
@@ -286,7 +286,7 @@ void NPacket::Merge()
     for (unsigned int i=0;i<IntroductionCount;i++)
     {
         GetGame()->GetLog()->Send("PACKET",2,std::string(Introductions[i].Name) + " has joined the game.");
-        NPlayer* Player = GetGame()->GetScene()->AddPlayer(std::string(Introductions[i].Name));
+        NPlayer* Player = new NPlayer(ToMBS(std::string(Introductions[i].Name)));
         Player->SetID(GetGame()->GetPacketHandler()->GetActivePlayers()->size()+1);
         Player->SetPos(512,512,1024);
         GetGame()->GetPacketHandler()->AddPlayer(Player);

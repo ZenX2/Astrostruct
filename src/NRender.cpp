@@ -231,7 +231,7 @@ NCamera* NRender::GetCamera()
 {
     if (!Camera)
     {
-        Camera = GetGame()->GetScene()->AddCamera();
+        Camera = new NCamera();
     }
     return Camera;
 }
@@ -266,7 +266,7 @@ void NRender::Draw()
     {
         GetGame()->GetScene()->Draw(Camera);
     } else {
-        Camera = GetGame()->GetScene()->AddCamera();
+        Camera = new NCamera();
         GetGame()->GetScene()->Draw(Camera);
     }
     glBindFramebuffer(GL_FRAMEBUFFER,0);

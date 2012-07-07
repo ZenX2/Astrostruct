@@ -1,6 +1,6 @@
 #include "NEngine.hpp"
 
-NTextInput::NTextInput(std::string i_Texture)
+NTextInput::NTextInput(std::string i_Texture) : NNode(NodeTextInput)
 {
     HasFocus = false;
     DisplayCursor = false;
@@ -43,7 +43,7 @@ NText* NTextInput::GetText()
 {
     if (!DisplayText)
     {
-        DisplayText = GetGame()->GetScene()->AddText("cousine",_t(""));
+        DisplayText = new NText("cousine",_t(""));
         DisplayText->SetParent(this);
         DisplayText->SetSize(13);
         DisplayText->SetPos(glm::vec2(-GetScale().x/2.f,0));
@@ -61,7 +61,7 @@ void NTextInput::SetText(std::wstring Text)
 {
     if (!DisplayText)
     {
-        DisplayText = GetGame()->GetScene()->AddText("cousine",_t(""));
+        DisplayText = new NText("cousine",_t(""));
         DisplayText->SetParent(this);
         DisplayText->SetSize(13);
         DisplayText->SetPos(glm::vec2(-GetScale().x/2.f,0));
@@ -256,7 +256,7 @@ void NTextInput::Tick(double DT)
 {
     if (!DisplayText)
     {
-        DisplayText = GetGame()->GetScene()->AddText("cousine",_t(""));
+        DisplayText = new NText("cousine",_t(""));
         DisplayText->SetParent(this);
         DisplayText->SetSize(13);
     }

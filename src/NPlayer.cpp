@@ -1,6 +1,6 @@
 #include "NEngine.hpp"
 
-NPlayer::NPlayer(std::wstring i_Name)
+NPlayer::NPlayer(std::wstring i_Name) : NNode(NodePlayer)
 {
     Velocity = glm::vec3(0);
     Speed = 200;
@@ -27,7 +27,7 @@ NPlayer::NPlayer(std::wstring i_Name)
         MatrixLoc = Shader->GetUniformLocation("MVP");
         ColorLoc = Shader->GetUniformLocation("Color");
     }
-    NameText = GetGame()->GetScene()->AddText("didactgothic",Name);
+    NameText = new NText("didactgothic",Name);
     NameText->SetPos(Position+glm::vec3(0,20,0));
     NameText->SwapView();
     NameText->SetLayer(1); // Put it into the world
@@ -81,7 +81,7 @@ void NPlayer::StopMove()
 void NPlayer::SetControl()
 {
     Controlled = true;
-    NLight* Light = GetGame()->GetScene()->AddLight("point");
+    NLight* Light = new NLight("point");
     Light->SetScale(glm::vec3(256,256,1));
     Light->SetParent(this);
 }

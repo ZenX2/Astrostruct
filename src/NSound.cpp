@@ -144,7 +144,7 @@ NSoundData::~NSoundData()
     }
 }
 
-NSound::NSound(std::string Name)
+NSound::NSound(std::string Name) : NNode(NodeSound)
 {
     ID = 0;
     NSoundData* Check = GetGame()->GetSoundSystem()->GetSound(Name);

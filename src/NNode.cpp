@@ -1,6 +1,6 @@
 #include "NEngine.hpp"
 
-NNode::NNode()
+NNode::NNode(NodeType i_Type)
 {
     ID = 0;
     Position = glm::vec3(0);
@@ -10,6 +10,8 @@ NNode::NNode()
     Parent = NULL;
     Matrix = glm::mat4();
     SMatrix = glm::mat4();
+    Type = i_Type;
+    GetGame()->GetScene()->AddNode(this);
 }
 
 NNode::~NNode()
@@ -162,8 +164,7 @@ NNode* NNode::GetRoot()
     return Parent->GetRoot();
 }
 
-glm::mat4 NNode::GetNonScaleMatrix()
-{
+glm::mat4 NNode::GetNonScaleMatrix() {
     return SMatrix;
 }
 
@@ -222,7 +223,7 @@ void NNode::Remove()
 }
 NodeType NNode::GetType()
 {
-    return NodeNone;
+    return Type;
 }
 void NNode::SetLayer(unsigned int Layer)
 {

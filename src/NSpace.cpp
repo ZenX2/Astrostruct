@@ -1,6 +1,6 @@
 #include "NEngine.hpp"
 
-NStar::NStar()
+NStar::NStar() : NNode(NodeStar)
 {
     Texture = NULL;
     Changed = true;

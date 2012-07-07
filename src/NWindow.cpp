@@ -1,6 +1,6 @@
 #include "NEngine.hpp"
 
-NWindow::NWindow(std::string i_Texture)
+NWindow::NWindow(std::string i_Texture) : NNode(NodeWindow)
 {
     UI = true;
     Persp = false;

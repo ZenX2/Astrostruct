@@ -33,7 +33,7 @@ class NCamera;
 class NNode
 {
 public:
-    NNode();
+    NNode(NodeType i_Type);
     ~NNode();
     /**
     * @brief Updates the object, depending on what it does.
@@ -245,6 +245,7 @@ public:
      * @param Layer The desired layer number. (0-4)
      */
     virtual void SetLayer(unsigned int Layer);
+    NodeType Type;
     glm::vec3 Angle;
     glm::vec4 Color;
     glm::vec3 Position;

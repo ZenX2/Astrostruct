@@ -1,6 +1,6 @@
 #include "NEngine.hpp"
 
-NMap::NMap(std::string i_TileSet)
+NMap::NMap(std::string i_TileSet) : NNode(NodeMap)
 {
     DepthMem = 0;
     Ready = false;
@@ -155,7 +155,7 @@ void NMap::FixUp()
                 NTile* Tile = Tiles[x][y][z];
                 if (Tile->IsLight() && !Tile->Light)
                 {
-                    Tile->Light = GetGame()->GetScene()->AddLight("point");
+                    Tile->Light = new NLight("point");
                     Tile->Light->SetScale(glm::vec3(850,850,1));
                     Tile->Light->SetPos(glm::vec3(x*RealTileSize+RealTileSize/2.f,y*RealTileSize+RealTileSize/2.f,z*RealTileSize));
                 } else if (!Tile->IsLight() && Tile->Light)

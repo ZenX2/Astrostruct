@@ -229,7 +229,7 @@ GLuint NFace::GetTexture(unsigned int Size)
     return Textures[Size]->GetTexture();
 }
 
-NText::NText(std::string i_Face, std::wstring i_Data) : NNode()
+NText::NText(std::string i_Face, std::wstring i_Data) : NNode(NodeText)
 {
     Multiline = true;
     Persp = false;

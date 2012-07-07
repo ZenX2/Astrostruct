@@ -1,6 +1,6 @@
 #include "NEngine.hpp"
 
-NCamera::NCamera()
+NCamera::NCamera() : NNode(NodeCamera)
 {
     Zoom = 1.f;
     OrthoMatrix = glm::mat4(1.f);
