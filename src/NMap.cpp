@@ -51,7 +51,7 @@ NMap::~NMap()
     }
     if (!GetGame()->IsServer())
     {
-        for (unsigned int i=0;i<Depth;i++)
+        for (unsigned int i=0;i<Buffers.size();i++)
         {
             glDeleteBuffers(5,Buffers[i]);
             delete[] Buffers[i];
@@ -71,6 +71,7 @@ void NMap::DeInit()
         {
             for (unsigned int z=0;z<Depth;z++)
             {
+                Tiles[x][y][z]->CallMethod("OnRemove");
                 delete Tiles[x][y][z];
             }
         }
@@ -111,6 +112,7 @@ void NMap::Init(unsigned int i_Width, unsigned int i_Height, unsigned int i_Dept
         TextureWidth = Texture->GetSize().x;
         TextureHeight = Texture->GetSize().y;
     }
+    MaxTiles = GetGame()->GetConfig()->GetFloat("MaxTiles");
     Width = i_Width;
     Height = i_Height;
     Depth = i_Depth;
@@ -272,10 +274,11 @@ void NMap::GenerateBuffers()
                 {
                     continue;
                 }
+                float B = .5;
                 float TS = RealTileSize;
-                float X = x*TS;
-                float Y = y*TS;
-                float Z = i*TS;
+                float X = x*TS-B;
+                float Y = y*TS-B;
+                float Z = i*TS-B;
                 float UTW = TS/(float)TextureWidth;
                 float UTH = TS/(float)TextureHeight;
                 float UTWS = UTW*((ID-1)%((unsigned int)(TextureWidth/TileSize)));
@@ -286,11 +289,11 @@ void NMap::GenerateBuffers()
                     {
                         Verts[i].push_back(glm::vec3(X,Y,Z));
                         UVs[i].push_back(glm::vec2(UTWS,UTHS+UTH));
-                        Verts[i].push_back(glm::vec3(X+TS,Y,Z));
+                        Verts[i].push_back(glm::vec3(X+TS+B,Y,Z));
                         UVs[i].push_back(glm::vec2(UTWS+UTW,UTHS+UTH));
-                        Verts[i].push_back(glm::vec3(X+TS,Y+TS,Z));
+                        Verts[i].push_back(glm::vec3(X+TS+B,Y+TS+B,Z));
                         UVs[i].push_back(glm::vec2(UTWS+UTW,UTHS));
-                        Verts[i].push_back(glm::vec3(X,Y+TS,Z));
+                        Verts[i].push_back(glm::vec3(X,Y+TS+B,Z));
                         UVs[i].push_back(glm::vec2(UTWS,UTHS));
                         break;
                     }
@@ -298,11 +301,11 @@ void NMap::GenerateBuffers()
                     {
                         Verts[i].push_back(glm::vec3(X,Y,Z));
                         UVs[i].push_back(glm::vec2(UTWS,UTHS+UTH));
-                        Verts[i].push_back(glm::vec3(X+TS,Y,Z));
+                        Verts[i].push_back(glm::vec3(X+TS+B,Y,Z));
                         UVs[i].push_back(glm::vec2(UTWS+UTW,UTHS+UTH));
-                        Verts[i].push_back(glm::vec3(X+TS,Y+TS,Z+TS));
+                        Verts[i].push_back(glm::vec3(X+TS+B,Y+TS+B,Z+TS));
                         UVs[i].push_back(glm::vec2(UTWS+UTW,UTHS));
-                        Verts[i].push_back(glm::vec3(X,Y+TS,Z+TS));
+                        Verts[i].push_back(glm::vec3(X,Y+TS+B,Z+TS));
                         UVs[i].push_back(glm::vec2(UTWS,UTHS));
                         break;
                     }
@@ -310,11 +313,11 @@ void NMap::GenerateBuffers()
                     {
                         Verts[i].push_back(glm::vec3(X,Y,Z));
                         UVs[i].push_back(glm::vec2(UTWS,UTHS+UTH));
-                        Verts[i].push_back(glm::vec3(X+TS,Y,Z+TS));
+                        Verts[i].push_back(glm::vec3(X+TS+B,Y,Z+TS));
                         UVs[i].push_back(glm::vec2(UTWS+UTW,UTHS+UTH));
-                        Verts[i].push_back(glm::vec3(X+TS,Y+TS,Z+TS));
+                        Verts[i].push_back(glm::vec3(X+TS+B,Y+TS+B,Z+TS));
                         UVs[i].push_back(glm::vec2(UTWS+UTW,UTHS));
-                        Verts[i].push_back(glm::vec3(X,Y+TS,Z));
+                        Verts[i].push_back(glm::vec3(X,Y+TS+B,Z));
                         UVs[i].push_back(glm::vec2(UTWS,UTHS));
                         break;
                     }
@@ -322,11 +325,11 @@ void NMap::GenerateBuffers()
                     {
                         Verts[i].push_back(glm::vec3(X,Y,Z+TS));
                         UVs[i].push_back(glm::vec2(UTWS,UTHS+UTH));
-                        Verts[i].push_back(glm::vec3(X+TS,Y,Z+TS));
+                        Verts[i].push_back(glm::vec3(X+TS+B,Y,Z+TS));
                         UVs[i].push_back(glm::vec2(UTWS+UTW,UTHS+UTH));
-                        Verts[i].push_back(glm::vec3(X+TS,Y+TS,Z));
+                        Verts[i].push_back(glm::vec3(X+TS+B,Y+TS+B,Z));
                         UVs[i].push_back(glm::vec2(UTWS+UTW,UTHS));
-                        Verts[i].push_back(glm::vec3(X,Y+TS,Z));
+                        Verts[i].push_back(glm::vec3(X,Y+TS+B,Z));
                         UVs[i].push_back(glm::vec2(UTWS,UTHS));
                         break;
                     }
@@ -334,11 +337,11 @@ void NMap::GenerateBuffers()
                     {
                         Verts[i].push_back(glm::vec3(X,Y,Z+TS));
                         UVs[i].push_back(glm::vec2(UTWS,UTHS+UTH));
-                        Verts[i].push_back(glm::vec3(X+TS,Y,Z));
+                        Verts[i].push_back(glm::vec3(X+TS+B,Y,Z));
                         UVs[i].push_back(glm::vec2(UTWS+UTW,UTHS+UTH));
-                        Verts[i].push_back(glm::vec3(X+TS,Y+TS,Z));
+                        Verts[i].push_back(glm::vec3(X+TS+B,Y+TS+B,Z));
                         UVs[i].push_back(glm::vec2(UTWS+UTW,UTHS));
-                        Verts[i].push_back(glm::vec3(X,Y+TS,Z+TS));
+                        Verts[i].push_back(glm::vec3(X,Y+TS+B,Z+TS));
                         UVs[i].push_back(glm::vec2(UTWS,UTHS));
                         break;
                     }
@@ -355,60 +358,60 @@ void NMap::GenerateBuffers()
                 {
                     //outline left
                     Outline[i].push_back(glm::vec3(X,Y,Z));
-                    Outline[i].push_back(glm::vec3(X,Y+TS,Z));
+                    Outline[i].push_back(glm::vec3(X,Y+TS+B,Z));
                 }
                 if (right >= Width || (!Tiles[right][y][i]->IsSolid()))
                 {
                     //outline right
-                    Outline[i].push_back(glm::vec3(X+TS,Y,Z));
-                    Outline[i].push_back(glm::vec3(X+TS,Y+TS,Z));
+                    Outline[i].push_back(glm::vec3(X+TS+B,Y,Z));
+                    Outline[i].push_back(glm::vec3(X+TS+B,Y+TS+B,Z));
                 }
                 if (bottom < 0 || (!Tiles[x][bottom][i]->IsSolid()))
                 {
                     //outline bottom
                     Outline[i].push_back(glm::vec3(X,Y,Z));
-                    Outline[i].push_back(glm::vec3(X+TS,Y,Z));
+                    Outline[i].push_back(glm::vec3(X+TS+B,Y,Z));
                 }
                 if (top >= Height || (!Tiles[x][top][i]->IsSolid()))
                 {
                     //outline top
-                    Outline[i].push_back(glm::vec3(X,Y+TS,Z));
-                    Outline[i].push_back(glm::vec3(X+TS,Y+TS,Z));
+                    Outline[i].push_back(glm::vec3(X,Y+TS+B,Z));
+                    Outline[i].push_back(glm::vec3(X+TS+B,Y+TS+B,Z));
                 }
                 BoxVerts[i].push_back(glm::vec3(X,Y,Z));
                 BoxUVs[i].push_back(glm::vec2(UTWS,UTHS+UTH));
-                BoxVerts[i].push_back(glm::vec3(X+TS,Y,Z));
+                BoxVerts[i].push_back(glm::vec3(X+TS+B,Y,Z));
                 BoxUVs[i].push_back(glm::vec2(UTWS+UTW,UTHS+UTH));
-                BoxVerts[i].push_back(glm::vec3(X+TS,Y,Z+TS));
+                BoxVerts[i].push_back(glm::vec3(X+TS+B,Y,Z+TS));
                 BoxUVs[i].push_back(glm::vec2(UTWS+UTW,UTHS));
                 BoxVerts[i].push_back(glm::vec3(X,Y,Z+TS));
                 BoxUVs[i].push_back(glm::vec2(UTWS,UTHS));
 
-                BoxVerts[i].push_back(glm::vec3(X,Y+TS,Z));
+                BoxVerts[i].push_back(glm::vec3(X,Y+TS+B,Z));
                 BoxUVs[i].push_back(glm::vec2(UTWS,UTHS+UTH));
-                BoxVerts[i].push_back(glm::vec3(X+TS,Y+TS,Z));
+                BoxVerts[i].push_back(glm::vec3(X+TS+B,Y+TS+B,Z));
                 BoxUVs[i].push_back(glm::vec2(UTWS+UTW,UTHS+UTH));
-                BoxVerts[i].push_back(glm::vec3(X+TS,Y+TS,Z+TS));
+                BoxVerts[i].push_back(glm::vec3(X+TS+B,Y+TS+B,Z+TS));
                 BoxUVs[i].push_back(glm::vec2(UTWS+UTW,UTHS));
-                BoxVerts[i].push_back(glm::vec3(X,Y+TS,Z+TS));
+                BoxVerts[i].push_back(glm::vec3(X,Y+TS+B,Z+TS));
                 BoxUVs[i].push_back(glm::vec2(UTWS,UTHS));
 
                 BoxVerts[i].push_back(glm::vec3(X,Y,Z));
                 BoxUVs[i].push_back(glm::vec2(UTWS,UTHS+UTH));
-                BoxVerts[i].push_back(glm::vec3(X,Y+TS,Z));
+                BoxVerts[i].push_back(glm::vec3(X,Y+TS+B,Z));
                 BoxUVs[i].push_back(glm::vec2(UTWS+UTW,UTHS+UTH));
-                BoxVerts[i].push_back(glm::vec3(X,Y+TS,Z+TS));
+                BoxVerts[i].push_back(glm::vec3(X,Y+TS+B,Z+TS));
                 BoxUVs[i].push_back(glm::vec2(UTWS+UTW,UTHS));
                 BoxVerts[i].push_back(glm::vec3(X,Y,Z+TS));
                 BoxUVs[i].push_back(glm::vec2(UTWS,UTHS));
 
-                BoxVerts[i].push_back(glm::vec3(X+TS,Y,Z));
+                BoxVerts[i].push_back(glm::vec3(X+TS+B,Y,Z));
                 BoxUVs[i].push_back(glm::vec2(UTWS,UTHS+UTH));
-                BoxVerts[i].push_back(glm::vec3(X+TS,Y+TS,Z));
+                BoxVerts[i].push_back(glm::vec3(X+TS+B,Y+TS+B,Z));
                 BoxUVs[i].push_back(glm::vec2(UTWS+UTW,UTHS+UTH));
-                BoxVerts[i].push_back(glm::vec3(X+TS,Y+TS,Z+TS));
+                BoxVerts[i].push_back(glm::vec3(X+TS+B,Y+TS,Z+TS));
                 BoxUVs[i].push_back(glm::vec2(UTWS+UTW,UTHS));
-                BoxVerts[i].push_back(glm::vec3(X+TS,Y,Z+TS));
+                BoxVerts[i].push_back(glm::vec3(X+TS+B,Y,Z+TS+B));
                 BoxUVs[i].push_back(glm::vec2(UTWS,UTHS));
             }
         }
@@ -672,13 +675,13 @@ int NMap::GetLuaTile(unsigned int ID)
 
 void NTile::SetID(int i_ID)
 {
+    GetGame()->GetScene()->UpdateLights();
+    GetGame()->GetMap()->SetChanged(Z);
     if (ID == i_ID)
     {
         return;
     }
     ID = i_ID;
-    GetGame()->GetScene()->UpdateLights();
-    GetGame()->GetMap()->SetChanged(Z);
     if (ID == 0)
     {
         dSolid = false;
@@ -686,32 +689,11 @@ void NTile::SetID(int i_ID)
         return;
     }
     lua_State* L = GetGame()->GetLua()->GetL();
-    if (LuaReference != LUA_NOREF)
-    {
-        lua_getref(L,LuaReference);
-        lua_getfield(L,-1,"OnChange");
-        if (!lua_isfunction(L,-1))
-        {
-            lua_pop(L,2);
-        } else {
-            lua_pushTile(L,this);
-            lua_call(L,1,0);
-            lua_pop(L,1);
-        }
-    }
+    CallMethod("OnRemove");
     LuaReference = GetGame()->GetMap()->GetLuaTile(ID);
     dSolid = GetBool("Solid");
     dOpaque = GetBool("Opaque");
-    lua_getref(L,LuaReference);
-    lua_getfield(L,-1,"OnInitialize");
-    if (!lua_isfunction(L,-1))
-    {
-        lua_pop(L,2);
-    } else {
-        lua_pushTile(L,this);
-        lua_call(L,1,0);
-        lua_pop(L,1);
-    }
+    CallMethod("OnInitialize");
 }
 
 bool NTile::GetBool(std::string Name)
@@ -738,19 +720,11 @@ NTile::~NTile()
 }
 void NTile::SetSolid(bool i_Solid)
 {
-    if (IsSolid() == i_Solid)
-    {
-        return;
-    }
     ForceSolid = true;
     Solid = i_Solid;
 }
 void NTile::SetOpaque(bool i_Opaque)
 {
-    if (IsOpaque() == i_Opaque)
-    {
-        return;
-    }
     ForceOpaque = true;
     Opaque = i_Opaque;
 }
@@ -799,6 +773,10 @@ bool NMap::Save(std::string Name)
             for (unsigned int z=0;z<Depth;z++)
             {
                 File.Write(&(Tiles[x][y][z]->ID),sizeof(unsigned int));
+                if (Tiles[x][y][z]->ID == 0)
+                {
+                    continue;
+                }
                 bool Solid = Tiles[x][y][z]->IsSolid();
                 File.Write(&(Solid),sizeof(bool));
                 bool Opaque = Tiles[x][y][z]->IsOpaque();
@@ -835,11 +813,16 @@ bool NMap::Load(std::string Name)
                 unsigned int ID;
                 File.Read(&ID,sizeof(unsigned int));
                 Tiles[x][y][z]->SetID(ID);
+                if (Tiles[x][y][z]->ID == 0)
+                {
+                    continue;
+                }
                 bool Solid;
                 File.Read(&Solid,sizeof(bool));
                 Tiles[x][y][z]->SetSolid(Solid);
                 bool Opaque;
                 File.Read(&(Opaque),sizeof(bool));
+                Tiles[x][y][z]->SetOpaque(Opaque);
                 TileSlope Slope;
                 File.Read(&(Slope),sizeof(TileSlope));
                 Tiles[x][y][z]->SetSlope(Slope);
@@ -860,7 +843,7 @@ unsigned int NMap::GetHeight()
 }
 unsigned int NMap::GetTileCount()
 {
-    return 4;
+    return MaxTiles;
 }
 void NTile::SetSlope(TileSlope i_Slope)
 {
@@ -869,4 +852,21 @@ void NTile::SetSlope(TileSlope i_Slope)
 TileSlope NTile::GetSlope()
 {
     return Slope;
+}
+void NTile::CallMethod(std::string Name)
+{
+    lua_State* L = GetGame()->GetLua()->GetL();
+    if (LuaReference != LUA_NOREF)
+    {
+        lua_getref(L,LuaReference);
+        lua_getfield(L,-1,Name.c_str());
+        if (!lua_isfunction(L,-1))
+        {
+            lua_pop(L,2);
+        } else {
+            lua_pushTile(L,this);
+            lua_call(L,1,0);
+            lua_pop(L,1);
+        }
+    }
 }

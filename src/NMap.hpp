@@ -86,6 +86,7 @@ public:
     bool GetBool(std::string Name);
     int LuaReference;
     int SelfReference;
+    void CallMethod(std::string Name);
 private:
     TileSlope Slope;
     bool ForceSolid;
@@ -239,6 +240,7 @@ public:
     unsigned int GetTileCount();
     int GetLuaTile(unsigned int ID);
 private:
+    unsigned int MaxTiles;
     std::vector<int> LuaTiles;
     float RealTileSize;
     unsigned int ViewingLevel;

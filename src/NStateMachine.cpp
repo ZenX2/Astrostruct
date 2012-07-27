@@ -178,7 +178,7 @@ void NGameState::OnEnter()
         Light = new NLight("ray");
         Light->SetScale(glm::vec3(512,350,1));
         Light->SetColor(glm::vec4(1,1,1,1));
-        GetGame()->GetMap()->Init(16,16,16);
+        GetGame()->GetMap()->Load("default");
         Player->SetPos(512,512,1024);
         Init = true;
     }

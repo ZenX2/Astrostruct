@@ -99,7 +99,6 @@ bool NGame::Init(int i_Width, int i_Height, std::string Title, int argc, char** 
         Log->Send("ENGINE",0,"GLFW failed to initialize!");
         return Fail;
     }
-    FileSystem = new NFileSystem(argv[0]);
     //Now lets load some data from our config interface
     NewWidth = Config->GetFloat("Width");
     NewHeight = Config->GetFloat("Height");
