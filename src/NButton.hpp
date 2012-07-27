@@ -55,19 +55,13 @@ public:
     /**
      * @brief Unallocates the object.
      */
-    void Remove();
+    void Unallocate();
     /**
      * @brief Hooks into NNode to make our text follow color. Probably shouldn't do that, but if i encounter problems with it I'll change it.
      *
      * @param i_Color The desired color of the text and button.
      */
     void SetColor(glm::vec4 i_Color);
-    /**
-     * @brief Returns the type of the object.
-     *
-     * @return Button.
-     */
-    NodeType GetType();
     NText* GetText();
     void SetToggleable(bool i_Toggleable);
     void SetToggle(bool i_Toggled);

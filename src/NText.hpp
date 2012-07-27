@@ -237,7 +237,7 @@ public:
     /**
      * @brief Unallocates the object.
      */
-    void Remove();
+    void Unallocate();
     /**
      * @brief Creates a box where the text will wrap within. (It's not very good at the moment and still need vertical text support)
      *
@@ -245,12 +245,6 @@ public:
      * @param i_H The desired height of the box.
      */
     void SetBorder(float i_W, float i_H);
-    /**
-     * @brief Returns the type of the object.
-     *
-     * @return Text
-     */
-    NodeType GetType();
     ~NText();
     /**
      * @brief Toggles the view from orthographic to perspective, useful for rendering text in world space.

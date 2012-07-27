@@ -49,7 +49,7 @@
 #include "NUnicode.hpp"
 #include <GL/glew.h>
 #include <GL/glfw.h>
-#include <SOIL.h>
+#include <SOIL/SOIL.h>
 #include <iostream>
 #include <fstream>
 #include <cctype>

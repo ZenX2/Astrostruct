@@ -36,7 +36,7 @@ public:
     /**
      * @brief Deletes the object.
      */
-    void Remove();
+    void Unallocate();
     /**
      * @brief Plugs this into NNode to ensure we regenerate our shadows when we change scale.
      *
@@ -49,12 +49,6 @@ public:
      * @param i_Position Desired position of object.
      */
     void SetPos(glm::vec3 i_Position);
-    /**
-     * @brief Returns the type of the object.
-     *
-     * @return Light.
-     */
-    NodeType GetType();
     bool SChanged;
 private:
     void DrawLight(NCamera* View);

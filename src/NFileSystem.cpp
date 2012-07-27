@@ -108,14 +108,14 @@ NFileSystem::NFileSystem(std::string CurrentPath)
     PHYSFS_permitSymbolicLinks(false);
     std::string Path = PHYSFS_getBaseDir();
     PHYSFS_addToSearchPath((Path+"data").c_str(),0);
-    const PHYSFS_ArchiveInfo** Listing = PHYSFS_supportedArchiveTypes();
+    /*const PHYSFS_ArchiveInfo** Listing = PHYSFS_supportedArchiveTypes();
     unsigned int i=0;
     std::stringstream Archives;
     while (Listing[i] != NULL)
     {
         Archives << Listing[i]->extension << " ";
         i++;
-    }
+    }*/
     //GetGame()->GetLog()->Send("FILESYS",2,std::string("Supported archives are: ") + Archives.str());
 }
 

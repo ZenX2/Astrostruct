@@ -220,6 +220,7 @@ glm::vec4 NNode::GetColor()
 }
 void NNode::Remove()
 {
+    GetGame()->GetScene()->Remove(this);
 }
 NodeType NNode::GetType()
 {
@@ -228,4 +229,8 @@ NodeType NNode::GetType()
 void NNode::SetLayer(unsigned int Layer)
 {
     GetGame()->GetScene()->SwapLayer(this,Layer);
+}
+void NNode::Unallocate()
+{
+    delete this;
 }

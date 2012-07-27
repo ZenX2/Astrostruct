@@ -374,11 +374,6 @@ void NPlayer::Remove()
     delete (NPlayer*)this;
 }
 
-NodeType NPlayer::GetType()
-{
-    return NodePlayer;
-}
-
 float NPlayer::GetDirection()
 {
     return CurrentDirection;

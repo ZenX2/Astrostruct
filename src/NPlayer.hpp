@@ -59,12 +59,6 @@ public:
      */
     void Remove();
     /**
-     * @brief Returns the type of this object.
-     *
-     * @return Player.
-     */
-    NodeType GetType();
-    /**
      * @brief Returns the name of the player.
      *
      * @return The name of the player.

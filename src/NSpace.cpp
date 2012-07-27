@@ -144,7 +144,7 @@ NodeType NStar::GetType()
     return NodeStar;
 }
 
-void NStar::Remove()
+void NStar::Unallocate()
 {
     delete (NStar*)this;
 }

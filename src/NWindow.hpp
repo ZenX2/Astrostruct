@@ -41,13 +41,7 @@ public:
     /**
      * @brief Unallocates the object.
      */
-    void Remove();
-    /**
-     * @brief Returns the type of the node.
-     *
-     * @return NodeWindow.
-     */
-    NodeType GetType();
+    void Unallocate();
     /**
      * @brief Swaps the view matrix from orthographic to perspective and vise-versa.
      */

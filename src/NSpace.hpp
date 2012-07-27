@@ -8,7 +8,7 @@ public:
     ~NStar();
     void Tick(double DT);
     void Draw(NCamera* View);
-    void Remove();
+    void Unallocate();
     NodeType GetType();
 private:
     NTexture* Texture;

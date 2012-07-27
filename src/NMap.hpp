@@ -71,13 +71,6 @@ public:
      */
     void SetID(int i_ID);
     unsigned int X,Y,Z;
-    NLight* Light;
-    /**
-     * @brief Returns if the tile is meant to emit light.
-     *
-     * @return True if it is, false otherwise.
-     */
-    bool IsLight();
     /**
      * @brief Returns the current slope of the tile.
      *
@@ -90,12 +83,17 @@ public:
      * @param i_Slope The desired slope of the tile as a TileSlope enum.
      */
     void SetSlope(TileSlope i_Slope);
+    bool GetBool(std::string Name);
+    int LuaReference;
+    int SelfReference;
 private:
     TileSlope Slope;
     bool ForceSolid;
     bool Solid;
+    bool dSolid;
     bool ForceOpaque;
     bool Opaque;
+    bool dOpaque;
 };
 
 /**
@@ -135,7 +133,7 @@ public:
     /**
      * @brief Unallocates the memory in use by this class.
      */
-    void Remove();
+    void Unallocate();
     /**
      * @brief Disables rendering of levels out of view.
      *
@@ -192,12 +190,6 @@ public:
     NTile* GetTile(unsigned int X, unsigned int Y, unsigned int Z);
     bool Ready;
     /**
-     * @brief Returns the type of the object.
-     *
-     * @return Map.
-     */
-    NodeType GetType();
-    /**
      * @brief Returns the current level that a position resides on. Currently use to decide when to render objects or not.
      *
      * @param Pos The position.
@@ -245,8 +237,9 @@ public:
      * @return Currently, 4.
      */
     unsigned int GetTileCount();
+    int GetLuaTile(unsigned int ID);
 private:
-    unsigned int DepthMem;
+    std::vector<int> LuaTiles;
     float RealTileSize;
     unsigned int ViewingLevel;
     NShader* Shader;

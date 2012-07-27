@@ -44,13 +44,7 @@ public:
     /**
      * @brief Unallocates the object.
      */
-    void Remove();
-    /**
-     * @brief Returns the type of the object.
-     *
-     * @return Checkbox.
-     */
-    NodeType GetType();
+    void Unallocate();
 private:
     bool Changed;
     bool Pressed;

@@ -416,12 +416,7 @@ void NLightSystem::Draw()
     glUseProgram(0);
 }
 
-NodeType NLight::GetType()
-{
-    return NodeLight;
-}
-
-void NLight::Remove()
+void NLight::Unallocate()
 {
     delete (NLight*)this;
 }

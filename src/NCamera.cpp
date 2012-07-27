@@ -69,12 +69,7 @@ void NCamera::SetAng(glm::vec3 i_Angle)
     UpdateMatrix();
 }
 
-void NCamera::Remove()
+void NCamera::Unallocate()
 {
     delete (NCamera*)this;
-}
-
-NodeType NCamera::GetType()
-{
-    return NodeCamera;
 }

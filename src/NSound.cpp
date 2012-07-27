@@ -175,12 +175,7 @@ NSound::~NSound()
     alDeleteSources(1,&ID);
 }
 
-void NSound::Remove()
+void NSound::Unallocate()
 {
     delete (NSound*)this;
-}
-
-NodeType NSound::GetType()
-{
-    return NodeSound;
 }

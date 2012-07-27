@@ -60,13 +60,7 @@ public:
     /**
      * @brief Removes the object from memory.
      */
-    void Remove();
-    /**
-     * @brief Returns the type of the object.
-     *
-     * @return NodeCamera.
-     */
-    NodeType GetType();
+    void Unallocate();
 private:
     bool Changed;
     void UpdateCameraMatrix();

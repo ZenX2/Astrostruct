@@ -614,7 +614,7 @@ void NTextSystem::AddFace(NFace* Face)
     Faces.push_back(Face);
 }
 
-void NText::Remove()
+void NText::Unallocate()
 {
     delete (NText*)this;
 }
@@ -689,10 +689,6 @@ NTextureNode::~NTextureNode()
         delete Children[0];
         delete Children[1];
     }
-}
-NodeType NText::GetType()
-{
-    return NodeText;
 }
 void NText::SetMultiline(bool i_Multiline)
 {

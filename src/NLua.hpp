@@ -101,6 +101,9 @@ int LoadTexture(lua_State* L);
 * @return A pointer to the NAnimation class.
 */
 NAnimation* lua_checkAnimation(lua_State* L, int narg);
+NAnimation* lua_toAnimation(lua_State* L, int index);
+void lua_pushAnimation(lua_State* L, NAnimation* Animation);
+
 /**
 * @brief Lua function that loads font faces into memory.
 *
@@ -118,4 +121,39 @@ int LoadFace(lua_State* L);
  */
 int LoadSound(lua_State* L);
 
+int CreateVector(lua_State* L);
+int Vector__index(lua_State* L);
+int Vector__newindex(lua_State* L);
+int Vector__sub(lua_State* L);
+int Vector__add(lua_State* L);
+glm::vec3* lua_checkVector(lua_State* L, int narg);
+glm::vec3* lua_toVector(lua_State* L, int index);
+void lua_pushVector(lua_State* L, glm::vec3 Vector);
+
+int CreateColor(lua_State* L);
+int Color__index(lua_State* L);
+int Color__newindex(lua_State* L);
+int Color__sub(lua_State* L);
+int Color__add(lua_State* L);
+glm::vec4* lua_checkColor(lua_State* L, int narg);
+glm::vec4* lua_toColor(lua_State* L, int index);
+void lua_pushColor(lua_State* L, glm::vec4 Color);
+
+int CreateLight(lua_State* L);
+int Light__index(lua_State* L);
+int Light__newindex(lua_State* L);
+NLight* lua_checkLight(lua_State* L, int narg);
+NLight* lua_toLight(lua_State* L, int index);
+int LightSetPos(lua_State* L);
+int LightSetRadius(lua_State* L);
+int LightSetColor(lua_State* L);
+void lua_pushLight(lua_State* L, NLight* Light);
+int LightRemove(lua_State* L);
+
+int Tile__index(lua_State* L);
+int Tile__newindex(lua_State* L);
+NTile* lua_toTile(lua_State* L, int index);
+NTile* lua_checkTile(lua_State* L, int narg);
+int TileGetPos(lua_State* L);
+void lua_pushTile(lua_State* L, NTile* Tile);
 #endif

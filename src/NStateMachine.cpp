@@ -113,8 +113,8 @@ void NPauseState::OnExit()
     if (Init)
     {
         Init = false;
-        GetGame()->GetScene()->Remove(Window);
-        GetGame()->GetScene()->Remove(InfoWindow);
+        Window->Remove();
+        InfoWindow->Remove();
     }
 }
 void NPauseState::Tick(double DT)
@@ -323,7 +323,7 @@ void NServerState::Tick(double DT)
                     NPlayer* Player = (NPlayer*)GetGame()->GetScene()->GetNodeByID(*ID);
                     GetGame()->GetLog()->Send("SERVER",2,Player->GetName() + " left the game.");
                     GetGame()->GetPacketHandler()->RemovePlayer(*ID);
-                    GetGame()->GetScene()->Remove(Player);
+                    Player->Remove();
                 } else {
                     GetGame()->GetLog()->Send("SERVER",2,"A client has disconnected.");
                 }
@@ -480,13 +480,13 @@ void NMapState::OnExit()
     if (Init)
     {
         GetGame()->GetMap()->DeInit();
-        GetGame()->GetScene()->Remove(HWindow);
-        GetGame()->GetScene()->Remove(Window);
-        GetGame()->GetScene()->Remove(OtherWindow);
-        GetGame()->GetScene()->Remove(Bg);
+        HWindow->Remove();
+        Window->Remove();
+        OtherWindow->Remove();
+        Bg->Remove();
         if (SaveWindow)
         {
-            GetGame()->GetScene()->Remove(SaveWindow);
+            SaveWindow->Remove();
         }
         Init = false;
     }
@@ -576,7 +576,7 @@ void NMapState::Tick(double DT)
     {
         if (SaveWindow)
         {
-            GetGame()->GetScene()->Remove(SaveWindow);
+            SaveWindow->Remove();
             SaveWindow = NULL;
         } else {
             SaveWindow = new NWindow("window");
@@ -801,7 +801,6 @@ void NMapState::Tick(double DT)
                 SlopeOff->SetToggle(true);
                 Tile->SetSlope(SlopeNone);
             }
-            GetGame()->GetMap()->FixUp();
         }
     }
 }

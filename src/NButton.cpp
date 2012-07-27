@@ -311,7 +311,7 @@ bool NButton::OnRelease()
     return false;
 }
 
-void NButton::Remove()
+void NButton::Unallocate()
 {
     delete (NButton*)this;
 }
@@ -323,10 +323,6 @@ void NButton::SetColor(glm::vec4 i_Color)
         DisplayText->SetColor(i_Color);
     }
     Color = i_Color;
-}
-NodeType NButton::GetType()
-{
-    return NodeButton;
 }
 void NButton::SetToggleable(bool i_Toggleable)
 {

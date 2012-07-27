@@ -240,13 +240,9 @@ void NWindow::Tick(double DT)
         Texture->Tick(DT);
     }
 }
-void NWindow::Remove()
+void NWindow::Unallocate()
 {
     delete (NWindow*)this;
-}
-NodeType NWindow::GetType()
-{
-    return NodeWindow;
 }
 void NWindow::SwapView()
 {

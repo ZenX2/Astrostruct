@@ -159,12 +159,7 @@ bool NCheckbox::IsChecked()
     return Checked;
 }
 
-void NCheckbox::Remove()
+void NCheckbox::Unallocate()
 {
     delete (NCheckbox*)this;
-}
-
-NodeType NCheckbox::GetType()
-{
-    return NodeCheckbox;
 }

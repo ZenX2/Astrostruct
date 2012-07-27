@@ -95,7 +95,7 @@ NScene::~NScene()
     {
         for (unsigned int o=0;o<Layers[i].size();o++)
         {
-            Layers[i][o]->Remove();
+            Layers[i][o]->Unallocate();
         }
     }
 }
@@ -126,7 +126,7 @@ void NScene::RemoveByID(unsigned int ID)
         {
             if (Layers[i][o]->GetID() == ID)
             {
-                Layers[i][o]->Remove();
+                Layers[i][o]->Unallocate();
                 Layers[i].erase(Layers[i].begin()+o);
                 break;
             }
@@ -145,7 +145,7 @@ void NScene::Remove(NNode* Node)
         {
             if (Layers[i][o] == Node)
             {
-                Node->Remove();
+                Node->Unallocate();
                 Layers[i].erase(Layers[i].begin()+o);
                 return;
             }
@@ -168,7 +168,7 @@ void NScene::RemoveByType(NodeType Type)
         {
             if (Layers[i][o]->GetType() == Type)
             {
-                Layers[i][o]->Remove();
+                Layers[i][o]->Unallocate();
                 Layers[i].erase(Layers[i].begin()+o);
                 o--;
             }

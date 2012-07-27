@@ -311,13 +311,7 @@ void NTextInput::Tick(double DT)
         HasFocus = false;
     }
 }
-
-void NTextInput::Remove()
+void NTextInput::Unallocate()
 {
     delete (NTextInput*)this;
-}
-
-NodeType NTextInput::GetType()
-{
-    return NodeTextInput;
 }

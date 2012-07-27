@@ -12,6 +12,6 @@ VerticalSync = true
 MaxFPS = 0
 -- I don't think this affects speed, but you can change the texture filter here. GL_LINEAR for smooth textures, GL_NEAREST for pixelated textures.
 TextureFilter = "GL_LINEAR"
--- Use this to set the default map texture
-MapSkin = "grimy"
 PlayerName = "Naelstrof"
+-- Set the default gamemode here.
+GameMode = "test"

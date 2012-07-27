@@ -17,7 +17,134 @@ NLua::NLua()
     };
     lua_getglobal(L,"_G");
     luaL_register(L, NULL, BaseFunctions);
+    lua_pushboolean(L,GetGame()->IsServer());
+    lua_setfield(L,-2,"SERVER");
+    lua_pushboolean(L,!GetGame()->IsServer());
+    lua_setfield(L,-2,"CLIENT");
     lua_pop(L,1);
+
+    //Animations and textures
+    static const luaL_Reg AniBaseFunctions[] = {
+        {"Animation",CreateAnimation},
+        {"LoadTexture",LoadTexture},
+        {NULL,NULL}
+    };
+    lua_getglobal(L,"_G");
+    luaL_register(L,NULL,AniBaseFunctions);
+    lua_pop(L,1);
+    luaL_getmetatable(L,"AnimationBase");
+    if (lua_isnoneornil(L,-1))
+    {
+        lua_pop(L,1);
+        luaL_newmetatable(L,"AnimationBase");
+    }
+    static const luaL_Reg AnimationMethods[] = {
+        {"__newindex",Animation__newindex},
+        {NULL,NULL}
+    };
+    luaL_register(L,NULL,AnimationMethods);
+    lua_pushstring(L,"Animation");
+    lua_setfield(L,-2,"__type");
+    lua_pop(L,1);
+
+    //Vectors
+    static const luaL_Reg VecBaseFunctions[] = {
+        {"Vector",CreateVector},
+        {NULL,NULL}
+    };
+    lua_getglobal(L,"_G");
+    luaL_register(L,NULL,VecBaseFunctions);
+    lua_pop(L,1);
+    luaL_getmetatable(L,"VectorBase");
+    if (lua_isnoneornil(L,-1))
+    {
+        lua_pop(L,1);
+        luaL_newmetatable(L,"VectorBase");
+    }
+    static const luaL_Reg VectorMethods[] = {
+        {"__index",Vector__index},
+        {"__newindex",Vector__newindex},
+        {"__sub",Vector__sub},
+        {"__add",Vector__add},
+        {NULL,NULL}
+    };
+    luaL_register(L,NULL,VectorMethods);
+    lua_pushstring(L,"Vector");
+    lua_setfield(L,-2,"__type");
+    lua_pop(L,1);
+
+    //Colors
+    static const luaL_Reg ColBaseFunctions[] = {
+        {"Color",CreateColor},
+        {NULL,NULL}
+    };
+    lua_getglobal(L,"_G");
+    luaL_register(L,NULL,ColBaseFunctions);
+    lua_pop(L,1);
+    luaL_getmetatable(L,"ColorBase");
+    if (lua_isnoneornil(L,-1))
+    {
+        lua_pop(L,1);
+        luaL_newmetatable(L,"ColorBase");
+    }
+    static const luaL_Reg ColorMethods[] = {
+        {"__index",Color__index},
+        {"__newindex",Color__newindex},
+        {"__sub",Color__sub},
+        {"__add",Color__add},
+        {NULL,NULL}
+    };
+    luaL_register(L,NULL,ColorMethods);
+    lua_pushstring(L,"Color");
+    lua_setfield(L,-2,"__type");
+    lua_pop(L,1);
+
+    //Tiles
+    luaL_getmetatable(L,"Tile");
+    if (lua_isnoneornil(L,-1))
+    {
+        lua_pop(L,1);
+        luaL_newmetatable(L,"Tile");
+    }
+    static const luaL_Reg TileMethods[] = {
+        {"__index", Tile__index},
+        {"__newindex", Tile__newindex},
+        {"GetPos", TileGetPos},
+        {NULL,NULL}
+    };
+    luaL_register(L,NULL,TileMethods);
+    lua_pushstring(L,"Tile");
+    lua_setfield(L,-2,"__type");
+    lua_pop(L,1);
+
+    //Lights
+    static const luaL_Reg LightBaseFunctions[] = {
+        {"Light",CreateLight},
+        {NULL,NULL}
+    };
+    lua_getglobal(L,"_G");
+    luaL_register(L,NULL,LightBaseFunctions);
+    lua_pop(L,1);
+    luaL_getmetatable(L,"LightBase");
+    if (lua_isnoneornil(L,-1))
+    {
+        lua_pop(L,1);
+        luaL_newmetatable(L,"LightBase");
+    }
+    static const luaL_Reg LightMethods[] = {
+        {"__index",Light__index},
+        {"__newindex",Light__newindex},
+        {"SetPos",LightSetPos},
+        {"SetRadius",LightSetRadius},
+        {"SetColor",LightSetColor},
+        {"Remove",LightRemove},
+        {NULL,NULL}
+    };
+    luaL_register(L,NULL,LightMethods);
+    lua_pushstring(L,"Light");
+    lua_setfield(L,-2,"__type");
+    lua_pop(L,1);
+    DoFile("gamemodes/entity.lua");
 }
 
 NLua::~NLua()
@@ -48,7 +175,9 @@ int ConsoleHelp(lua_State* L)
 
 int Include(lua_State* L)
 {
-    lua_Debug ar1;
+    luaL_checkstring(L,1);
+    //Do nothing!
+    /*lua_Debug ar1;
     lua_getstack(L,1,&ar1);
     lua_getinfo(L,"f",&ar1);
     lua_Debug ar2;
@@ -57,6 +186,8 @@ int Include(lua_State* L)
     int Found = Source.find_last_of("/\\");
     std::string Folder = Source.substr(1,Found);
     std::string File = luaL_checkstring(L,1);
+    GetGame()->GetLua()->DoFile(Folder+"/"+File);*/
+    return 0;
 }
 
 bool NLua::DoFile(std::string FileName)
@@ -70,6 +201,23 @@ bool NLua::DoFile(std::string FileName)
     char* FileData = new char[File.Size()+1];
     File.Read(FileData,File.Size());
     FileData[File.Size()] = '\0'; //Ensure the 'string' is null terminated, we could be reading some random file for all we know.
+    std::string Data(FileData);
+    //Now parse for any includes
+    int Pos = 0;
+    while (Pos != Data.npos)
+    {
+        Pos = Data.find("include(",Pos);
+        if (Pos != Data.npos)
+        {
+            Pos += 9;
+            int QuotePos = Data.find("\"",Pos);
+            if (QuotePos != Data.npos)
+            {
+                QuotePos -= Pos;
+                DoFile(FileName.substr(0,FileName.find_last_of('/')+1)+Data.substr(Pos,QuotePos));
+            }
+        }
+    }
     if (luaL_dostring(L,FileData))
     {
         delete[] FileData;
@@ -262,4 +410,394 @@ int Print(lua_State* L) //Grabbed this from http://www.lua.org/source/5.1/lbasel
     }
     GetGame()->GetLog()->Send("LUA",2,Message.str());
     return 0;
+}
+
+
+NTile* lua_toTile(lua_State* L, int index)
+{
+    NTile** Tile = (NTile**)luaL_checkudata(L,index,"Tile");
+    return *Tile;
+}
+
+NTile* lua_checkTile(lua_State* L, int narg)
+{
+    NTile* Foo = lua_toTile(L,narg);
+    if (Foo == NULL)
+    {
+        luaL_argerror(L,narg,"attempt to index a NULL Tile");
+    }
+    return Foo;
+}
+
+int Tile__index(lua_State* L)
+{
+    NTile* Foo = lua_toTile(L,1);
+    if (Foo == NULL)
+    {
+        lua_Debug ar1;
+        lua_getstack(L,1,&ar1);
+        lua_getinfo(L,"fl",&ar1);
+        lua_Debug ar2;
+        lua_getinfo(L,">S",&ar2);
+        lua_pushfstring(L, "%s:%d: attempt to index a NULL Tile", ar2.short_src, ar1.currentline);
+        return lua_error(L);
+    }
+    const char* Field = luaL_checkstring(L,2);
+    if (!strcmp(Field,"ID"))
+    {
+        lua_pushnumber(L,Foo->ID);
+    } else {
+        lua_getmetatable(L,1);
+        lua_pushvalue(L,2);
+        lua_gettable(L,-2);
+        if (lua_isnil(L,-1))
+        {
+            lua_pop(L,1);
+            lua_getref(L,Foo->SelfReference);
+            lua_pushvalue(L,2);
+            lua_gettable(L,-2);
+        }
+    }
+    return 1;
+}
+
+int Tile__newindex(lua_State* L)
+{
+    NTile* Foo = lua_toTile(L,1);
+    if (Foo == NULL)
+    {
+        lua_Debug ar1;
+        lua_getstack(L,1,&ar1);
+        lua_getinfo(L,"fl",&ar1);
+        lua_Debug ar2;
+        lua_getinfo(L,">S",&ar2);
+        lua_pushfstring(L, "%s:%d: attempt to index a NULL Tile", ar2.short_src, ar1.currentline);
+        return lua_error(L);
+    }
+    const char* Field = luaL_checkstring(L,2);
+    lua_getref(L,Foo->SelfReference);
+    lua_pushvalue(L,3);
+    lua_setfield(L,-2,luaL_checkstring(L,2));
+    return 0;
+}
+int TileGetPos(lua_State* L)
+{
+    NTile* Foo = lua_checkTile(L,1);
+    float TileSize = GetGame()->GetMap()->GetTileSize();
+    lua_pushVector(L, glm::vec3(Foo->X*TileSize + TileSize/2.f,Foo->Y*TileSize+TileSize/2.f,Foo->Z*TileSize+TileSize/2.f));
+    return 1;
+}
+
+void lua_pushTile(lua_State* L, NTile* Tile)
+{
+    NTile** Pointer = (NTile**)lua_newuserdata(L,sizeof(NTile*));
+    *Pointer = Tile;
+    luaL_getmetatable(L,"Tile");
+    lua_setmetatable(L,-2);
+}
+
+int CreateLight(lua_State* L)
+{
+    NLight* Light = new NLight(luaL_checkstring(L,1));
+    lua_pushLight(L,Light);
+    return 1;
+}
+
+int Light__index(lua_State* L)
+{
+    NLight* Foo = lua_toLight(L,1);
+    if (Foo == NULL)
+    {
+        lua_Debug ar1;
+        lua_getstack(L,1,&ar1);
+        lua_getinfo(L,"fl",&ar1);
+        lua_Debug ar2;
+        lua_getinfo(L,">S",&ar2);
+        lua_pushfstring(L, "%s:%d: attempt to index a NULL Light", ar2.short_src, ar1.currentline);
+        return lua_error(L);
+    }
+    lua_getmetatable(L,1);
+    lua_pushvalue(L,2);
+    lua_gettable(L,-2);
+    if (lua_isnil(L,-1))
+    {
+        lua_pop(L,1);
+        return 0;
+    }
+    return 1;
+}
+
+int Light__newindex(lua_State* L)
+{
+    NLight* Foo = lua_toLight(L,1);
+    if (Foo == NULL)
+    {
+        lua_Debug ar1;
+        lua_getstack(L,1,&ar1);
+        lua_getinfo(L,"fl",&ar1);
+        lua_Debug ar2;
+        lua_getinfo(L,">S",&ar2);
+        lua_pushfstring(L, "%s:%d: attempt to index a NULL Light", ar2.short_src, ar1.currentline);
+        return lua_error(L);
+    }
+    /*const char* Field = luaL_checkstring(L,2);
+    lua_getref(L,Foo->LuaReference);
+    lua_pushvalue(L,3);
+    lua_setfield(L,-2,luaL_checkstring(L,2));*/
+    //todo: hook up light to lua
+    return 0;
+}
+
+NLight* lua_toLight(lua_State* L, int index)
+{
+    NLight** Light = (NLight**)luaL_checkudata(L,index,"LightBase");
+    return *Light;
+}
+
+NLight* lua_checkLight(lua_State* L, int narg)
+{
+    NLight* Foo = lua_toLight(L,narg);
+    if (Foo == NULL)
+    {
+        luaL_argerror(L,narg,"attempt to index a NULL Light");
+    }
+    return Foo;
+}
+
+int LightSetRadius(lua_State* L)
+{
+    NLight* Foo = lua_checkLight(L,1);
+    float Rad = luaL_checknumber(L,2);
+    Foo->SetScale(glm::vec3(Rad,Rad,1.0));
+    return 0;
+}
+
+int LightSetPos(lua_State* L)
+{
+    NLight* Foo = lua_checkLight(L,1);
+    glm::vec3* Bar = lua_checkVector(L,2);
+    Foo->SetPos(*Bar);
+    return 0;
+}
+
+int LightSetColor(lua_State* L)
+{
+    NLight* Foo = lua_checkLight(L,1);
+    glm::vec4* Bar = lua_checkColor(L,2);
+    Foo->SetColor(*Bar);
+    return 0;
+}
+
+void lua_pushLight(lua_State* L, NLight* Light)
+{
+    NLight** Pointer = (NLight**)lua_newuserdata(L,sizeof(NLight*));
+    *Pointer = Light;
+    luaL_getmetatable(L,"LightBase");
+    lua_setmetatable(L,-2);
+}
+
+int LightRemove(lua_State* L)
+{
+    NLight* Foo = lua_checkLight(L,1);
+    GetGame()->GetScene()->Remove(Foo);
+    return 0;
+}
+int CreateVector(lua_State* L)
+{
+    lua_pushVector(L,glm::vec3(luaL_checknumber(L,1),luaL_checknumber(L,2),luaL_checknumber(L,3)));
+    return 1;
+}
+int Vector__sub(lua_State* L)
+{
+    glm::vec3* Foo = lua_checkVector(L,1);
+    glm::vec3* Bar = lua_checkVector(L,2);
+    lua_pushVector(L,*Foo-*Bar);
+}
+int Vector__add(lua_State* L)
+{
+    glm::vec3* Foo = lua_checkVector(L,1);
+    glm::vec3* Bar = lua_checkVector(L,2);
+    lua_pushVector(L,*Foo+*Bar);
+}
+glm::vec3* lua_toVector(lua_State* L, int index)
+{
+    glm::vec3* Vector = (glm::vec3*)luaL_checkudata(L,index,"VectorBase");
+    return Vector;
+}
+
+void lua_pushVector(lua_State* L, glm::vec3 Foo)
+{
+    glm::vec3* Pointer = (glm::vec3*)lua_newuserdata(L,sizeof(glm::vec3));
+    *Pointer = Foo;
+    luaL_getmetatable(L,"VectorBase");
+    lua_setmetatable(L,-2);
+}
+
+int Vector__index(lua_State* L)
+{
+    glm::vec3* Foo = lua_toVector(L,1);
+    if (Foo == NULL)
+    {
+        lua_Debug ar1;
+        lua_getstack(L,1,&ar1);
+        lua_getinfo(L,"fl",&ar1);
+        lua_Debug ar2;
+        lua_getinfo(L,">S",&ar2);
+        lua_pushfstring(L, "%s:%d: attempt to index a NULL Vector", ar2.short_src, ar1.currentline);
+        return lua_error(L);
+    }
+    const char* Field = luaL_checkstring(L,2);
+    if (!strcmp(Field,"x"))
+    {
+        lua_pushnumber(L,Foo->x);
+    } else if (!strcmp(Field,"y"))
+    {
+        lua_pushnumber(L,Foo->y);
+    } else if (!strcmp(Field,"z"))
+    {
+        lua_pushnumber(L,Foo->z);
+    } else {
+        return 0;
+    }
+    return 1;
+}
+
+int Vector__newindex(lua_State* L)
+{
+    glm::vec3* Foo = lua_toVector(L,1);
+    if (Foo == NULL)
+    {
+        lua_Debug ar1;
+        lua_getstack(L,1,&ar1);
+        lua_getinfo(L,"fl",&ar1);
+        lua_Debug ar2;
+        lua_getinfo(L,">S",&ar2);
+        lua_pushfstring(L, "%s:%d: attempt to index a NULL Vector", ar2.short_src, ar1.currentline);
+        return lua_error(L);
+    }
+    const char* Field = luaL_checkstring(L,2);
+    if (!strcmp(Field,"x"))
+    {
+        Foo->x = luaL_checknumber(L,3);
+    } else if (!strcmp(Field,"y"))
+    {
+        Foo->y = luaL_checknumber(L,3);
+    } else if (!strcmp(Field,"z"))
+    {
+        Foo->z = luaL_checknumber(L,3);
+    }
+    return 0;
+}
+
+glm::vec3* lua_checkVector(lua_State* L, int narg)
+{
+    glm::vec3* Foo = lua_toVector(L,narg);
+    if (Foo == NULL)
+    {
+        luaL_argerror(L,narg,"attempt to index a NULL Vector");
+    }
+    return Foo;
+}
+
+int CreateColor(lua_State* L)
+{
+    lua_pushColor(L,glm::vec4(luaL_checknumber(L,1),luaL_checknumber(L,2),luaL_checknumber(L,3),luaL_checknumber(L,4)));
+    return 1;
+}
+int Color__sub(lua_State* L)
+{
+    glm::vec4* Foo = lua_checkColor(L,1);
+    glm::vec4* Bar = lua_checkColor(L,2);
+    lua_pushColor(L,*Foo-*Bar);
+}
+int Color__add(lua_State* L)
+{
+    glm::vec4* Foo = lua_checkColor(L,1);
+    glm::vec4* Bar = lua_checkColor(L,2);
+    lua_pushColor(L,*Foo+*Bar);
+}
+glm::vec4* lua_toColor(lua_State* L, int index)
+{
+    glm::vec4* Color = (glm::vec4*)luaL_checkudata(L,index,"ColorBase");
+    return Color;
+}
+
+void lua_pushColor(lua_State* L, glm::vec4 Color)
+{
+    glm::vec4* Pointer = (glm::vec4*)lua_newuserdata(L,sizeof(glm::vec4));
+    *Pointer = Color;
+    luaL_getmetatable(L,"ColorBase");
+    lua_setmetatable(L,-2);
+}
+
+int Color__index(lua_State* L)
+{
+    glm::vec4* Foo = lua_toColor(L,1);
+    if (Foo == NULL)
+    {
+        lua_Debug ar1;
+        lua_getstack(L,1,&ar1);
+        lua_getinfo(L,"fl",&ar1);
+        lua_Debug ar2;
+        lua_getinfo(L,">S",&ar2);
+        lua_pushfstring(L, "%s:%d: attempt to index a NULL Color", ar2.short_src, ar1.currentline);
+        return lua_error(L);
+    }
+    const char* Field = luaL_checkstring(L,2);
+    if (!strcmp(Field,"r"))
+    {
+        lua_pushnumber(L,Foo->x);
+    } else if (!strcmp(Field,"g"))
+    {
+        lua_pushnumber(L,Foo->y);
+    } else if (!strcmp(Field,"b"))
+    {
+        lua_pushnumber(L,Foo->z);
+    } else if (!strcmp(Field,"a"))
+    {
+        lua_pushnumber(L,Foo->w);
+    } else {
+        return 0;
+    }
+    return 1;
+}
+
+int Color__newindex(lua_State* L)
+{
+    glm::vec4* Foo = lua_toColor(L,1);
+    if (Foo == NULL)
+    {
+        lua_Debug ar1;
+        lua_getstack(L,1,&ar1);
+        lua_getinfo(L,"fl",&ar1);
+        lua_Debug ar2;
+        lua_getinfo(L,">S",&ar2);
+        lua_pushfstring(L, "%s:%d: attempt to index a NULL Color", ar2.short_src, ar1.currentline);
+        return lua_error(L);
+    }
+    const char* Field = luaL_checkstring(L,2);
+    if (!strcmp(Field,"r"))
+    {
+        Foo->x = luaL_checknumber(L,3);
+    } else if (!strcmp(Field,"g"))
+    {
+        Foo->y = luaL_checknumber(L,3);
+    } else if (!strcmp(Field,"b"))
+    {
+        Foo->z = luaL_checknumber(L,3);
+    } else if (!strcmp(Field,"a"))
+    {
+        Foo->w = luaL_checknumber(L,3);
+    }
+    return 0;
+}
+
+glm::vec4* lua_checkColor(lua_State* L, int narg)
+{
+    glm::vec4* Foo = lua_toColor(L,narg);
+    if (Foo == NULL)
+    {
+        luaL_argerror(L,narg,"attempt to index a NULL Color");
+    }
+    return Foo;
 }

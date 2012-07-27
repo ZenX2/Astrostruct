@@ -245,6 +245,7 @@ public:
      * @param Layer The desired layer number. (0-4)
      */
     virtual void SetLayer(unsigned int Layer);
+    virtual void Unallocate();
     NodeType Type;
     glm::vec3 Angle;
     glm::vec4 Color;

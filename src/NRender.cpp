@@ -2,29 +2,6 @@
 
 void NRender::LoadTextures()
 {
-    lua_State* L = GetGame()->GetLua()->GetL();
-    static const luaL_Reg BaseFunctions[] = {
-        {"Animation",CreateAnimation},
-        {"LoadTexture",LoadTexture},
-        {NULL,NULL}
-    };
-    lua_getglobal(L,"_G");
-    luaL_register(L,NULL,BaseFunctions);
-    lua_pop(L,1);
-    luaL_getmetatable(L,"AnimationBase");
-    if (lua_isnoneornil(L,-1))
-    {
-        lua_pop(L,1);
-        luaL_newmetatable(L,"AnimationBase");
-    }
-    static const luaL_Reg AnimationMethods[] = {
-        {"__newindex",Animation__newindex},
-        {NULL,NULL}
-    };
-    luaL_register(L,NULL,AnimationMethods);
-    lua_pushstring(L,"Animation");
-    lua_setfield(L,-2,"__type");
-    lua_pop(L,1);
     GetGame()->GetLua()->DoFolder("textures");
 }
 

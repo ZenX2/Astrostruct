@@ -2,11 +2,10 @@
 
 NMap::NMap(std::string i_TileSet) : NNode(NodeMap)
 {
-    DepthMem = 0;
     Ready = false;
     RealTileSize = 64;
     Width = Height = Depth = 0;
-    ViewingLevel = 1;
+    ViewingLevel = 0;
     Texture = NULL;
     if (GetGame()->IsServer())
     {
@@ -65,6 +64,7 @@ NMap::~NMap()
 }
 void NMap::DeInit()
 {
+    Ready = false;
     for (unsigned int x=0;x<Width;x++)
     {
         for (unsigned int y=0;y<Height;y++)
@@ -78,6 +78,7 @@ void NMap::DeInit()
     Width = 0;
     Height = 0;
     Depth = 0;
+    ViewingLevel = 0;
     Changed.clear();
     Verts.clear();
     UVs.clear();
@@ -85,34 +86,35 @@ void NMap::DeInit()
     BoxUVs.clear();
     Outline.clear();
     Tiles.clear();
-    for (unsigned int i=0;i<Buffers.size();i++)
+    if (Texture)
     {
-        delete[] Buffers[i];
+        delete Texture;
+        Texture = NULL;
     }
-    Buffers.clear();
-    Ready = false;
 }
 
 void NMap::Init(unsigned int i_Width, unsigned int i_Height, unsigned int i_Depth)
 {
-    DepthMem = 0;
+    std::string Gamemode = GetGame()->GetConfig()->GetString("GameMode");
+    GetGame()->GetLua()->DoFile("gamemodes/"+Gamemode+"/init.lua");
+    Texture = GetGame()->GetRender()->GetTexture(GetGame()->GetConfig()->GetString("MapSkin"));
+    if (Texture)
+    {
+        TileSize = Texture->GetFloat("TileSize");
+
+        lua_State* L = GetGame()->GetLua()->GetL();
+        lua_getglobal(L,"_G");
+        lua_pushnumber(L,TileSize);
+        lua_setfield(L,-2,"TileSize");
+        lua_pop(L,1);
+
+        TextureWidth = Texture->GetSize().x;
+        TextureHeight = Texture->GetSize().y;
+    }
     Width = i_Width;
     Height = i_Height;
     Depth = i_Depth;
-    Changed.clear();
-    Verts.clear();
-    UVs.clear();
-    BoxVerts.clear();
-    BoxUVs.clear();
-    Outline.clear();
-    Tiles.clear();
     Changed.resize(Depth,true);
-    for (unsigned int i=0;i<Buffers.size();i++)
-    {
-        delete[] Buffers[i];
-    }
-    Buffers.clear();
-    Buffers.resize(Depth,NULL);
     std::vector<glm::vec3> Foo2;
     Verts.resize(Depth, Foo2);
     std::vector<glm::vec2> Bar;
@@ -143,29 +145,6 @@ void NMap::Init(unsigned int i_Width, unsigned int i_Height, unsigned int i_Dept
         }
     }
     Ready = true;
-}
-void NMap::FixUp()
-{
-    for (unsigned int x=0;x<Width;x++)
-    {
-        for (unsigned int y=0;y<Height;y++)
-        {
-            for (unsigned int z=0;z<Depth;z++)
-            {
-                NTile* Tile = Tiles[x][y][z];
-                if (Tile->IsLight() && !Tile->Light)
-                {
-                    Tile->Light = new NLight("point");
-                    Tile->Light->SetScale(glm::vec3(850,850,1));
-                    Tile->Light->SetPos(glm::vec3(x*RealTileSize+RealTileSize/2.f,y*RealTileSize+RealTileSize/2.f,z*RealTileSize));
-                } else if (!Tile->IsLight() && Tile->Light)
-                {
-                    GetGame()->GetScene()->Remove(Tile->Light);
-                    Tile->Light = NULL;
-                }
-            }
-        }
-    }
 }
 NTile* NMap::GetTile(unsigned int X, unsigned int Y, unsigned int Z)
 {
@@ -258,18 +237,20 @@ float NMap::GetTileSize()
 }
 void NMap::GenerateBuffers()
 {
-    if (!Texture || !Ready)
+    if (Buffers.size() != Depth)
     {
-        return;
-    }
-    if (DepthMem != Depth)
-    {
+        for (unsigned int i=0;i<Buffers.size();i++)
+        {
+            glDeleteBuffers(5,Buffers[i]);
+            delete[] Buffers[i];
+        }
+        Buffers.clear();
+        Buffers.resize(Depth);
         for (unsigned int i=0;i<Depth;i++)
         {
             Buffers[i] = new GLuint[6];
             glGenBuffers(5,Buffers[i]);
         }
-        DepthMem = Depth;
     }
     for (int i=ViewingLevel;i>=0;i--)
     {
@@ -557,7 +538,7 @@ void NMap::Tick(double DT)
         ViewLevel(Level);
     }
 }
-void NMap::Remove()
+void NMap::Unallocate()
 {
     delete (NMap*)this;
 }
@@ -576,42 +557,184 @@ void NMap::SetChanged(int Level)
 
 NTile::NTile(unsigned int x, unsigned int y, unsigned int z)
 {
+    LuaReference = LUA_NOREF;
+    lua_State* L = GetGame()->GetLua()->GetL();
+    lua_newtable(L);
+    SelfReference = luaL_ref(L,LUA_REGISTRYINDEX);
     Slope = SlopeNone;
     ID = 0;
+    dSolid = false;
     Solid = false;
     ForceSolid = false;
+    dOpaque = false;
     Opaque = false;
     ForceOpaque = false;
     X = x;
     Y = y;
     Z = z;
-    Light = NULL;
 }
 NTile::NTile(unsigned int i_ID)
 {
-    Slope = SlopeNone;
     ID = i_ID; 
+    LuaReference = GetGame()->GetMap()->GetLuaTile(ID);
+    lua_State* L = GetGame()->GetLua()->GetL();
+    lua_newtable(L);
+    SelfReference = luaL_ref(L,LUA_REGISTRYINDEX);
+    Slope = SlopeNone;
     Solid = false;
+    dSolid = GetBool("Solid");
     ForceSolid = false;
     Opaque = false;
+    dOpaque = GetBool("Opaque");
     ForceOpaque = false;
     X = 0;
     Y = 0;
     Z = 0;
-    Light = NULL;
 }
+
+int NMap::GetLuaTile(unsigned int ID)
+{
+    if (ID == 0)
+    {
+        return LUA_NOREF;
+    }
+    if (LuaTiles.size() <= ID)
+    {
+        LuaTiles.resize(ID+1,LUA_NOREF);
+    }
+    if (LuaTiles[ID] == LUA_NOREF)
+    {
+        std::string Gamemode = GetGame()->GetConfig()->GetString("GameMode");
+        std::stringstream TileDir;
+        TileDir << "gamemodes/" << Gamemode << "/tiles/" << ID << "/";
+        if (GetGame()->IsServer())
+        {
+            TileDir << "init.lua";
+        } else {
+            TileDir << "cl_init.lua";
+        }
+        lua_State* L = GetGame()->GetLua()->GetL();
+        lua_newtable(L);
+        lua_setglobal(L, "TILE");
+        if (!GetGame()->GetLua()->DoFile(TileDir.str()))
+        {
+            //If we failed, reset the global and abort.
+            lua_pushnil(L);
+            lua_setglobal(L,"TILE");
+            return LUA_NOREF;
+        }
+        //Right now i'll just include tiles into the entities table. This could cause problems later on if entities have the same names as tiles.
+        lua_getglobal(L,"entity");
+        if (!lua_istable(L,-1))
+        {
+            //If we haven't loaded in the entity module, reset the global and abort.
+            lua_pop(L,1);
+            lua_pushnil(L);
+            lua_setglobal(L,"TILE");
+            return LUA_NOREF;
+        }
+        lua_getfield(L,-1,"register");
+        if (!lua_isfunction(L,-1))
+        {
+            //If our register function doesn't exist, create it!
+            lua_pop(L,2);
+            lua_pushnil(L);
+            lua_setglobal(L,"TILE");
+            return LUA_NOREF;
+        }
+        lua_remove(L,-2);
+        lua_getglobal(L,"TILE");
+        std::stringstream TileID;
+        TileID << ID;
+        lua_pushstring(L,TileID.str().c_str());
+        lua_pcall(L,2,0,0);
+        lua_pushnil(L);
+        lua_setglobal(L,"TILE");
+        lua_getglobal(L,"entity");
+        if (!lua_istable(L,-1))
+        {
+            lua_pop(L,1);
+            return LUA_NOREF;
+        }
+        lua_getfield(L,-1,"get");
+        if (!lua_isfunction(L,-1))
+        {
+            lua_pop(L,2);
+            return LUA_NOREF;
+        }
+        lua_remove(L,-2);
+        lua_pushstring(L,TileID.str().c_str());
+        lua_pcall(L,1,1,0);
+        LuaTiles[ID] = luaL_ref(L, LUA_REGISTRYINDEX);
+    }
+    return LuaTiles[ID];
+}
+
 void NTile::SetID(int i_ID)
 {
+    if (ID == i_ID)
+    {
+        return;
+    }
     ID = i_ID;
     GetGame()->GetScene()->UpdateLights();
     GetGame()->GetMap()->SetChanged(Z);
+    if (ID == 0)
+    {
+        dSolid = false;
+        dOpaque = false;
+        return;
+    }
+    lua_State* L = GetGame()->GetLua()->GetL();
+    if (LuaReference != LUA_NOREF)
+    {
+        lua_getref(L,LuaReference);
+        lua_getfield(L,-1,"OnChange");
+        if (!lua_isfunction(L,-1))
+        {
+            lua_pop(L,2);
+        } else {
+            lua_pushTile(L,this);
+            lua_call(L,1,0);
+            lua_pop(L,1);
+        }
+    }
+    LuaReference = GetGame()->GetMap()->GetLuaTile(ID);
+    dSolid = GetBool("Solid");
+    dOpaque = GetBool("Opaque");
+    lua_getref(L,LuaReference);
+    lua_getfield(L,-1,"OnInitialize");
+    if (!lua_isfunction(L,-1))
+    {
+        lua_pop(L,2);
+    } else {
+        lua_pushTile(L,this);
+        lua_call(L,1,0);
+        lua_pop(L,1);
+    }
 }
+
+bool NTile::GetBool(std::string Name)
+{
+    if (LuaReference == LUA_NOREF)
+    {
+        return false;
+    }
+    lua_State* L = GetGame()->GetLua()->GetL();
+    lua_getref(L,LuaReference);
+    lua_getfield(L,-1,Name.c_str());
+    if (!lua_isboolean(L,-1))
+    {
+        lua_pop(L,2);
+        return false;
+    }
+    bool Bool = lua_toboolean(L,-1);
+    lua_pop(L,2);
+    return Bool;
+}
+
 NTile::~NTile()
 {
-    if (Light)
-    {
-        GetGame()->GetScene()->Remove(Light);
-    }
 }
 void NTile::SetSolid(bool i_Solid)
 {
@@ -635,44 +758,18 @@ bool NTile::IsSolid()
 {
     if (ForceSolid)
     {
-        if (Solid)
-        {
-            return true;
-        }
-        return false;
+        return Solid;
     }
-    switch (ID)
-    {
-        case 2: return true;
-        case 3: return true;
-    }
-    return false;
+    return dSolid;
 }
 
 bool NTile::IsOpaque()
 {
     if (ForceOpaque)
     {
-        if (Opaque)
-        {
-            return true;
-        }
-        return false;
+        return Opaque;
     }
-    switch (ID)
-    {
-        case 2: return true;
-    }
-    return false;
-}
-
-bool NTile::IsLight()
-{
-    switch(ID)
-    {
-        case 4: return true;
-    }
-    return false;
+    return dOpaque;
 }
 
 bool NTile::IsOpenSpace()
@@ -682,11 +779,6 @@ bool NTile::IsOpenSpace()
         return true;
     }
     return false;
-}
-
-NodeType NMap::GetType()
-{
-    return NodeMap;
 }
 
 bool NMap::Save(std::string Name)
@@ -728,18 +820,21 @@ bool NMap::Load(std::string Name)
         GetGame()->GetLog()->Send("MAP",0,std::string("Failed to save map 'maps/") + Name + ".map!");
         return Fail;
     }
-    File.Read(&Width,sizeof(unsigned int));
-    File.Read(&Height,sizeof(unsigned int));
-    File.Read(&Depth,sizeof(unsigned int));
+    unsigned int W,H,D;
+    File.Read(&W,sizeof(unsigned int));
+    File.Read(&H,sizeof(unsigned int));
+    File.Read(&D,sizeof(unsigned int));
     DeInit();
-    Init(Width,Height,Depth);
+    Init(W,H,D);
     for (unsigned int x=0;x<Width;x++)
     {
         for (unsigned int y=0;y<Height;y++)
         {
             for (unsigned int z=0;z<Depth;z++)
             {
-                File.Read(&(Tiles[x][y][z]->ID),sizeof(unsigned int));
+                unsigned int ID;
+                File.Read(&ID,sizeof(unsigned int));
+                Tiles[x][y][z]->SetID(ID);
                 bool Solid;
                 File.Read(&Solid,sizeof(bool));
                 Tiles[x][y][z]->SetSolid(Solid);
@@ -752,9 +847,9 @@ bool NMap::Load(std::string Name)
         }
     }
     GetGame()->GetLog()->Send("MAP",2,std::string("Successfully loaded map 'maps/") + Name + ".map!");
-    FixUp();
     return Success;
 }
+
 unsigned int NMap::GetWidth()
 {
     return Width;

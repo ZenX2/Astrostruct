@@ -56,8 +56,7 @@ public:
     /**
      * @brief Unallocates the object.
      */
-    void Remove();
-    NodeType GetType();
+    void Unallocate();
 private:
     ALuint ID;
 };

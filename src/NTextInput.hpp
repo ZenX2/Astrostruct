@@ -39,13 +39,7 @@ public:
     /**
      * @brief Unallocates the object.
      */
-    void Remove();
-    /**
-     * @brief Returns the type of the object.
-     *
-     * @return TextInput.
-     */
-    NodeType GetType();
+    void Unallocate();
     /**
      * @brief Returns the text object we're using, useful for changing it's color or size.
      *
