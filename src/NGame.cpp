@@ -21,6 +21,7 @@ NGame::NGame()
     SoundSystem = NULL;
     TextSystem = NULL;
     SignalInterceptor = NULL;
+    EntityManager = NULL;
     Console = NULL;
     Map = NULL;
     Network = NULL;
@@ -41,6 +42,7 @@ NGame::~NGame()
     delete Input;
     delete Render;
     delete PacketHandler;
+    delete EntityManager;
     if (!Server)
     {
         delete SoundSystem;
@@ -83,6 +85,7 @@ bool NGame::Init(int i_Width, int i_Height, std::string Title, int argc, char** 
         Render = new NRender();
         Console = new NConsole();
         PacketHandler = new NPacketHandler();
+        EntityManager = new NEntityManager();
         return Success;
     }
     //Initialize everything we can
@@ -145,7 +148,13 @@ bool NGame::Init(int i_Width, int i_Height, std::string Title, int argc, char** 
     StateMachine = new NStateMachine("Paused");
     Network = new NNetwork();
     PacketHandler = new NPacketHandler();
+    EntityManager = new NEntityManager();
     return Success;
+}
+
+NEntityManager* NGame::GetEntityManager()
+{
+    return EntityManager;
 }
 
 NInput* NGame::GetInput()

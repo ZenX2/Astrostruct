@@ -2,6 +2,10 @@
 
 NMap::NMap(std::string i_TileSet) : NNode(NodeMap)
 {
+    lua_State* L = GetGame()->GetLua()->GetL();
+    lua_newtable(L);
+    SelfReference = luaL_ref(L,LUA_REGISTRYINDEX);
+    LuaReference = LUA_NOREF;
     Ready = false;
     RealTileSize = 64;
     Width = Height = Depth = 0;
@@ -96,8 +100,7 @@ void NMap::DeInit()
 
 void NMap::Init(unsigned int i_Width, unsigned int i_Height, unsigned int i_Depth)
 {
-    std::string Gamemode = GetGame()->GetConfig()->GetString("GameMode");
-    GetGame()->GetLua()->DoFile("gamemodes/"+Gamemode+"/init.lua");
+    GetGameMode();
     Texture = GetGame()->GetRender()->GetTexture(GetGame()->GetConfig()->GetString("MapSkin"));
     if (Texture)
     {
@@ -673,6 +676,73 @@ int NMap::GetLuaTile(unsigned int ID)
     return LuaTiles[ID];
 }
 
+int NMap::GetGameMode()
+{
+    if (LuaReference == LUA_NOREF)
+    {
+        std::string Gamemode = GetGame()->GetConfig()->GetString("GameMode");
+        std::string Dir = "gamemodes/"+Gamemode+"/";
+        if (GetGame()->IsServer())
+        {
+            Dir += "init.lua";
+        } else {
+            Dir += "cl_init.lua";
+        }
+        lua_State* L = GetGame()->GetLua()->GetL();
+        lua_newtable(L);
+        lua_setglobal(L, "GAME");
+        if (!GetGame()->GetLua()->DoFile(Dir))
+        {
+            //If we failed, reset the global and abort.
+            lua_pushnil(L);
+            lua_setglobal(L,"GAME");
+            return LUA_NOREF;
+        }
+        //Right now i'll just include game modes into the entities table. This could cause problems later on if entities have the same names as the gamemode.
+        lua_getglobal(L,"entity");
+        if (!lua_istable(L,-1))
+        {
+            //If we haven't loaded in the entity module, reset the global and abort.
+            lua_pop(L,1);
+            lua_pushnil(L);
+            lua_setglobal(L,"GAME");
+            return LUA_NOREF;
+        }
+        lua_getfield(L,-1,"register");
+        if (!lua_isfunction(L,-1))
+        {
+            //If our register function doesn't exist, create it!
+            lua_pop(L,2);
+            lua_pushnil(L);
+            lua_setglobal(L,"GAME");
+            return LUA_NOREF;
+        }
+        lua_remove(L,-2);
+        lua_getglobal(L,"GAME");
+        lua_pushstring(L,Gamemode.c_str());
+        lua_pcall(L,2,0,0);
+        lua_pushnil(L);
+        lua_setglobal(L,"GAME");
+        lua_getglobal(L,"entity");
+        if (!lua_istable(L,-1))
+        {
+            lua_pop(L,1);
+            return LUA_NOREF;
+        }
+        lua_getfield(L,-1,"get");
+        if (!lua_isfunction(L,-1))
+        {
+            lua_pop(L,2);
+            return LUA_NOREF;
+        }
+        lua_remove(L,-2);
+        lua_pushstring(L,Gamemode.c_str());
+        lua_pcall(L,1,1,0);
+        LuaReference = luaL_ref(L, LUA_REGISTRYINDEX);
+    }
+    return LuaReference;
+}
+
 void NTile::SetID(int i_ID)
 {
     GetGame()->GetScene()->UpdateLights();
@@ -703,7 +773,7 @@ bool NTile::GetBool(std::string Name)
         return false;
     }
     lua_State* L = GetGame()->GetLua()->GetL();
-    lua_getref(L,LuaReference);
+    lua_rawgeti(L,LUA_REGISTRYINDEX,LuaReference);
     lua_getfield(L,-1,Name.c_str());
     if (!lua_isboolean(L,-1))
     {
@@ -786,6 +856,15 @@ bool NMap::Save(std::string Name)
             }
         }
     }
+    std::vector<NNode*> Entities = GetGame()->GetScene()->GetNodesByType(NodeEntity);
+    for (unsigned int i=0;i<Entities.size();i++)
+    {
+        NEntity* Ent = (NEntity*)Entities[i];
+        std::string Temp = Ent->GetName() + '\0';
+        File.Write((char*)Temp.c_str(),Temp.length());
+        glm::vec3 Pos = Ent->GetPos();
+        File.Write(&(Pos),sizeof(glm::vec3));
+    }
     GetGame()->GetLog()->Send("MAP",2,std::string("Successfully saved map 'maps/") + Name + ".map!");
     return Success;
 }
@@ -829,7 +908,25 @@ bool NMap::Load(std::string Name)
             }
         }
     }
+    std::string Entities;
+    while (File.Good())
+    {
+        char Buffer[32];
+        unsigned int Read = File.Read(Buffer,32);
+        Entities.append(Buffer, Read);
+    }
+    int Pos = 0;
+    while (Pos < Entities.length())
+    {
+        std::string EntName = Entities.substr(Pos,Entities.find('\0',Pos)-Pos);
+        Pos += EntName.length()+1;
+        glm::vec3 Vector;
+        memcpy(&(Vector),Entities.substr(Pos,sizeof(glm::vec3)).c_str(),sizeof(glm::vec3));
+        Pos += sizeof(glm::vec3);
+        NEntity* Entity = new NEntity(EntName,Vector);
+    }
     GetGame()->GetLog()->Send("MAP",2,std::string("Successfully loaded map 'maps/") + Name + ".map!");
+    CallMethod("OnInitialize");
     return Success;
 }
 
@@ -858,7 +955,7 @@ void NTile::CallMethod(std::string Name)
     lua_State* L = GetGame()->GetLua()->GetL();
     if (LuaReference != LUA_NOREF)
     {
-        lua_getref(L,LuaReference);
+        lua_rawgeti(L,LUA_REGISTRYINDEX,LuaReference);
         lua_getfield(L,-1,Name.c_str());
         if (!lua_isfunction(L,-1))
         {
@@ -868,5 +965,30 @@ void NTile::CallMethod(std::string Name)
             lua_call(L,1,0);
             lua_pop(L,1);
         }
+    }
+}
+void NMap::CallMethod(std::string Name, unsigned int AdditionalVars,  ...)
+{
+    lua_State* L = GetGame()->GetLua()->GetL();
+    GetGameMode();
+    lua_rawgeti(L,LUA_REGISTRYINDEX,LuaReference);
+    lua_getfield(L,-1,Name.c_str());
+    if (!lua_isfunction(L,-1))
+    {
+        lua_pop(L,2);
+    } else {
+        lua_pushMap(L,this);
+        va_list vl;
+        va_start(vl,AdditionalVars);
+        for (unsigned int i=0;i<AdditionalVars;i++)
+        {
+            NNode* Temp = va_arg(vl,NNode*);
+            switch(Temp->GetType())
+            {
+                case NodePlayer: lua_pushPlayer(L,(NPlayer*)Temp);
+            }
+        }
+        lua_call(L,1+AdditionalVars,0);
+        lua_pop(L,1);
     }
 }

@@ -64,6 +64,7 @@ public:
     std::vector<std::string> GetFiles(std::string Directory);
     NReadFile GetReadFile(std::string File);
     NWriteFile GetWriteFile(std::string File);
+    bool IsDir(std::string File);
 };
 
 #endif

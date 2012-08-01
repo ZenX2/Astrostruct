@@ -182,11 +182,13 @@ public:
      * @return A pointer to the logging system.
      */
     NLog* GetLog();
+    NEntityManager* GetEntityManager();
 private:
     bool Server;
     bool WindowChanged;
     bool Run;
     NLog* Log;
+    NEntityManager* EntityManager;
     NStateMachine* StateMachine;
     NPacketHandler* PacketHandler;
     NLightSystem* LightSystem;

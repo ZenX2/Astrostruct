@@ -3,7 +3,8 @@
 NLight::NLight(std::string i_Texture) : NNode(NodeLight)
 {
     Changed = true;
-    SChanged = true;
+    PositionMemory = glm::vec3(0,0,0);
+    ScaleMemory = glm::vec3(0,0,0);
     Texture = GetGame()->GetRender()->GetTexture(i_Texture);
     glGenBuffers(3,Buffers);
     Shader = GetGame()->GetRender()->GetShader("flat");
@@ -63,23 +64,24 @@ void NLight::GenerateShadowBuffers()
     {
         return;
     }
-    if (!SChanged && !GetParent())
+    if (PositionMemory == GetRealPos() && ScaleMemory == GetScale())
     {
         return;
     }
+    glm::vec3 Pos = GetRealPos();
     Shadows.clear();
     float Max = std::max(GetScale().x, GetScale().y);
     for (float x = -Max;x<Max;x+=GetGame()->GetMap()->GetTileSize())
     {
         for (float y = -Max;y<Max;y+=GetGame()->GetMap()->GetTileSize())
         {
-            NTile* Tile = GetGame()->GetMap()->GetTile(GetPos()+glm::vec3(x,y,0));
+            NTile* Tile = GetGame()->GetMap()->GetTile(Pos+glm::vec3(x,y,0));
             if (Tile == NULL || !Tile->IsOpaque())
             {
                 continue;
             }
             float TS = GetGame()->GetMap()->GetTileSize()/2.f;
-            glm::vec3 TPos = GetGame()->GetMap()->TilePos(GetPos()+glm::vec3(x,y,0));
+            glm::vec3 TPos = GetGame()->GetMap()->TilePos(Pos+glm::vec3(x,y,0));
             glm::vec3 Points[4];
             Points[0] = TPos+glm::vec3(TS,TS,0);
             Points[1] = TPos+glm::vec3(TS,-TS,0);
@@ -110,13 +112,13 @@ void NLight::GenerateShadowBuffers()
             for (unsigned int i=0;i<Faces.size();i++)
             {
                 //Remove front faces
-                if (!Facing(glm::vec2(GetPos().x,GetPos().y),Faces[i]))
+                if (!Facing(glm::vec2(Pos.x,Pos.y),Faces[i]))
                 {
                     continue;
                 }
                 //Generate shadow mesh
-                float Radians = -atan2(GetPos().x-Faces[i].x,GetPos().y-Faces[i].y)-PI/2.f;
-                float BRadians = -atan2(GetPos().x-Faces[i].z,GetPos().y-Faces[i].w)-PI/2.f;
+                float Radians = -atan2(Pos.x-Faces[i].x,Pos.y-Faces[i].y)-PI/2.f;
+                float BRadians = -atan2(Pos.x-Faces[i].z,Pos.y-Faces[i].w)-PI/2.f;
                 Shadows.push_back(glm::vec3(Faces[i].x,Faces[i].y,TPos.z));
                 Shadows.push_back(glm::vec3(Faces[i].z,Faces[i].w,TPos.z));
                 Shadows.push_back(glm::vec3(Faces[i].z+cos(BRadians)*GetScale().x,Faces[i].w+sin(BRadians)*GetScale().y,TPos.z));
@@ -126,26 +128,13 @@ void NLight::GenerateShadowBuffers()
     }
     glBindBuffer(GL_ARRAY_BUFFER,Buffers[2]);
     glBufferData(GL_ARRAY_BUFFER,Shadows.size()*sizeof(glm::vec3),&Shadows[0],GL_STATIC_DRAW);
-    SChanged = false;
-}
-
-void NLight::SetPos(glm::vec3 i_Position)
-{
-    Position = i_Position;
-    SChanged = true;
-    UpdateMatrix();
-}
-
-void NLight::SetScale(glm::vec3 i_Scale)
-{
-    Scale = i_Scale;
-    SChanged = true;
-    UpdateMatrix();
+    PositionMemory = GetRealPos();
+    ScaleMemory = GetScale();
 }
 
 void NLight::Draw(NCamera* View)
 {
-    if (GetGame()->GetMap()->GetLevel() != GetGame()->GetMap()->GetLevel(GetPos()))
+    if (GetGame()->GetMap()->GetLevel() != GetGame()->GetMap()->GetLevel(GetRealPos()))
     {
         return;
     }
@@ -423,4 +412,8 @@ void NLight::Unallocate()
 
 void NLight::Tick(double DT)
 {
+}
+void NLight::UpdateShadows()
+{
+    PositionMemory = glm::vec3(0);
 }

@@ -94,6 +94,7 @@ public:
      * @param i_Moving True if moving, false if not.
      */
     void SetMoving(bool i_Moving);
+    int SelfReference;
 private:
     glm::vec3 WantedPosition;
     bool HasSetWantedPosition;

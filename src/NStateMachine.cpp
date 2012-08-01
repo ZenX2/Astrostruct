@@ -172,14 +172,13 @@ void NGameState::OnEnter()
 {
     if (!Init)
     {
+        GetGame()->GetMap()->Load("default");
         std::string Name = GetGame()->GetConfig()->GetString("PlayerName");
         Player = new NPlayer(ToMBS(Name));
         Player->SetControl();
         Light = new NLight("ray");
         Light->SetScale(glm::vec3(512,350,1));
         Light->SetColor(glm::vec4(1,1,1,1));
-        GetGame()->GetMap()->Load("default");
-        Player->SetPos(512,512,1024);
         Init = true;
     }
 }
@@ -365,6 +364,7 @@ void NMapState::OnEnter()
 {
     if (!Init)
     {
+        Entities = GetGame()->GetEntityManager()->GetEntityNames();
         NCamera* Camera = GetGame()->GetRender()->GetCamera();
         Camera->SetPos(glm::vec3(512,512,500));
         WantedPosition = glm::vec3(512,512,500);
@@ -546,31 +546,46 @@ void NMapState::Tick(double DT)
     if (Increase->OnRelease() || (GetGame()->GetInput()->KeyChanged('E') && GetGame()->GetInput()->GetKey('E')))
     {
         CurrentTile++;
-        if (CurrentTile>GetGame()->GetMap()->GetTileCount())
+        if (CurrentTile>int(GetGame()->GetMap()->GetTileCount()))
         {
-            CurrentTile = 0;
+            CurrentTile = -Entities.size();
         }
-        std::wstringstream Stream;
-        Stream << "Tile: ";
-        Stream << CurrentTile;
-        ChangingText->SetText(Stream.str());
-        NTile Tile(CurrentTile);
-        CheckBox->SetCheck(Tile.IsSolid());
-        OCheckBox->SetCheck(Tile.IsOpaque());
+        if (CurrentTile >= 0)
+        {
+            std::wstringstream Stream;
+            Stream << "Tile: ";
+            Stream << CurrentTile;
+            ChangingText->SetText(Stream.str());
+            NTile Tile(CurrentTile);
+            CheckBox->SetCheck(Tile.IsSolid());
+            OCheckBox->SetCheck(Tile.IsOpaque());
+        } else {
+            ChangingText->SetText(Entities[-CurrentTile-1]);
+            CheckBox->SetCheck(false);
+            OCheckBox->SetCheck(false);
+        }
     }
     if (Decrease->OnRelease() || (GetGame()->GetInput()->KeyChanged('Q') && GetGame()->GetInput()->GetKey('Q')))
     {
         CurrentTile--;
-        if (CurrentTile<0)
+        if (CurrentTile<-int(Entities.size()))
         {
             CurrentTile = GetGame()->GetMap()->GetTileCount();
         }
-        std::wstringstream Stream; Stream << "Tile: ";
-        Stream << CurrentTile;
-        ChangingText->SetText(Stream.str());
-        NTile Tile(CurrentTile);
-        CheckBox->SetCheck(Tile.IsSolid());
-        OCheckBox->SetCheck(Tile.IsOpaque());
+        if (CurrentTile >= 0)
+        {
+            std::wstringstream Stream;
+            Stream << "Tile: ";
+            Stream << CurrentTile;
+            ChangingText->SetText(Stream.str());
+            NTile Tile(CurrentTile);
+            CheckBox->SetCheck(Tile.IsSolid());
+            OCheckBox->SetCheck(Tile.IsOpaque());
+        } else {
+            ChangingText->SetText(Entities[-CurrentTile-1]);
+            CheckBox->SetCheck(false);
+            OCheckBox->SetCheck(false);
+        }
     }
     if (GetGame()->GetInput()->KeyChanged(GLFW_KEY_ESC) && GetGame()->GetInput()->GetKey(GLFW_KEY_ESC))
     {
@@ -779,30 +794,39 @@ void NMapState::Tick(double DT)
     HWindow->SetPos(TilePos);
     if (GetGame()->GetInput()->GetMouseKey(0) && !GetGame()->GetInput()->GetMouseHitGUI())
     {
-        NTile* Tile = GetGame()->GetMap()->GetTile(GetGame()->GetInput()->GetPerspMouse(.45));
-        if (Tile)
+        if (CurrentTile >= 0)
         {
-            Tile->SetID(CurrentTile);
-            Tile->SetSolid(CheckBox->IsChecked());
-            Tile->SetOpaque(OCheckBox->IsChecked());
-            if (SlopeUp->GetToggle())
+            NTile* Tile = GetGame()->GetMap()->GetTile(GetGame()->GetInput()->GetPerspMouse(.45));
+            if (Tile)
             {
-                Tile->SetSlope(SlopeNorth);
-            } else if (SlopeDown->GetToggle())
+                Tile->SetID(CurrentTile);
+                Tile->SetSolid(CheckBox->IsChecked());
+                Tile->SetOpaque(OCheckBox->IsChecked());
+                if (SlopeUp->GetToggle())
+                {
+                    Tile->SetSlope(SlopeNorth);
+                } else if (SlopeDown->GetToggle())
+                {
+                    Tile->SetSlope(SlopeSouth);
+                } else if (SlopeRight->GetToggle())
+                {
+                    Tile->SetSlope(SlopeEast);
+                } else if (SlopeLeft->GetToggle())
+                {
+                    Tile->SetSlope(SlopeWest);
+                } else {
+                    SlopeOff->SetToggle(true);
+                    Tile->SetSlope(SlopeNone);
+                }
+            }
+        } else {
+            if (GetGame()->GetInput()->KeyChanged(0))
             {
-                Tile->SetSlope(SlopeSouth);
-            } else if (SlopeRight->GetToggle())
-            {
-                Tile->SetSlope(SlopeEast);
-            } else if (SlopeLeft->GetToggle())
-            {
-                Tile->SetSlope(SlopeWest);
-            } else {
-                SlopeOff->SetToggle(true);
-                Tile->SetSlope(SlopeNone);
+                NEntity* Entity = new NEntity(Entities[-CurrentTile-1],GetGame()->GetInput()->GetPerspMouse(.45));
             }
         }
     }
+    GetGame()->GetInput()->KeyChanged(0);
 }
 std::string NMapState::GetName()
 {

@@ -51,6 +51,7 @@ void NReadFile::Close()
 
 bool NReadFile::Good()
 {
+    Eof = PHYSFS_eof(File);
     return (Open && Exists && !Eof && File);
 }
 
@@ -153,4 +154,9 @@ NReadFile NFileSystem::GetReadFile(std::string File)
 NWriteFile NFileSystem::GetWriteFile(std::string File)
 {
     return NWriteFile(File);
+}
+
+bool NFileSystem::IsDir(std::string File)
+{
+    return PHYSFS_isDirectory(File.c_str());
 }

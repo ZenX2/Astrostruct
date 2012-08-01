@@ -81,6 +81,7 @@ set(source
     src/NUnicode.cpp
     src/NWindow.cpp
     src/NSpace.cpp
+    src/NEntity.cpp
     src/NLog.cpp)
 
 # GAME

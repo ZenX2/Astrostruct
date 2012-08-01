@@ -7,6 +7,7 @@ NLua::NLua()
     static const luaL_Reg BaseFunctions[] =
     {
         {"include",Include},
+        {"GetEntitiesByName",LuaGetEntitiesByName},
         {"help",ConsoleHelp},
         {"quit",Quit},
         {"exit",Quit},
@@ -135,6 +136,7 @@ NLua::NLua()
         {"__index",Light__index},
         {"__newindex",Light__newindex},
         {"SetPos",LightSetPos},
+        {"GetPos",LightGetPos},
         {"SetRadius",LightSetRadius},
         {"SetColor",LightSetColor},
         {"Remove",LightRemove},
@@ -145,6 +147,60 @@ NLua::NLua()
     lua_setfield(L,-2,"__type");
     lua_pop(L,1);
     DoFile("gamemodes/entity.lua");
+
+    //Map
+    luaL_getmetatable(L,"Map");
+    if (lua_isnoneornil(L,-1))
+    {
+        lua_pop(L,1);
+        luaL_newmetatable(L,"Map");
+    }
+    static const luaL_Reg MapMethods[] = {
+        {"__index", Map__index},
+        {"__newindex", Map__newindex},
+        {NULL,NULL}
+    };
+    luaL_register(L,NULL,MapMethods);
+    lua_pushstring(L,"Map");
+    lua_setfield(L,-2,"__type");
+    lua_pop(L,1);
+
+    //Player
+    luaL_getmetatable(L,"Player");
+    if (lua_isnoneornil(L,-1))
+    {
+        lua_pop(L,1);
+        luaL_newmetatable(L,"Player");
+    }
+    static const luaL_Reg PlayerMethods[] = {
+        {"__index", Player__index},
+        {"__newindex", Player__newindex},
+        {"SetPos", PlayerSetPos},
+        {NULL,NULL}
+    };
+    luaL_register(L,NULL,PlayerMethods);
+    lua_pushstring(L,"Player");
+    lua_setfield(L,-2,"__type");
+    lua_pop(L,1);
+
+    //Entity
+    luaL_getmetatable(L,"Entity");
+    if (lua_isnoneornil(L,-1))
+    {
+        lua_pop(L,1);
+        luaL_newmetatable(L,"Entity");
+    }
+    static const luaL_Reg EntityMethods[] = {
+        {"__index", Entity__index},
+        {"__newindex", Entity__newindex},
+        {"GetPos", EntityGetPos},
+        {"SetPos", EntitySetPos},
+        {NULL,NULL}
+    };
+    luaL_register(L,NULL,EntityMethods);
+    lua_pushstring(L,"Entity");
+    lua_setfield(L,-2,"__type");
+    lua_pop(L,1);
 }
 
 NLua::~NLua()
@@ -412,7 +468,6 @@ int Print(lua_State* L) //Grabbed this from http://www.lua.org/source/5.1/lbasel
     return 0;
 }
 
-
 NTile* lua_toTile(lua_State* L, int index)
 {
     NTile** Tile = (NTile**)luaL_checkudata(L,index,"Tile");
@@ -453,7 +508,8 @@ int Tile__index(lua_State* L)
         if (lua_isnil(L,-1))
         {
             lua_pop(L,1);
-            lua_getref(L,Foo->SelfReference);
+            //lua_getref(L,Foo->SelfReference);
+            lua_rawgeti(L,LUA_REGISTRYINDEX,Foo->SelfReference);
             lua_pushvalue(L,2);
             lua_gettable(L,-2);
         }
@@ -475,7 +531,7 @@ int Tile__newindex(lua_State* L)
         return lua_error(L);
     }
     const char* Field = luaL_checkstring(L,2);
-    lua_getref(L,Foo->SelfReference);
+    lua_rawgeti(L,LUA_REGISTRYINDEX,Foo->SelfReference);
     lua_pushvalue(L,3);
     lua_setfield(L,-2,luaL_checkstring(L,2));
     return 0;
@@ -578,6 +634,13 @@ int LightSetPos(lua_State* L)
     glm::vec3* Bar = lua_checkVector(L,2);
     Foo->SetPos(*Bar);
     return 0;
+}
+
+int LightGetPos(lua_State* L)
+{
+    NLight* Foo = lua_checkLight(L,1);
+    lua_pushVector(L,Foo->GetPos());
+    return 1;
 }
 
 int LightSetColor(lua_State* L)
@@ -800,4 +863,275 @@ glm::vec4* lua_checkColor(lua_State* L, int narg)
         luaL_argerror(L,narg,"attempt to index a NULL Color");
     }
     return Foo;
+}
+
+
+NMap* lua_toMap(lua_State* L, int index)
+{
+    NMap** Map = (NMap**)luaL_checkudata(L,index,"Map");
+    return *Map;
+}
+
+NMap* lua_checkMap(lua_State* L, int narg)
+{
+    NMap* Foo = lua_toMap(L,narg);
+    if (Foo == NULL)
+    {
+        luaL_argerror(L,narg,"attempt to index a NULL Map");
+    }
+    return Foo;
+}
+
+int Map__index(lua_State* L)
+{
+    NMap* Foo = lua_toMap(L,1);
+    if (Foo == NULL)
+    {
+        lua_Debug ar1;
+        lua_getstack(L,1,&ar1);
+        lua_getinfo(L,"fl",&ar1);
+        lua_Debug ar2;
+        lua_getinfo(L,">S",&ar2);
+        lua_pushfstring(L, "%s:%d: attempt to index a NULL Map", ar2.short_src, ar1.currentline);
+        return lua_error(L);
+    }
+    const char* Field = luaL_checkstring(L,2);
+    if (!strcmp(Field,"TileSize"))
+    {
+        lua_pushnumber(L,Foo->GetTileSize());
+    } else {
+        lua_getmetatable(L,1);
+        lua_pushvalue(L,2);
+        lua_gettable(L,-2);
+        if (lua_isnil(L,-1))
+        {
+            lua_pop(L,1);
+            //lua_getref(L,Foo->SelfReference);
+            lua_rawgeti(L,LUA_REGISTRYINDEX,Foo->SelfReference);
+            lua_pushvalue(L,2);
+            lua_gettable(L,-2);
+        }
+    }
+    return 1;
+}
+
+int Map__newindex(lua_State* L)
+{
+    NMap* Foo = lua_toMap(L,1);
+    if (Foo == NULL)
+    {
+        lua_Debug ar1;
+        lua_getstack(L,1,&ar1);
+        lua_getinfo(L,"fl",&ar1);
+        lua_Debug ar2;
+        lua_getinfo(L,">S",&ar2);
+        lua_pushfstring(L, "%s:%d: attempt to index a NULL Map", ar2.short_src, ar1.currentline);
+        return lua_error(L);
+    }
+    const char* Field = luaL_checkstring(L,2);
+    lua_rawgeti(L,LUA_REGISTRYINDEX,Foo->SelfReference);
+    lua_pushvalue(L,3);
+    lua_setfield(L,-2,luaL_checkstring(L,2));
+    return 0;
+}
+void lua_pushMap(lua_State* L, NMap* Map)
+{
+    NMap** Pointer = (NMap**)lua_newuserdata(L,sizeof(NMap*));
+    *Pointer = Map;
+    luaL_getmetatable(L,"Map");
+    lua_setmetatable(L,-2);
+}
+
+NPlayer* lua_toPlayer(lua_State* L, int index)
+{
+    NPlayer** Player = (NPlayer**)luaL_checkudata(L,index,"Player");
+    return *Player;
+}
+
+NPlayer* lua_checkPlayer(lua_State* L, int narg)
+{
+    NPlayer* Foo = lua_toPlayer(L,narg);
+    if (Foo == NULL)
+    {
+        luaL_argerror(L,narg,"attempt to index a NULL Player");
+    }
+    return Foo;
+}
+
+int Player__index(lua_State* L)
+{
+    NPlayer* Foo = lua_toPlayer(L,1);
+    if (Foo == NULL)
+    {
+        lua_Debug ar1;
+        lua_getstack(L,1,&ar1);
+        lua_getinfo(L,"fl",&ar1);
+        lua_Debug ar2;
+        lua_getinfo(L,">S",&ar2);
+        lua_pushfstring(L, "%s:%d: attempt to index a NULL Player", ar2.short_src, ar1.currentline);
+        return lua_error(L);
+    }
+    const char* Field = luaL_checkstring(L,2);
+    if (!strcmp(Field,"Name"))
+    {
+        lua_pushstring(L,Foo->GetName().c_str());
+    } else {
+        lua_getmetatable(L,1);
+        lua_pushvalue(L,2);
+        lua_gettable(L,-2);
+        if (lua_isnil(L,-1))
+        {
+            lua_pop(L,1);
+            //lua_getref(L,Foo->SelfReference);
+            lua_rawgeti(L,LUA_REGISTRYINDEX,Foo->SelfReference);
+            lua_pushvalue(L,2);
+            lua_gettable(L,-2);
+        }
+    }
+    return 1;
+}
+
+int Player__newindex(lua_State* L)
+{
+    NPlayer* Foo = lua_toPlayer(L,1);
+    if (Foo == NULL)
+    {
+        lua_Debug ar1;
+        lua_getstack(L,1,&ar1);
+        lua_getinfo(L,"fl",&ar1);
+        lua_Debug ar2;
+        lua_getinfo(L,">S",&ar2);
+        lua_pushfstring(L, "%s:%d: attempt to index a NULL Player", ar2.short_src, ar1.currentline);
+        return lua_error(L);
+    }
+    const char* Field = luaL_checkstring(L,2);
+    lua_rawgeti(L,LUA_REGISTRYINDEX,Foo->SelfReference);
+    lua_pushvalue(L,3);
+    lua_setfield(L,-2,luaL_checkstring(L,2));
+    return 0;
+}
+void lua_pushPlayer(lua_State* L, NPlayer* Player)
+{
+    NPlayer** Pointer = (NPlayer**)lua_newuserdata(L,sizeof(NPlayer*));
+    *Pointer = Player;
+    luaL_getmetatable(L,"Player");
+    lua_setmetatable(L,-2);
+}
+
+NEntity* lua_toEntity(lua_State* L, int index)
+{
+    NEntity** Entity = (NEntity**)luaL_checkudata(L,index,"Entity");
+    return *Entity;
+}
+
+NEntity* lua_checkEntity(lua_State* L, int narg)
+{
+    NEntity* Foo = lua_toEntity(L,narg);
+    if (Foo == NULL)
+    {
+        luaL_argerror(L,narg,"attempt to index a NULL Entity");
+    }
+    return Foo;
+}
+
+int Entity__index(lua_State* L)
+{
+    NEntity* Foo = lua_toEntity(L,1);
+    if (Foo == NULL)
+    {
+        lua_Debug ar1;
+        lua_getstack(L,1,&ar1);
+        lua_getinfo(L,"fl",&ar1);
+        lua_Debug ar2;
+        lua_getinfo(L,">S",&ar2);
+        lua_pushfstring(L, "%s:%d: attempt to index a NULL Entity", ar2.short_src, ar1.currentline);
+        return lua_error(L);
+    }
+    const char* Field = luaL_checkstring(L,2);
+    //if (!strcmp(Field,"Name"))
+    //{
+    //    lua_pushstring(L,Foo->GetName().c_str());
+    //} else {
+        lua_getmetatable(L,1);
+        lua_pushvalue(L,2);
+        lua_gettable(L,-2);
+        if (lua_isnil(L,-1))
+        {
+            lua_pop(L,1);
+            //lua_getref(L,Foo->SelfReference);
+            lua_rawgeti(L,LUA_REGISTRYINDEX,Foo->SelfReference);
+            lua_pushvalue(L,2);
+            lua_gettable(L,-2);
+        }
+    //}
+    return 1;
+}
+
+int Entity__newindex(lua_State* L)
+{
+    NEntity* Foo = lua_toEntity(L,1);
+    if (Foo == NULL)
+    {
+        lua_Debug ar1;
+        lua_getstack(L,1,&ar1);
+        lua_getinfo(L,"fl",&ar1);
+        lua_Debug ar2;
+        lua_getinfo(L,">S",&ar2);
+        lua_pushfstring(L, "%s:%d: attempt to index a NULL Entity", ar2.short_src, ar1.currentline);
+        return lua_error(L);
+    }
+    const char* Field = luaL_checkstring(L,2);
+    lua_rawgeti(L,LUA_REGISTRYINDEX,Foo->SelfReference);
+    lua_pushvalue(L,3);
+    lua_setfield(L,-2,luaL_checkstring(L,2));
+    return 0;
+}
+void lua_pushEntity(lua_State* L, NEntity* Entity)
+{
+    NEntity** Pointer = (NEntity**)lua_newuserdata(L,sizeof(NEntity*));
+    *Pointer = Entity;
+    luaL_getmetatable(L,"Entity");
+    lua_setmetatable(L,-2);
+}
+
+int EntityGetPos(lua_State* L)
+{
+    NEntity* Foo = lua_checkEntity(L,1);
+    lua_pushVector(L,Foo->GetPos());
+    return 1;
+}
+int EntitySetPos(lua_State* L)
+{
+    NEntity* Foo = lua_checkEntity(L,1);
+    glm::vec3* Bar = lua_checkVector(L,2);
+    Foo->SetPos(*Bar);
+    return 0;
+}
+
+int LuaGetEntitiesByName(lua_State* L)
+{
+    const char* Name = luaL_checkstring(L,1);
+    lua_newtable(L);
+    std::vector<NNode*> Nodes = GetGame()->GetScene()->GetNodesByType(NodeEntity);
+    int Size = 0;
+    for (unsigned int i=0;i<Nodes.size();i++)
+    {
+        NEntity* Ent = (NEntity*)Nodes[i];
+        if (Ent->GetName() == Name)
+        {
+            lua_pushEntity(L,Ent);
+            lua_rawseti(L,-2,Size+1);
+            Size++;
+        }
+    }
+    lua_pushinteger(L,Size);
+    return 2;
+}
+
+int PlayerSetPos(lua_State* L)
+{
+    NPlayer* Foo = lua_checkPlayer(L,1);
+    glm::vec3* Bar = lua_checkVector(L,2);
+    Foo->SetPos(*Bar);
+    return 0;
 }

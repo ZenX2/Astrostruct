@@ -49,13 +49,18 @@
 #include "NUnicode.hpp"
 #include <GL/glew.h>
 #include <GL/glfw.h>
+#ifdef _WIN32
+#include <SOIL.h>
+#else
 #include <SOIL/SOIL.h>
+#endif
 #include <iostream>
 #include <fstream>
 #include <cctype>
 #include <sstream>
 #include <vector>
 #include <signal.h>
+#include <enet/enet.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/projection.hpp>
@@ -68,7 +73,6 @@
 #include <physfs.h>
 #define LUA_COMPAT_MODULE
 #include <lua.hpp>
-#include <enet/enet.h>
 
 #define Fail false
 #define Success true
@@ -109,6 +113,7 @@
 #include "NSpace.hpp"
 #include "NLight.hpp"
 #include "NMap.hpp"
+#include "NEntity.hpp"
 #include "NWindow.hpp"
 #include "NCheckbox.hpp"
 #include "NTextInput.hpp"

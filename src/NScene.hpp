@@ -93,6 +93,7 @@ public:
      * @brief Forces all lights to update their shadows, currently used when map changes.
      */
     void UpdateLights();
+    std::vector<NNode*> GetNodesByType(NodeType Type);
 private:
     double LastTick;
     std::vector<std::vector<NNode*> > Layers;

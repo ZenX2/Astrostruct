@@ -2,6 +2,9 @@
 
 NPlayer::NPlayer(std::wstring i_Name) : NNode(NodePlayer)
 {
+    lua_State* L = GetGame()->GetLua()->GetL();
+    lua_newtable(L);
+    SelfReference = luaL_ref(L,LUA_REGISTRYINDEX);
     Velocity = glm::vec3(0);
     Speed = 200;
     Changed = true;
@@ -34,6 +37,7 @@ NPlayer::NPlayer(std::wstring i_Name) : NNode(NodePlayer)
     NameText->SetMode(1);
     NameText->SetSize(13);
     NameText->SetParent(this);
+    GetGame()->GetMap()->CallMethod("OnPlayerSpawn",1,this);
 }
 
 NPlayer::~NPlayer()

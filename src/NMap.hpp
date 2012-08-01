@@ -239,7 +239,11 @@ public:
      */
     unsigned int GetTileCount();
     int GetLuaTile(unsigned int ID);
+    int SelfReference;
+    void CallMethod(std::string Name, unsigned int AdditionalVars = 0, ...);
+    int GetGameMode();
 private:
+    int LuaReference;
     unsigned int MaxTiles;
     std::vector<int> LuaTiles;
     float RealTileSize;

@@ -37,20 +37,10 @@ public:
      * @brief Deletes the object.
      */
     void Unallocate();
-    /**
-     * @brief Plugs this into NNode to ensure we regenerate our shadows when we change scale.
-     *
-     * @param i_Scale Desired scale of the object.
-     */
-    void SetScale(glm::vec3 i_Scale);
-    /**
-     * @brief Plugs this into NNode to ensure we regenerate our shadows when we change position.
-     *
-     * @param i_Position Desired position of object.
-     */
-    void SetPos(glm::vec3 i_Position);
-    bool SChanged;
+    void UpdateShadows();
 private:
+    glm::vec3 ScaleMemory;
+    glm::vec3 PositionMemory;
     void DrawLight(NCamera* View);
     void DrawShadow(NCamera* View);
     NTexture* Texture;

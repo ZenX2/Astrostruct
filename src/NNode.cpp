@@ -181,6 +181,7 @@ void NNode::SetScale(float W, float H)
 void NNode::SetScale(glm::vec3 i_Scale)
 {
     Scale = i_Scale;
+    UpdateMatrix();
 }
 
 void NNode::SetScale(glm::vec2 i_Scale)

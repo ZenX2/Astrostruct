@@ -22,7 +22,8 @@ enum NodeType
     NodeCamera,
     NodeLight,
     NodePlayer,
-    NodeStar
+    NodeStar,
+    NodeEntity
 };
 
 class NCamera;

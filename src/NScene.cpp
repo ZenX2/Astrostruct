@@ -62,6 +62,7 @@ void NScene::AddNode(NNode* Node)
         //World
         case NodeMap:       Layers[1].push_back(Node); return;
         case NodePlayer:    Layers[1].push_back(Node); return;
+        case NodeEntity:    Layers[1].push_back(Node); return;
 
         //Lights
         case NodeLight:     Layers[2].push_back(Node); return;
@@ -184,7 +185,7 @@ void NScene::UpdateLights()
             if (Layers[i][o]->GetType() == NodeLight)
             {
                 NLight* Light = (NLight*)Layers[i][o];
-                Light->SChanged = true;
+                Light->UpdateShadows();
             }
         }
     }
@@ -212,4 +213,20 @@ void NScene::SwapLayer(NNode* Node, unsigned int Layer)
 void NScene::SetFullBright(bool Bright)
 {
     FullBright = Bright;
+}
+
+std::vector<NNode*> NScene::GetNodesByType(NodeType Type)
+{
+    std::vector<NNode*> Foo;
+    for (unsigned int i=0;i<Layers.size();i++)
+    {
+        for (unsigned int o=0;o<Layers[i].size();o++)
+        {
+            if (Layers[i][o]->GetType() == Type)
+            {
+                Foo.push_back(Layers[i][o]);
+            }
+        }
+    }
+    return Foo;
 }

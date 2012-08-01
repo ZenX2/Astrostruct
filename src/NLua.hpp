@@ -8,6 +8,7 @@
 #ifndef NAELSTROF_LUA
 #define NAELSTROF_LUA
 
+int LuaGetEntitiesByName(lua_State* L);
 int MapLoad(lua_State* L);
 int MapSave(lua_State* L);
 /**
@@ -145,6 +146,7 @@ int Light__newindex(lua_State* L);
 NLight* lua_checkLight(lua_State* L, int narg);
 NLight* lua_toLight(lua_State* L, int index);
 int LightSetPos(lua_State* L);
+int LightGetPos(lua_State* L);
 int LightSetRadius(lua_State* L);
 int LightSetColor(lua_State* L);
 void lua_pushLight(lua_State* L, NLight* Light);
@@ -156,4 +158,25 @@ NTile* lua_toTile(lua_State* L, int index);
 NTile* lua_checkTile(lua_State* L, int narg);
 int TileGetPos(lua_State* L);
 void lua_pushTile(lua_State* L, NTile* Tile);
+
+int Map__index(lua_State* L);
+int Map__newindex(lua_State* L);
+NMap* lua_toMap(lua_State* L, int index);
+NMap* lua_checkMap(lua_State* L, int narg);
+void lua_pushMap(lua_State* L, NMap* Map);
+
+int Player__index(lua_State* L);
+int PlayerSetPos(lua_State* L);
+int Player__newindex(lua_State* L);
+NPlayer* lua_toPlayer(lua_State* L, int index);
+NPlayer* lua_checkPlayer(lua_State* L, int narg);
+void lua_pushPlayer(lua_State* L, NPlayer* Player);
+
+int Entity__index(lua_State* L);
+int Entity__newindex(lua_State* L);
+NEntity* lua_toEntity(lua_State* L, int index);
+NEntity* lua_checkEntity(lua_State* L, int narg);
+void lua_pushEntity(lua_State* L, NEntity* Entity);
+int EntityGetPos(lua_State* L);
+int EntitySetPos(lua_State* L);
 #endif
