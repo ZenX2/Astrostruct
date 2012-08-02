@@ -11,8 +11,24 @@ bool Intersects(glm::vec4 Box, glm::vec2 Point)
     {
         return false;
     }
-    return true; }
+    return true;
+}
 
+bool Intersects(glm::vec3 BoxPos, glm::vec3 BoxSize, glm::vec3 Point)
+{
+    glm::vec3 AMin = BoxPos-BoxSize/2.f;
+    glm::vec3 AMax = BoxPos+BoxSize/2.f;
+    if (Point.x > AMax.x ||
+        Point.y > AMax.y ||
+        Point.z > AMax.z ||
+        Point.x < AMin.x ||
+        Point.y < AMin.y ||
+        Point.z < AMin.z)
+    {
+        return false;
+    }
+    return true;
+}
 bool Intersects(glm::vec4 ABox, glm::vec4 BBox)
 {
     glm::vec2 AMin = glm::vec2(ABox.x,ABox.y)-(glm::vec2(ABox.z,ABox.w)/2.f);

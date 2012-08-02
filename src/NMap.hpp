@@ -242,6 +242,7 @@ public:
     int SelfReference;
     void CallMethod(std::string Name, unsigned int AdditionalVars = 0, ...);
     int GetGameMode();
+    void Resize(unsigned int X, unsigned int Y, unsigned int Z);
 private:
     int LuaReference;
     unsigned int MaxTiles;

@@ -31,7 +31,7 @@ public:
     void SetVel(glm::vec3 i_Velocity);
     glm::vec3 GetVel();
     void Draw(NCamera* View);
-    void Remove();
+    void Unallocate();
     int SelfReference;
     void CallMethod(std::string Name, unsigned int AdditionalVars = 0, ...);
     std::string GetString(std::string Name);

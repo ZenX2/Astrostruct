@@ -57,7 +57,7 @@ public:
     /**
      * @brief Deletes the player and its draw buffers.
      */
-    void Remove();
+    void Unallocate();
     /**
      * @brief Returns the name of the player.
      *

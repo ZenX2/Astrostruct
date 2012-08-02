@@ -8,6 +8,7 @@
 #ifndef NAELSTROF_PHYSICS
 #define NAELSTROF_PHYSICS
 
+bool Intersects(glm::vec3 BoxPos, glm::vec3 BoxSize, glm::vec3 Point);
 /**
  * @brief Checks if a point intersects with a box.
  *

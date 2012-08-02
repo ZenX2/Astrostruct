@@ -36,7 +36,6 @@ public:
      * @return "NULL"
      */
     virtual std::string GetName();
-    bool Init;
 };
 
 /**
@@ -100,7 +99,8 @@ public:
     void Tick(double DT);
 private:
     NPlayer* Player;
-    NLight* Light;
+    NWindow* Window;
+    NButton* Button;
 };
 
 class NServerState : public NState

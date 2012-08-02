@@ -3,7 +3,6 @@
 // --- State Template ---
 NState::NState()
 {
-    Init = false;
 }
 NState::~NState() {}
 void NState::Tick(double DT) {}
@@ -69,53 +68,45 @@ NPauseState::~NPauseState()
 }
 void NPauseState::OnEnter()
 {
-    if (!Init)
-    {
-        Window = new NWindow("window");
-        Window->SetScale(256,256);
-        Window->SetPos(GetGame()->GetWindowSize()/2.f);
-        Window->SetParent(GetGame()->GetRender()->GetCamera());
-        QuitButton = new NButton("button");
-        QuitButton->SetScale(150,32);
-        QuitButton->SetText(_t("Quit"));
-        QuitButton->SetPos(0,-48);
-        QuitButton->SetParent(Window);
-        PlayButton = new NButton("button");
-        PlayButton->SetScale(150,32);
-        PlayButton->SetText(_t("Play"));
-        PlayButton->SetPos(0,-16);
-        PlayButton->SetParent(Window);
-        MultiButton = new NButton("button");
-        MultiButton->SetScale(150,32);
-        MultiButton->SetText(_t("Play Online"));
-        MultiButton->SetPos(0,16);
-        MultiButton->SetParent(Window);
-        MapButton = new NButton("button");
-        MapButton->SetScale(150,32);
-        MapButton->SetText(_t("Make new map"));
-        MapButton->SetPos(0,48);
-        MapButton->SetParent(Window);
-        InfoWindow = new NWindow("window");
-        InfoWindow->SetScale(128,256);
-        InfoWindow->SetPos(GetGame()->GetWindowSize()-glm::vec2(64,128));
-        InfoWindow->SetParent(GetGame()->GetRender()->GetCamera());
-        InfoText = new NText("cousine", _t("This game is in very early development, but the engine framework is pretty much completed now. You can see lots of it demo'd here. Use wasd and qe to move the camera around. While escape brings back up the beginning menu."));
-        InfoText->SetBorder(128,256);
-        InfoText->SetPos(-64,108);
-        InfoText->SetSize(12);
-        InfoText->SetParent(InfoWindow);
-        PlaySound = new NSound("coin");
-        Init = true;
-    }
+    Window = new NWindow("window");
+    Window->SetScale(256,256);
+    Window->SetPos(GetGame()->GetWindowSize()/2.f);
+    Window->SetParent(GetGame()->GetRender()->GetCamera());
+    QuitButton = new NButton("button");
+    QuitButton->SetScale(150,32);
+    QuitButton->SetText(_t("Quit"));
+    QuitButton->SetPos(0,-48);
+    QuitButton->SetParent(Window);
+    PlayButton = new NButton("button");
+    PlayButton->SetScale(150,32);
+    PlayButton->SetText(_t("Play"));
+    PlayButton->SetPos(0,-16);
+    PlayButton->SetParent(Window);
+    MultiButton = new NButton("button");
+    MultiButton->SetScale(150,32);
+    MultiButton->SetText(_t("Play Online"));
+    MultiButton->SetPos(0,16);
+    MultiButton->SetParent(Window);
+    MapButton = new NButton("button");
+    MapButton->SetScale(150,32);
+    MapButton->SetText(_t("Make new map"));
+    MapButton->SetPos(0,48);
+    MapButton->SetParent(Window);
+    InfoWindow = new NWindow("window");
+    InfoWindow->SetScale(128,256);
+    InfoWindow->SetPos(GetGame()->GetWindowSize()-glm::vec2(64,128));
+    InfoWindow->SetParent(GetGame()->GetRender()->GetCamera());
+    InfoText = new NText("cousine", _t("This game is in very early development, but the engine framework is pretty much completed now. You can see lots of it demo'd here. Use wasd and qe to move the camera around. While escape brings back up the beginning menu."));
+    InfoText->SetBorder(128,256);
+    InfoText->SetPos(-64,108);
+    InfoText->SetSize(12);
+    InfoText->SetParent(InfoWindow);
+    PlaySound = new NSound("coin");
 }
 void NPauseState::OnExit()
 {
-    if (Init)
-    {
-        Init = false;
-        Window->Remove();
-        InfoWindow->Remove();
-    }
+    Window->Remove();
+    InfoWindow->Remove();
 }
 void NPauseState::Tick(double DT)
 {
@@ -150,11 +141,6 @@ void NPauseState::Tick(double DT)
         GetGame()->GetStateMachine()->SetState("Mapping");
         return;
     }
-    if (GetGame()->GetInput()->KeyChanged(GLFW_KEY_ESC) && GetGame()->GetInput()->GetKey(GLFW_KEY_ESC))
-    {
-        GetGame()->GetStateMachine()->SetState("Game");
-        return;
-    }
 }
 std::string NPauseState::GetName()
 {
@@ -170,42 +156,50 @@ NGameState::~NGameState()
 }
 void NGameState::OnEnter()
 {
-    if (!Init)
-    {
-        GetGame()->GetMap()->Load("default");
-        std::string Name = GetGame()->GetConfig()->GetString("PlayerName");
-        Player = new NPlayer(ToMBS(Name));
-        Player->SetControl();
-        Light = new NLight("ray");
-        Light->SetScale(glm::vec3(512,350,1));
-        Light->SetColor(glm::vec4(1,1,1,1));
-        Init = true;
-    }
+    GetGame()->GetScene()->SetFullBright(false);
+    GetGame()->GetMap()->Load("default");
+    std::string Name = GetGame()->GetConfig()->GetString("PlayerName");
+    Player = new NPlayer(ToMBS(Name));
+    Player->SetControl();
+    Window = NULL;
 }
 void NGameState::OnExit()
 {
+    Player->Remove();
+    if (Window)
+    {
+        Window->Remove();
+    }
+    GetGame()->GetMap()->DeInit();
 }
 void NGameState::Tick(double DT)
 {
     NCamera* Camera = GetGame()->GetRender()->GetCamera();
     glm::vec3 Pos = glm::vec3(GetGame()->GetInput()->GetMouseX(),GetGame()->GetInput()->GetMouseY(),0)-Player->GetPos()-glm::vec3(GetGame()->GetWindowWidth()/2.f,GetGame()->GetWindowHeight()/2.f,0);
-    Light->SetAng(glm::vec3(0,0,90-(atan2(Pos.x,Pos.y)/PI)*180));
     glm::vec3 WantedCameraPos = Player->GetPos()+glm::vec3(0,0,500);
     Camera->SetPos(Camera->GetPos()-(Camera->GetPos()-WantedCameraPos)/float(1.f+DT*50.f));
     Camera->SetPos(glm::vec3(Camera->GetPos().x,Camera->GetPos().y,WantedCameraPos.z));
-    Light->SetPos(Player->GetPos());
     if (GetGame()->GetInput()->KeyChanged(GLFW_KEY_ESC) && GetGame()->GetInput()->GetKey(GLFW_KEY_ESC))
     {
-        GetGame()->GetStateMachine()->SetState("Paused");
-    }
-    if (GetGame()->GetInput()->KeyChanged('F') && GetGame()->GetInput()->GetKey('F'))
-    {
-        if (Light->GetColor().w == 0)
+        if (!Window)
         {
-            Light->SetColor(glm::vec4(1,1,1,1));
+            Window = new NWindow("window");
+            Window->SetScale(256,256);
+            Window->SetPos(GetGame()->GetWindowSize()/2.f);
+            Window->SetParent(GetGame()->GetRender()->GetCamera());
+            Button = new NButton("button");
+            Button->SetScale(64,32);
+            Button->SetText(_t("Quit"));
+            Button->SetPos(0,0);
+            Button->SetParent(Window);
         } else {
-            Light->SetColor(glm::vec4(1,1,1,0));
+            Window->Remove();
+            Window = NULL;
         }
+    }
+    if (Window && Button->OnRelease())
+    {
+        GetGame()->GetStateMachine()->SetState("Paused");
     }
 }
 std::string NGameState::GetName()
@@ -222,11 +216,7 @@ NOnlineState::~NOnlineState()
 }
 void NOnlineState::OnEnter()
 {
-    if (!Init)
-    {
-        GetGame()->GetMap()->Init(16,16,16);
-        Init = true;
-    }
+    GetGame()->GetMap()->Init(16,16,16);
 }
 void NOnlineState::OnExit()
 {
@@ -284,11 +274,7 @@ NServerState::~NServerState()
 }
 void NServerState::OnEnter()
 {
-    if (!Init)
-    {
-        GetGame()->GetMap()->Init(16,16,16);
-        Init = true;
-    }
+    GetGame()->GetMap()->Init(16,16,16);
 }
 void NServerState::OnExit()
 {
@@ -362,133 +348,125 @@ NMapState::~NMapState()
 }
 void NMapState::OnEnter()
 {
-    if (!Init)
+    Entities = GetGame()->GetEntityManager()->GetEntityNames();
+    NCamera* Camera = GetGame()->GetRender()->GetCamera();
+    Camera->SetPos(glm::vec3(512,512,500));
+    WantedPosition = glm::vec3(512,512,500);
+    GetGame()->GetMap()->Init(16,16,6);
+    MapDim[0] = 16;
+    MapDim[1] = 16;
+    MapDim[2] = 6;
+    GetGame()->GetScene()->SetFullBright(true);
+    Window = new NWindow("window");
+    Window->SetScale(150,150);
+    Window->SetPos(75,75);
+    Window->SetParent(Camera);
+    OtherWindow = new NWindow("window");
+    OtherWindow->SetScale(128,128);
+    OtherWindow->SetParent(Camera);
+    OtherWindow->SetPos(glm::vec3(GetGame()->GetWindowWidth()-64,64,0));
+    CheckBox = new NCheckbox("checkbox");
+    CheckBox->SetScale(16,16);
+    CheckBox->SetPos(glm::vec3(-16,18, 0));
+    CheckBox->SetParent(OtherWindow);
+    CheckText = new NText("cousine",_t("Solid"));
+    CheckText->SetSize(12);
+    CheckText->SetPos(glm::vec3(0,20,0));
+    CheckText->SetParent(OtherWindow);
+    OCheckBox = new NCheckbox("checkbox");
+    OCheckBox->SetScale(16,16);
+    OCheckBox->SetPos(glm::vec3(-16,-7+5,0));
+    OCheckBox->SetParent(OtherWindow);
+    OCheckText = new NText("cousine",_t("Opaque"));
+    OCheckText->SetSize(12);
+    OCheckText->SetPos(glm::vec3(0,0,0));
+    OCheckText->SetParent(OtherWindow);
+    Increase = new NButton("button");
+    Increase->SetScale(16,16);
+    Increase->SetText(_t(">"));
+    Increase->SetPos(64-16,37+5);
+    Increase->SetParent(OtherWindow);
+    Decrease = new NButton("button");
+    Decrease->SetScale(16,16);
+    Decrease->SetText(_t("<"));
+    Decrease->SetPos(-64+16,37+5);
+    Decrease->SetParent(OtherWindow);
+    ChangingText = new NText("cousine",_t("Tile: 0"));
+    ChangingText->SetSize(16);
+    ChangingText->SetMode(1);
+    ChangingText->SetPos(0,43);
+    ChangingText->SetParent(OtherWindow);
+    Text = new NText("cousine",_t("Welcome to the map editor! Use the WASD keys to move, arrowkeys to change levels, F to toggle fullbright, left click to spawn stuff, rightclick to delete entities, and QE to quick change tiles."));
+    Text->SetSize(12);
+    Text->SetBorder(150,150);
+    Text->SetPos(-75,75-18);
+    Text->SetParent(Window);
+    CurrentTile = 0;
+    HWindow = new NWindow("highlight");
+    HWindow->SetScale(128,128);
+    HWindow->SetLayer(1); // Place it into the world
+    HWindow->SwapView();
+    Bg = new NWindow("space");
+    unsigned int W = GetGame()->GetWindowWidth();
+    unsigned int H = GetGame()->GetWindowHeight();
+    if (W > H) 
     {
-        Entities = GetGame()->GetEntityManager()->GetEntityNames();
-        NCamera* Camera = GetGame()->GetRender()->GetCamera();
-        Camera->SetPos(glm::vec3(512,512,500));
-        WantedPosition = glm::vec3(512,512,500);
-        GetGame()->GetMap()->Init(16,16,6);
-        MapDim[0] = 16;
-        MapDim[1] = 16;
-        MapDim[2] = 6;
-        GetGame()->GetScene()->SetFullBright(true);
-        Window = new NWindow("window");
-        Window->SetScale(128,150);
-        Window->SetPos(64,75);
-        Window->SetParent(Camera);
-        OtherWindow = new NWindow("window");
-        OtherWindow->SetScale(128,150);
-        OtherWindow->SetParent(Camera);
-        OtherWindow->SetPos(glm::vec3(GetGame()->GetWindowWidth()-64,75,0));
-        CheckBox = new NCheckbox("checkbox");
-        CheckBox->SetScale(16,16);
-        CheckBox->SetPos(glm::vec3(-16,13+15,0));
-        CheckBox->SetParent(OtherWindow);
-        CheckText = new NText("cousine",_t("Solid"));
-        CheckText->SetSize(12);
-        CheckText->SetPos(glm::vec3(0,15+15,0));
-        CheckText->SetParent(OtherWindow);
-        OCheckBox = new NCheckbox("checkbox");
-        OCheckBox->SetScale(16,16);
-        OCheckBox->SetPos(glm::vec3(-16,-7+15,0));
-        OCheckBox->SetParent(OtherWindow);
-        OCheckText = new NText("cousine",_t("Opaque"));
-        OCheckText->SetSize(12);
-        OCheckText->SetPos(glm::vec3(0,-5+15,0));
-        OCheckText->SetParent(OtherWindow);
-        Increase = new NButton("button");
-        Increase->SetScale(16,16);
-        Increase->SetText(_t(">"));
-        Increase->SetPos(64-16,37+15);
-        Increase->SetParent(OtherWindow);
-        Decrease = new NButton("button");
-        Decrease->SetScale(16,16);
-        Decrease->SetText(_t("<"));
-        Decrease->SetPos(-64+16,37+15);
-        Decrease->SetParent(OtherWindow);
-        ChangingText = new NText("cousine",_t("Tile: 0"));
-        ChangingText->SetSize(16);
-        ChangingText->SetMode(1);
-        ChangingText->SetPos(0,56);
-        ChangingText->SetParent(OtherWindow);
-        Text = new NText("cousine",_t("Welcome to the map editor! Use the WASD keys move and arrowkeys to change levels. You can also press F to toggle fullbright as well as QE to quick change tiles."));
-        Text->SetSize(12);
-        Text->SetBorder(128,150);
-        Text->SetPos(-64,75-18);
-        Text->SetParent(Window);
-        Init = true;
-        CurrentTile = 0;
-        HWindow = new NWindow("highlight");
-        HWindow->SetScale(128,128);
-        HWindow->SetLayer(1); // Place it into the world
-        HWindow->SwapView();
-        Bg = new NWindow("space");
-        unsigned int W = GetGame()->GetWindowWidth();
-        unsigned int H = GetGame()->GetWindowHeight();
-        if (W > H) 
-        {
-            Bg->SetScale(glm::vec3(W,W,1));
-        } else {
-            Bg->SetScale(glm::vec3(H,H,1));
-        }
-        Bg->SetLayer(0); // Place it into space.
-        Bg->SetUI(false);
-        Bg->SetParent(Camera);
-        Bg->SetPos(GetGame()->GetWindowSize()/2.f);
-
-        SlopeUp = new NButton("button");
-        SlopeUp->SetScale(16,16);
-        SlopeUp->SetText(_t("^"));
-        SlopeUp->SetPos(0,-8);
-        SlopeUp->SetToggleable(true);
-        SlopeUp->SetParent(OtherWindow);
-
-        SlopeDown = new NButton("button");
-        SlopeDown->SetScale(16,16);
-        SlopeDown->SetText(_t("v"));
-        SlopeDown->SetPos(0,-40);
-        SlopeDown->SetToggleable(true);
-        SlopeDown->SetParent(OtherWindow);
-
-        SlopeRight = new NButton("button");
-        SlopeRight->SetScale(16,16);
-        SlopeRight->SetText(_t(">"));
-        SlopeRight->SetPos(16,-24);
-        SlopeRight->SetToggleable(true);
-        SlopeRight->SetParent(OtherWindow);
-
-        SlopeLeft = new NButton("button");
-        SlopeLeft->SetScale(16,16);
-        SlopeLeft->SetText(_t("<"));
-        SlopeLeft->SetPos(-16,-24);
-        SlopeLeft->SetToggleable(true);
-        SlopeLeft->SetParent(OtherWindow);
-
-        SlopeOff = new NButton("button");
-        SlopeOff->SetScale(16,16);
-        SlopeOff->SetText(_t("o"));
-        SlopeOff->SetPos(0,-24);
-        SlopeOff->SetToggleable(true);
-        SlopeOff->SetParent(OtherWindow);
+        Bg->SetScale(glm::vec3(W,W,1));
+    } else {
+        Bg->SetScale(glm::vec3(H,H,1));
     }
+    Bg->SetLayer(0); // Place it into space.
+    Bg->SetUI(false);
+    Bg->SetParent(Camera);
+    Bg->SetPos(GetGame()->GetWindowSize()/2.f);
+
+    SlopeUp = new NButton("button");
+    SlopeUp->SetScale(16,16);
+    SlopeUp->SetText(_t("^"));
+    SlopeUp->SetPos(0,-18);
+    SlopeUp->SetToggleable(true);
+    SlopeUp->SetParent(OtherWindow);
+
+    SlopeDown = new NButton("button");
+    SlopeDown->SetScale(16,16);
+    SlopeDown->SetText(_t("v"));
+    SlopeDown->SetPos(0,-50);
+    SlopeDown->SetToggleable(true);
+    SlopeDown->SetParent(OtherWindow);
+
+    SlopeRight = new NButton("button");
+    SlopeRight->SetScale(16,16);
+    SlopeRight->SetText(_t(">"));
+    SlopeRight->SetPos(16,-34);
+    SlopeRight->SetToggleable(true);
+    SlopeRight->SetParent(OtherWindow);
+
+    SlopeLeft = new NButton("button");
+    SlopeLeft->SetScale(16,16);
+    SlopeLeft->SetText(_t("<"));
+    SlopeLeft->SetPos(-16,-34);
+    SlopeLeft->SetToggleable(true);
+    SlopeLeft->SetParent(OtherWindow);
+
+    SlopeOff = new NButton("button");
+    SlopeOff->SetScale(16,16);
+    SlopeOff->SetText(_t("o"));
+    SlopeOff->SetPos(0,-34);
+    SlopeOff->SetToggleable(true);
+    SlopeOff->SetParent(OtherWindow);
     SaveWindow = NULL;
 }
 void NMapState::OnExit()
 {
     GetGame()->GetScene()->RemoveByType(NodeStar);
-    if (Init)
+    GetGame()->GetMap()->DeInit();
+    HWindow->Remove();
+    Window->Remove();
+    OtherWindow->Remove();
+    Bg->Remove();
+    if (SaveWindow)
     {
-        GetGame()->GetMap()->DeInit();
-        HWindow->Remove();
-        Window->Remove();
-        OtherWindow->Remove();
-        Bg->Remove();
-        if (SaveWindow)
-        {
-            SaveWindow->Remove();
-        }
-        Init = false;
+        SaveWindow->Remove();
     }
 }
 void NMapState::Tick(double DT)
@@ -542,7 +520,7 @@ void NMapState::Tick(double DT)
     {
         new NStar();
     }
-    OtherWindow->SetPos(glm::vec3(GetGame()->GetWindowWidth()-64,50,0));
+    OtherWindow->SetPos(glm::vec3(GetGame()->GetWindowWidth()-64,64,0));
     if (Increase->OnRelease() || (GetGame()->GetInput()->KeyChanged('E') && GetGame()->GetInput()->GetKey('E')))
     {
         CurrentTile++;
@@ -706,7 +684,7 @@ void NMapState::Tick(double DT)
         }
         if (Apply->OnRelease())
         {
-            GetGame()->GetMap()->Init(MapDim[0],MapDim[1],MapDim[2]);
+            GetGame()->GetMap()->Resize(MapDim[0],MapDim[1],MapDim[2]);
         }
         for (unsigned int i=0;i<3;i++)
         {
@@ -823,6 +801,19 @@ void NMapState::Tick(double DT)
             if (GetGame()->GetInput()->KeyChanged(0))
             {
                 NEntity* Entity = new NEntity(Entities[-CurrentTile-1],GetGame()->GetInput()->GetPerspMouse(.45));
+            }
+        }
+    }
+    if (GetGame()->GetInput()->KeyChanged(1) && GetGame()->GetInput()->GetMouseKey(1) && !GetGame()->GetInput()->GetMouseHitGUI())
+    {
+        std::vector<NNode*> Entities = GetGame()->GetScene()->GetNodesByType(NodeEntity);
+        glm::vec3 MousePos = GetGame()->GetInput()->GetPerspMouse(.45);
+        for (unsigned int i=0;i<Entities.size();i++)
+        {
+            if (Intersects(Entities[i]->GetPos(),glm::vec3(64,64,64),MousePos))
+            {
+                Entities[i]->Remove();
+                break;
             }
         }
     }

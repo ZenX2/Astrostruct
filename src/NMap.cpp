@@ -96,6 +96,7 @@ void NMap::DeInit()
         delete Texture;
         Texture = NULL;
     }
+    GetGame()->GetScene()->RemoveByType(NodeEntity);
 }
 
 void NMap::Init(unsigned int i_Width, unsigned int i_Height, unsigned int i_Depth)
@@ -990,5 +991,84 @@ void NMap::CallMethod(std::string Name, unsigned int AdditionalVars,  ...)
         }
         lua_call(L,1+AdditionalVars,0);
         lua_pop(L,1);
+    }
+}
+void NMap::Resize(unsigned int X, unsigned int Y, unsigned int Z)
+{
+    if (X<Width)
+    {
+        for (unsigned int x=X;x>=Width;x--)
+        {
+            for (unsigned int y=0;y<Height;y++)
+            {
+                for (unsigned int z=0;z<Depth;z++)
+                {
+                    delete Tiles[x][y][z];
+                }
+            }
+        }
+        Tiles.resize(X);
+    } else {
+        std::vector<std::vector<NTile* > > Foo;
+        Tiles.resize(X,Foo);
+    }
+    Width = X;
+    if (Y<Height)
+    {
+        for (unsigned int x=0;x<Width;x++)
+        {
+            for (unsigned int y=Y;y>=Height;y--)
+            {
+                for (unsigned int z=0;z<Depth;z++)
+                {
+                    delete Tiles[x][y][z];
+                }
+            }
+        }
+        for (unsigned int x=0;x<Width;x++)
+        {
+            Tiles[x].resize(Y);
+        }
+    } else {
+        for (unsigned int x=0;x<Width;x++)
+        {
+            std::vector<NTile* > Foo;
+            Tiles[x].resize(Y,Foo);
+        }
+    }
+    Height = Y;
+    if (Z<Depth)
+    {
+        for (unsigned int x=0;x<Width;x++)
+        {
+            for (unsigned int y=0;y<Height;y++)
+            {
+                for (unsigned int z=Z;z>=Depth;z--)
+                {
+                    delete Tiles[x][y][z];
+                }
+            }
+        }
+        for (unsigned int x=0;x<Width;x++)
+        {
+            for (unsigned int y=0;y<Height;y++)
+            {
+                Tiles[x][y].resize(Z);
+            }
+        }
+    } else {
+        for (unsigned int x=0;x<Width;x++)
+        {
+            for (unsigned int y=0;y<Height;y++)
+            {
+                NTile* Foo;
+                Tiles[x][y].resize(Z,Foo);
+            }
+        }
+    }
+    Depth = Z;
+    if (ViewingLevel >= Depth)
+    {
+        ViewingLevel = Depth-1;
     }
 }

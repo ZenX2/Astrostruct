@@ -267,6 +267,7 @@ NEntity::NEntity(std::string i_Name, glm::vec3 i_Position) : NNode(NodeEntity)
 
 NEntity::~NEntity()
 {
+    CallMethod("OnRemove");
     if (Texture)
     {
         delete Texture;
@@ -393,7 +394,7 @@ void NEntity::SetVel(glm::vec3 i_Velocity)
     Velocity = i_Velocity;
 }
 
-void NEntity::Remove()
+void NEntity::Unallocate()
 {
     delete (NEntity*)this;
 }
