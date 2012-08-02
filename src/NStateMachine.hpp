@@ -137,6 +137,8 @@ public:
     std::string GetName();
     void Tick(double DT);
 private:
+    std::vector<NWindow*> EntityHighlight;
+    std::vector<NText*> EntityText;
     std::vector<std::string> Entities;
     glm::vec3 WantedPosition;
     bool ShowWindow;

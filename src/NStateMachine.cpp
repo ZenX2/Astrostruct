@@ -468,9 +468,48 @@ void NMapState::OnExit()
     {
         SaveWindow->Remove();
     }
+    for (unsigned int i=0;i<EntityHighlight.size();i++)
+    {
+        EntityHighlight[i]->Remove();
+    }
 }
 void NMapState::Tick(double DT)
 {
+    std::vector<NNode*> Nodes = GetGame()->GetScene()->GetNodesByType(NodeEntity);
+    if (Nodes.size() != EntityHighlight.size())
+    {
+        if (Nodes.size() < EntityHighlight.size())
+        {
+            for (unsigned int i=EntityHighlight.size()-1;i>Nodes.size()-1;i--)
+            {
+                EntityHighlight[i]->Remove();
+                EntityHighlight[i] = NULL;
+            }
+        }
+        EntityHighlight.resize(Nodes.size(),NULL);
+        EntityText.resize(Nodes.size(),NULL);
+        for (unsigned int i=0;i<Nodes.size();i++)
+        {
+            NEntity* Ent = (NEntity*)Nodes[i];
+            if (EntityHighlight[i] == NULL)
+            {
+                EntityHighlight[i] = new NWindow("highlight");
+                EntityHighlight[i]->SetScale(glm::vec3(80,80,1));
+                EntityHighlight[i]->SetColor(glm::vec4(0,1,0,1));
+                EntityHighlight[i]->SetLayer(1);
+                EntityHighlight[i]->SwapView();
+                EntityText[i] = new NText("cousine",ToMBS(Ent->GetName()));
+                EntityText[i]->SetParent(EntityHighlight[i]);
+                EntityText[i]->SetSize(13);
+                EntityText[i]->SwapView();
+                EntityText[i]->SetLayer(1);
+                EntityText[i]->SetColor(glm::vec4(0,1,0,1));
+                EntityText[i]->SetMode(1);
+            }
+            EntityText[i]->SetText(ToMBS(Ent->GetName()));
+            EntityHighlight[i]->SetPos(Ent->GetPos());
+        }
+    }
     if (SlopeUp->OnPressed() && SlopeUp->GetToggle())
     {
         SlopeDown->SetToggle(false);
@@ -727,8 +766,18 @@ void NMapState::Tick(double DT)
     if (!GetGame()->GetScene()->GetFullBright())
     {
         HWindow->SetColor(glm::vec4(0,0,0,0));
+        for (unsigned int i=0;i<EntityHighlight.size();i++)
+        {
+            EntityHighlight[i]->SetColor(glm::vec4(0,0,0,0));
+            EntityText[i]->SetColor(glm::vec4(0,0,0,0));
+        }
     } else {
         HWindow->SetColor(glm::vec4(1,1,1,1));
+        for (unsigned int i=0;i<EntityHighlight.size();i++)
+        {
+            EntityHighlight[i]->SetColor(glm::vec4(0,1,0,1));
+            EntityText[i]->SetColor(glm::vec4(0,1,0,1));
+        }
     }
     NCamera* Camera = GetGame()->GetRender()->GetCamera();
     float Multi = DT*5;
