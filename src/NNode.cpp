@@ -36,14 +36,6 @@ unsigned int NNode::GetID()
 {
     return ID;
 }
-void NNode::SetPos(float X, float Y, float Z)
-{
-    SetPos(glm::vec3(X,Y,Z));
-}
-void NNode::SetPos(float X, float Y)
-{
-    SetPos(glm::vec3(X,Y,GetPos().z));
-}
 
 NNode* NNode::GetParent()
 {
@@ -54,12 +46,6 @@ void NNode::SetPos(glm::vec3 i_Position)
 {
     Position = i_Position;
     UpdateMatrix();
-}
-
-void NNode::SetPos(glm::vec2 i_Position)
-{
-    float Z = Position.z;
-    SetPos(glm::vec3(i_Position,Z));
 }
 
 void NNode::SetAng(glm::vec3 i_Angle)

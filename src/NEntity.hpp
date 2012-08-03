@@ -28,8 +28,6 @@ public:
     NEntity(std::string i_Name, glm::vec3 i_Position);
     ~NEntity();
     void Tick(double DT);
-    void SetVel(glm::vec3 i_Velocity);
-    glm::vec3 GetVel();
     void Draw(NCamera* View);
     void Unallocate();
     int SelfReference;
@@ -48,7 +46,6 @@ private:
     void GenerateBuffers();
     std::vector<glm::vec2> Verts;
     std::vector<glm::vec2> UVs;
-    glm::vec3 Velocity;
     NTexture* Texture;
 };
 

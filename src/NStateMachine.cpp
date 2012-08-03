@@ -70,35 +70,37 @@ void NPauseState::OnEnter()
 {
     Window = new NWindow("window");
     Window->SetScale(256,256);
-    Window->SetPos(GetGame()->GetWindowSize()/2.f);
+    glm::vec2 WSize = GetGame()->GetWindowSize()/2.f;
+    Window->SetPos(glm::vec3(WSize.x,WSize.y,0));
     Window->SetParent(GetGame()->GetRender()->GetCamera());
     QuitButton = new NButton("button");
     QuitButton->SetScale(150,32);
     QuitButton->SetText(_t("Quit"));
-    QuitButton->SetPos(0,-48);
+    QuitButton->SetPos(glm::vec3(0,-48,0));
     QuitButton->SetParent(Window);
     PlayButton = new NButton("button");
     PlayButton->SetScale(150,32);
     PlayButton->SetText(_t("Play"));
-    PlayButton->SetPos(0,-16);
+    PlayButton->SetPos(glm::vec3(0,-16,0));
     PlayButton->SetParent(Window);
     MultiButton = new NButton("button");
     MultiButton->SetScale(150,32);
     MultiButton->SetText(_t("Play Online"));
-    MultiButton->SetPos(0,16);
+    MultiButton->SetPos(glm::vec3(0,16,0));
     MultiButton->SetParent(Window);
     MapButton = new NButton("button");
     MapButton->SetScale(150,32);
     MapButton->SetText(_t("Make new map"));
-    MapButton->SetPos(0,48);
+    MapButton->SetPos(glm::vec3(0,48,0));
     MapButton->SetParent(Window);
     InfoWindow = new NWindow("window");
     InfoWindow->SetScale(128,256);
-    InfoWindow->SetPos(GetGame()->GetWindowSize()-glm::vec2(64,128));
     InfoWindow->SetParent(GetGame()->GetRender()->GetCamera());
+    glm::vec2 Temp = GetGame()->GetWindowSize()-glm::vec2(64,128);
+    InfoWindow->SetPos(glm::vec3(Temp.x,Temp.y,0));
     InfoText = new NText("cousine", _t("This game is in very early development, but the engine framework is pretty much completed now. You can see lots of it demo'd here. Use wasd and qe to move the camera around. While escape brings back up the beginning menu."));
     InfoText->SetBorder(128,256);
-    InfoText->SetPos(-64,108);
+    InfoText->SetPos(glm::vec3(-64,108,0));
     InfoText->SetSize(12);
     InfoText->SetParent(InfoWindow);
     PlaySound = new NSound("coin");
@@ -110,8 +112,10 @@ void NPauseState::OnExit()
 }
 void NPauseState::Tick(double DT)
 {
-    Window->SetPos(GetGame()->GetWindowSize()/2.f);
-    InfoWindow->SetPos(GetGame()->GetWindowSize()-glm::vec2(64,128));
+    glm::vec2 Temp = GetGame()->GetWindowSize()/2.f;
+    Window->SetPos(glm::vec3(Temp.x,Temp.y,0));
+    Temp = GetGame()->GetWindowSize()-glm::vec2(64,128);
+    InfoWindow->SetPos(glm::vec3(Temp.x,Temp.y,0));
     if (PlayButton->OnRelease())
     {
         PlaySound->Play();
@@ -185,12 +189,13 @@ void NGameState::Tick(double DT)
         {
             Window = new NWindow("window");
             Window->SetScale(256,256);
-            Window->SetPos(GetGame()->GetWindowSize()/2.f);
+            glm::vec2 Temp = GetGame()->GetWindowSize()/2.f;
+            Window->SetPos(glm::vec3(Temp.x,Temp.y,0));
             Window->SetParent(GetGame()->GetRender()->GetCamera());
             Button = new NButton("button");
             Button->SetScale(64,32);
             Button->SetText(_t("Quit"));
-            Button->SetPos(0,0);
+            Button->SetPos(glm::vec3(0,0,0));
             Button->SetParent(Window);
         } else {
             Window->Remove();
@@ -359,7 +364,7 @@ void NMapState::OnEnter()
     GetGame()->GetScene()->SetFullBright(true);
     Window = new NWindow("window");
     Window->SetScale(150,150);
-    Window->SetPos(75,75);
+    Window->SetPos(glm::vec3(75,75,0));
     Window->SetParent(Camera);
     OtherWindow = new NWindow("window");
     OtherWindow->SetScale(128,128);
@@ -384,22 +389,22 @@ void NMapState::OnEnter()
     Increase = new NButton("button");
     Increase->SetScale(16,16);
     Increase->SetText(_t(">"));
-    Increase->SetPos(64-16,37+5);
+    Increase->SetPos(glm::vec3(64-16,37+5,0));
     Increase->SetParent(OtherWindow);
     Decrease = new NButton("button");
     Decrease->SetScale(16,16);
     Decrease->SetText(_t("<"));
-    Decrease->SetPos(-64+16,37+5);
+    Decrease->SetPos(glm::vec3(-64+16,37+5,0));
     Decrease->SetParent(OtherWindow);
     ChangingText = new NText("cousine",_t("Tile: 0"));
     ChangingText->SetSize(16);
     ChangingText->SetMode(1);
-    ChangingText->SetPos(0,43);
+    ChangingText->SetPos(glm::vec3(0,43,0));
     ChangingText->SetParent(OtherWindow);
     Text = new NText("cousine",_t("Welcome to the map editor! Use the WASD keys to move, arrowkeys to change levels, F to toggle fullbright, left click to spawn stuff, rightclick to delete entities, and QE to quick change tiles."));
     Text->SetSize(12);
     Text->SetBorder(150,150);
-    Text->SetPos(-75,75-18);
+    Text->SetPos(glm::vec3(-75,75-18,0));
     Text->SetParent(Window);
     CurrentTile = 0;
     HWindow = new NWindow("highlight");
@@ -418,40 +423,41 @@ void NMapState::OnEnter()
     Bg->SetLayer(0); // Place it into space.
     Bg->SetUI(false);
     Bg->SetParent(Camera);
-    Bg->SetPos(GetGame()->GetWindowSize()/2.f);
+    glm::vec2 Temp = GetGame()->GetWindowSize()/2.f;
+    Bg->SetPos(glm::vec3(Temp.x,Temp.y,0));
 
     SlopeUp = new NButton("button");
     SlopeUp->SetScale(16,16);
     SlopeUp->SetText(_t("^"));
-    SlopeUp->SetPos(0,-18);
+    SlopeUp->SetPos(glm::vec3(0,-18,0));
     SlopeUp->SetToggleable(true);
     SlopeUp->SetParent(OtherWindow);
 
     SlopeDown = new NButton("button");
     SlopeDown->SetScale(16,16);
     SlopeDown->SetText(_t("v"));
-    SlopeDown->SetPos(0,-50);
+    SlopeDown->SetPos(glm::vec3(0,-50,0));
     SlopeDown->SetToggleable(true);
     SlopeDown->SetParent(OtherWindow);
 
     SlopeRight = new NButton("button");
     SlopeRight->SetScale(16,16);
     SlopeRight->SetText(_t(">"));
-    SlopeRight->SetPos(16,-34);
+    SlopeRight->SetPos(glm::vec3(16,-34,0));
     SlopeRight->SetToggleable(true);
     SlopeRight->SetParent(OtherWindow);
 
     SlopeLeft = new NButton("button");
     SlopeLeft->SetScale(16,16);
     SlopeLeft->SetText(_t("<"));
-    SlopeLeft->SetPos(-16,-34);
+    SlopeLeft->SetPos(glm::vec3(-16,-34,0));
     SlopeLeft->SetToggleable(true);
     SlopeLeft->SetParent(OtherWindow);
 
     SlopeOff = new NButton("button");
     SlopeOff->SetScale(16,16);
     SlopeOff->SetText(_t("o"));
-    SlopeOff->SetPos(0,-34);
+    SlopeOff->SetPos(glm::vec3(0,-34,0));
     SlopeOff->SetToggleable(true);
     SlopeOff->SetParent(OtherWindow);
     SaveWindow = NULL;
@@ -553,7 +559,8 @@ void NMapState::Tick(double DT)
     } else {
         Bg->SetScale(glm::vec3(H,H,1));
     }
-    Bg->SetPos(GetGame()->GetWindowSize()/2.f);
+    glm::vec2 Temp = GetGame()->GetWindowSize()/2.f;
+    Bg->SetPos(glm::vec3(Temp.x,Temp.y,0));
     std::vector<NNode*>* Stars = GetGame()->GetScene()->GetLayer(0);
     while(Stars->size()<(W+H)/20)
     {
@@ -613,58 +620,59 @@ void NMapState::Tick(double DT)
         } else {
             SaveWindow = new NWindow("window");
             SaveWindow->SetScale(256,256);
-            SaveWindow->SetPos(GetGame()->GetWindowSize()/2.f);
+            glm::vec2 Temp = GetGame()->GetWindowSize()/2.f;
+            SaveWindow->SetPos(glm::vec3(Temp.x,Temp.y,0));
             SaveWindow->SetParent(GetGame()->GetRender()->GetCamera());
             Input = new NTextInput("textbox");
             Input->SetScale(200,24);
-            Input->SetPos(0,100);
+            Input->SetPos(glm::vec3(0,100,0));
             Input->GetText()->SetMultiline(false);
             Input->SetText(_t("MapName"));
             Input->SetParent(SaveWindow);
             SaveButton = new NButton("button");
             SaveButton->SetScale(64,32);
             SaveButton->SetText(_t("Save"));
-            SaveButton->SetPos(0,62);
+            SaveButton->SetPos(glm::vec3(0,62,0));
             SaveButton->SetParent(SaveWindow);
             LoadButton = new NButton("button");
             LoadButton->SetScale(64,32);
             LoadButton->SetText(_t("Load"));
-            LoadButton->SetPos(0,30);
+            LoadButton->SetPos(glm::vec3(0,30,0));
             LoadButton->SetParent(SaveWindow);
             QuitButton = new NButton("button");
             QuitButton->SetScale(64,32);
             QuitButton->SetText(_t("Quit"));
-            QuitButton->SetPos(0,-2);
+            QuitButton->SetPos(glm::vec3(0,-2,0));
             QuitButton->SetParent(SaveWindow);
             MapIncrease[0] = new NButton("button");
             MapIncrease[0]->SetScale(16,16);
-            MapIncrease[0]->SetPos(64,-64);
+            MapIncrease[0]->SetPos(glm::vec3(64,-64,0));
             MapIncrease[0]->SetText(_t(">"));
             MapIncrease[0]->SetParent(SaveWindow);
             MapIncrease[1] = new NButton("button");
             MapIncrease[1]->SetScale(16,16);
-            MapIncrease[1]->SetPos(64,-82);
+            MapIncrease[1]->SetPos(glm::vec3(64,-82,0));
             MapIncrease[1]->SetText(_t(">"));
             MapIncrease[1]->SetParent(SaveWindow);
             MapIncrease[2] = new NButton("button");
             MapIncrease[2]->SetScale(16,16);
-            MapIncrease[2]->SetPos(64,-100);
+            MapIncrease[2]->SetPos(glm::vec3(64,-100,0));
             MapIncrease[2]->SetText(_t(">"));
             MapIncrease[2]->SetParent(SaveWindow);
 
             MapDecrease[0] = new NButton("button");
             MapDecrease[0]->SetScale(16,16);
-            MapDecrease[0]->SetPos(-64,-64);
+            MapDecrease[0]->SetPos(glm::vec3(-64,-64,0));
             MapDecrease[0]->SetText(_t("<"));
             MapDecrease[0]->SetParent(SaveWindow);
             MapDecrease[1] = new NButton("button");
             MapDecrease[1]->SetScale(16,16);
-            MapDecrease[1]->SetPos(-64,-82);
+            MapDecrease[1]->SetPos(glm::vec3(-64,-82,0));
             MapDecrease[1]->SetText(_t("<"));
             MapDecrease[1]->SetParent(SaveWindow);
             MapDecrease[2] = new NButton("button");
             MapDecrease[2]->SetScale(16,16);
-            MapDecrease[2]->SetPos(-64,-100);
+            MapDecrease[2]->SetPos(glm::vec3(-64,-100,0));
             MapDecrease[2]->SetText(_t("<"));
             MapDecrease[2]->SetParent(SaveWindow);
 
@@ -674,21 +682,21 @@ void NMapState::Tick(double DT)
             std::wstringstream String;
             String << "Width: " << MapDim[0];
             Dimensions[0] = new NText("cousine",String.str());
-            Dimensions[0]->SetPos(0,-64);
+            Dimensions[0]->SetPos(glm::vec3(0,-64,0));
             Dimensions[0]->SetSize(16);
             Dimensions[0]->SetMode(1);
             Dimensions[0]->SetParent(SaveWindow);
             std::wstringstream Stringh;
             Stringh << "Height: " << MapDim[1];
             Dimensions[1] = new NText("cousine",Stringh.str());
-            Dimensions[1]->SetPos(0,-82);
+            Dimensions[1]->SetPos(glm::vec3(0,-82,0));
             Dimensions[1]->SetSize(16);
             Dimensions[1]->SetMode(1);
             Dimensions[1]->SetParent(SaveWindow);
             std::wstringstream Stringd;
             Stringd << "Depth: " << MapDim[2];
             Dimensions[2] = new NText("cousine",Stringd.str());
-            Dimensions[2]->SetPos(0,-100);
+            Dimensions[2]->SetPos(glm::vec3(0,-100,0));
             Dimensions[2]->SetSize(16);
             Dimensions[2]->SetMode(1);
             Dimensions[2]->SetParent(SaveWindow);
@@ -696,18 +704,19 @@ void NMapState::Tick(double DT)
             Apply->SetText(_t("Apply"));
             Apply->GetText()->SetSize(14);
             Apply->SetScale(64,16);
-            Apply->SetPos(0,-120);
+            Apply->SetPos(glm::vec3(0,-120,0));
             Apply->SetParent(SaveWindow);
             NText* TempText = new NText("cousine",_t("Map dimensions"));
             TempText->SetMode(1);
-            TempText->SetPos(0,-34);
+            TempText->SetPos(glm::vec3(0,-34,0));
             TempText->SetSize(16);
             TempText->SetParent(SaveWindow);
         }
     }
     if (SaveWindow)
     {
-        SaveWindow->SetPos(GetGame()->GetWindowSize()/2.f);
+        glm::vec2 Temp = GetGame()->GetWindowSize()/2.f;
+        SaveWindow->SetPos(glm::vec3(Temp.x,Temp.y,0));
         if (SaveButton->OnRelease())
         {
             GetGame()->GetMap()->Save(ToMBS(Input->GetEnteredText()));

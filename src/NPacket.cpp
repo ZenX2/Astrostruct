@@ -14,7 +14,7 @@ NPacketPlayer::NPacketPlayer(NPlayer* Player)
     ID = Player->GetID();
     Pos = Player->GetPos();
     Direction = Player->GetDirection();
-    Vel = Player->GetVel();
+    //Vel = Player->GetVel();
     Moving = Player->GetMoving();
 }
 NPacketPlayer::NPacketPlayer()
@@ -269,7 +269,7 @@ void NPacket::Merge()
                 Player->SetWantedPosition(Players[i].Pos);
                 if (Player != GetGame()->GetPacketHandler()->GetPlayer())
                 {
-                    Player->SetVel(Players[i].Vel);
+                    //Player->SetVel(Players[i].Vel);
                     Player->SetDirection(Players[i].Direction);
                     Player->SetMoving(Players[i].Moving);
                 }
@@ -288,7 +288,7 @@ void NPacket::Merge()
         GetGame()->GetLog()->Send("PACKET",2,std::string(Introductions[i].Name) + " has joined the game.");
         NPlayer* Player = new NPlayer(ToMBS(std::string(Introductions[i].Name)));
         Player->SetID(GetGame()->GetPacketHandler()->GetActivePlayers()->size()+1);
-        Player->SetPos(512,512,1024);
+        Player->SetPos(glm::vec3(512,512,1024));
         GetGame()->GetPacketHandler()->AddPlayer(Player);
         NPacket Packet('0',Event);
         Packet.Send(Event.peer);

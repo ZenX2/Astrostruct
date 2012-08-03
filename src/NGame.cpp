@@ -15,6 +15,7 @@ NGame::NGame()
     FileSystem = NULL;
     Input = NULL;
     Scene = NULL;
+    Physics = NULL;
     Render = NULL;
     Lua = NULL;
     Config = NULL;
@@ -43,6 +44,7 @@ NGame::~NGame()
     delete Render;
     delete PacketHandler;
     delete EntityManager;
+    delete Physics;
     if (!Server)
     {
         delete SoundSystem;
@@ -86,6 +88,7 @@ bool NGame::Init(int i_Width, int i_Height, std::string Title, int argc, char** 
         Console = new NConsole();
         PacketHandler = new NPacketHandler();
         EntityManager = new NEntityManager();
+        Physics = new NPhysics();
         return Success;
     }
     //Initialize everything we can
@@ -149,6 +152,7 @@ bool NGame::Init(int i_Width, int i_Height, std::string Title, int argc, char** 
     Network = new NNetwork();
     PacketHandler = new NPacketHandler();
     EntityManager = new NEntityManager();
+    Physics = new NPhysics();
     return Success;
 }
 
@@ -306,4 +310,8 @@ NPacketHandler* NGame::GetPacketHandler()
 NLog* NGame::GetLog()
 {
     return Log;
+}
+NPhysics* NGame::GetPhysics()
+{
+    return Physics;
 }

@@ -5,16 +5,11 @@ NPlayer::NPlayer(std::wstring i_Name) : NNode(NodePlayer)
     lua_State* L = GetGame()->GetLua()->GetL();
     lua_newtable(L);
     SelfReference = luaL_ref(L,LUA_REGISTRYINDEX);
-    Velocity = glm::vec3(0);
-    Speed = 200;
+    Speed = 4;
     Changed = true;
     Moving = false;
     CurrentDirection = 0;
     Controlled = false;
-    Friction = 2;
-    OnGround = false;
-    Gravity = 2;
-    CollisionBox = glm::vec2(16,25);
     Name = i_Name;
     HasSetWantedPosition = false;
     if (GetGame()->IsServer())
@@ -37,11 +32,39 @@ NPlayer::NPlayer(std::wstring i_Name) : NNode(NodePlayer)
     NameText->SetMode(1);
     NameText->SetSize(13);
     NameText->SetParent(this);
+    float TS = GetGame()->GetMap()->GetTileSize();
+    //btCollisionShape* PlaneShape = new btBoxShape(btVector3(TS/3.f,TS/3.f,TS/3.f));
+    btCollisionShape* PlaneShape = new btSphereShape(TS/4.f);
+    //btCollisionShape* PlaneShape = new btCapsuleShapeZ(TS/4.f,TS/4.f);
+    btVector3 FallInertia(0,0,0);
+    PlaneShape->calculateLocalInertia(80,FallInertia);
+    btDefaultMotionState* StaticMotionState = new btDefaultMotionState(btTransform(btQuaternion(0,0,0,1),btVector3(0,0,0)));
+    btRigidBody::btRigidBodyConstructionInfo PlaneBody(80,StaticMotionState,PlaneShape,FallInertia);
+    //PlaneBody.m_friction = 30;
+    Body = new btRigidBody(PlaneBody);
+    Body->setSleepingThresholds(0,0);
+    //Body->setAngularFactor(0);
+    GetGame()->GetPhysics()->GetWorld()->addRigidBody(Body);
     GetGame()->GetMap()->CallMethod("OnPlayerSpawn",1,this);
+}
+
+void NPlayer::SetPos(glm::vec3 i_Position)
+{
+    Position = i_Position;
+    UpdateMatrix();
+
+    GetGame()->GetPhysics()->GetWorld()->removeRigidBody(Body);
+    btTransform Trans = Body->getWorldTransform();
+    Trans.setOrigin(btVector3(Position.x,Position.y,Position.z));
+    Body->setWorldTransform(Trans);
+    GetGame()->GetPhysics()->GetWorld()->addRigidBody(Body);
 }
 
 NPlayer::~NPlayer()
 {
+    GetGame()->GetPhysics()->GetWorld()->removeRigidBody(Body);
+    delete Body->getMotionState();
+    delete Body;
     if (GetGame()->IsServer())
     {
         return;
@@ -159,10 +182,6 @@ void NPlayer::Tick(double DT)
                 break;
             }
         }
-        if (GetGame()->GetInput()->GetKey(GLFW_KEY_SPACE))
-        {
-            SetVel(glm::vec3(GetVel().x,GetVel().y,100));
-        }
     }
     if (!Moving)
     {
@@ -177,90 +196,18 @@ void NPlayer::Tick(double DT)
         }
         delete[] Pos;
     }
-    if (Moving && OnGround)
+    //Collision Movement
+    if (Moving)
     {
-        glm::vec2 Dir = glm::vec2(sin(CurrentDirection),cos(CurrentDirection));
-        Dir *= Speed*DT;
-        SetVel(GetVel()+glm::vec3(Dir,0));
+        btVector3 Vel = Body->getLinearVelocity();
+        Body->setLinearVelocity(btVector3(Vel.x()+sin(CurrentDirection)*Speed,Vel.y()+cos(CurrentDirection)*Speed,Vel.z()));
     }
-    //Collisions Init
-    glm::vec3 PosMem = GetPos();
     //Collisions
-    NMap* Map = GetGame()->GetMap();
-    for (float x=-GetScale().x*CollisionBox.x;x<=GetScale().x*CollisionBox.x;x+=GetScale().x*CollisionBox.x)
-    {
-        for (float y=-GetScale().y*CollisionBox.y;y<=GetScale().y*CollisionBox.y;y+=GetScale().y*CollisionBox.y)
-        {
-            NTile* Tile = Map->GetTile(GetPos()+glm::vec3(x,y,0));
-            if (!Tile || !Tile->IsSolid())
-            {
-                continue;
-            }
-            glm::vec3 TilePos = Map->TilePos(GetPos()+glm::vec3(x,y,0));
-            if (Intersects(glm::vec4(TilePos.x,TilePos.y,Map->GetTileSize(),Map->GetTileSize()),glm::vec4(GetPos().x,GetPos().y,GetScale().x*CollisionBox.x,GetScale().y*CollisionBox.y)))
-            {
-                glm::vec2 Move = MinimumTranslation(glm::vec4(TilePos.x,TilePos.y,Map->GetTileSize(),Map->GetTileSize()),glm::vec4(GetPos().x,GetPos().y,GetScale().x*CollisionBox.x,GetScale().y*CollisionBox.y))/2.f;
-                SetPos(GetPos()+glm::vec3(Move.x,Move.y,0));
-                if (fabs(Move.y) == 0)
-                {
-                    Move.y = GetVel().y;
-                }
-                if (fabs(Move.x) == 0)
-                {
-                    Move.x = GetVel().x;
-                }
-                SetVel(glm::vec3(Move.x,Move.y,GetVel().z));
-            }
-        }
-    }
-    //Update Position
-    glm::vec3 Vel = glm::vec3(Velocity.x*DT,Velocity.y*DT,Velocity.z*DT);
-    SetPos(GetPos()+Vel);
-    if (OnGround)
-    {
-        if ((fabs(Velocity.x)+fabs(Velocity.y))/2.f<DT*Friction*40)
-        {
-            Velocity = glm::vec3(0);
-        } else {
-            Velocity = glm::vec3(Velocity.x*(1-DT*Friction),Velocity.y*(1-DT*Friction),Velocity.z);
-        }
-    }
-    //Tracer Collisions
-    OnGround = false;
-    glm::vec3 Normal = glm::normalize(GetPos()-PosMem);
-    for (unsigned int i=0;i<glm::length(GetPos()-PosMem);i+=4)
-    {
-        glm::vec3 Pos = PosMem+(Normal*float(i));
-        NMap* Map = GetGame()->GetMap();
-        NTile* CTile = Map->GetTile(Pos);
-        glm::vec3 CTilePos = Map->TilePos(Pos);
-        for (float x=-GetScale().x*CollisionBox.x;x<=GetScale().x*CollisionBox.y;x+=GetScale().x*CollisionBox.x)
-        {
-            for (float y=-GetScale().y*CollisionBox.y;y<=GetScale().y*CollisionBox.y;y+=GetScale().y*CollisionBox.y)
-            {
-                NTile* Tile = Map->GetTile(GetPos()+glm::vec3(x,y,0));
-                if (!Tile || Tile->IsOpenSpace() || Tile->IsSolid())
-                {
-                    continue;
-                }
-                glm::vec3 TilePos = Map->TilePos(GetPos()+glm::vec3(x,y,0));
-                if (Intersects(glm::vec4(TilePos.x,TilePos.y,Map->GetTileSize(),Map->GetTileSize()),glm::vec4(GetPos().x,GetPos().y,GetScale().x*CollisionBox.x,GetScale().y*CollisionBox.y)))
-                {
-                    if (fabs(TilePos.z-Pos.z)<8)
-                    {
-                        OnGround = true;
-                        SetPos(glm::vec3(GetPos().x,GetPos().y,TilePos.z+2));
-                        SetVel(glm::vec3(GetVel().x,GetVel().y,0));
-                        break; //Break the tracer because we hit something!
-                    }
-                }
-            }
-        }
-    }
-    if (!OnGround)
-    {
-        SetVel(GetVel()-glm::vec3(0,0,Gravity));
-    }
+    btTransform Trans; 
+    Body->getMotionState()->getWorldTransform(Trans);
+    btVector3 WPos = Trans.getOrigin();
+    Position = glm::vec3(WPos.x(),WPos.y(),WPos.z());
+    UpdateMatrix();
     //Misc
     if (!GetGame()->IsServer())
     {
@@ -361,16 +308,6 @@ void NPlayer::Draw(NCamera* View)
     glDisableVertexAttribArray(0);
     glDisableVertexAttribArray(1);
     glUseProgram(0);
-}
-
-glm::vec3 NPlayer::GetVel()
-{
-    return Velocity;
-}
-
-void NPlayer::SetVel(glm::vec3 i_Velocity)
-{
-    Velocity = i_Velocity;
 }
 
 void NPlayer::Unallocate()

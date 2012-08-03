@@ -46,7 +46,7 @@ NText* NTextInput::GetText()
         DisplayText = new NText("cousine",_t(""));
         DisplayText->SetParent(this);
         DisplayText->SetSize(13);
-        DisplayText->SetPos(glm::vec2(-GetScale().x/2.f,0));
+        DisplayText->SetPos(glm::vec3(-GetScale().x/2.f,0,0));
         DisplayText->SetBorder(GetScale().x,GetScale().y);
     }
     return DisplayText;
@@ -64,7 +64,7 @@ void NTextInput::SetText(std::wstring Text)
         DisplayText = new NText("cousine",_t(""));
         DisplayText->SetParent(this);
         DisplayText->SetSize(13);
-        DisplayText->SetPos(glm::vec2(-GetScale().x/2.f,0));
+        DisplayText->SetPos(glm::vec3(-GetScale().x/2.f,0,0));
         DisplayText->SetBorder(GetScale().x,GetScale().y);
     }
     RealText = Text;
@@ -275,7 +275,7 @@ void NTextInput::Tick(double DT)
     }
     if (HasFocus)
     {
-        DisplayText->SetPos(glm::vec2(-GetScale().x/2.f,0));
+        DisplayText->SetPos(glm::vec3(-GetScale().x/2.f,0,0));
         DisplayText->SetBorder(GetScale().x,GetScale().y);
         Time += DT;
         if (Time>1)

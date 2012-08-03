@@ -11,6 +11,7 @@ void NScene::Tick()
             Layers[i][o]->Tick(DT);
         }
     }
+    GetGame()->GetPhysics()->Step(DT);
 }
 
 void NScene::Draw(NCamera* View)

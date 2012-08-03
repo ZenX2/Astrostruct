@@ -184,7 +184,6 @@ NEntity::NEntity(std::string i_Name) : NNode(NodeEntity)
     lua_newtable(L);
     SelfReference = luaL_ref(L,LUA_REGISTRYINDEX);
     LuaSelf = GetGame()->GetEntityManager()->GetLuaEntity(Name);
-    Velocity = glm::vec3(0);
     Changed = true;
     Friction = 2;
     if (GetGame()->IsServer())
@@ -228,7 +227,6 @@ NEntity::NEntity(std::string i_Name, glm::vec3 i_Position) : NNode(NodeEntity)
     lua_newtable(L);
     SelfReference = luaL_ref(L,LUA_REGISTRYINDEX);
     LuaSelf = GetGame()->GetEntityManager()->GetLuaEntity(Name);
-    Velocity = glm::vec3(0);
     Changed = true;
     Friction = 2;
     if (GetGame()->IsServer())
@@ -382,16 +380,6 @@ void NEntity::Draw(NCamera* View)
     glDisableVertexAttribArray(0);
     glDisableVertexAttribArray(1);
     glUseProgram(0);
-}
-
-glm::vec3 NEntity::GetVel()
-{
-    return Velocity;
-}
-
-void NEntity::SetVel(glm::vec3 i_Velocity)
-{
-    Velocity = i_Velocity;
 }
 
 void NEntity::Unallocate()

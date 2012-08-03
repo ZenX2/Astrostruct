@@ -183,11 +183,13 @@ public:
      */
     NLog* GetLog();
     NEntityManager* GetEntityManager();
+    NPhysics* GetPhysics();
 private:
     bool Server;
     bool WindowChanged;
     bool Run;
     NLog* Log;
+    NPhysics* Physics;
     NEntityManager* EntityManager;
     NStateMachine* StateMachine;
     NPacketHandler* PacketHandler;

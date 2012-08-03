@@ -61,27 +61,6 @@ public:
      */
     virtual glm::vec3 GetRealPos();
     /**
-    * @brief Sets the position of the object.
-    *
-    * @param X The desired X position.
-    * @param Y The desired Y position.
-    * @param Z The desired Z position.
-    */
-    virtual void SetPos(float X,float Y,float Z);
-    /**
-     * @brief Sets the position of the object in 2D space, retaining depth.
-     *
-     * @param X The desired X position.
-     * @param Y The desired Y position.
-     */
-    virtual void SetPos(float X,float Y);
-    /**
-    * @brief Sets the position of the object in 2D space, retaining depth.
-    *
-    * @param i_Position The desired position.
-    */
-    virtual void SetPos(glm::vec2 i_Position);
-    /**
      * @brief Sets the position of the object.
      *
      * @param i_Position The desired position.

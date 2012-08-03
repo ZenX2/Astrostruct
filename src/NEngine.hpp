@@ -73,6 +73,8 @@
 #include <physfs.h>
 #define LUA_COMPAT_MODULE
 #include <lua.hpp>
+#include <bullet/btBulletDynamicsCommon.h>
+#include <bullet/btBulletCollisionCommon.h>
 
 #define Fail false
 #define Success true

@@ -88,6 +88,9 @@ public:
     int SelfReference;
     void CallMethod(std::string Name);
 private:
+    void GenerateBody();
+    btCollisionShape* Shape;
+    btRigidBody* Body;
     TileSlope Slope;
     bool ForceSolid;
     bool Solid;

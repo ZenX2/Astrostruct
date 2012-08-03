@@ -541,7 +541,7 @@ void NMap::Tick(double DT)
         {
             Texture->Tick(DT);
         }
-        int Level = round((GetGame()->GetRender()->GetCamera()->GetPos().z-500)/TileSize);
+        int Level = floor((GetGame()->GetRender()->GetCamera()->GetPos().z-500)/TileSize);
         ViewLevel(Level);
     }
 }
@@ -564,6 +564,7 @@ void NMap::SetChanged(int Level)
 
 NTile::NTile(unsigned int x, unsigned int y, unsigned int z)
 {
+    Body = NULL;
     LuaReference = LUA_NOREF;
     lua_State* L = GetGame()->GetLua()->GetL();
     lua_newtable(L);
@@ -582,6 +583,7 @@ NTile::NTile(unsigned int x, unsigned int y, unsigned int z)
 }
 NTile::NTile(unsigned int i_ID)
 {
+    Body = NULL;
     ID = i_ID; 
     LuaReference = GetGame()->GetMap()->GetLuaTile(ID);
     lua_State* L = GetGame()->GetLua()->GetL();
@@ -765,6 +767,7 @@ void NTile::SetID(int i_ID)
     dSolid = GetBool("Solid");
     dOpaque = GetBool("Opaque");
     CallMethod("OnInitialize");
+    GenerateBody();
 }
 
 bool NTile::GetBool(std::string Name)
@@ -788,11 +791,77 @@ bool NTile::GetBool(std::string Name)
 
 NTile::~NTile()
 {
+    if (Body != NULL)
+    {
+        GetGame()->GetPhysics()->GetWorld()->removeRigidBody(Body);
+        delete Body->getMotionState();
+        delete Body;
+    }
 }
+void NTile::GenerateBody()
+{
+    if (GetSlope() != SlopeNone)
+    {
+        float TS = GetGame()->GetMap()->GetTileSize();
+        if (Body != NULL)
+        {
+            GetGame()->GetPhysics()->GetWorld()->removeRigidBody(Body);
+            delete Body->getMotionState();
+            delete Body;
+            delete Shape;
+        }
+        Shape = new btBoxShape(btVector3(TS/2.f,TS/2.f,1));
+        btQuaternion Angle = btQuaternion(0,0,0,1);
+        switch(GetSlope())
+        {
+            case SlopeNorth: Angle = btQuaternion(btVector3(1,0,0),45); break;
+            case SlopeSouth: Angle = btQuaternion(btVector3(1,0,0),-45); break;
+            case SlopeEast: Angle = btQuaternion(btVector3(0,1,0),-45); break;
+            case SlopeWest: Angle = btQuaternion(btVector3(0,1,0),45); break;
+        }
+        btDefaultMotionState* StaticMotionState = new btDefaultMotionState(btTransform(Angle,btVector3(X*TS+TS/2.f,Y*TS+TS/2.f,Z*TS+TS/2.f)));
+        btRigidBody::btRigidBodyConstructionInfo PlaneBody(0,StaticMotionState,Shape,btVector3(0,0,0));
+        Body = new btRigidBody(PlaneBody);
+        GetGame()->GetPhysics()->GetWorld()->addRigidBody(Body);
+        return;
+    }
+    if (!IsSolid())
+    {
+        float TS = GetGame()->GetMap()->GetTileSize();
+        if (Body != NULL)
+        {
+            GetGame()->GetPhysics()->GetWorld()->removeRigidBody(Body);
+            delete Body->getMotionState();
+            delete Body;
+            delete Shape;
+        }
+        Shape =  new btBoxShape(btVector3(TS/2.f,TS/2.f,1));
+        btDefaultMotionState* StaticMotionState = new btDefaultMotionState(btTransform(btQuaternion(0,0,0,1),btVector3(X*TS+TS/2.f,Y*TS+TS/2.f,Z*TS)));
+        btRigidBody::btRigidBodyConstructionInfo PlaneBody(0,StaticMotionState,Shape,btVector3(0,0,0));
+        Body = new btRigidBody(PlaneBody);
+        GetGame()->GetPhysics()->GetWorld()->addRigidBody(Body);
+        return;
+    }
+    float TS = GetGame()->GetMap()->GetTileSize();
+    if (Body != NULL)
+    {
+        GetGame()->GetPhysics()->GetWorld()->removeRigidBody(Body);
+        delete Body->getMotionState();
+        delete Body;
+        delete Shape;
+    }
+    Shape = new btBoxShape(btVector3(TS/2.f,TS/2.f,TS/2.f));
+    btDefaultMotionState* StaticMotionState = new btDefaultMotionState(btTransform(btQuaternion(0,0,0,1),btVector3(X*TS+TS/2.f,Y*TS+TS/2.f,Z*TS+TS/2.f)));
+    btRigidBody::btRigidBodyConstructionInfo PlaneBody(0,StaticMotionState,Shape,btVector3(0,0,0));
+    Body = new btRigidBody(PlaneBody);
+    GetGame()->GetPhysics()->GetWorld()->addRigidBody(Body);
+}
+
 void NTile::SetSolid(bool i_Solid)
 {
     ForceSolid = true;
     Solid = i_Solid;
+    GenerateBody();
 }
 void NTile::SetOpaque(bool i_Opaque)
 {
@@ -946,6 +1015,7 @@ unsigned int NMap::GetTileCount()
 void NTile::SetSlope(TileSlope i_Slope)
 {
     Slope = i_Slope;
+    GenerateBody();
 }
 TileSlope NTile::GetSlope()
 {

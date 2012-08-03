@@ -47,4 +47,21 @@ glm::vec2 MinimumTranslation(glm::vec4 ABox, glm::vec4 BBox);
  */
 bool Facing(glm::vec2 Point, glm::vec4 Face);
 
+class NPhysics
+{
+public:
+    NPhysics();
+    ~NPhysics();
+    void Step(double DT);
+    btDiscreteDynamicsWorld* GetWorld();
+    btBroadphaseInterface* GetBroadphase();
+private:
+    btBroadphaseInterface* Broadphase;
+    btDefaultCollisionConfiguration* CollisionConfig;
+    btCollisionDispatcher* Dispatcher;
+    btSequentialImpulseConstraintSolver* Solver;
+    btDiscreteDynamicsWorld* DynamicsWorld;
+    std::vector<btCollisionShape*> Shapes;
+};
+
 #endif

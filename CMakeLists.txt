@@ -99,6 +99,7 @@ find_package(GLM REQUIRED)
 find_package(UTF8 REQUIRED)
 find_package(Alure REQUIRED)
 find_package(Physfs REQUIRED)
+find_package(Bullet REQUIRED)
 
 include_directories(${OPENGL_INCLUDE_DIR}
                     ${LUA_INCLUDE_DIR}
@@ -111,7 +112,8 @@ include_directories(${OPENGL_INCLUDE_DIR}
                     ${UTF8_INCLUDE_DIR}
                     ${ALURE_INCLUDE_DIR}
                     ${OPENAL_INCLUDE_DIR}
-                    ${PHYSFS_INCLUDE_DIR})
+                    ${PHYSFS_INCLUDE_DIR}
+                    ${BULLET_INCLUDE_DIRS})
 
 set(GAME_TARGET "bin/astrostruct")
 add_executable(${GAME_TARGET} ${source})
@@ -125,4 +127,5 @@ target_link_libraries(${GAME_TARGET}
                       ${SOIL_LIBRARIES}
                       ${ALURE_LIBRARIES}
                       ${OPENAL_LIBRARY}
-                      ${PHYSFS_LIBRARY})
+                      ${PHYSFS_LIBRARY}
+                      ${BULLET_LIBRARIES})

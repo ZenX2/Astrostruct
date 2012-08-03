@@ -283,7 +283,7 @@ void NButton::SetText(std::wstring Text)
         DisplayText->SetMode(1);
         DisplayText->SetSize(GetScale().y/1.3);
         DisplayText->SetParent(this);
-        DisplayText->SetPos(0,4);
+        DisplayText->SetPos(glm::vec3(0,4,0));
         return;
     }
     DisplayText->SetText(Text);

@@ -97,3 +97,35 @@ bool Facing(glm::vec2 Point, glm::vec4 Face)
     }
     return false;
 }
+
+void NPhysics::Step(double DT)
+{
+    DynamicsWorld->stepSimulation(DT,6);
+}
+
+NPhysics::NPhysics()
+{
+    Broadphase = new btDbvtBroadphase();
+    CollisionConfig = new btDefaultCollisionConfiguration();
+    Dispatcher = new btCollisionDispatcher(CollisionConfig);
+    Solver = new btSequentialImpulseConstraintSolver();
+    DynamicsWorld = new btDiscreteDynamicsWorld(Dispatcher,Broadphase,Solver,CollisionConfig);
+    DynamicsWorld->setGravity(btVector3(0,0,-30));
+}
+
+NPhysics::~NPhysics()
+{
+    delete DynamicsWorld;
+    delete Solver;
+    delete Dispatcher;
+    delete CollisionConfig;
+    delete Broadphase;
+}
+btDiscreteDynamicsWorld* NPhysics::GetWorld()
+{
+    return DynamicsWorld;
+}
+btBroadphaseInterface* NPhysics::GetBroadphase()
+{
+    return Broadphase;
+}

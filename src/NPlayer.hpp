@@ -33,18 +33,6 @@ public:
      */
     void Tick(double DT);
     /**
-     * @brief Sets the player's velocity.
-     *
-     * @param i_Velocity The desired velocity.
-     */
-    void SetVel(glm::vec3 i_Velocity);
-    /**
-     * @brief Returns the player's velocity.
-     *
-     * @return The player's velocity.
-     */
-    glm::vec3 GetVel();
-    /**
      * @brief Draws the player in it's current animation state.
      *
      * @param View The camera to draw from.
@@ -95,15 +83,13 @@ public:
      */
     void SetMoving(bool i_Moving);
     int SelfReference;
+    void SetPos(glm::vec3 i_Position);
 private:
+    btRigidBody* Body;
     glm::vec3 WantedPosition;
     bool HasSetWantedPosition;
     std::wstring Name;
     NText* NameText;
-    glm::vec2 CollisionBox;
-    float Gravity;
-    bool OnGround;
-    float Friction;
     bool Controlled;
     NShader* Shader;
     GLuint TextureLoc, MatrixLoc, ColorLoc;
@@ -113,7 +99,6 @@ private:
     float Speed;
     std::vector<glm::vec2> Verts;
     std::vector<glm::vec2> UVs;
-    glm::vec3 Velocity;
     float CurrentDirection;
     bool Moving;
     NTexture* Texture;
