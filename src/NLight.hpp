@@ -37,6 +37,9 @@ public:
      * @brief Deletes the object.
      */
     void Unallocate();
+    /**
+     * @brief Forces an update to the shadow volumes, useful for when the map changes.
+     */
     void UpdateShadows();
 private:
     glm::vec3 ScaleMemory;

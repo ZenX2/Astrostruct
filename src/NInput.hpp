@@ -45,7 +45,7 @@ public:
     */
     int GetMouseY();
     /**
-    * @brief If the given key has changed since the last call to KeyChanged, it returns true. Otherwise false.
+    * @brief If the given key has changed since the last call to KeyChanged, it returns true. Otherwise false.  So things like if (KeyDown('i') && KeyChanged('i')) won't work because KeyChanged() won't be called whenever key 'i' is up.
     *
     * @param Key They keycode of the key. Example: 'A' would return the A key's state.
     *

@@ -13,39 +13,40 @@
  * @{*/
 
 #ifdef _WIN32
-    #include <windows.h>
+enum NTerminalColor
+{
+    Red = 12,
+    Green = 10,
+    Yellow = 14,
+    Blue = 9
+};
+#else
+enum NTerminalColor
+{
+    Red = 1,
+    Green,
+    Yellow,
+    Blue
+};
 #endif
 
-namespace NTerminal
+/**
+ * @brief Class that handles terminal specific stuff, like coloring and uh. Oh that's all it supports.
+ */
+class NTerminal
 {
-    #ifdef _WIN32
-        enum Color
-        {
-            Red = 12,
-            Green = 10,
-            Yellow = 14,
-            Blue = 9
-        };
-    #else
-        enum Color
-        {
-            Red = 1,
-            Green,
-            Yellow,
-            Blue
-        };
-    #endif
+public:
     /**
     * @brief Sets the color of text output.
     *
     * @param Color The specific color as an enum: Red, Green, Yellow, and Blue.
     */
-    void SetColor(unsigned int Color);
+    void SetColor(unsigned int NTerminalColor);
     /**
     * @brief Resets color output to normal color.
     */
     void ClearColor();
-}
+};
 /*@}*/
 
 #endif

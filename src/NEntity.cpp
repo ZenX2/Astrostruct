@@ -15,6 +15,7 @@ NEntityManager::NEntityManager()
         if (GetGame()->GetFileSystem()->IsDir(EntityList[i].c_str()))
         {
             std::string File = EntityList[i]+"/";
+            //If we're a server, run init.lua. Otherwise run the cl_init.lua
             if (GetGame()->IsServer())
             {
                 File += "init.lua";
@@ -44,7 +45,7 @@ NEntityManager::NEntityManager()
             lua_getfield(L,-1,"register");
             if (!lua_isfunction(L,-1))
             {
-                //If our register function doesn't exist, create it!
+                //If our register function doesn't exist, abort!
                 lua_pop(L,2);
                 lua_pushnil(L);
                 lua_setglobal(L,"ENT");
@@ -54,6 +55,7 @@ NEntityManager::NEntityManager()
             lua_getglobal(L,"ENT");
             std::string EntityName = EntityList[i].substr(EntityList[i].find_last_of('/')+1);
             lua_pushstring(L,EntityName.c_str());
+            //Finally run the register function on our new entity.
             lua_pcall(L,2,0,0);
             lua_pushnil(L);
             lua_setglobal(L,"ENT");
@@ -79,6 +81,7 @@ NEntityManager::NEntityManager()
     }
 }
 
+//Exact same as the constructor, just makes sure to clean after itself.
 void NEntityManager::Reload()
 {
     for (unsigned int i=0;i<Entities.size();i++)
@@ -181,8 +184,10 @@ NEntity::NEntity(std::string i_Name) : NNode(NodeEntity)
 {
     Name = i_Name;
     lua_State* L = GetGame()->GetLua()->GetL();
+    //Create a new table to store our per-entity variables.
     lua_newtable(L);
     SelfReference = luaL_ref(L,LUA_REGISTRYINDEX);
+    //Grab our already-loaded entity from our entity manager.
     LuaSelf = GetGame()->GetEntityManager()->GetLuaEntity(Name);
     Changed = true;
     Friction = 2;
@@ -191,15 +196,19 @@ NEntity::NEntity(std::string i_Name) : NNode(NodeEntity)
         return;
     }
     glGenBuffers(2,Buffers);
+    //Try to grab a texture to display from the lua
     std::string Tex = GetString("Texture");
     if (Tex != "NULL")
     {
+        //Hey we got a match, try to load it.
         Texture = GetGame()->GetRender()->GetTexture(Tex);
     } else {
+        //Can't do shit captain
         Texture = NULL;
     }
     float W = GetFloat("Width");
     float H = GetFloat("Height");
+    //If no width or height is specified, assume the size of texture.
     if (W == 0 && H == 0)
     {
         if (Texture)
@@ -208,8 +217,10 @@ NEntity::NEntity(std::string i_Name) : NNode(NodeEntity)
             std::cout << GetScale().x;
         }
     } else {
+        //If there's no texture or sizes specified, assume 0,0,1!
         SetScale(glm::vec3(W,H,1.f));
     }
+    //Load in our shader
     Shader = GetGame()->GetRender()->GetShader("flat");
     if (Shader)
     {
@@ -217,11 +228,13 @@ NEntity::NEntity(std::string i_Name) : NNode(NodeEntity)
         MatrixLoc = Shader->GetUniformLocation("MVP");
         ColorLoc = Shader->GetUniformLocation("Color");
     }
+    //make sure we call our initialization function.
     CallMethod("OnInitialize");
 }
 
 NEntity::NEntity(std::string i_Name, glm::vec3 i_Position) : NNode(NodeEntity)
 {
+    //See above function for comments.
     Name = i_Name;
     lua_State* L = GetGame()->GetLua()->GetL();
     lua_newtable(L);
@@ -292,6 +305,7 @@ void NEntity::Tick(double DT)
 
 void NEntity::GenerateBuffers()
 {
+    //Just generates a plain quad that's sized at one pixel.
     if (!Changed || !Texture)
     {
         return;
@@ -316,41 +330,9 @@ void NEntity::GenerateBuffers()
 void NEntity::Draw(NCamera* View)
 {
     GenerateBuffers();
-    if (Texture == NULL || GetColor().w == 0)
+    //Make sure we can draw
+    if (Texture == NULL || GetColor().w == 0 || Shader == NULL)
     {
-        return;
-    }
-    if (Shader == NULL)
-    {
-        glEnableClientState(GL_VERTEX_ARRAY);
-        glBindBuffer(GL_ARRAY_BUFFER,Buffers[0]);
-        glVertexPointer(2,GL_FLOAT,0,NULL);
-
-        glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-        glBindBuffer(GL_ARRAY_BUFFER,Buffers[1]);
-        glTexCoordPointer(2,GL_FLOAT,0,NULL);
-
-        glEnable(GL_TEXTURE_2D);
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        if (Texture != NULL)
-        {
-            glBindTexture(GL_TEXTURE_2D,Texture->GetID());
-        }
-
-        glMatrixMode(GL_PROJECTION);
-        glLoadMatrixf(&View->GetOrthoMatrix()[0][0]);
-        glMatrixMode(GL_MODELVIEW);
-        glm::mat4 MVP = View->GetViewMatrix()*GetModelMatrix();
-        glLoadMatrixf(&MVP[0][0]);
-
-        glColor4fv(&(GetColor()[0]));
-        glDrawArrays(GL_QUADS,0,Verts.size());
-        glDisable(GL_TEXTURE_2D);
-        glDisable(GL_BLEND);
-
-        glDisableClientState(GL_VERTEX_ARRAY);
-        glDisableClientState(GL_TEXTURE_COORD_ARRAY);
         return;
     }
     glUseProgram(Shader->GetID());
@@ -396,16 +378,19 @@ void NEntity::CallMethod(std::string VarName, unsigned int AdditionalVars,  ...)
     lua_State* L = GetGame()->GetLua()->GetL();
     lua_rawgeti(L,LUA_REGISTRYINDEX,LuaSelf);
     lua_getfield(L,-1,VarName.c_str());
+    //Make sure our function is valid, otherwise abort.
     if (!lua_isfunction(L,-1))
     {
         lua_pop(L,2);
     } else {
+        //Push on our entity so we can use self. in the scripts.
         lua_pushEntity(L,this);
         va_list vl;
         va_start(vl,AdditionalVars);
         for (unsigned int i=0;i<AdditionalVars;i++)
         {
             NNode* Temp = va_arg(vl,NNode*);
+            //FIXME: we only accept one kind of additional var right now! Players! :u
             switch(Temp->GetType())
             {
                 case NodePlayer: lua_pushPlayer(L,(NPlayer*)Temp);

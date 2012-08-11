@@ -51,7 +51,10 @@ void NReadFile::Close()
 
 bool NReadFile::Good()
 {
-    Eof = PHYSFS_eof(File);
+    if (Exists)
+    {
+        Eof = PHYSFS_eof(File);
+    }
     return (Open && Exists && !Eof && File);
 }
 
@@ -127,12 +130,16 @@ NFileSystem::~NFileSystem()
 
 std::vector<std::string> NFileSystem::GetFiles(std::string Directory)
 {
+    //Grab a listing from physfs
     char** Listing = PHYSFS_enumerateFiles(Directory.c_str());
     unsigned int i = 0;
     std::vector<std::string> Files;
+    //Loop through the listing until we hit a NULL
     while (Listing[i] != NULL)
     {
+        //Push back a full path to the file/directory
         Files.push_back((Directory)+'/'+std::string(Listing[i]));
+        //If it's a directory we recursively add on to the files.
         if (PHYSFS_isDirectory((Directory+'/'+std::string(Listing[i])).c_str()))
         {
             std::vector<std::string> NewFiles = GetFiles(Directory+'/'+std::string(Listing[i]));

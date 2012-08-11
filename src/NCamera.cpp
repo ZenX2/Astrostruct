@@ -36,6 +36,7 @@ glm::mat4 NCamera::GetPerspMatrix()
 
 void NCamera::UpdateCameraMatrix()
 {
+    //If we haven't changed and neither has the main window's aspect ratio then we shouldn't update anything.
     if (!Changed && !GetGame()->GetWindowChanged())
     {
         return;
@@ -48,6 +49,7 @@ void NCamera::UpdateCameraMatrix()
     Changed = false;
 }
 
+//We override anything in NNode that would affect the camera, and make it update our Matricies.
 void NCamera::SetPos(glm::vec3 i_Position)
 {
     Position = i_Position;

@@ -201,6 +201,25 @@ NLua::NLua()
     lua_pushstring(L,"Entity");
     lua_setfield(L,-2,"__type");
     lua_pop(L,1);
+
+    //PhysicsObject
+    /*luaL_getmetatable(L,"PhysicsObject");
+    if (lua_isnoneornil(L,-1))
+    {
+        lua_pop(L,1);
+        luaL_newmetatable(L,"PhysicsObject");
+    }
+    static const luaL_Reg PhysicsObjectMethods[] = {
+        {"__index", PhysicsObject__index},
+        {"__newindex", PhysicsObject__newindex},
+        {"GetPos", PhysicsObjectGetPos},
+        {"SetPos", PhysicsObjectSetPos},
+        {NULL,NULL}
+    };
+    luaL_register(L,NULL,PhysicsObjectMethods);
+    lua_pushstring(L,"PhysicsObject");
+    lua_setfield(L,-2,"__type");
+    lua_pop(L,1);*/
 }
 
 NLua::~NLua()

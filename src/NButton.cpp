@@ -1,5 +1,6 @@
 #include "NEngine.hpp"
 
+//NButton inherits NNode
 NButton::NButton(std::string i_Texture) : NNode(NodeButton)
 {
     Toggled = false;
@@ -7,18 +8,21 @@ NButton::NButton(std::string i_Texture) : NNode(NodeButton)
     BorderSize = 0;
     Texture = NULL;
     Changed = true;
-    glGenBuffers(2,Buffers);
-    Shader = GetGame()->GetRender()->GetShader("flat");
     DisplayText = NULL;
+    IsPressed = false;
+    IsChanged = false;
+    PressedMemory = false;
+    //Allocate some buffers
+    glGenBuffers(2,Buffers);
+    //Try to grab our 'flat' shader, if we succeed grab our uniform locations as well.
+    Shader = GetGame()->GetRender()->GetShader("flat");
     if (Shader != NULL)
     {
         MatrixLoc = Shader->GetUniformLocation("MVP");
         TextureLoc = Shader->GetUniformLocation("Texture");
         ColorLoc = Shader->GetUniformLocation("Color");
     }
-    IsPressed = false;
-    IsChanged = false;
-    PressedMemory = false;
+    //Try to grab our desired texture, if we succeed grab the texture's size so we can generate a proper mesh to display it.
     TextureWidth = 0;
     TextureHeight = 0;
     Texture = GetGame()->GetRender()->GetTexture(i_Texture);
@@ -26,13 +30,16 @@ NButton::NButton(std::string i_Texture) : NNode(NodeButton)
     {
         TextureWidth = Texture->GetSize().x;
         TextureHeight = Texture->GetSize().y;
+        //This variable is specified by the texture's lua file. If it doesn't exist it'll be 0 and will generate a normal quad.
         BorderSize = Texture->GetFloat("BorderSize");
     }
 }
 
 NButton::~NButton()
 {
+    //Delete our previously allocated buffers.
     glDeleteBuffers(2,Buffers);
+    //If we succeeded in finding our texture, it needs to be unallocated.
     if (Texture)
     {
         delete Texture;
@@ -45,12 +52,15 @@ NText* NButton::GetText()
 }
 void NButton::GenerateBuffers()
 {
+    //Only generate new buffers if we have a texture and the button's mesh has changed in some way.
     if (!Texture || !Changed)
     {
         return;
     }
     Verts.clear();
     UVs.clear();
+    //This massive block of variables generates a mesh that keeps the button texture's borders from stretching, but only if we found a proper BorderSize variable.
+    //We also compensate for the scale set by NNode to make it pixel perfect (almost).
     if (BorderSize == 0)
     {
         Verts.push_back(glm::vec2(-.5,-.5));
@@ -148,6 +158,7 @@ void NButton::GenerateBuffers()
         Verts.push_back(glm::vec2(.5-SX,-.5));
         UVs.push_back(glm::vec2(1-UX,1));
     }
+    //Then we stick all the data into opengl buffers in preparation to be drawn.
     glBindBuffer(GL_ARRAY_BUFFER,Buffers[0]);
     glBufferData(GL_ARRAY_BUFFER,Verts.size()*sizeof(glm::vec2),&Verts[0],GL_STATIC_DRAW);
     glBindBuffer(GL_ARRAY_BUFFER,Buffers[1]);
@@ -157,51 +168,22 @@ void NButton::GenerateBuffers()
 
 void NButton::Draw(NCamera* View)
 {
+    //Make sure we have our buffers generated.
     GenerateBuffers();
-    if (Texture == NULL || GetColor().w == 0)
+    //If we don't have a texture, are invisible, or our shader doesn't exist, don't draw!
+    if (Texture == NULL || GetColor().w == 0 || Shader == NULL)
     {
-        return;
-    }
-    if (Shader == NULL)
-    {
-        glEnableClientState(GL_VERTEX_ARRAY);
-        glBindBuffer(GL_ARRAY_BUFFER,Buffers[0]);
-        glVertexPointer(2,GL_FLOAT,0,NULL);
-
-        glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-        glBindBuffer(GL_ARRAY_BUFFER,Buffers[1]);
-        glTexCoordPointer(2,GL_FLOAT,0,NULL);
-
-        glEnable(GL_TEXTURE_2D);
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        if (Texture != NULL)
-        {
-            glBindTexture(GL_TEXTURE_2D,Texture->GetID());
-        }
-
-        glMatrixMode(GL_PROJECTION);
-        glLoadMatrixf(&View->GetOrthoMatrix()[0][0]);
-        glMatrixMode(GL_MODELVIEW);
-        glm::mat4 MVP = View->GetViewMatrix()*GetModelMatrix();
-        glLoadMatrixf(&MVP[0][0]);
-
-        glColor4fv(&(GetColor()[0]));
-        glDrawArrays(GL_QUADS,0,Verts.size());
-        glDisable(GL_TEXTURE_2D);
-        glDisable(GL_BLEND);
-
-        glDisableClientState(GL_VERTEX_ARRAY);
-        glDisableClientState(GL_TEXTURE_COORD_ARRAY);
         return;
     }
     glUseProgram(Shader->GetID());
     glActiveTexture(GL_TEXTURE0);
+    //Make sure we have a texture before we try to call a member in it.
     if (Texture != NULL)
     {
         glBindTexture(GL_TEXTURE_2D,Texture->GetID());
     }
     glUniform1i(TextureLoc,0);
+    //Generate our matrix to send to the GPU.
     glm::mat4 MVP = View->GetOrthoMatrix()*View->GetViewMatrix()*GetModelMatrix();
     glUniformMatrix4fv(MatrixLoc,1,GL_FALSE,&MVP[0][0]);
     glUniform4fv(ColorLoc,1,&(GetColor()[0]));
@@ -215,6 +197,7 @@ void NButton::Draw(NCamera* View)
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glEnable(GL_TEXTURE_2D);
+    //blahblahblah and then we finally draw using the Size of the Verts array we generated in GenerateBuffers.
     glDrawArrays(GL_QUADS,0,Verts.size());
     glDisable(GL_TEXTURE_2D);
     glDisable(GL_BLEND);
@@ -224,14 +207,17 @@ void NButton::Draw(NCamera* View)
     glUseProgram(0);
 }
 
+//Here we do a bunch of ifelseifelseifififelse to make our little quad act like a button.
 void NButton::Tick(double DT)
 {
     IsPressed = false;
+    //Make sure if we have a texture to move it forward in time, just in case it's animated.
     if (Texture)
     {
         Texture->Tick(DT);
     }
     glm::vec2 MP = GetGame()->GetInput()->GetMouse();
+    //Check if the mouse intersects with button
     if (Intersects(glm::vec4(GetRealPos().x,GetRealPos().y,GetScale().x,GetScale().y),MP))
     {
         if (GetGame()->GetInput()->GetMouseKey(0))

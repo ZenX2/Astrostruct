@@ -41,6 +41,10 @@
 
 #ifndef NAELSTROF_ENGINE
 #define NAELSTROF_ENGINE
+//windows.h required for some console things.
+#ifdef _WIN32
+    #include <windows.h>
+#endif
 #include "config.h"
 #include <sys/time.h>
 #include <cstdlib>

@@ -182,13 +182,30 @@ public:
      * @return A pointer to the logging system.
      */
     NLog* GetLog();
+    /**
+     * @brief Gets a pointer to the entity manager.
+     *
+     * @return A pointer to the entity manager.
+     */
     NEntityManager* GetEntityManager();
+    /**
+     * @brief Gets a pointer to the physics manager.
+     *
+     * @return A pointer to the physics manager.
+     */
     NPhysics* GetPhysics();
+    /**
+     * @brief Gets a pointer to the terminal.
+     *
+     * @return A pointer to the terminal.
+     */
+    NTerminal* GetTerminal();
 private:
     bool Server;
     bool WindowChanged;
     bool Run;
     NLog* Log;
+    NTerminal* Terminal;
     NPhysics* Physics;
     NEntityManager* EntityManager;
     NStateMachine* StateMachine;

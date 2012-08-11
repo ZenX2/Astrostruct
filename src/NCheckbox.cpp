@@ -2,26 +2,30 @@
 
 NCheckbox::NCheckbox(std::string i_Texture) : NNode(NodeCheckbox)
 {
+    //Bunch of random vars.
     Pressed = false;
     PressedMemory = false;
     Changed = true;
-    Buffers = new GLuint[2];
-    glGenBuffers(2,Buffers);
-    Shader = GetGame()->GetRender()->GetShader("flat");
     Checked = false;
+    //Allocate our opengl buffers.
+    glGenBuffers(2,Buffers);
+    //Attempt to grab our flat shader.
+    Shader = GetGame()->GetRender()->GetShader("flat");
     if (Shader != NULL)
     {
+        //If we succeed, grab our uniforms.
         MatrixLoc = Shader->GetUniformLocation("MVP");
         TextureLoc = Shader->GetUniformLocation("Texture");
         ColorLoc = Shader->GetUniformLocation("Color");
     }
+    //Attempt to grab the desired texture.
     Texture = GetGame()->GetRender()->GetTexture(i_Texture);
 }
 
 NCheckbox::~NCheckbox()
 {
+    //Thou whom allocates, deallocates!
     glDeleteBuffers(2,Buffers);
-    delete[] Buffers;
     if (Texture)
     {
         delete Texture;
@@ -35,6 +39,7 @@ void NCheckbox::SetCheck(bool Check)
 
 void NCheckbox::GenerateBuffers()
 {
+    //If we changed and have a texture, generate a simple quad.
     if (!Texture || !Changed)
     {
         return;
@@ -59,41 +64,9 @@ void NCheckbox::GenerateBuffers()
 void NCheckbox::Draw(NCamera* View)
 {
     GenerateBuffers();
-    if (Texture == NULL || GetColor().w == 0)
+    //If we have everything to draw, draw!
+    if (Texture == NULL || GetColor().w == 0 || Shader == NULL)
     {
-        return;
-    }
-    if (Shader == NULL)
-    {
-        glEnableClientState(GL_VERTEX_ARRAY);
-        glBindBuffer(GL_ARRAY_BUFFER,Buffers[0]);
-        glVertexPointer(2,GL_FLOAT,0,NULL);
-
-        glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-        glBindBuffer(GL_ARRAY_BUFFER,Buffers[1]);
-        glTexCoordPointer(2,GL_FLOAT,0,NULL);
-
-        glEnable(GL_TEXTURE_2D);
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        if (Texture != NULL)
-        {
-            glBindTexture(GL_TEXTURE_2D,Texture->GetID());
-        }
-
-        glMatrixMode(GL_PROJECTION);
-        glLoadMatrixf(&View->GetOrthoMatrix()[0][0]);
-        glMatrixMode(GL_MODELVIEW);
-        glm::mat4 MVP = View->GetViewMatrix()*GetModelMatrix();
-        glLoadMatrixf(&MVP[0][0]);
-
-        glColor4fv(&(GetColor()[0]));
-        glDrawArrays(GL_QUADS,0,Verts.size());
-        glDisable(GL_TEXTURE_2D);
-        glDisable(GL_BLEND);
-
-        glDisableClientState(GL_VERTEX_ARRAY);
-        glDisableClientState(GL_TEXTURE_COORD_ARRAY);
         return;
     }
     glUseProgram(Shader->GetID());
@@ -127,6 +100,7 @@ void NCheckbox::Draw(NCamera* View)
 
 void NCheckbox::Tick(double DT)
 {
+    //Checks if the mouse intersects and changes state if the mouse is down.
     if (Intersects(glm::vec4(GetRealPos().x,GetRealPos().y,GetScale().x,GetScale().y),GetGame()->GetInput()->GetMouse()))
     {
         if (GetGame()->GetInput()->GetMouseKey(0))

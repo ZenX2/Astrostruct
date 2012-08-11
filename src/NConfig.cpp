@@ -1,9 +1,8 @@
 #include "NEngine.hpp"
 
+//Just makes lua do a whole folder.
 NConfig::NConfig(std::string i_Folder)
 {
-    lua_State* L = GetGame()->GetLua()->GetL();
-    lua_getglobal(L,"_G");
     Folder = i_Folder;
     GetGame()->GetLua()->DoFolder(i_Folder);
 }
@@ -12,6 +11,7 @@ NConfig::~NConfig()
 {
 }
 
+//Reads global variables in lua.
 float NConfig::GetFloat(std::string Name)
 {
     lua_State* L = GetGame()->GetLua()->GetL();

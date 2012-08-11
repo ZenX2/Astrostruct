@@ -19,6 +19,11 @@
 class NCheckbox : public NNode
 {
 public:
+    /**
+     * @brief Creates a checkbox and uses the specified texture for it.
+     *
+     * @param i_Texture The desired texture, it should have an idle, unchecked_active, checked_idle, and checked_active.
+     */
     NCheckbox(std::string i_Texture);
     ~NCheckbox();
     NTexture* Texture;
@@ -28,6 +33,11 @@ public:
     * @param View The camera view matrix, might not be used in the future.
     */
     void Draw(NCamera* View);
+    /**
+     * @brief Updates the checkbox depending on the mouse.
+     *
+     * @param DT How much time has passed.
+     */
     void Tick(double DT);
     /**
      * @brief Returns if the box has been checked or not.
@@ -54,7 +64,7 @@ private:
     void GenerateBuffers();
     std::vector<glm::vec2> Verts;
     std::vector<glm::vec2> UVs;
-    GLuint* Buffers;
+    GLuint Buffers[2];
     GLuint ScreenLoc;
     GLuint TextureLoc;
     GLuint MatrixLoc;

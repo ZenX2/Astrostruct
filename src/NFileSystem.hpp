@@ -8,6 +8,9 @@
 #ifndef NAELSTROF_FILE_SYSTEM
 #define NAELSTROF_FILE_SYSTEM
 
+/**
+ * @brief Facilitates reading files by abstracting physfs.
+ */
 class NReadFile
 {
 public:
@@ -25,6 +28,9 @@ private:
     PHYSFS_File* File;
 };
 
+/**
+ * @brief Facilitates writing files by abstracting physfs. Right now you can only write to one folder at a time so make sure you close these when you're done with them!
+ */
 class NWriteFile
 {
 public:
@@ -62,8 +68,29 @@ public:
      * @return A vector full of filepaths AND directories.
      */
     std::vector<std::string> GetFiles(std::string Directory);
+    /**
+     * @brief Just returns a NReadFile class of the object, it's really not necessary to use and it might be cleaner to just do NReadFile(File) instead.
+     *
+     * @param File The file path to the file. ex textures/human/human.png
+     *
+     * @return NReadFile(File)
+     */
     NReadFile GetReadFile(std::string File);
+    /**
+     * @brief Just returns a NWriteFile class of the object, it's really not necessary to use and it might be cleaner to just do NWriteFile(File) instead.
+     *
+     * @param File The file path to the file. ex textures/human/human.png
+     *
+     * @return NWriteFile(File)
+     */
     NWriteFile GetWriteFile(std::string File);
+    /**
+     * @brief Checks if a "file" is a directory or not.
+     *
+     * @param File The filepath to the file/directory.
+     *
+     * @return True if it is, false otherwise.
+     */
     bool IsDir(std::string File);
 };
 

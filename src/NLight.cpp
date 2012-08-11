@@ -60,27 +60,34 @@ void NLight::GenerateLightBuffers()
 
 void NLight::GenerateShadowBuffers()
 {
+    //oh boy why didn't i comment this while i coded it; it's pretty damn complicated. I'll try my best to reinterpret and explain what i was thinking.
     if (!Texture)
     {
         return;
     }
+    //Compares it's current position and scale from memory, if it hasn't changed from last generation then don't regenerate it!
     if (PositionMemory == GetRealPos() && ScaleMemory == GetScale())
     {
         return;
     }
     glm::vec3 Pos = GetRealPos();
     Shadows.clear();
+    //Figures out what size of a box of map tiles we should loop through. FIXME: Make it more accurately decide which map tiles to loop through.
     float Max = std::max(GetScale().x, GetScale().y);
+    //For every map tile in a massive area around the light...
     for (float x = -Max;x<Max;x+=GetGame()->GetMap()->GetTileSize())
     {
         for (float y = -Max;y<Max;y+=GetGame()->GetMap()->GetTileSize())
         {
+            //Get the tile object at the current loop position
             NTile* Tile = GetGame()->GetMap()->GetTile(Pos+glm::vec3(x,y,0));
+            //If the tile doesn't block light or doesn't exist, skip it!
             if (Tile == NULL || !Tile->IsOpaque())
             {
                 continue;
             }
             float TS = GetGame()->GetMap()->GetTileSize()/2.f;
+            //Generate points in the four corners of the tile.
             glm::vec3 TPos = GetGame()->GetMap()->TilePos(Pos+glm::vec3(x,y,0));
             glm::vec3 Points[4];
             Points[0] = TPos+glm::vec3(TS,TS,0);
@@ -88,7 +95,7 @@ void NLight::GenerateShadowBuffers()
             Points[2] = TPos+glm::vec3(-TS,-TS,0);
             Points[3] = TPos+glm::vec3(-TS,TS,0);
             std::vector<glm::vec4> Faces;
-            //Generate faces
+            //Generate faces (two points = face, each tile has 4 faces)
             NTile* CheckTile = GetGame()->GetMap()->GetTile(Tile->X,Tile->Y-1,Tile->Z);
             if (CheckTile && !CheckTile->IsOpaque() || !CheckTile)
             {
@@ -116,7 +123,7 @@ void NLight::GenerateShadowBuffers()
                 {
                     continue;
                 }
-                //Generate shadow mesh
+                //Generate shadow mesh by extruding back faces.
                 float Radians = -atan2(Pos.x-Faces[i].x,Pos.y-Faces[i].y)-PI/2.f;
                 float BRadians = -atan2(Pos.x-Faces[i].z,Pos.y-Faces[i].w)-PI/2.f;
                 Shadows.push_back(glm::vec3(Faces[i].x,Faces[i].y,TPos.z));
@@ -134,60 +141,32 @@ void NLight::GenerateShadowBuffers()
 
 void NLight::Draw(NCamera* View)
 {
+    //If the light isn't on the current level of the map, don't draw it! This is required because 2d lighting!
     if (GetGame()->GetMap()->GetLevel() != GetGame()->GetMap()->GetLevel(GetRealPos()))
     {
         return;
     }
+    //Clear out the stencil buffer with 0's so we have a clean slate to work with.
     glClear(GL_STENCIL_BUFFER_BIT);
     glEnable(GL_STENCIL_TEST);
+    //Make it so whatever we draw replaces everything it touches in the stencil to 1.
     glStencilFunc(GL_ALWAYS,0x1,0x1);
     glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
+    //Draw all our shadow volumes.
     DrawShadow(View);
+    //Now we make it so we can only draw on 0's, we also don't want to replace anything in the stencil buffer so we lock it up.
     glStencilFunc(GL_EQUAL,0x0,0x1);
     glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+    //Finally draw the light into whatever's not shadow.
     DrawLight(View);
     glDisable(GL_STENCIL_TEST);
 }
 void NLight::DrawLight(NCamera* View)
 {
+    //Pretty standard drawing procedures, should make sense for most people.
     GenerateLightBuffers();
-    if (Texture == NULL || GetColor().w == 0)
+    if (Texture == NULL || GetColor().w == 0 || Shader == NULL)
     {
-        return;
-    }
-    if (Shader == NULL)
-    {
-        glEnableClientState(GL_VERTEX_ARRAY);
-        glBindBuffer(GL_ARRAY_BUFFER,Buffers[0]);
-        glVertexPointer(2,GL_FLOAT,0,NULL);
-
-        glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-        glBindBuffer(GL_ARRAY_BUFFER,Buffers[1]);
-        glTexCoordPointer(2,GL_FLOAT,0,NULL);
-
-        glEnable(GL_TEXTURE_2D);
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        if (Texture != NULL)
-        {
-            glBindTexture(GL_TEXTURE_2D,Texture->GetID());
-        }
-
-        glMatrixMode(GL_PROJECTION);
-        glLoadMatrixf(&View->GetPerspMatrix()[0][0]);
-        glMatrixMode(GL_MODELVIEW);
-        glm::mat4 MVP = View->GetPerspViewMatrix()*GetModelMatrix();
-        glLoadMatrixf(&MVP[0][0]);
-
-        glColor4fv(&(GetColor()[0]));
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        glDrawArrays(GL_QUADS,0,Verts.size());
-        glDisable(GL_TEXTURE_2D);
-        glDisable(GL_BLEND);
-
-        glDisableClientState(GL_VERTEX_ARRAY);
-        glDisableClientState(GL_TEXTURE_COORD_ARRAY);
         return;
     }
     glUseProgram(Shader->GetID());
@@ -220,27 +199,10 @@ void NLight::DrawLight(NCamera* View)
 }
 void NLight::DrawShadow(NCamera* View)
 {
+    //asdlkfhwler
     GenerateShadowBuffers();
-    if (Texture == NULL || GetColor().w == 0)
+    if (Texture == NULL || GetColor().w == 0 || ShadowShader == NULL)
     {
-        return;
-    }
-    if (ShadowShader == NULL)
-    {
-        glEnableClientState(GL_VERTEX_ARRAY);
-        glBindBuffer(GL_ARRAY_BUFFER,Buffers[2]);
-        glVertexPointer(2,GL_FLOAT,0,NULL);
-
-        glMatrixMode(GL_PROJECTION);
-        glLoadMatrixf(&View->GetPerspMatrix()[0][0]);
-        glMatrixMode(GL_MODELVIEW);
-        glm::mat4 MVP = View->GetViewMatrix();
-        glLoadMatrixf(&MVP[0][0]);
-
-        glColor4f(1,1,1,1);
-        glDrawArrays(GL_QUADS,0,Verts.size());
-
-        glDisableClientState(GL_VERTEX_ARRAY);
         return;
     }
     glUseProgram(ShadowShader->GetID());
@@ -415,5 +377,5 @@ void NLight::Tick(double DT)
 }
 void NLight::UpdateShadows()
 {
-    PositionMemory = glm::vec3(0);
+    PositionMemory += glm::vec3(0,1,0);
 }

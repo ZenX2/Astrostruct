@@ -23,6 +23,7 @@ NGame::NGame()
     TextSystem = NULL;
     SignalInterceptor = NULL;
     EntityManager = NULL;
+    Terminal = NULL;
     Console = NULL;
     Map = NULL;
     Network = NULL;
@@ -52,6 +53,7 @@ NGame::~NGame()
         delete LightSystem;
     }
     delete Log;
+    delete Terminal;
     glfwTerminate();
 }
 
@@ -65,6 +67,7 @@ bool NGame::Init(int i_Width, int i_Height, std::string Title, int argc, char** 
             Server = true;
         }
     }
+    Terminal = new NTerminal();
     if (Server)
     {
         srand(time(NULL));
@@ -314,4 +317,9 @@ NLog* NGame::GetLog()
 NPhysics* NGame::GetPhysics()
 {
     return Physics;
+}
+
+NTerminal* NGame::GetTerminal()
+{
+    return Terminal;
 }

@@ -19,6 +19,11 @@
 class NButton : public NNode
 {
 public:
+    /**
+     * @brief Creates a button and adds it to the scene using the given texture.
+     *
+     * @param i_Texture The desired texture of the button, should have the following animations in it: idle, active, and pressed.
+     */
     NButton(std::string i_Texture);
     ~NButton();
     NTexture* Texture;
@@ -62,9 +67,29 @@ public:
      * @param i_Color The desired color of the text and button.
      */
     void SetColor(glm::vec4 i_Color);
+    /**
+     * @brief Gets the text object that's positioned over the button.
+     *
+     * @return A pointer to the text.
+     */
     NText* GetText();
+    /**
+     * @brief Lets the button get toggled by the mouse.
+     *
+     * @param i_Toggleable True if we want this button to get toggled, false otherwise.
+     */
     void SetToggleable(bool i_Toggleable);
+    /**
+     * @brief If the button is toggleable, sets the button's state.
+     *
+     * @param i_Toggled True to be pressed in, false otherwise.
+     */
     void SetToggle(bool i_Toggled);
+    /**
+     * @brief Returns if the button is pressed in or not.
+     *
+     * @return True if pressed, false otherwise.
+     */
     bool GetToggle();
 private:
     bool Toggled;
