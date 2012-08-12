@@ -43,6 +43,7 @@
 #define NAELSTROF_ENGINE
 //windows.h required for some console things.
 #ifdef _WIN32
+    #include <winsock2.h>
     #include <windows.h>
 #endif
 #include "config.h"

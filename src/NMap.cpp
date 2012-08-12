@@ -2,19 +2,23 @@
 
 NMap::NMap(std::string i_TileSet) : NNode(NodeMap)
 {
-    lua_State* L = GetGame()->GetLua()->GetL();
-    lua_newtable(L);
-    SelfReference = luaL_ref(L,LUA_REGISTRYINDEX);
+    //Various variables.
     LuaReference = LUA_NOREF;
     Ready = false;
     RealTileSize = 64;
     Width = Height = Depth = 0;
     ViewingLevel = 0;
     Texture = NULL;
+    //Allocate ourselves a table for use in the gamemode.
+    lua_State* L = GetGame()->GetLua()->GetL();
+    lua_newtable(L);
+    SelfReference = luaL_ref(L,LUA_REGISTRYINDEX);
+    //We don't want to do graphic related stuff on a sever that doesn't have an opengl context.
     if (GetGame()->IsServer())
     {
         return;
     }
+    //This variable is the size of tiles in the texture. (it's read from lua when the texture is set)
     TileSize = 0;
     Shader = GetGame()->GetRender()->GetShader("map");
     OutlineShader = GetGame()->GetRender()->GetShader("normal");

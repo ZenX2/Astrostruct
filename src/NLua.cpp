@@ -3,7 +3,9 @@
 NLua::NLua()
 {
     L = luaL_newstate();
+    //Load all lua libraries.
     luaL_openlibs(L);
+    //List of all global functions
     static const luaL_Reg BaseFunctions[] =
     {
         {"include",Include},
@@ -16,8 +18,10 @@ NLua::NLua()
         {"print",Print},
         {NULL,NULL}
     };
+    //Register the global functions into "_G"lobal
     lua_getglobal(L,"_G");
     luaL_register(L, NULL, BaseFunctions);
+    //Create a global bool SERVER and CLIENT so lua knows which one we're running as.
     lua_pushboolean(L,GetGame()->IsServer());
     lua_setfield(L,-2,"SERVER");
     lua_pushboolean(L,!GetGame()->IsServer());
@@ -251,7 +255,7 @@ int ConsoleHelp(lua_State* L)
 int Include(lua_State* L)
 {
     luaL_checkstring(L,1);
-    //Do nothing!
+    //Do nothing! We will pre-parse for this.
     /*lua_Debug ar1;
     lua_getstack(L,1,&ar1);
     lua_getinfo(L,"f",&ar1);
@@ -296,6 +300,7 @@ bool NLua::DoFile(std::string FileName)
     if (luaL_dostring(L,FileData))
     {
         delete[] FileData;
+        //FIXME: Make lua errors output file dir and line.
         GetGame()->GetLog()->Send("LUA",1,lua_tostring(L,-1));
         return Fail;
     }
@@ -311,6 +316,7 @@ bool NLua::DoFolder(std::string Folder)
     std::vector<std::string> Files = GetGame()->GetFileSystem()->GetFiles(Folder);
     for (unsigned int i=0;i<Files.size();i++)
     {
+        //executes all files that has .lua in them and has a at the end.
         if (Files[i].find(".lua")!=std::string::npos && Files[i][Files[i].length()-1] == 'a')
         {
             GetGame()->GetLog()->Send("LUA",2,std::string("Executing ") + Files[i] + ".");

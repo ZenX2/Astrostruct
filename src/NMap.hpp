@@ -83,9 +83,21 @@ public:
      * @param i_Slope The desired slope of the tile as a TileSlope enum.
      */
     void SetSlope(TileSlope i_Slope);
+    /**
+     * @brief Grabs a bool from the tile's lua reference.
+     *
+     * @param Name The name of the bool.
+     *
+     * @return A bool from the lua reference or false if it isn't found.
+     */
     bool GetBool(std::string Name);
     int LuaReference;
     int SelfReference;
+    /**
+     * @brief Calls a tile method.
+     *
+     * @param Name The name of the method.
+     */
     void CallMethod(std::string Name);
 private:
     void GenerateBody();
@@ -241,10 +253,36 @@ public:
      * @return Currently, 4.
      */
     unsigned int GetTileCount();
+    /**
+     * @brief Grabs a lua reference to a lua tile loaded from gamemodes/<current gamemode>/tiles/<id>
+     *
+     * @param ID The id of the lua tile.
+     *
+     * @return A lua refernce to the lua tile.
+     */
     int GetLuaTile(unsigned int ID);
     int SelfReference;
+    /**
+     * @brief Calls a method to the gamemode. FIXME: make it parse more varied additional variables.
+     *
+     * @param Name The name of the method.
+     * @param AdditionalVars The number of additional nodes.
+     * @param ... Any additional nodes.
+     */
     void CallMethod(std::string Name, unsigned int AdditionalVars = 0, ...);
+    /**
+     * @brief Gets a lua reference to the gamemode.
+     *
+     * @return A lua reference to the gamemode.
+     */
     int GetGameMode();
+    /**
+     * @brief Attempts to resize the map to the specified dimensions. It will unallocate/allocate tiles if needed.
+     *
+     * @param X Desired width dimension.
+     * @param Y Desired height dimension.
+     * @param Z Desired depth dimension.
+     */
     void Resize(unsigned int X, unsigned int Y, unsigned int Z);
 private:
     int LuaReference;
