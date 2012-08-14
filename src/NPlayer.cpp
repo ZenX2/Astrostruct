@@ -33,19 +33,19 @@ NPlayer::NPlayer(std::wstring i_Name) : NNode(NodePlayer)
     NameText->SetSize(13);
     NameText->SetParent(this);
     float TS = GetGame()->GetMap()->GetTileSize();
-    //btCollisionShape* PlaneShape = new btBoxShape(btVector3(TS/3.f,TS/3.f,TS/3.f));
-    btCollisionShape* PlaneShape = new btSphereShape(TS/4.f);
-    //btCollisionShape* PlaneShape = new btCapsuleShapeZ(TS/4.f,TS/4.f);
+    //btCollisionShape* Shape = new btBoxShape(btVector3(TS/3.f,TS/3.f,TS/3.f));
+    Shape = new btSphereShape(TS/4.f);
+    //btCollisionShape* Shape = new btCapsuleShapeZ(TS/4.f,TS/4.f);
     btVector3 FallInertia(0,0,0);
-    PlaneShape->calculateLocalInertia(80,FallInertia);
+    Shape->calculateLocalInertia(80,FallInertia);
     btDefaultMotionState* StaticMotionState = new btDefaultMotionState(btTransform(btQuaternion(0,0,0,1),btVector3(0,0,0)));
-    btRigidBody::btRigidBodyConstructionInfo PlaneBody(80,StaticMotionState,PlaneShape,FallInertia);
+    btRigidBody::btRigidBodyConstructionInfo PlaneBody(80,StaticMotionState,Shape,FallInertia);
     //PlaneBody.m_friction = 30;
     Body = new btRigidBody(PlaneBody);
     Body->setSleepingThresholds(0,0);
     //Body->setAngularFactor(0);
     GetGame()->GetPhysics()->GetWorld()->addRigidBody(Body);
-    GetGame()->GetMap()->CallMethod("OnPlayerSpawn",1,this);
+    GetGame()->GetMap()->CallMethod("OnPlayerSpawn","n",this);
 }
 
 void NPlayer::SetPos(glm::vec3 i_Position)
@@ -65,6 +65,7 @@ NPlayer::~NPlayer()
     GetGame()->GetPhysics()->GetWorld()->removeRigidBody(Body);
     delete Body->getMotionState();
     delete Body;
+    delete Shape;
     if (GetGame()->IsServer())
     {
         return;

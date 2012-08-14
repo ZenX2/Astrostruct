@@ -8,56 +8,56 @@ void NRender::LoadTextures()
 bool NRender::LoadShaders()
 {
     NShader* Shader = new NShader("text");
-    if (Shader->Load("shaders/text.vert","shaders/text.frag") != Fail)
+    if (!Shader->Load("shaders/text.vert","shaders/text.frag"))
     {
         Shaders.push_back(Shader);
     } else {
         delete Shader;
     }
     Shader = new NShader("flat");
-    if (Shader->Load("shaders/flat.vert","shaders/flat.frag") != Fail)
+    if (!Shader->Load("shaders/flat.vert","shaders/flat.frag"))
     {
         Shaders.push_back(Shader);
     } else {
         delete Shader;
     }
     Shader = new NShader("map");
-    if (Shader->Load("shaders/map.vert","shaders/map.frag") != Fail)
+    if (!Shader->Load("shaders/map.vert","shaders/map.frag"))
     {
         Shaders.push_back(Shader);
     } else {
         delete Shader;
     }
     Shader = new NShader("normal");
-    if (Shader->Load("shaders/normal.vert","shaders/normal.frag") != Fail)
+    if (!Shader->Load("shaders/normal.vert","shaders/normal.frag"))
     {
         Shaders.push_back(Shader);
     } else {
         delete Shader;
     }
     Shader = new NShader("post");
-    if (Shader->Load("shaders/post.vert","shaders/post.frag") != Fail)
+    if (!Shader->Load("shaders/post.vert","shaders/post.frag"))
     {
         Shaders.push_back(Shader);
     } else {
         delete Shader;
     }
     Shader = new NShader("flat_textureless");
-    if (Shader->Load("shaders/flat_textureless.vert","shaders/flat_textureless.frag") != Fail)
+    if (!Shader->Load("shaders/flat_textureless.vert","shaders/flat_textureless.frag"))
     {
         Shaders.push_back(Shader);
     } else {
         delete Shader;
     }
     Shader = new NShader("flat_colorless");
-    if (Shader->Load("shaders/flat_colorless.vert","shaders/flat_colorless.frag") != Fail)
+    if (!Shader->Load("shaders/flat_colorless.vert","shaders/flat_colorless.frag"))
     {
         Shaders.push_back(Shader);
     } else {
         delete Shader;
     }
     Shader = new NShader("normal_textureless");
-    if (Shader->Load("shaders/normal_textureless.vert","shaders/normal_textureless.frag") != Fail)
+    if (!Shader->Load("shaders/normal_textureless.vert","shaders/normal_textureless.frag"))
     {
         Shaders.push_back(Shader);
     } else {

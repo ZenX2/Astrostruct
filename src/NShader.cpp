@@ -71,7 +71,7 @@ bool NShader::Load(std::string VertexFilePath, std::string FragmentFilePath)
         GetGame()->GetLog()->Send("SHADER",1,"Failed to load " + VertexFilePath + "!");
         glDeleteShader(VertexShaderID);
         glDeleteShader(FragmentShaderID);
-        return Fail;
+        return 1;
     }
     VertexShaderCode = new char[VertexShaderStream.Size()];
     VertexShaderStream.Read(VertexShaderCode,VertexShaderStream.Size());
@@ -83,7 +83,7 @@ bool NShader::Load(std::string VertexFilePath, std::string FragmentFilePath)
         GetGame()->GetLog()->Send("SHADER",1,"Failed to load " + FragmentFilePath + "!");
         glDeleteShader(VertexShaderID);
         glDeleteShader(FragmentShaderID);
-        return Fail;
+        return 1;
     }
     FragmentShaderCode = new char[FragmentShaderStream.Size()];
     FragmentShaderStream.Read(FragmentShaderCode,FragmentShaderStream.Size());
@@ -114,7 +114,7 @@ bool NShader::Load(std::string VertexFilePath, std::string FragmentFilePath)
         GetGame()->GetLog()->Send("SHADER",1,"Failed to compile " + VertexFilePath + "!");
         glDeleteShader(VertexShaderID);
         glDeleteShader(FragmentShaderID);
-        return Fail;
+        return 1;
     }
 
     //Same for the fragment shader
@@ -140,7 +140,7 @@ bool NShader::Load(std::string VertexFilePath, std::string FragmentFilePath)
         GetGame()->GetLog()->Send("SHADER",1,"Failed to compile " + FragmentFilePath + "!");
         glDeleteShader(VertexShaderID);
         glDeleteShader(FragmentShaderID);
-        return Fail;
+        return 1;
     }
 
     //Then create and link the program
@@ -164,7 +164,7 @@ bool NShader::Load(std::string VertexFilePath, std::string FragmentFilePath)
         GetGame()->GetLog()->Send("SHADER",1,"Failed to link program" + Name + "!");
         glDeleteShader(VertexShaderID);
         glDeleteShader(FragmentShaderID);
-        return Fail;
+        return 1;
     }
     //Clean up
     glDeleteShader(VertexShaderID);

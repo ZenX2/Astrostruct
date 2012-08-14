@@ -81,8 +81,6 @@
 #include <bullet/btBulletDynamicsCommon.h>
 #include <bullet/btBulletCollisionCommon.h>
 
-#define Fail false
-#define Success true
 #define PI 3.14159265
 
 #include "NSignal.hpp"

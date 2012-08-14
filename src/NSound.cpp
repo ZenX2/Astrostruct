@@ -122,7 +122,7 @@ bool NSoundData::Load(std::string FileName)
     if (!File.Good())
     {
         GetGame()->GetLog()->Send("ALURE",1,"Failed to open " + FileName + " as a sound file, it doesn't exist!");
-        return Fail;
+        return 1;
     }
     unsigned char* Data = new unsigned char[File.Size()];
     File.Read(Data,File.Size());
@@ -131,9 +131,9 @@ bool NSoundData::Load(std::string FileName)
     if (ID == AL_NONE)
     {
         GetGame()->GetLog()->Send("ALURE",1,"Failed to open " + FileName + " as a sound file for reason: " + alureGetErrorString() + "!");
-        return Fail;
+        return 1;
     }
-    return Success;
+    return 0;
 }
 
 NSoundData::~NSoundData()

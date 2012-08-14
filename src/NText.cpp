@@ -85,13 +85,13 @@ bool NFace::Load(std::string File)
     FT_Library FTLib = GetGame()->GetTextSystem()->GetFreeTypeLib();
     if (!FTLib)
     {
-        return Fail;
+        return 1;
     }
     NReadFile MyFile = GetGame()->GetFileSystem()->GetReadFile(File);
     if (!MyFile.Good())
     {
         GetGame()->GetLog()->Send("FREETYPE",1,"Failed to load " + File + ", it doesn't exist!");
-        return Fail;
+        return 1;
     }
     FileData = new char[MyFile.Size()];
     MyFile.Read(FileData,MyFile.Size());
@@ -99,9 +99,9 @@ bool NFace::Load(std::string File)
     {
         delete[] FileData;
         GetGame()->GetLog()->Send("FREETYPE",1,"Failed to load " + File + " as a font, it's either corrupt or not a FreeType-compatible format!");
-        return Fail;
+        return 1;
     }
-    return Success;
+    return 0;
 }
 
 NGlyph::NGlyph(FT_Face Face)
@@ -121,6 +121,7 @@ NTextureAtlas::NTextureAtlas(FT_Face Face, unsigned int i_Size)
 {
     //Get Width and Height of desired textureatlas
     Changed = true;
+    //FIXME: When the texture fills, resize the texture to be bigger.
     Width = 256;
     Height = 256;
     Size = i_Size;

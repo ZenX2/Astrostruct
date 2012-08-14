@@ -2,7 +2,7 @@
 
 int main(int argc, char** argv)
 {
-    if (!GetGame()->Init(512,512,"Astrostruct",argc,argv))
+    if (GetGame()->Init(512,512,"Astrostruct",argc,argv))
     {
         GetGame()->CleanUp();
         return 1;

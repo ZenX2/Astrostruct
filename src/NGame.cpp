@@ -76,7 +76,7 @@ bool NGame::Init(int i_Width, int i_Height, std::string Title, int argc, char** 
         if (!glfwInit())
         {
             Log->Send("ENGINE",0,"GLFW failed to initialize!");
-            return Fail;
+            return 1;
         }
         Lua = new NLua();
         Config = new NConfig("config");
@@ -92,7 +92,7 @@ bool NGame::Init(int i_Width, int i_Height, std::string Title, int argc, char** 
         PacketHandler = new NPacketHandler();
         EntityManager = new NEntityManager();
         Physics = new NPhysics();
-        return Success;
+        return 0;
     }
     //Initialize everything we can
     srand(time(NULL));
@@ -106,7 +106,7 @@ bool NGame::Init(int i_Width, int i_Height, std::string Title, int argc, char** 
     if (!glfwInit())
     {
         Log->Send("ENGINE",0,"GLFW failed to initialize!");
-        return Fail;
+        return 1;
     }
     //Now lets load some data from our config interface
     NewWidth = Config->GetFloat("Width");
@@ -130,14 +130,14 @@ bool NGame::Init(int i_Width, int i_Height, std::string Title, int argc, char** 
     {
         Log->Send("ENGINE",0,"GLFW failed to open a window!");
         glfwTerminate();
-        return Fail;
+        return 1;
     }
     glfwSetWindowTitle(Title.c_str());
     if (glewInit() != GLEW_OK)
     {
         Log->Send("ENGINE",0,"GLEW failed to initialize!");
         glfwTerminate();
-        return Fail;
+        return 1;
     }
     glfwSetWindowSizeCallback(&ResizeWindow);
     Input = new NInput();
@@ -156,7 +156,7 @@ bool NGame::Init(int i_Width, int i_Height, std::string Title, int argc, char** 
     PacketHandler = new NPacketHandler();
     EntityManager = new NEntityManager();
     Physics = new NPhysics();
-    return Success;
+    return 0;
 }
 
 NEntityManager* NGame::GetEntityManager()

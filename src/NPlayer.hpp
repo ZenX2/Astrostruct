@@ -85,6 +85,7 @@ public:
     int SelfReference;
     void SetPos(glm::vec3 i_Position);
 private:
+    btCollisionShape* Shape;
     btRigidBody* Body;
     glm::vec3 WantedPosition;
     bool HasSetWantedPosition;

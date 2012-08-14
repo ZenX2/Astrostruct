@@ -28,9 +28,9 @@ bool NNetwork::CreateServer()
     if (!Server)
     {
         GetGame()->GetLog()->Send("NETWORK",0,"Failed to create server!");
-        return Fail;
+        return 1;
     }
-    return Success;
+    return 0;
 }
 
 bool NNetwork::CreateClient()
@@ -43,9 +43,9 @@ bool NNetwork::CreateClient()
     if (!Client)
     {
         GetGame()->GetLog()->Send("NETWORK",0,"Failed to create client!");
-        return Fail;
+        return 1;
     }
-    return Success;
+    return 0;
 }
 
 bool NNetwork::PollEvent(ENetEvent* Event)
@@ -116,7 +116,7 @@ bool NNetwork::Connect(std::string i_HostName, unsigned int Port)
         std::stringstream Message;
         Message << "Failed to connect to host " << HostName << " on port " << Port << "!";
         GetGame()->GetLog()->Send("NETWORK",0,Message.str());
-        return Fail;
+        return 1;
     }
     ENetEvent Event;
     if (enet_host_service(Client, &Event, 2500) > 0 && Event.type == ENET_EVENT_TYPE_CONNECT)
@@ -124,14 +124,15 @@ bool NNetwork::Connect(std::string i_HostName, unsigned int Port)
         std::stringstream Message;
         Message << "Successfully connected to " << HostName << " on port " << Port << ".";
         GetGame()->GetLog()->Send("NETWORK",2,Message.str());
-        return Success;
+        return 0;
     } else {
         std::stringstream Message;
         Message << "Failed to connect to host " << HostName << " on port " << Port << "!";
         GetGame()->GetLog()->Send("NETWORK",0,Message.str());
         Host = NULL;
-        return Fail;
+        return 1;
     }
+    return 1;
 }
 
 void NNetwork::Disconnect()

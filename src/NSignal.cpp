@@ -30,13 +30,13 @@ void SignalHandler(int Signal)
         }
         case SIGTERM:
         {
-            GetGame()->GetLog()->Send("SIGNAL",1,"Recieved signal " + SignalToString(Signal) + ": exiting...");
+            GetGame()->GetLog()->Send("SIGNAL",0,"Recieved signal " + SignalToString(Signal) + ": exiting...");
             GetGame()->Close();
             break;
         }
         default:
         {
-            GetGame()->GetLog()->Send("SIGNAL",1,"Recieved unknown signal " + SignalToString(Signal) + ". Not sure what I should do about it, so I'll happily do nothing!");
+            GetGame()->GetLog()->Send("SIGNAL",0,"Recieved unknown signal " + SignalToString(Signal) + ". Not sure what I should do about it, so I'll happily do nothing!");
             break;
         }
     }

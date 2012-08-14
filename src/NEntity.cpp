@@ -25,7 +25,7 @@ NEntityManager::NEntityManager()
             lua_State* L = GetGame()->GetLua()->GetL();
             lua_newtable(L);
             lua_setglobal(L, "ENT");
-            if (!GetGame()->GetLua()->DoFile(File))
+            if (GetGame()->GetLua()->DoFile(File))
             {
                 //If we failed, reset the global and abort.
                 lua_pushnil(L);
@@ -105,7 +105,7 @@ void NEntityManager::Reload()
             lua_State* L = GetGame()->GetLua()->GetL();
             lua_newtable(L);
             lua_setglobal(L, "ENT");
-            if (!GetGame()->GetLua()->DoFile(File))
+            if (GetGame()->GetLua()->DoFile(File))
             {
                 //If we failed, reset the global and abort.
                 lua_pushnil(L);
@@ -369,7 +369,7 @@ void NEntity::Unallocate()
     delete (NEntity*)this;
 }
 
-void NEntity::CallMethod(std::string VarName, unsigned int AdditionalVars,  ...)
+void NEntity::CallMethod(std::string VarName, std::string AdditionalVars,  ...)
 {
     if (LuaSelf == LUA_NOREF)
     {
@@ -383,20 +383,42 @@ void NEntity::CallMethod(std::string VarName, unsigned int AdditionalVars,  ...)
     {
         lua_pop(L,2);
     } else {
-        //Push on our entity so we can use self. in the scripts.
+        //Push on our entity so we can use self in the scripts.
         lua_pushEntity(L,this);
         va_list vl;
         va_start(vl,AdditionalVars);
-        for (unsigned int i=0;i<AdditionalVars;i++)
+        for (unsigned int i=0;i<AdditionalVars.length();i++)
         {
-            NNode* Temp = va_arg(vl,NNode*);
-            //FIXME: we only accept one kind of additional var right now! Players! :u
-            switch(Temp->GetType())
+            switch(AdditionalVars[i])
             {
-                case NodePlayer: lua_pushPlayer(L,(NPlayer*)Temp);
+                case 'n':
+                {
+                    NNode* Temp = va_arg(vl,NNode*);
+                    //FIXME: we only accept one kind of additional var right now! Players! :u
+                    switch(Temp->GetType())
+                    {
+                        case NodePlayer: lua_pushPlayer(L,(NPlayer*)Temp); break;
+                    }
+                    break;
+                }
+                case 's':
+                {
+                    lua_pushstring(L,va_arg(vl,char*));
+                    break;
+                }
+                case 'f':
+                {
+                    lua_pushnumber(L,va_arg(vl,double));
+                    break;
+                }
+                default:
+                {
+                    GetGame()->GetLog()->Send("LUA",1,std::string("Attempted to push an unkown class with key ") + AdditionalVars[i] + " as a function argument!"); 
+                    break;
+                }
             }
         }
-        lua_call(L,1+AdditionalVars,0);
+        lua_protcall(L,1+AdditionalVars.length(),0);
         lua_pop(L,1);
     }
 }

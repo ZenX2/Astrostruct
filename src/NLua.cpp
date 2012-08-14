@@ -3,6 +3,8 @@
 NLua::NLua()
 {
     L = luaL_newstate();
+    //First load in the panic manager
+    lua_atpanic(L,OnPanic);
     //Load all lua libraries.
     luaL_openlibs(L);
     //List of all global functions
@@ -254,8 +256,13 @@ int ConsoleHelp(lua_State* L)
 
 int Include(lua_State* L)
 {
-    luaL_checkstring(L,1);
-    //Do nothing! We will pre-parse for this.
+    std::string File = luaL_checkstring(L,1);
+    std::string FullPath = GetGame()->GetLua()->GetCurrentDoFile();
+    std::string Path = FullPath.substr(0,FullPath.find_last_of('/')+1);
+    GetGame()->GetLua()->DoFile(Path+File);
+    //Make sure we reset the file we're doing in case someone wants to include more than one file.
+    GetGame()->GetLua()->SetCurrentDoFile(FullPath);
+    //This stuff was made by amcfaggot which doesn't work when my filesystem is virtualized.
     /*lua_Debug ar1;
     lua_getstack(L,1,&ar1);
     lua_getinfo(L,"f",&ar1);
@@ -269,8 +276,24 @@ int Include(lua_State* L)
     return 0;
 }
 
+void NLua::SetCurrentDoFile(std::string File)
+{
+    CurrentDoFile = File;
+}
+std::string NLua::GetCurrentDoFile()
+{
+    return CurrentDoFile;
+}
+
+int luaL_nloadstring(lua_State* L, const char* s, const char* name)
+{
+    return luaL_loadbuffer(L, s, strlen(s), name);
+}
+
 bool NLua::DoFile(std::string FileName)
 {
+    //Set the current do file so our lua Include will know what to include.
+    SetCurrentDoFile(FileName);
     NReadFile File = GetGame()->GetFileSystem()->GetReadFile(FileName);
     if (!File.Good())
     {
@@ -280,39 +303,25 @@ bool NLua::DoFile(std::string FileName)
     char* FileData = new char[File.Size()+1];
     File.Read(FileData,File.Size());
     FileData[File.Size()] = '\0'; //Ensure the 'string' is null terminated, we could be reading some random file for all we know.
-    std::string Data(FileData);
-    //Now parse for any includes
-    int Pos = 0;
-    while (Pos != Data.npos)
-    {
-        Pos = Data.find("include(",Pos);
-        if (Pos != Data.npos)
-        {
-            Pos += 9;
-            int QuotePos = Data.find("\"",Pos);
-            if (QuotePos != Data.npos)
-            {
-                QuotePos -= Pos;
-                DoFile(FileName.substr(0,FileName.find_last_of('/')+1)+Data.substr(Pos,QuotePos));
-            }
-        }
-    }
-    if (luaL_dostring(L,FileData))
+    //Use our special string loading function to associate the code with our file.
+    if (luaL_ndostring(L,FileData,FileName.c_str()))
     {
         delete[] FileData;
-        //FIXME: Make lua errors output file dir and line.
-        GetGame()->GetLog()->Send("LUA",1,lua_tostring(L,-1));
-        return Fail;
+        //Parse the error and replace the string with the file path.
+        std::string Error = lua_tostring(L,-1);
+        std::string RealError = Error.substr(Error.find(']')+1);
+        GetGame()->GetLog()->Send("LUA",1,"[file \""+FileName+"\"]"+RealError);
+        return 1;
     }
     delete[] FileData;
-    return Success;
+    return 0;
 }
 
 bool NLua::DoFolder(std::string Folder)
 {
     GetGame()->GetLog()->Send("LUA",2,std::string("Scanning ") + Folder + " for lua files...");
     std::string ParentFolder = Folder;
-    bool Result = Success;
+    bool Result = 0;
     std::vector<std::string> Files = GetGame()->GetFileSystem()->GetFiles(Folder);
     for (unsigned int i=0;i<Files.size();i++)
     {
@@ -429,7 +438,7 @@ int LoadSound(lua_State* L)
     const char* Name = luaL_checkstring(L,1);
     const char* DataDir = luaL_checkstring(L,2);
     NSoundData* Data = new NSoundData(Name);
-    if (!Data->Load(DataDir))
+    if (Data->Load(DataDir))
     {
         delete Data;
         return 0;
@@ -443,7 +452,7 @@ int LoadFace(lua_State* L)
     const char* Name = luaL_checkstring(L,1);
     const char* Data = luaL_checkstring(L,2);
     NFace* FontFace = new NFace(Name);
-    if (FontFace->Load(Data))
+    if (!FontFace->Load(Data))
     {
         GetGame()->GetTextSystem()->AddFace(FontFace);
     } else {
@@ -1158,5 +1167,21 @@ int PlayerSetPos(lua_State* L)
     NPlayer* Foo = lua_checkPlayer(L,1);
     glm::vec3* Bar = lua_checkVector(L,2);
     Foo->SetPos(*Bar);
+    return 0;
+}
+
+int OnPanic(lua_State* L)
+{
+    GetGame()->GetLog()->Send("LUA",0,lua_tostring(L,-1));
+    return 0;
+}
+
+int lua_protcall(lua_State* L, int nargs, int nresults)
+{
+    if (lua_pcall(L,nargs,nresults,0))
+    {
+        GetGame()->GetLog()->Send("LUA",1,lua_tostring(L,-1));
+        return 1;
+    }
     return 0;
 }

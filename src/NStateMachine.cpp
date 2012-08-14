@@ -130,7 +130,7 @@ void NPauseState::Tick(double DT)
     if (MultiButton->OnRelease())
     {
         GetGame()->GetNetwork()->CreateClient();
-        if (GetGame()->GetNetwork()->Connect("10.0.1.5",51313) == Success)
+        if (!GetGame()->GetNetwork()->Connect("10.0.1.5",51313))
         {
             PlaySound->Play();
             NPacket Packet(GetGame()->GetConfig()->GetString("PlayerName"));
@@ -180,10 +180,10 @@ void NGameState::Tick(double DT)
 {
     NCamera* Camera = GetGame()->GetRender()->GetCamera();
     glm::vec3 Pos = glm::vec3(GetGame()->GetInput()->GetMouseX(),GetGame()->GetInput()->GetMouseY(),0)-Player->GetPos()-glm::vec3(GetGame()->GetWindowWidth()/2.f,GetGame()->GetWindowHeight()/2.f,0);
-    glm::vec3 WantedCameraPos = Player->GetPos()+glm::vec3(0,0,500);
+    glm::vec3 WantedCameraPos = Player->GetPos()+glm::vec3(0,0,500)-glm::vec3(0,0,GetGame()->GetMap()->GetTileSize()/2.f);
     Camera->SetPos(Camera->GetPos()-(Camera->GetPos()-WantedCameraPos)/float(1.f+DT*50.f));
     Camera->SetPos(glm::vec3(Camera->GetPos().x,Camera->GetPos().y,WantedCameraPos.z));
-    if (GetGame()->GetInput()->KeyChanged(GLFW_KEY_ESC) && GetGame()->GetInput()->GetKey(GLFW_KEY_ESC))
+    if (GetGame()->GetInput()->GetKeyChanged(GLFW_KEY_ESC) && GetGame()->GetInput()->GetKey(GLFW_KEY_ESC))
     {
         if (!Window)
         {
@@ -260,7 +260,7 @@ void NOnlineState::Tick(double DT)
             }
         }
     }
-    if (GetGame()->GetInput()->KeyChanged('F') && GetGame()->GetInput()->GetKey('F'))
+    if (GetGame()->GetInput()->GetKeyChanged('F') && GetGame()->GetInput()->GetKey('F'))
     {
         GetGame()->GetScene()->ToggleFullBright();
     }
@@ -331,7 +331,7 @@ void NServerState::Tick(double DT)
             }
             case ENET_EVENT_TYPE_NONE:
             {
-                GetGame()->GetLog()->Send("SERVER",2,"Alex: I downloaded the whole packet, and they have been chasing us ever since.");
+                GetGame()->GetLog()->Send("SERVER",2,"Alyx: I downloaded the whole packet, and they have been chasing us ever since.");
                 glfwSleep(1);
                 break;
             }
@@ -478,6 +478,7 @@ void NMapState::OnExit()
     {
         EntityHighlight[i]->Remove();
     }
+    Entities.clear();
 }
 void NMapState::Tick(double DT)
 {
@@ -567,7 +568,7 @@ void NMapState::Tick(double DT)
         new NStar();
     }
     OtherWindow->SetPos(glm::vec3(GetGame()->GetWindowWidth()-64,64,0));
-    if (Increase->OnRelease() || (GetGame()->GetInput()->KeyChanged('E') && GetGame()->GetInput()->GetKey('E')))
+    if (Increase->OnRelease() || (GetGame()->GetInput()->GetKeyChanged('E') && GetGame()->GetInput()->GetKey('E')))
     {
         CurrentTile++;
         if (CurrentTile>int(GetGame()->GetMap()->GetTileCount()))
@@ -589,7 +590,7 @@ void NMapState::Tick(double DT)
             OCheckBox->SetCheck(false);
         }
     }
-    if (Decrease->OnRelease() || (GetGame()->GetInput()->KeyChanged('Q') && GetGame()->GetInput()->GetKey('Q')))
+    if (Decrease->OnRelease() || (GetGame()->GetInput()->GetKeyChanged('Q') && GetGame()->GetInput()->GetKey('Q')))
     {
         CurrentTile--;
         if (CurrentTile<-int(Entities.size()))
@@ -611,7 +612,7 @@ void NMapState::Tick(double DT)
             OCheckBox->SetCheck(false);
         }
     }
-    if (GetGame()->GetInput()->KeyChanged(GLFW_KEY_ESC) && GetGame()->GetInput()->GetKey(GLFW_KEY_ESC))
+    if (GetGame()->GetInput()->GetKeyChanged(GLFW_KEY_ESC) && GetGame()->GetInput()->GetKey(GLFW_KEY_ESC))
     {
         if (SaveWindow)
         {
@@ -768,7 +769,7 @@ void NMapState::Tick(double DT)
             }
         }
     }
-    if (GetGame()->GetInput()->KeyChanged('F') && GetGame()->GetInput()->GetKey('F'))
+    if (GetGame()->GetInput()->GetKeyChanged('F') && GetGame()->GetInput()->GetKey('F'))
     {
         GetGame()->GetScene()->ToggleFullBright();
     }
@@ -796,14 +797,14 @@ void NMapState::Tick(double DT)
     } else {
         Camera->SetPos(WantedPosition);
     }
-    if (GetGame()->GetInput()->KeyChanged(GLFW_KEY_UP) && GetGame()->GetInput()->GetKey(GLFW_KEY_UP))
+    if (GetGame()->GetInput()->GetKeyChanged(GLFW_KEY_UP) && GetGame()->GetInput()->GetKey(GLFW_KEY_UP))
     {
         if (GetGame()->GetMap()->GetLevel(WantedPosition-glm::vec3(0,0,500)) < GetGame()->GetMap()->GetDepth()-1)
         {
             WantedPosition += glm::vec3(0,0,GetGame()->GetMap()->GetTileSize());
         }
     }
-    if (GetGame()->GetInput()->KeyChanged(GLFW_KEY_DOWN) && GetGame()->GetInput()->GetKey(GLFW_KEY_DOWN))
+    if (GetGame()->GetInput()->GetKeyChanged(GLFW_KEY_DOWN) && GetGame()->GetInput()->GetKey(GLFW_KEY_DOWN))
     {
         if (GetGame()->GetMap()->GetLevel(WantedPosition-glm::vec3(0,0,500)) > 0)
         {
@@ -856,13 +857,13 @@ void NMapState::Tick(double DT)
                 }
             }
         } else {
-            if (GetGame()->GetInput()->KeyChanged(0))
+            if (GetGame()->GetInput()->GetMouseKeyChanged(0))
             {
                 NEntity* Entity = new NEntity(Entities[-CurrentTile-1],GetGame()->GetInput()->GetPerspMouse(.45));
             }
         }
     }
-    if (GetGame()->GetInput()->KeyChanged(1) && GetGame()->GetInput()->GetMouseKey(1) && !GetGame()->GetInput()->GetMouseHitGUI())
+    if (GetGame()->GetInput()->GetMouseKeyChanged(1) && GetGame()->GetInput()->GetMouseKey(1) && !GetGame()->GetInput()->GetMouseHitGUI())
     {
         std::vector<NNode*> Entities = GetGame()->GetScene()->GetNodesByType(NodeEntity);
         glm::vec3 MousePos = GetGame()->GetInput()->GetPerspMouse(.45);
@@ -875,7 +876,6 @@ void NMapState::Tick(double DT)
             }
         }
     }
-    GetGame()->GetInput()->KeyChanged(0);
 }
 std::string NMapState::GetName()
 {

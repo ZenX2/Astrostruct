@@ -8,9 +8,15 @@
 #ifndef NAELSTROF_LUA
 #define NAELSTROF_LUA
 
+#define luaL_ndostring(L, s, n) \
+            (luaL_nloadstring(L, s, n) || lua_pcall(L, 0, LUA_MULTRET, 0))
+
 int LuaGetEntitiesByName(lua_State* L);
 int MapLoad(lua_State* L);
 int MapSave(lua_State* L);
+int OnPanic(lua_State* L);
+int lua_protcall(lua_State* L, int nargs, int nresults);
+int lua_nloadstring(lua_State* L, const char* s, const char* name);
 /**
 * @brief Used in lua to include other files.
 *
@@ -66,8 +72,11 @@ public:
      * @return True on success, false if an error occured in one of the lua files.
      */
     bool DoFolder(std::string Folder);
+    std::string GetCurrentDoFile();
+    void SetCurrentDoFile(std::string File);
 private:
     lua_State* L;
+    std::string CurrentDoFile;
 };
 /**
 * @brief Lua function to load textures into memory.

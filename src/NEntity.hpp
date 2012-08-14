@@ -89,13 +89,13 @@ public:
     void Unallocate();
     int SelfReference;
     /**
-     * @brief Calls the lua function with the given arguments, FIXME: make it parse varying arguments.
+     * @brief Calls the lua function with the given arguments.
      *
      * @param Name The name of the function.
-     * @param AdditionalVars The number of additional arguments.
+     * @param AdditionalVars String containing the list of variables. Key: n = NNode, f = float, s = string. Example: "nfsff"
      * @param ... The additional arguments.
      */
-    void CallMethod(std::string Name, unsigned int AdditionalVars = 0, ...);
+    void CallMethod(std::string Name, std::string AdditionalVars = "", ...);
     /**
      * @brief Gets a string from the loaded lua reference or returns NULL if it doesn't exist.
      *

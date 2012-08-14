@@ -438,56 +438,11 @@ void NMap::GenerateBuffers()
 }
 void NMap::Draw(NCamera* View)
 {
-    if (!Texture || !Ready)
+    if (!Texture || !Ready || Shader == NULL)
     {
         return;
     }
     GenerateBuffers();
-    if (Shader == NULL)
-    {
-
-        glMatrixMode(GL_PROJECTION);
-        glLoadMatrixf(&View->GetPerspMatrix()[0][0]);
-        glMatrixMode(GL_MODELVIEW);
-        glm::mat4 MVP = View->GetPerspViewMatrix()*GetModelMatrix();
-        glLoadMatrixf(&MVP[0][0]);
-
-        glColor4fv(&(GetColor()[0]));
-        glEnable(GL_TEXTURE_2D);
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        glBindTexture(GL_TEXTURE_2D,Texture->GetID());
-        glEnableClientState(GL_VERTEX_ARRAY);
-        glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-        int Check = ViewingLevel - 2;
-        if (Check < 0)
-        {
-            Check = 0;
-        }
-        for (unsigned int i=Check;i<=ViewingLevel;i++)
-        {
-            glBindBuffer(GL_ARRAY_BUFFER,Buffers[i][0]);
-            glVertexPointer(3,GL_FLOAT,0,NULL);
-
-            glBindBuffer(GL_ARRAY_BUFFER,Buffers[i][1]);
-            glTexCoordPointer(2,GL_FLOAT,0,NULL);
-
-            glDrawArrays(GL_QUADS,0,Verts[i].size());
-        }
-        glDisable(GL_TEXTURE_2D);
-        glDisable(GL_BLEND);
-        glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-        glColor4f(0,0,0,1);
-        for (unsigned int i=0;i<=ViewingLevel;i++)
-        {
-            glBindBuffer(GL_ARRAY_BUFFER,Buffers[i][2]);
-            glVertexPointer(3,GL_FLOAT,0,NULL);
-            
-            glDrawArrays(GL_LINES,0,Outline[i].size());
-        }
-        glDisableClientState(GL_VERTEX_ARRAY);
-        return;
-    }
     glUseProgram(Shader->GetID());
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D,Texture->GetID());
@@ -545,7 +500,7 @@ void NMap::Tick(double DT)
         {
             Texture->Tick(DT);
         }
-        int Level = floor((GetGame()->GetRender()->GetCamera()->GetPos().z-500)/TileSize);
+        int Level = round((GetGame()->GetRender()->GetCamera()->GetPos().z-500)/RealTileSize);
         ViewLevel(Level);
     }
 }
@@ -617,7 +572,7 @@ int NMap::GetLuaTile(unsigned int ID)
     }
     if (LuaTiles[ID] == LUA_NOREF)
     {
-        std::string Gamemode = GetGame()->GetConfig()->GetString("GameMode");
+        Gamemode = GetGame()->GetConfig()->GetString("GameMode");
         std::stringstream TileDir;
         TileDir << "gamemodes/" << Gamemode << "/tiles/" << ID << "/";
         if (GetGame()->IsServer())
@@ -629,7 +584,7 @@ int NMap::GetLuaTile(unsigned int ID)
         lua_State* L = GetGame()->GetLua()->GetL();
         lua_newtable(L);
         lua_setglobal(L, "TILE");
-        if (!GetGame()->GetLua()->DoFile(TileDir.str()))
+        if (GetGame()->GetLua()->DoFile(TileDir.str()))
         {
             //If we failed, reset the global and abort.
             lua_pushnil(L);
@@ -660,7 +615,7 @@ int NMap::GetLuaTile(unsigned int ID)
         std::stringstream TileID;
         TileID << ID;
         lua_pushstring(L,TileID.str().c_str());
-        lua_pcall(L,2,0,0);
+        lua_protcall(L,2,0);
         lua_pushnil(L);
         lua_setglobal(L,"TILE");
         lua_getglobal(L,"entity");
@@ -677,7 +632,7 @@ int NMap::GetLuaTile(unsigned int ID)
         }
         lua_remove(L,-2);
         lua_pushstring(L,TileID.str().c_str());
-        lua_pcall(L,1,1,0);
+        lua_protcall(L,1,1);
         LuaTiles[ID] = luaL_ref(L, LUA_REGISTRYINDEX);
     }
     return LuaTiles[ID];
@@ -687,7 +642,7 @@ int NMap::GetGameMode()
 {
     if (LuaReference == LUA_NOREF)
     {
-        std::string Gamemode = GetGame()->GetConfig()->GetString("GameMode");
+        Gamemode = GetGame()->GetConfig()->GetString("GameMode");
         std::string Dir = "gamemodes/"+Gamemode+"/";
         if (GetGame()->IsServer())
         {
@@ -698,7 +653,7 @@ int NMap::GetGameMode()
         lua_State* L = GetGame()->GetLua()->GetL();
         lua_newtable(L);
         lua_setglobal(L, "GAME");
-        if (!GetGame()->GetLua()->DoFile(Dir))
+        if (GetGame()->GetLua()->DoFile(Dir))
         {
             //If we failed, reset the global and abort.
             lua_pushnil(L);
@@ -800,6 +755,7 @@ NTile::~NTile()
         GetGame()->GetPhysics()->GetWorld()->removeRigidBody(Body);
         delete Body->getMotionState();
         delete Body;
+        delete Shape;
     }
 }
 void NTile::GenerateBody()
@@ -905,7 +861,7 @@ bool NMap::Save(std::string Name)
     if (!File.Good())
     {
         GetGame()->GetLog()->Send("MAP",0,std::string("Failed to save map 'maps/") + Name + ".map!");
-        return Fail;
+        return 1;
     }
     File.Write(&Width,sizeof(unsigned int));
     File.Write(&Height,sizeof(unsigned int));
@@ -940,7 +896,7 @@ bool NMap::Save(std::string Name)
         File.Write(&(Pos),sizeof(glm::vec3));
     }
     GetGame()->GetLog()->Send("MAP",2,std::string("Successfully saved map 'maps/") + Name + ".map!");
-    return Success;
+    return 0;
 }
 
 bool NMap::Load(std::string Name)
@@ -949,7 +905,7 @@ bool NMap::Load(std::string Name)
     if (!File.Good())
     {
         GetGame()->GetLog()->Send("MAP",0,std::string("Failed to save map 'maps/") + Name + ".map!");
-        return Fail;
+        return 1;
     }
     unsigned int W,H,D;
     File.Read(&W,sizeof(unsigned int));
@@ -1001,7 +957,7 @@ bool NMap::Load(std::string Name)
     }
     GetGame()->GetLog()->Send("MAP",2,std::string("Successfully loaded map 'maps/") + Name + ".map!");
     CallMethod("OnInitialize");
-    return Success;
+    return 0;
 }
 
 unsigned int NMap::GetWidth()
@@ -1025,53 +981,121 @@ TileSlope NTile::GetSlope()
 {
     return Slope;
 }
-void NTile::CallMethod(std::string Name)
+
+void NTile::CallMethod(std::string VarName, std::string AdditionalVars,  ...)
 {
-    lua_State* L = GetGame()->GetLua()->GetL();
-    if (LuaReference != LUA_NOREF)
+    if (LuaReference == LUA_NOREF)
     {
-        lua_rawgeti(L,LUA_REGISTRYINDEX,LuaReference);
-        lua_getfield(L,-1,Name.c_str());
-        if (!lua_isfunction(L,-1))
-        {
-            lua_pop(L,2);
-        } else {
-            lua_pushTile(L,this);
-            lua_call(L,1,0);
-            lua_pop(L,1);
-        }
+        return;
     }
-}
-void NMap::CallMethod(std::string Name, unsigned int AdditionalVars,  ...)
-{
     lua_State* L = GetGame()->GetLua()->GetL();
-    GetGameMode();
     lua_rawgeti(L,LUA_REGISTRYINDEX,LuaReference);
-    lua_getfield(L,-1,Name.c_str());
+    lua_getfield(L,-1,VarName.c_str());
+    //Make sure our function is valid, otherwise abort.
     if (!lua_isfunction(L,-1))
     {
         lua_pop(L,2);
     } else {
-        lua_pushMap(L,this);
+        //Push on our entity so we can use self in the scripts.
+        lua_pushTile(L,this);
         va_list vl;
         va_start(vl,AdditionalVars);
-        for (unsigned int i=0;i<AdditionalVars;i++)
+        for (unsigned int i=0;i<AdditionalVars.length();i++)
         {
-            NNode* Temp = va_arg(vl,NNode*);
-            switch(Temp->GetType())
+            switch(AdditionalVars[i])
             {
-                case NodePlayer: lua_pushPlayer(L,(NPlayer*)Temp);
+                case 'n':
+                {
+                    NNode* Temp = va_arg(vl,NNode*);
+                    //FIXME: we only accept one kind of additional var right now! Players! :u
+                    switch(Temp->GetType())
+                    {
+                        case NodePlayer: lua_pushPlayer(L,(NPlayer*)Temp); break;
+                    }
+                    break;
+                }
+                case 's':
+                {
+                    char* Temp = va_arg(vl,char*);
+                    lua_pushstring(L,Temp);
+                    break;
+                }
+                case 'f':
+                {
+                    lua_pushnumber(L,va_arg(vl,double));
+                    break;
+                }
+                default:
+                {
+                    GetGame()->GetLog()->Send("LUA",1,std::string("Attempted to push an unkown class with key ") + AdditionalVars[i] + " as a function argument!"); 
+                    break;
+                }
             }
         }
-        lua_call(L,1+AdditionalVars,0);
+        lua_protcall(L,1+AdditionalVars.length(),0);
         lua_pop(L,1);
     }
 }
+
+void NMap::CallMethod(std::string VarName, std::string AdditionalVars,  ...)
+{
+    if (LuaReference == LUA_NOREF)
+    {
+        return;
+    }
+    lua_State* L = GetGame()->GetLua()->GetL();
+    lua_rawgeti(L,LUA_REGISTRYINDEX,LuaReference);
+    lua_getfield(L,-1,VarName.c_str());
+    //Make sure our function is valid, otherwise abort.
+    if (!lua_isfunction(L,-1))
+    {
+        lua_pop(L,2);
+    } else {
+        //Push on our entity so we can use self in the scripts.
+        lua_pushMap(L,this);
+        va_list vl;
+        va_start(vl,AdditionalVars);
+        for (unsigned int i=0;i<AdditionalVars.length();i++)
+        {
+            switch(AdditionalVars[i])
+            {
+                case 'n':
+                {
+                    NNode* Temp = va_arg(vl,NNode*);
+                    //FIXME: we only accept one kind of additional var right now! Players! :u
+                    switch(Temp->GetType())
+                    {
+                        case NodePlayer: lua_pushPlayer(L,(NPlayer*)Temp); break;
+                    }
+                    break;
+                }
+                case 's':
+                {
+                    lua_pushstring(L,va_arg(vl,char*));
+                    break;
+                }
+                case 'f':
+                {
+                    lua_pushnumber(L,va_arg(vl,double));
+                    break;
+                }
+                default:
+                {
+                    GetGame()->GetLog()->Send("LUA",1,std::string("Attempted to push an unkown class with key ") + AdditionalVars[i] + " as a function argument!"); 
+                    break;
+                }
+            }
+        }
+        lua_protcall(L,1+AdditionalVars.length(),0);
+        lua_pop(L,1);
+    }
+}
+
 void NMap::Resize(unsigned int X, unsigned int Y, unsigned int Z)
 {
     if (X<Width)
     {
-        for (unsigned int x=X;x>=Width;x--)
+        for (unsigned int x=Width-1;x>=X;x--)
         {
             for (unsigned int y=0;y<Height;y++)
             {
@@ -1085,17 +1109,30 @@ void NMap::Resize(unsigned int X, unsigned int Y, unsigned int Z)
     } else {
         std::vector<std::vector<NTile* > > Foo;
         Tiles.resize(X,Foo);
+        for (unsigned int x=0;x<X;x++)
+        {
+            std::vector<NTile* > Bar;
+            Tiles[x].resize(Height,Bar);
+            for (unsigned int y=0;y<Height;y++)
+            {
+                NTile* Doo = NULL;
+                Tiles[x][y].resize(Depth,Doo);
+            }
+        }
     }
     Width = X;
     if (Y<Height)
     {
         for (unsigned int x=0;x<Width;x++)
         {
-            for (unsigned int y=Y;y>=Height;y--)
+            for (unsigned int y=Height-1;y>=Y;y--)
             {
                 for (unsigned int z=0;z<Depth;z++)
                 {
-                    delete Tiles[x][y][z];
+                    if (Tiles[x][y][z] != NULL)
+                    {
+                        delete Tiles[x][y][z];
+                    }
                 }
             }
         }
@@ -1108,6 +1145,11 @@ void NMap::Resize(unsigned int X, unsigned int Y, unsigned int Z)
         {
             std::vector<NTile* > Foo;
             Tiles[x].resize(Y,Foo);
+            for (unsigned int y=0;y<Y;y++)
+            {
+                NTile* Doo = NULL;
+                Tiles[x][y].resize(Depth,Doo);
+            }
         }
     }
     Height = Y;
@@ -1117,9 +1159,12 @@ void NMap::Resize(unsigned int X, unsigned int Y, unsigned int Z)
         {
             for (unsigned int y=0;y<Height;y++)
             {
-                for (unsigned int z=Z;z>=Depth;z--)
+                for (unsigned int z=Depth-1;z>=Z;z--)
                 {
-                    delete Tiles[x][y][z];
+                    if (Tiles[x][y][z] != NULL)
+                    {
+                        delete Tiles[x][y][z];
+                    }
                 }
             }
         }
@@ -1135,7 +1180,7 @@ void NMap::Resize(unsigned int X, unsigned int Y, unsigned int Z)
         {
             for (unsigned int y=0;y<Height;y++)
             {
-                NTile* Foo;
+                NTile* Foo = NULL;
                 Tiles[x][y].resize(Z,Foo);
             }
         }
@@ -1145,4 +1190,23 @@ void NMap::Resize(unsigned int X, unsigned int Y, unsigned int Z)
     {
         ViewingLevel = Depth-1;
     }
+    for (unsigned int x=0;x<Width;x++)
+    {
+        for (unsigned int y=0;y<Height;y++)
+        {
+            for (unsigned int z=0;z<Depth;z++)
+            {
+                if (Tiles[x][y][z] == NULL)
+                {
+                    Tiles[x][y][z] = new NTile(x,y,z);
+                }
+                SetChanged(z);
+            }
+        }
+    }
+}
+
+std::string NMap::GetGameModeName()
+{
+    return Gamemode;
 }

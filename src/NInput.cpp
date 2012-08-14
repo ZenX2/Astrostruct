@@ -8,16 +8,42 @@ void GLFWCALL NStringInput(int character, int action)
     }
     GetGame()->GetInput()->PushStringInput(character);
 }
+
 void GLFWCALL NKeyInput(int character, int action)
 {
-    if (action == GLFW_RELEASE)
-    {
-        return;
-    }
+    GetGame()->GetInput()->SetKey(character,(action != GLFW_RELEASE));
+    //This is used by string handling to pop the last character on the stack (if it exists).
     if (character == GLFW_KEY_BACKSPACE)
     {
         GetGame()->GetInput()->PushStringInput(character);
     }
+}
+
+void GLFWCALL NMouseKeyInput(int character, int action)
+{
+    GetGame()->GetInput()->SetMouseKey(character,(action != GLFW_RELEASE));
+}
+
+void NInput::SetKey(int Key, bool IsDown)
+{
+    if (Key >= Keys.size())
+    {
+        Keys.resize(Key+1,false);
+        KeyMem.resize(Key+1,false);
+        KeyChanged.resize(Key+1,false);
+    }
+    Keys[Key] = IsDown;
+}
+
+void NInput::SetMouseKey(int Key, bool IsDown)
+{
+    if (Key >= Keys.size())
+    {
+        MouseKeys.resize(Key+1,false);
+        MouseKeyMem.resize(Key+1,false);
+        MouseKeyChanged.resize(Key+1,false);
+    }
+    MouseKeys[Key] = IsDown;
 }
 
 NInput::NInput()
@@ -28,12 +54,9 @@ NInput::NInput()
     {
         return;
     }
-    for (unsigned int i=0;i<KeyCount;i++)
-    {
-        Keys[i] = false;
-    }
     glfwSetCharCallback(NStringInput);
     glfwSetKeyCallback(NKeyInput);
+    glfwSetMouseButtonCallback(NMouseKeyInput);
     glfwEnable(GLFW_KEY_REPEAT);
 }
 
@@ -63,6 +86,27 @@ void NInput::Poll()
     } else {
         StringInput.clear();
     }
+    //Check if keys have changed
+    for (unsigned int i=0;i<Keys.size();i++)
+    {
+        if (KeyMem[i] != Keys[i])
+        {
+            KeyMem[i] = Keys[i];
+            KeyChanged[i] = true;
+        } else {
+            KeyChanged[i] = false;
+        }
+    }
+    for (unsigned int i=0;i<MouseKeys.size();i++)
+    {
+        if (MouseKeyMem[i] != MouseKeys[i])
+        {
+            MouseKeyMem[i] = MouseKeys[i];
+            MouseKeyChanged[i] = true;
+        } else {
+            MouseKeyChanged[i] = false;
+        }
+    }
 }
 
 bool NInput::GetKey(int Key)
@@ -72,45 +116,42 @@ bool NInput::GetKey(int Key)
     {
         return false;
     }
-    if (glfwGetKey(Key) == GLFW_PRESS)
+    if (Key > Keys.size())
     {
-        return true;
+        Keys.resize(Key+1,false);
+        KeyMem.resize(Key+1,false);
+        KeyChanged.resize(Key+1,false);
+        return glfwGetKey(Key);
     }
-    return false;
+    return Keys[Key];
 }
-
-//This hocus pocus handles an array of booleans to check if a key has changed, it's a little broken in the fact that it MUST be called continuously in order to detect the change. (So things like if (KeyDown('i') && KeyChanged('i')) won't work because KeyChanged() won't be called whenever key 'i' is up.)
-bool NInput::KeyChanged(int Key)
+//This hocus pocus handles an array of booleans to check if a key has changed.
+bool NInput::GetKeyChanged(int Key)
 {
     //If our focus is directed elsewhere, return false!
     if (Focus)
     {
         return false;
     }
-    //Make sure we don't try to grab keys out of our array size, if you see this it means we need to increase our array size! FIXME: switch it to use vectors.
-    if (Key > KeyCount || Key < 0)
+    //Make sure our vectors are large enough to hold all our keys
+    if (Key > Keys.size())
     {
-        std::stringstream Message;
-        Message << "Attempted to grab key: " << Key << ", it's out of range!";
-        GetGame()->GetLog()->Send("INPUT",1,Message.str());
-        return false;
+        Keys.resize(Key+1,false);
+        KeyMem.resize(Key+1,false);
+        KeyChanged.resize(Key+1,false);
     }
-    //FIXME: I direct the lower 10 keys for mouse keys! This is bad as whatever 10 keys for the keyboard won't work!
-    if (Key<10)
+    return KeyChanged[Key];
+}
+
+bool NInput::GetMouseKeyChanged(int Key)
+{
+    if (Key > MouseKeys.size())
     {
-        if (Keys[Key] != GetMouseKey(Key))
-        {
-            Keys[Key] = GetMouseKey(Key);
-            return true;
-        }
-        return false;
+        MouseKeys.resize(Key+1,false);
+        MouseKeyMem.resize(Key+1,false);
+        MouseKeyChanged.resize(Key+1,false);
     }
-    if (Keys[Key] != GetKey(Key))
-    {
-        Keys[Key] = GetKey(Key);
-        return true;
-    }
-    return false;
+    return MouseKeyChanged[Key];
 }
 
 //Clumbsily abstracts glfw's ability to grab joysticks, I can only test it with an xbox controller so this won't have good support unless some other programmer really wants it.
@@ -158,7 +199,14 @@ glm::vec2 NInput::GetMouse()
 
 int NInput::GetMouseKey(int Key)
 {
-    return glfwGetMouseButton(Key);
+    if (Key >= MouseKeys.size())
+    {
+        MouseKeys.resize(Key+1,false);
+        MouseKeyMem.resize(Key+1,false);
+        MouseKeyChanged.resize(Key+1,false);
+        return glfwGetMouseButton(Key); //Temporarily use this while we wait for the next poll to fill it in.
+    }
+    return MouseKeys[Key];
 }
 bool NInput::GetMouseHitGUI()
 {

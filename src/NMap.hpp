@@ -94,11 +94,13 @@ public:
     int LuaReference;
     int SelfReference;
     /**
-     * @brief Calls a tile method.
+     * @brief Calls the lua function with the given arguments.
      *
-     * @param Name The name of the method.
+     * @param Name The name of the function.
+     * @param AdditionalVars String containing the list of variables. Key: n = NNode, f = float, s = string. Example: "nfsff"
+     * @param ... The additional arguments.
      */
-    void CallMethod(std::string Name);
+    void CallMethod(std::string Name,std::string AdditionalVars = "", ...);
 private:
     void GenerateBody();
     btCollisionShape* Shape;
@@ -263,13 +265,13 @@ public:
     int GetLuaTile(unsigned int ID);
     int SelfReference;
     /**
-     * @brief Calls a method to the gamemode. FIXME: make it parse more varied additional variables.
+     * @brief Calls the lua function with the given arguments.
      *
-     * @param Name The name of the method.
-     * @param AdditionalVars The number of additional nodes.
-     * @param ... Any additional nodes.
+     * @param Name The name of the function.
+     * @param AdditionalVars String containing the list of variables. Key: n = NNode, f = float, s = string. Example: "nfsff"
+     * @param ... The additional arguments.
      */
-    void CallMethod(std::string Name, unsigned int AdditionalVars = 0, ...);
+    void CallMethod(std::string Name, std::string AdditionalVars = "", ...);
     /**
      * @brief Gets a lua reference to the gamemode.
      *
@@ -284,7 +286,9 @@ public:
      * @param Z Desired depth dimension.
      */
     void Resize(unsigned int X, unsigned int Y, unsigned int Z);
+    std::string GetGameModeName();
 private:
+    std::string Gamemode;
     int LuaReference;
     unsigned int MaxTiles;
     std::vector<int> LuaTiles;
