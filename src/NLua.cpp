@@ -237,6 +237,7 @@ int Quit(lua_State* L)
 {
     GetGame()->GetLog()->Send("LUA",2,"Recieved a command to exit!");
     GetGame()->Close();
+    return 0;
 }
 
 int ConsoleHelp(lua_State* L)
@@ -252,6 +253,7 @@ int ConsoleHelp(lua_State* L)
     GetGame()->GetLog()->Send("LUA",2,"load(\"Map\")\t\tLoads the map maps/Map.map.");
     GetGame()->GetLog()->Send("LUA",2,"save(\"Map\")\t\tSaves the current map to maps/Map.map.");
     lua_pop(L,2);
+    return 0;
 }
 
 int Include(lua_State* L)
@@ -564,7 +566,7 @@ int Tile__newindex(lua_State* L)
         lua_pushfstring(L, "%s:%d: attempt to index a NULL Tile", ar2.short_src, ar1.currentline);
         return lua_error(L);
     }
-    const char* Field = luaL_checkstring(L,2);
+    //const char* Field = luaL_checkstring(L,2);
     lua_rawgeti(L,LUA_REGISTRYINDEX,Foo->SelfReference);
     lua_pushvalue(L,3);
     lua_setfield(L,-2,luaL_checkstring(L,2));
@@ -709,12 +711,14 @@ int Vector__sub(lua_State* L)
     glm::vec3* Foo = lua_checkVector(L,1);
     glm::vec3* Bar = lua_checkVector(L,2);
     lua_pushVector(L,*Foo-*Bar);
+    return 1;
 }
 int Vector__add(lua_State* L)
 {
     glm::vec3* Foo = lua_checkVector(L,1);
     glm::vec3* Bar = lua_checkVector(L,2);
     lua_pushVector(L,*Foo+*Bar);
+    return 1;
 }
 glm::vec3* lua_toVector(lua_State* L, int index)
 {
@@ -806,12 +810,14 @@ int Color__sub(lua_State* L)
     glm::vec4* Foo = lua_checkColor(L,1);
     glm::vec4* Bar = lua_checkColor(L,2);
     lua_pushColor(L,*Foo-*Bar);
+    return 1;
 }
 int Color__add(lua_State* L)
 {
     glm::vec4* Foo = lua_checkColor(L,1);
     glm::vec4* Bar = lua_checkColor(L,2);
     lua_pushColor(L,*Foo+*Bar);
+    return 1;
 }
 glm::vec4* lua_toColor(lua_State* L, int index)
 {
@@ -962,7 +968,7 @@ int Map__newindex(lua_State* L)
         lua_pushfstring(L, "%s:%d: attempt to index a NULL Map", ar2.short_src, ar1.currentline);
         return lua_error(L);
     }
-    const char* Field = luaL_checkstring(L,2);
+    //const char* Field = luaL_checkstring(L,2);
     lua_rawgeti(L,LUA_REGISTRYINDEX,Foo->SelfReference);
     lua_pushvalue(L,3);
     lua_setfield(L,-2,luaL_checkstring(L,2));
@@ -1038,7 +1044,7 @@ int Player__newindex(lua_State* L)
         lua_pushfstring(L, "%s:%d: attempt to index a NULL Player", ar2.short_src, ar1.currentline);
         return lua_error(L);
     }
-    const char* Field = luaL_checkstring(L,2);
+    //const char* Field = luaL_checkstring(L,2);
     lua_rawgeti(L,LUA_REGISTRYINDEX,Foo->SelfReference);
     lua_pushvalue(L,3);
     lua_setfield(L,-2,luaL_checkstring(L,2));
@@ -1081,7 +1087,7 @@ int Entity__index(lua_State* L)
         lua_pushfstring(L, "%s:%d: attempt to index a NULL Entity", ar2.short_src, ar1.currentline);
         return lua_error(L);
     }
-    const char* Field = luaL_checkstring(L,2);
+    //const char* Field = luaL_checkstring(L,2);
     //if (!strcmp(Field,"Name"))
     //{
     //    lua_pushstring(L,Foo->GetName().c_str());
@@ -1114,7 +1120,7 @@ int Entity__newindex(lua_State* L)
         lua_pushfstring(L, "%s:%d: attempt to index a NULL Entity", ar2.short_src, ar1.currentline);
         return lua_error(L);
     }
-    const char* Field = luaL_checkstring(L,2);
+    //const char* Field = luaL_checkstring(L,2);
     lua_rawgeti(L,LUA_REGISTRYINDEX,Foo->SelfReference);
     lua_pushvalue(L,3);
     lua_setfield(L,-2,luaL_checkstring(L,2));

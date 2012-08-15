@@ -59,7 +59,7 @@ NGame::~NGame()
 
 bool NGame::Init(int i_Width, int i_Height, std::string Title, int argc, char** argv)
 {
-    for (unsigned int i=0;i<argc;i++)
+    for (int i=0;i<argc;i++)
     {
         std::string Option = argv[i];
         if (Option == "-s")

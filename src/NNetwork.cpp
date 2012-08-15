@@ -158,6 +158,7 @@ void NNetwork::Disconnect()
                 Host = NULL;
                 return;
             }
+            default: GetGame()->GetLog()->Send("NET",1,"Certain events not implemented! FIXME"); break;
         }
     }
     GetGame()->GetLog()->Send("NETWORK",1,"Server didn't respond to disconnect!");

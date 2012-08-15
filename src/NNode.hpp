@@ -35,7 +35,7 @@ class NNode
 {
 public:
     NNode(NodeType i_Type);
-    ~NNode();
+    virtual ~NNode();
     /**
     * @brief Updates the object, depending on what it does.
     *

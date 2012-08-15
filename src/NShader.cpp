@@ -106,7 +106,7 @@ bool NShader::Load(std::string VertexFilePath, std::string FragmentFilePath)
     glGetShaderInfoLog(VertexShaderID, InfoLogLength, NULL, &VertexShaderErrorMessage[0]);
     if (Result == GL_FALSE)
     {
-        if (VertexShaderErrorMessage.size()-2>=0)
+        if (int(VertexShaderErrorMessage.size())-2>=0)
         {
             VertexShaderErrorMessage[VertexShaderErrorMessage.size()-2] = '\0';
         }
@@ -132,7 +132,7 @@ bool NShader::Load(std::string VertexFilePath, std::string FragmentFilePath)
     glGetShaderInfoLog(FragmentShaderID, InfoLogLength, NULL, &FragmentShaderErrorMessage[0]);
     if (Result == GL_FALSE)
     {
-        if (FragmentShaderErrorMessage.size()-2>=0)
+        if (int(FragmentShaderErrorMessage.size())-2>=0)
         {
             FragmentShaderErrorMessage[FragmentShaderErrorMessage.size()-2] = '\0';
         }
@@ -156,7 +156,7 @@ bool NShader::Load(std::string VertexFilePath, std::string FragmentFilePath)
     glGetProgramInfoLog(ProgramID, InfoLogLength, NULL, &ProgramErrorMessage[0]);
     if (Result == GL_FALSE)
     {
-        if (ProgramErrorMessage.size()-2>=0)
+        if (int(ProgramErrorMessage.size())-2>=0)
         {
             ProgramErrorMessage[ProgramErrorMessage.size()-2] = '\0';
         }
@@ -169,4 +169,5 @@ bool NShader::Load(std::string VertexFilePath, std::string FragmentFilePath)
     //Clean up
     glDeleteShader(VertexShaderID);
     glDeleteShader(FragmentShaderID);
+    return 0;
 }

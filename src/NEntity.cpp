@@ -398,6 +398,7 @@ void NEntity::CallMethod(std::string VarName, std::string AdditionalVars,  ...)
                     switch(Temp->GetType())
                     {
                         case NodePlayer: lua_pushPlayer(L,(NPlayer*)Temp); break;
+                        default: GetGame()->GetLog()->Send("LUA",0,"Some features not implemented yet, FIXME"); break;
                     }
                     break;
                 }

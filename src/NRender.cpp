@@ -7,11 +7,13 @@ void NRender::LoadTextures()
 
 bool NRender::LoadShaders()
 {
+    int Result = 0;
     NShader* Shader = new NShader("text");
     if (!Shader->Load("shaders/text.vert","shaders/text.frag"))
     {
         Shaders.push_back(Shader);
     } else {
+        Result++;
         delete Shader;
     }
     Shader = new NShader("flat");
@@ -19,6 +21,7 @@ bool NRender::LoadShaders()
     {
         Shaders.push_back(Shader);
     } else {
+        Result++;
         delete Shader;
     }
     Shader = new NShader("map");
@@ -26,6 +29,7 @@ bool NRender::LoadShaders()
     {
         Shaders.push_back(Shader);
     } else {
+        Result++;
         delete Shader;
     }
     Shader = new NShader("normal");
@@ -33,6 +37,7 @@ bool NRender::LoadShaders()
     {
         Shaders.push_back(Shader);
     } else {
+        Result++;
         delete Shader;
     }
     Shader = new NShader("post");
@@ -40,6 +45,7 @@ bool NRender::LoadShaders()
     {
         Shaders.push_back(Shader);
     } else {
+        Result++;
         delete Shader;
     }
     Shader = new NShader("flat_textureless");
@@ -47,6 +53,7 @@ bool NRender::LoadShaders()
     {
         Shaders.push_back(Shader);
     } else {
+        Result++;
         delete Shader;
     }
     Shader = new NShader("flat_colorless");
@@ -54,6 +61,7 @@ bool NRender::LoadShaders()
     {
         Shaders.push_back(Shader);
     } else {
+        Result++;
         delete Shader;
     }
     Shader = new NShader("normal_textureless");
@@ -61,8 +69,10 @@ bool NRender::LoadShaders()
     {
         Shaders.push_back(Shader);
     } else {
+        Result++;
         delete Shader;
     }
+    return Result;
 }
 
 void NRender::GenerateFramebuffer()
@@ -323,7 +333,8 @@ void NRender::glError()
         ErrorCount++;
         if (ErrorCount > 10)
         {
-            GetGame()->GetLog()->Send("RENDER",0,"OpenGL is reporting too many errors! Submit a bug report please!");
+            GetGame()->GetLog()->Send("RENDER",0,"OpenGL is reporting too many errors! Submit a bug report please! We're going to exit because something has to have gone drastically wrong...");
+            exit(1);
         }
     }
 }

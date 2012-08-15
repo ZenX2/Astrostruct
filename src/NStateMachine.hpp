@@ -15,7 +15,7 @@ class NState
 {
 public:
     NState();
-    ~NState();
+    virtual ~NState();
     /**
      * @brief Called when the engine switches to the state.
      */
@@ -147,7 +147,7 @@ private:
     NButton* MapIncrease[3];
     NButton* MapDecrease[3];
     NText* Dimensions[3];
-    unsigned int MapDim[3];
+    int MapDim[3];
     NButton* Increase;
     NButton* Decrease;
     NButton* SaveButton;

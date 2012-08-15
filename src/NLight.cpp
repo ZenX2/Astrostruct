@@ -97,22 +97,22 @@ void NLight::GenerateShadowBuffers()
             std::vector<glm::vec4> Faces;
             //Generate faces (two points = face, each tile has 4 faces)
             NTile* CheckTile = GetGame()->GetMap()->GetTile(Tile->X,Tile->Y-1,Tile->Z);
-            if (CheckTile && !CheckTile->IsOpaque() || !CheckTile)
+            if ((CheckTile && !CheckTile->IsOpaque()) || !CheckTile)
             {
                 Faces.push_back(glm::vec4(Points[1].x,Points[1].y,Points[2].x,Points[2].y));
             }
             CheckTile = GetGame()->GetMap()->GetTile(Tile->X,Tile->Y+1,Tile->Z);
-            if (CheckTile && !CheckTile->IsOpaque() || !CheckTile)
+            if ((CheckTile && !CheckTile->IsOpaque()) || !CheckTile)
             {
                 Faces.push_back(glm::vec4(Points[3].x,Points[3].y,Points[0].x,Points[0].y));
             }
             CheckTile = GetGame()->GetMap()->GetTile(Tile->X-1,Tile->Y,Tile->Z);
-            if (CheckTile && !CheckTile->IsOpaque() || !CheckTile)
+            if ((CheckTile && !CheckTile->IsOpaque()) || !CheckTile)
             {
                 Faces.push_back(glm::vec4(Points[2].x,Points[2].y,Points[3].x,Points[3].y));
             }
             CheckTile = GetGame()->GetMap()->GetTile(Tile->X+1,Tile->Y,Tile->Z);
-            if (CheckTile && !CheckTile->IsOpaque() || !CheckTile)
+            if ((CheckTile && !CheckTile->IsOpaque()) || !CheckTile)
             {
                 Faces.push_back(glm::vec4(Points[0].x,Points[0].y,Points[1].x,Points[1].y));
             }

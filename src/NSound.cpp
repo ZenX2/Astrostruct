@@ -4,12 +4,12 @@ NSoundSystem::NSoundSystem()
 {
     ALCsizei Count;
     const char** DeviceNames = alureGetDeviceNames(true,&Count);
-    for (unsigned int i=0;i<Count;i++)
+    for (int i=0;i<Count;i++)
     {
         GetGame()->GetLog()->Send("ALURE",2,std::string("Found device: ") + DeviceNames[i] + ".");
     }
     bool Found = false;
-    for (unsigned int i=0;i<Count;i++)
+    for (int i=0;i<Count;i++)
     {
         if (alureInitDevice(DeviceNames[0],NULL) != AL_FALSE)
         {

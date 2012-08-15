@@ -26,7 +26,7 @@ void GLFWCALL NMouseKeyInput(int character, int action)
 
 void NInput::SetKey(int Key, bool IsDown)
 {
-    if (Key >= Keys.size())
+    if (Key >= (int)Keys.size())
     {
         Keys.resize(Key+1,false);
         KeyMem.resize(Key+1,false);
@@ -37,7 +37,7 @@ void NInput::SetKey(int Key, bool IsDown)
 
 void NInput::SetMouseKey(int Key, bool IsDown)
 {
-    if (Key >= Keys.size())
+    if (Key >= (int)Keys.size())
     {
         MouseKeys.resize(Key+1,false);
         MouseKeyMem.resize(Key+1,false);
@@ -116,7 +116,7 @@ bool NInput::GetKey(int Key)
     {
         return false;
     }
-    if (Key > Keys.size())
+    if (Key > (int)Keys.size())
     {
         Keys.resize(Key+1,false);
         KeyMem.resize(Key+1,false);
@@ -134,7 +134,7 @@ bool NInput::GetKeyChanged(int Key)
         return false;
     }
     //Make sure our vectors are large enough to hold all our keys
-    if (Key > Keys.size())
+    if (Key > (int)Keys.size())
     {
         Keys.resize(Key+1,false);
         KeyMem.resize(Key+1,false);
@@ -145,7 +145,7 @@ bool NInput::GetKeyChanged(int Key)
 
 bool NInput::GetMouseKeyChanged(int Key)
 {
-    if (Key > MouseKeys.size())
+    if (Key > (int)MouseKeys.size())
     {
         MouseKeys.resize(Key+1,false);
         MouseKeyMem.resize(Key+1,false);
@@ -199,7 +199,7 @@ glm::vec2 NInput::GetMouse()
 
 int NInput::GetMouseKey(int Key)
 {
-    if (Key >= MouseKeys.size())
+    if (Key >= (int)MouseKeys.size())
     {
         MouseKeys.resize(Key+1,false);
         MouseKeyMem.resize(Key+1,false);

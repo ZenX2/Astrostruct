@@ -179,7 +179,7 @@ void NGameState::OnExit()
 void NGameState::Tick(double DT)
 {
     NCamera* Camera = GetGame()->GetRender()->GetCamera();
-    glm::vec3 Pos = glm::vec3(GetGame()->GetInput()->GetMouseX(),GetGame()->GetInput()->GetMouseY(),0)-Player->GetPos()-glm::vec3(GetGame()->GetWindowWidth()/2.f,GetGame()->GetWindowHeight()/2.f,0);
+    //glm::vec3 Pos = glm::vec3(GetGame()->GetInput()->GetMouseX(),GetGame()->GetInput()->GetMouseY(),0)-Player->GetPos()-glm::vec3(GetGame()->GetWindowWidth()/2.f,GetGame()->GetWindowHeight()/2.f,0);
     glm::vec3 WantedCameraPos = Player->GetPos()+glm::vec3(0,0,500)-glm::vec3(0,0,GetGame()->GetMap()->GetTileSize()/2.f);
     Camera->SetPos(Camera->GetPos()-(Camera->GetPos()-WantedCameraPos)/float(1.f+DT*50.f));
     Camera->SetPos(glm::vec3(Camera->GetPos().x,Camera->GetPos().y,WantedCameraPos.z));
@@ -258,6 +258,7 @@ void NOnlineState::Tick(double DT)
                 enet_packet_destroy(Event.packet);
                 break;
             }
+            default: GetGame()->GetLog()->Send("SERVER",1,"Not all events are implemented! FIXMEEE"); break;
         }
     }
     if (GetGame()->GetInput()->GetKeyChanged('F') && GetGame()->GetInput()->GetKey('F'))
@@ -799,7 +800,7 @@ void NMapState::Tick(double DT)
     }
     if (GetGame()->GetInput()->GetKeyChanged(GLFW_KEY_UP) && GetGame()->GetInput()->GetKey(GLFW_KEY_UP))
     {
-        if (GetGame()->GetMap()->GetLevel(WantedPosition-glm::vec3(0,0,500)) < GetGame()->GetMap()->GetDepth()-1)
+        if (GetGame()->GetMap()->GetLevel(WantedPosition-glm::vec3(0,0,500)) < int(GetGame()->GetMap()->GetDepth())-1)
         {
             WantedPosition += glm::vec3(0,0,GetGame()->GetMap()->GetTileSize());
         }
@@ -859,7 +860,7 @@ void NMapState::Tick(double DT)
         } else {
             if (GetGame()->GetInput()->GetMouseKeyChanged(0))
             {
-                NEntity* Entity = new NEntity(Entities[-CurrentTile-1],GetGame()->GetInput()->GetPerspMouse(.45));
+                new NEntity(Entities[-CurrentTile-1],GetGame()->GetInput()->GetPerspMouse(.45));
             }
         }
     }

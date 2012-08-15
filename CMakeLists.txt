@@ -6,8 +6,8 @@ SET(CMAKE_BUILD_TYPE Debug CACHE STRING
     FORCE)
 
 if (CMAKE_COMPILER_IS_GNUCXX)
-    set(CMAKE_CSS_FLAGS
-        "${CMAKE_CXX_FLAGS} -Wall -Wextra -Werror -pedantic-errors")
+    set(CMAKE_CXX_FLAGS
+        "${CMAKE_CXX_FLAGS} -Wall -Wextra -Werror -Wno-unused-parameter")
         # -Wall:   Enable all warnings.
         # -Wextra: Enable some more warnings.
         # -Werror: Have errors on warnings.

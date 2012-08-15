@@ -140,7 +140,7 @@ void NMap::Init(unsigned int i_Width, unsigned int i_Height, unsigned int i_Dept
         Tiles[i].resize(Height,Bar);
         for (unsigned int o=0;o<Height;o++)
         {
-            NTile* Asdf;
+            NTile* Asdf = NULL;
             Tiles[i][o].resize(Depth, Asdf);
         }
     }
@@ -156,17 +156,17 @@ void NMap::Init(unsigned int i_Width, unsigned int i_Height, unsigned int i_Dept
     }
     Ready = true;
 }
-NTile* NMap::GetTile(unsigned int X, unsigned int Y, unsigned int Z)
+NTile* NMap::GetTile(int X, int Y, int Z)
 {
-    if (X < 0 || X >= Width)
+    if (X < 0 || X >= (int)Width)
     {
         return NULL;
     }
-    if (Y < 0 || Y >= Height)
+    if (Y < 0 || Y >= (int)Height)
     {
         return NULL;
     }
-    if (Z < 0 || Z >= Depth)
+    if (Z < 0 || Z >= (int)Depth)
     {
         return NULL;
     }
@@ -178,15 +178,15 @@ NTile* NMap::GetTile(glm::vec3 Pos)
     int X = floor(Pos.x/RealTileSize);
     int Y = floor(Pos.y/RealTileSize);
     int Z = floor(Pos.z/RealTileSize);
-    if (X < 0 || X >= Width)
+    if (X < 0 || X >= (int)Width)
     {
         return NULL;
     }
-    if (Y < 0 || Y >= Height)
+    if (Y < 0 || Y >= (int)Height)
     {
         return NULL;
     }
-    if (Z < 0 || Z >= Depth)
+    if (Z < 0 || Z >= (int)Depth)
     {
         return NULL;
     }
@@ -200,21 +200,21 @@ glm::vec3 NMap::TilePos(glm::vec3 Pos)
     if (X < 0)
     {
         X = 0;
-    } else if (X >= Width)
+    } else if (X >= (int)Width)
     {
         X = Width-1;
     }
     if (Y < 0)
     {
         Y = 0;
-    } else if (Y >= Height)
+    } else if (Y >= (int)Height)
     {
         Y = Height-1;
     }
     if (Z < 0)
     {
         Z = 0;
-    } else if (Z >= Depth)
+    } else if (Z >= (int)Depth)
     {
         Z = Depth-1;
     }
@@ -222,7 +222,7 @@ glm::vec3 NMap::TilePos(glm::vec3 Pos)
 }
 void NMap::ViewLevel(int Level)
 {
-    if (Level > Depth - 1)
+    if (Level > (int)Depth - 1)
     {
         ViewingLevel = Depth-1;
         return;
@@ -368,7 +368,7 @@ void NMap::GenerateBuffers()
                     Outline[i].push_back(glm::vec3(X,Y,Z));
                     Outline[i].push_back(glm::vec3(X,Y+TS+B,Z));
                 }
-                if (right >= Width || (!Tiles[right][y][i]->IsSolid()))
+                if (right >= (int)Width || (!Tiles[right][y][i]->IsSolid()))
                 {
                     //outline right
                     Outline[i].push_back(glm::vec3(X+TS+B,Y,Z));
@@ -380,7 +380,7 @@ void NMap::GenerateBuffers()
                     Outline[i].push_back(glm::vec3(X,Y,Z));
                     Outline[i].push_back(glm::vec3(X+TS+B,Y,Z));
                 }
-                if (top >= Height || (!Tiles[x][top][i]->IsSolid()))
+                if (top >= (int)Height || (!Tiles[x][top][i]->IsSolid()))
                 {
                     //outline top
                     Outline[i].push_back(glm::vec3(X,Y+TS+B,Z));
@@ -514,7 +514,7 @@ void NMap::SetChanged(int Level)
     {
         return;
     }
-    if (Level >= Depth)
+    if (Level >= (int)Depth)
     {
         return;
     }
@@ -709,7 +709,7 @@ void NTile::SetID(int i_ID)
 {
     GetGame()->GetScene()->UpdateLights();
     GetGame()->GetMap()->SetChanged(Z);
-    if (ID == i_ID)
+    if (ID == (unsigned int)i_ID)
     {
         return;
     }
@@ -720,7 +720,6 @@ void NTile::SetID(int i_ID)
         dOpaque = false;
         return;
     }
-    lua_State* L = GetGame()->GetLua()->GetL();
     CallMethod("OnRemove");
     LuaReference = GetGame()->GetMap()->GetLuaTile(ID);
     dSolid = GetBool("Solid");
@@ -778,6 +777,7 @@ void NTile::GenerateBody()
             case SlopeSouth: Angle = btQuaternion(btVector3(1,0,0),-45); break;
             case SlopeEast: Angle = btQuaternion(btVector3(0,1,0),-45); break;
             case SlopeWest: Angle = btQuaternion(btVector3(0,1,0),45); break;
+            default: Angle = btQuaternion(btVector3(0,1,0),0); break;
         }
         btDefaultMotionState* StaticMotionState = new btDefaultMotionState(btTransform(Angle,btVector3(X*TS+TS/2.f,Y*TS+TS/2.f,Z*TS+TS/2.f)));
         btRigidBody::btRigidBodyConstructionInfo PlaneBody(0,StaticMotionState,Shape,btVector3(0,0,0));
@@ -946,14 +946,14 @@ bool NMap::Load(std::string Name)
         Entities.append(Buffer, Read);
     }
     int Pos = 0;
-    while (Pos < Entities.length())
+    while (Pos < (int)Entities.length())
     {
         std::string EntName = Entities.substr(Pos,Entities.find('\0',Pos)-Pos);
         Pos += EntName.length()+1;
         glm::vec3 Vector;
         memcpy(&(Vector),Entities.substr(Pos,sizeof(glm::vec3)).c_str(),sizeof(glm::vec3));
         Pos += sizeof(glm::vec3);
-        NEntity* Entity = new NEntity(EntName,Vector);
+        new NEntity(EntName,Vector);
     }
     GetGame()->GetLog()->Send("MAP",2,std::string("Successfully loaded map 'maps/") + Name + ".map!");
     CallMethod("OnInitialize");
@@ -1011,6 +1011,7 @@ void NTile::CallMethod(std::string VarName, std::string AdditionalVars,  ...)
                     switch(Temp->GetType())
                     {
                         case NodePlayer: lua_pushPlayer(L,(NPlayer*)Temp); break;
+                        default: GetGame()->GetLog()->Send("LUA",1,"Certain node arguments not supported yet!");
                     }
                     break;
                 }
@@ -1066,6 +1067,7 @@ void NMap::CallMethod(std::string VarName, std::string AdditionalVars,  ...)
                     switch(Temp->GetType())
                     {
                         case NodePlayer: lua_pushPlayer(L,(NPlayer*)Temp); break;
+                        default: GetGame()->GetLog()->Send("LUA",1,"Certain node arguments not supported yet!");
                     }
                     break;
                 }

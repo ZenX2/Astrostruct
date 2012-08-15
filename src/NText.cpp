@@ -130,7 +130,7 @@ NTextureAtlas::NTextureAtlas(FT_Face Face, unsigned int i_Size)
     GetGame()->GetRender()->AddCachedTexture(Texture);
     glBindTexture(GL_TEXTURE_2D, Texture);
     unsigned char* Data = new unsigned char[Width*Height];
-    for (unsigned int i=0;i<Width*Height;i++)
+    for (int i=0;i<Width*Height;i++)
     {
         Data[i] = 0;
     }
@@ -156,7 +156,7 @@ unsigned int NTextureAtlas::GetSize()
 NGlyph* NTextureAtlas::GetGlyph(FT_Face Face, wchar_t ID)
 {
     FT_Set_Pixel_Sizes(Face,0,Size);
-    if (ID >= Glyphs.size())
+    if (ID >= (int)Glyphs.size())
     {
         Glyphs.resize(ID+1,NULL);
         FT_Load_Char(Face,ID,FT_LOAD_RENDER);

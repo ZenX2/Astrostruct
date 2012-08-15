@@ -205,7 +205,7 @@ public:
      *
      * @return A pointer to the tile at the position, or NULL if one of the numbers is out of bounds.
      */
-    NTile* GetTile(unsigned int X, unsigned int Y, unsigned int Z);
+    NTile* GetTile(int X, int Y, int Z);
     bool Ready;
     /**
      * @brief Returns the current level that a position resides on. Currently use to decide when to render objects or not.

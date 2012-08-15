@@ -100,6 +100,11 @@ void NCheckbox::Draw(NCamera* View)
 
 void NCheckbox::Tick(double DT)
 {
+    if (!Texture)
+    {
+        return;
+    }
+    Texture->Tick(DT);
     //Checks if the mouse intersects and changes state if the mouse is down.
     if (Intersects(glm::vec4(GetRealPos().x,GetRealPos().y,GetScale().x,GetScale().y),GetGame()->GetInput()->GetMouse()))
     {

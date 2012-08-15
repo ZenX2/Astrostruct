@@ -77,8 +77,8 @@ void NScene::AddNode(NNode* Node)
 
         case NodeCamera:    Layers[4].push_back(Node); return;
         case NodeSound:     Layers[4].push_back(Node); return;
+        default: delete Node; return;
     }
-    delete Node;
 }
 
 NScene::NScene()
