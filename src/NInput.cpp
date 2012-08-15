@@ -13,7 +13,7 @@ void GLFWCALL NKeyInput(int character, int action)
 {
     GetGame()->GetInput()->SetKey(character,(action != GLFW_RELEASE));
     //This is used by string handling to pop the last character on the stack (if it exists).
-    if (character == GLFW_KEY_BACKSPACE)
+    if (action != GLFW_RELEASE && character == GLFW_KEY_BACKSPACE)
     {
         GetGame()->GetInput()->PushStringInput(character);
     }

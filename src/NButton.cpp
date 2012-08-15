@@ -81,8 +81,9 @@ void NButton::GenerateBuffers()
         Verts.push_back(glm::vec2(-.5,.5));
         UVs.push_back(glm::vec2(0,0));
     } else {
-        float SY = BorderSize/GetScale().y;
-        float SX = BorderSize/GetScale().x;
+        //Add one to the vertex bordersize, else it occasionally renders wrong
+        float SY = (BorderSize+1)/GetScale().y;
+        float SX = (BorderSize+1)/GetScale().x;
         float UX = BorderSize/TextureWidth;
         float UY = BorderSize/TextureHeight;
         //Top Left Corner
@@ -227,7 +228,7 @@ void NButton::Tick(double DT)
     }
     if (ShrinkWrap && DisplayText)
     {
-        SetScale(glm::vec3(DisplayText->GetWidth(),GetScale().y,GetScale().z));
+        SetScale(glm::vec3(DisplayText->GetWidth()+10,GetScale().y,GetScale().z));
     }
     glm::vec2 MP = GetGame()->GetInput()->GetMouse();
     //Check if the mouse intersects with button
