@@ -75,22 +75,22 @@ void NPauseState::OnEnter()
     Window->SetParent(GetGame()->GetRender()->GetCamera());
     QuitButton = new NButton("button");
     QuitButton->SetScale(150,32);
-    QuitButton->SetText(_t("Quit"));
+    QuitButton->SetText(GetGame()->GetLua()->Translate(UIQuit));
     QuitButton->SetPos(glm::vec3(0,-48,0));
     QuitButton->SetParent(Window);
     PlayButton = new NButton("button");
     PlayButton->SetScale(150,32);
-    PlayButton->SetText(_t("Play"));
+    PlayButton->SetText(GetGame()->GetLua()->Translate(UIPlay));
     PlayButton->SetPos(glm::vec3(0,-16,0));
     PlayButton->SetParent(Window);
     MultiButton = new NButton("button");
     MultiButton->SetScale(150,32);
-    MultiButton->SetText(_t("Play Online"));
+    MultiButton->SetText(GetGame()->GetLua()->Translate(UIPlayOnline));
     MultiButton->SetPos(glm::vec3(0,16,0));
     MultiButton->SetParent(Window);
     MapButton = new NButton("button");
     MapButton->SetScale(150,32);
-    MapButton->SetText(_t("Make new map"));
+    MapButton->SetText(GetGame()->GetLua()->Translate(UIMakeMap));
     MapButton->SetPos(glm::vec3(0,48,0));
     MapButton->SetParent(Window);
     InfoWindow = new NWindow("window");
@@ -98,12 +98,12 @@ void NPauseState::OnEnter()
     InfoWindow->SetParent(GetGame()->GetRender()->GetCamera());
     glm::vec2 Temp = GetGame()->GetWindowSize()-glm::vec2(64,128);
     InfoWindow->SetPos(glm::vec3(Temp.x,Temp.y,0));
-    InfoText = new NText("cousine", _t("This game is in very early development, but the engine framework is pretty much completed now. You can see lots of it demo'd here. Use wasd and qe to move the camera around. While escape brings back up the beginning menu."));
+    InfoText = new NText("didactgothic", GetGame()->GetLua()->Translate(UIIntro));
     InfoText->SetBorder(128,256);
     InfoText->SetPos(glm::vec3(-64,108,0));
-    InfoText->SetSize(12);
+    InfoText->SetSize(14);
     InfoText->SetParent(InfoWindow);
-    PlaySound = new NSound("coin");
+    PlaySound = new NSound("click");
 }
 void NPauseState::OnExit()
 {
@@ -194,7 +194,7 @@ void NGameState::Tick(double DT)
             Window->SetParent(GetGame()->GetRender()->GetCamera());
             Button = new NButton("button");
             Button->SetScale(64,32);
-            Button->SetText(_t("Quit"));
+            Button->SetText(GetGame()->GetLua()->Translate(UIQuit));
             Button->SetPos(glm::vec3(0,0,0));
             Button->SetParent(Window);
         } else {
@@ -375,7 +375,7 @@ void NMapState::OnEnter()
     CheckBox->SetScale(16,16);
     CheckBox->SetPos(glm::vec3(-16,18, 0));
     CheckBox->SetParent(OtherWindow);
-    CheckText = new NText("cousine",_t("Solid"));
+    CheckText = new NText("didactgothic",GetGame()->GetLua()->Translate(UISolid));
     CheckText->SetSize(12);
     CheckText->SetPos(glm::vec3(0,20,0));
     CheckText->SetParent(OtherWindow);
@@ -383,7 +383,7 @@ void NMapState::OnEnter()
     OCheckBox->SetScale(16,16);
     OCheckBox->SetPos(glm::vec3(-16,-7+5,0));
     OCheckBox->SetParent(OtherWindow);
-    OCheckText = new NText("cousine",_t("Opaque"));
+    OCheckText = new NText("didactgothic",GetGame()->GetLua()->Translate(UIOpaque));
     OCheckText->SetSize(12);
     OCheckText->SetPos(glm::vec3(0,0,0));
     OCheckText->SetParent(OtherWindow);
@@ -397,12 +397,12 @@ void NMapState::OnEnter()
     Decrease->SetText(_t("<"));
     Decrease->SetPos(glm::vec3(-64+16,37+5,0));
     Decrease->SetParent(OtherWindow);
-    ChangingText = new NText("cousine",_t("Tile: 0"));
+    ChangingText = new NText("didactgothic",GetGame()->GetLua()->Translate(UITile)+_t(": 0"));
     ChangingText->SetSize(16);
     ChangingText->SetMode(1);
     ChangingText->SetPos(glm::vec3(0,43,0));
     ChangingText->SetParent(OtherWindow);
-    Text = new NText("cousine",_t("Welcome to the map editor! Use the WASD keys to move, arrowkeys to change levels, F to toggle fullbright, left click to spawn stuff, rightclick to delete entities, and QE to quick change tiles."));
+    Text = new NText("didactgothic",GetGame()->GetLua()->Translate(UIMapEditIntro));
     Text->SetSize(12);
     Text->SetBorder(150,150);
     Text->SetPos(glm::vec3(-75,75-18,0));
@@ -506,7 +506,7 @@ void NMapState::Tick(double DT)
                 EntityHighlight[i]->SetColor(glm::vec4(0,1,0,1));
                 EntityHighlight[i]->SetLayer(1);
                 EntityHighlight[i]->SwapView();
-                EntityText[i] = new NText("cousine",ToMBS(Ent->GetName()));
+                EntityText[i] = new NText("didactgothic",ToMBS(Ent->GetName()));
                 EntityText[i]->SetParent(EntityHighlight[i]);
                 EntityText[i]->SetSize(13);
                 EntityText[i]->SwapView();
@@ -579,7 +579,7 @@ void NMapState::Tick(double DT)
         if (CurrentTile >= 0)
         {
             std::wstringstream Stream;
-            Stream << "Tile: ";
+            Stream << GetGame()->GetLua()->Translate(UITile) << ": ";
             Stream << CurrentTile;
             ChangingText->SetText(Stream.str());
             NTile Tile(CurrentTile);
@@ -601,7 +601,7 @@ void NMapState::Tick(double DT)
         if (CurrentTile >= 0)
         {
             std::wstringstream Stream;
-            Stream << "Tile: ";
+            Stream << GetGame()->GetLua()->Translate(UITile) << ": ";
             Stream << CurrentTile;
             ChangingText->SetText(Stream.str());
             NTile Tile(CurrentTile);
@@ -633,17 +633,17 @@ void NMapState::Tick(double DT)
             Input->SetParent(SaveWindow);
             SaveButton = new NButton("button");
             SaveButton->SetScale(64,32);
-            SaveButton->SetText(_t("Save"));
+            SaveButton->SetText(GetGame()->GetLua()->Translate(UISave));
             SaveButton->SetPos(glm::vec3(0,62,0));
             SaveButton->SetParent(SaveWindow);
             LoadButton = new NButton("button");
             LoadButton->SetScale(64,32);
-            LoadButton->SetText(_t("Load"));
+            LoadButton->SetText(GetGame()->GetLua()->Translate(UILoad));
             LoadButton->SetPos(glm::vec3(0,30,0));
             LoadButton->SetParent(SaveWindow);
             QuitButton = new NButton("button");
             QuitButton->SetScale(64,32);
-            QuitButton->SetText(_t("Quit"));
+            QuitButton->SetText(GetGame()->GetLua()->Translate(UIQuit));
             QuitButton->SetPos(glm::vec3(0,-2,0));
             QuitButton->SetParent(SaveWindow);
             MapIncrease[0] = new NButton("button");
@@ -682,33 +682,33 @@ void NMapState::Tick(double DT)
             MapDim[1] = GetGame()->GetMap()->GetHeight();
             MapDim[2] = GetGame()->GetMap()->GetDepth();
             std::wstringstream String;
-            String << "Width: " << MapDim[0];
-            Dimensions[0] = new NText("cousine",String.str());
+            String << GetGame()->GetLua()->Translate(UIWidth) << ": " << MapDim[0];
+            Dimensions[0] = new NText("didactgothic",String.str());
             Dimensions[0]->SetPos(glm::vec3(0,-64,0));
             Dimensions[0]->SetSize(16);
             Dimensions[0]->SetMode(1);
             Dimensions[0]->SetParent(SaveWindow);
             std::wstringstream Stringh;
-            Stringh << "Height: " << MapDim[1];
-            Dimensions[1] = new NText("cousine",Stringh.str());
+            Stringh << GetGame()->GetLua()->Translate(UIHeight) << ": " << MapDim[1];
+            Dimensions[1] = new NText("didactgothic",Stringh.str());
             Dimensions[1]->SetPos(glm::vec3(0,-82,0));
             Dimensions[1]->SetSize(16);
             Dimensions[1]->SetMode(1);
             Dimensions[1]->SetParent(SaveWindow);
             std::wstringstream Stringd;
-            Stringd << "Depth: " << MapDim[2];
-            Dimensions[2] = new NText("cousine",Stringd.str());
+            Stringd << GetGame()->GetLua()->Translate(UIDepth) << ": " << MapDim[2];
+            Dimensions[2] = new NText("didactgothic",Stringd.str());
             Dimensions[2]->SetPos(glm::vec3(0,-100,0));
             Dimensions[2]->SetSize(16);
             Dimensions[2]->SetMode(1);
             Dimensions[2]->SetParent(SaveWindow);
             Apply = new NButton("button");
-            Apply->SetText(_t("Apply"));
+            Apply->SetText(GetGame()->GetLua()->Translate(UIApply));
             Apply->GetText()->SetSize(14);
             Apply->SetScale(64,16);
             Apply->SetPos(glm::vec3(0,-120,0));
             Apply->SetParent(SaveWindow);
-            NText* TempText = new NText("cousine",_t("Map dimensions"));
+            NText* TempText = new NText("didactgothic",GetGame()->GetLua()->Translate(UIMapDim));
             TempText->SetMode(1);
             TempText->SetPos(glm::vec3(0,-34,0));
             TempText->SetSize(16);
@@ -748,9 +748,9 @@ void NMapState::Tick(double DT)
                 std::wstringstream Stream;
                 switch(i)
                 {
-                    case 0: Stream << "Width: "; break;
-                    case 1: Stream << "Height: "; break;
-                    case 2: Stream << "Depth: "; break;
+                    case 0: Stream << GetGame()->GetLua()->Translate(UIWidth) << ": "; break;
+                    case 1: Stream << GetGame()->GetLua()->Translate(UIHeight) << ": "; break;
+                    case 2: Stream << GetGame()->GetLua()->Translate(UIDepth) << ": "; break;
                 }
                 Stream << MapDim[i];
                 Dimensions[i]->SetText(Stream.str());
@@ -761,9 +761,9 @@ void NMapState::Tick(double DT)
                 std::wstringstream Stream;
                 switch(i)
                 {
-                    case 0: Stream << "Width: "; break;
-                    case 1: Stream << "Height: "; break;
-                    case 2: Stream << "Depth: "; break;
+                    case 0: Stream << GetGame()->GetLua()->Translate(UIWidth) << ": "; break;
+                    case 1: Stream << GetGame()->GetLua()->Translate(UIHeight) << ": "; break;
+                    case 2: Stream << GetGame()->GetLua()->Translate(UIDepth) << ": "; break;
                 }
                 Stream << MapDim[i];
                 Dimensions[i]->SetText(Stream.str());

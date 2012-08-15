@@ -121,7 +121,6 @@ NTextureAtlas::NTextureAtlas(FT_Face Face, unsigned int i_Size)
 {
     //Get Width and Height of desired textureatlas
     Changed = true;
-    //FIXME: When the texture fills, resize the texture to be bigger.
     Width = 256;
     Height = 256;
     Size = i_Size;
@@ -176,8 +175,20 @@ NGlyph* NTextureAtlas::GetGlyph(FT_Face Face, wchar_t ID)
     FT_Load_Char(Face,ID,FT_LOAD_RENDER);
     FT_GlyphSlot Glyph = Face->glyph;
     NTextureNode* Temp = Node->Insert(glm::vec2(Glyph->bitmap.width+2,Glyph->bitmap.rows+2));
+    //If we failed to stick the glyph into our texture, make it bigger!
     if (Temp == NULL)
     {
+        Width *= 2;
+        Height *= 2;
+        unsigned char* Data = new unsigned char[Width*Height];
+        for (int i=0;i<Width*Height;i++)
+        {
+            Data[i] = 0;
+        }
+        glBindTexture(GL_TEXTURE_2D, Texture);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_ALPHA, Width, Height, 0, GL_ALPHA, GL_UNSIGNED_BYTE, Data);
+        delete Node;
+        Node = new NTextureNode(glm::vec4(Width,Height,0,0));
         return Glyphs[ID];
     }
     glBindTexture(GL_TEXTURE_2D, Texture);

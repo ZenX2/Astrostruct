@@ -1191,3 +1191,29 @@ int lua_protcall(lua_State* L, int nargs, int nresults)
     }
     return 0;
 }
+
+std::wstring NLua::Translate(LanguageElement Foo)
+{
+    if (Language.length() == 0)
+    {
+        Language = GetGame()->GetConfig()->GetString("Language");
+        GetGame()->GetLog()->Send("LUA",2,"Using language " + Language + ".");
+    }
+    lua_getglobal(L,"_G");
+    lua_getfield(L,-1,Language.c_str());
+    if (!lua_istable(L,-1))
+    {
+        lua_pop(L,2);
+        return _t("NULL");
+    }
+    lua_pushnumber(L,(float)Foo);
+    lua_gettable(L,-2);
+    if (!lua_isstring(L,-1))
+    {
+        lua_pop(L,3);
+        return _t("NULL");
+    }
+    const char* String = lua_tostring(L,-1);
+    lua_pop(L,3);
+    return ToMBS(String);
+}

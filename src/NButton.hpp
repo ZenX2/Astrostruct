@@ -25,7 +25,7 @@ public:
      * @param i_Texture The desired texture of the button, should have the following animations in it: idle, active, and pressed.
      */
     NButton(std::string i_Texture);
-    virtual ~NButton();
+    ~NButton();
     NTexture* Texture;
     /**
     * @brief Draws the button.

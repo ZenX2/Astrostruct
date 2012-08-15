@@ -42,6 +42,25 @@ int ConsoleHelp(lua_State* L);
  */
 int Quit(lua_State* L);
 int Print(lua_State* L);
+enum LanguageElement
+{
+    UIMakeMap = 1,
+    UIPlayOnline,
+    UIPlay,
+    UIQuit,
+    UIIntro,
+    UIMapEditIntro,
+    UITile,
+    UISolid,
+    UIOpaque,
+    UISave,
+    UILoad,
+    UIMapDim,
+    UIWidth,
+    UIHeight,
+    UIDepth,
+    UIApply
+};
 /**
 * @brief Class that initializes and exposes lua to the rest of the engine.
 */
@@ -74,9 +93,11 @@ public:
     bool DoFolder(std::string Folder);
     std::string GetCurrentDoFile();
     void SetCurrentDoFile(std::string File);
+    std::wstring Translate(LanguageElement Foo);
 private:
     lua_State* L;
     std::string CurrentDoFile;
+    std::string Language;
 };
 /**
 * @brief Lua function to load textures into memory.
@@ -188,4 +209,5 @@ NEntity* lua_checkEntity(lua_State* L, int narg);
 void lua_pushEntity(lua_State* L, NEntity* Entity);
 int EntityGetPos(lua_State* L);
 int EntitySetPos(lua_State* L);
+
 #endif
