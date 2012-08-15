@@ -102,10 +102,10 @@ void NPauseState::OnEnter()
     InfoWindow->SetParent(GetGame()->GetRender()->GetCamera());
     glm::vec2 Temp = GetGame()->GetWindowSize()-glm::vec2(64,128);
     InfoWindow->SetPos(glm::vec3(Temp.x,Temp.y,0));
-    InfoText = new NText("didactgothic", GetGame()->GetLua()->Translate(UIIntro));
+    InfoText = new NText("gui", GetGame()->GetLua()->Translate(UIIntro));
     InfoText->SetBorder(128,256);
     InfoText->SetPos(glm::vec3(-64,108,0));
-    InfoText->SetSize(14);
+    InfoText->SetSize(15);
     InfoText->SetParent(InfoWindow);
     PlaySound = new NSound("click");
 }
@@ -379,7 +379,7 @@ void NMapState::OnEnter()
     CheckBox->SetScale(16,16);
     CheckBox->SetPos(glm::vec3(-16,18, 0));
     CheckBox->SetParent(OtherWindow);
-    CheckText = new NText("didactgothic",GetGame()->GetLua()->Translate(UISolid));
+    CheckText = new NText("gui",GetGame()->GetLua()->Translate(UISolid));
     CheckText->SetSize(12);
     CheckText->SetPos(glm::vec3(0,20,0));
     CheckText->SetParent(OtherWindow);
@@ -387,7 +387,7 @@ void NMapState::OnEnter()
     OCheckBox->SetScale(16,16);
     OCheckBox->SetPos(glm::vec3(-16,-7+5,0));
     OCheckBox->SetParent(OtherWindow);
-    OCheckText = new NText("didactgothic",GetGame()->GetLua()->Translate(UIOpaque));
+    OCheckText = new NText("gui",GetGame()->GetLua()->Translate(UIOpaque));
     OCheckText->SetSize(12);
     OCheckText->SetPos(glm::vec3(0,0,0));
     OCheckText->SetParent(OtherWindow);
@@ -401,13 +401,13 @@ void NMapState::OnEnter()
     Decrease->SetText(_t("<"));
     Decrease->SetPos(glm::vec3(-64+16,37+5,0));
     Decrease->SetParent(OtherWindow);
-    ChangingText = new NText("didactgothic",GetGame()->GetLua()->Translate(UITile)+_t(": 0"));
+    ChangingText = new NText("gui",GetGame()->GetLua()->Translate(UITile)+_t(": 0"));
     ChangingText->SetSize(16);
     ChangingText->SetMode(1);
     ChangingText->SetPos(glm::vec3(0,43,0));
     ChangingText->SetParent(OtherWindow);
-    Text = new NText("didactgothic",GetGame()->GetLua()->Translate(UIMapEditIntro));
-    Text->SetSize(12);
+    Text = new NText("gui",GetGame()->GetLua()->Translate(UIMapEditIntro));
+    Text->SetSize(15);
     Text->SetBorder(150,150);
     Text->SetPos(glm::vec3(-75,75-18,0));
     Text->SetParent(Window);
@@ -507,7 +507,7 @@ void NMapState::Tick(double DT)
                 EntityHighlight[i]->SetColor(glm::vec4(0,1,0,1));
                 EntityHighlight[i]->SetLayer(1);
                 EntityHighlight[i]->SwapView();
-                EntityText[i] = new NText("didactgothic",ToMBS(Ent->GetName()));
+                EntityText[i] = new NText("gui",ToMBS(Ent->GetName()));
                 EntityText[i]->SetParent(EntityHighlight[i]);
                 EntityText[i]->SetSize(13);
                 EntityText[i]->SwapView();
@@ -630,6 +630,7 @@ void NMapState::Tick(double DT)
             Input->SetScale(200,24);
             Input->SetPos(glm::vec3(0,100,0));
             Input->GetText()->SetMultiline(false);
+            Input->GetText()->SetSize(15);
             Input->SetText(_t("MapName"));
             Input->SetParent(SaveWindow);
             SaveButton = new NButton("button");
@@ -687,21 +688,21 @@ void NMapState::Tick(double DT)
             MapDim[2] = GetGame()->GetMap()->GetDepth();
             std::wstringstream String;
             String << GetGame()->GetLua()->Translate(UIWidth) << ": " << MapDim[0];
-            Dimensions[0] = new NText("didactgothic",String.str());
+            Dimensions[0] = new NText("gui",String.str());
             Dimensions[0]->SetPos(glm::vec3(0,-64,0));
             Dimensions[0]->SetSize(16);
             Dimensions[0]->SetMode(1);
             Dimensions[0]->SetParent(SaveWindow);
             std::wstringstream Stringh;
             Stringh << GetGame()->GetLua()->Translate(UIHeight) << ": " << MapDim[1];
-            Dimensions[1] = new NText("didactgothic",Stringh.str());
+            Dimensions[1] = new NText("gui",Stringh.str());
             Dimensions[1]->SetPos(glm::vec3(0,-82,0));
             Dimensions[1]->SetSize(16);
             Dimensions[1]->SetMode(1);
             Dimensions[1]->SetParent(SaveWindow);
             std::wstringstream Stringd;
             Stringd << GetGame()->GetLua()->Translate(UIDepth) << ": " << MapDim[2];
-            Dimensions[2] = new NText("didactgothic",Stringd.str());
+            Dimensions[2] = new NText("gui",Stringd.str());
             Dimensions[2]->SetPos(glm::vec3(0,-100,0));
             Dimensions[2]->SetSize(16);
             Dimensions[2]->SetMode(1);
@@ -713,7 +714,7 @@ void NMapState::Tick(double DT)
             Apply->SetPos(glm::vec3(0,-120,0));
             Apply->SetShrinkWrap(true);
             Apply->SetParent(SaveWindow);
-            NText* TempText = new NText("didactgothic",GetGame()->GetLua()->Translate(UIMapDim));
+            NText* TempText = new NText("gui",GetGame()->GetLua()->Translate(UIMapDim));
             TempText->SetMode(1);
             TempText->SetPos(glm::vec3(0,-34,0));
             TempText->SetSize(16);

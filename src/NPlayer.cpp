@@ -25,7 +25,7 @@ NPlayer::NPlayer(std::wstring i_Name) : NNode(NodePlayer)
         MatrixLoc = Shader->GetUniformLocation("MVP");
         ColorLoc = Shader->GetUniformLocation("Color");
     }
-    NameText = new NText("didactgothic",Name);
+    NameText = new NText("gui",Name);
     NameText->SetPos(Position+glm::vec3(0,20,0));
     NameText->SwapView();
     NameText->SetLayer(1); // Put it into the world

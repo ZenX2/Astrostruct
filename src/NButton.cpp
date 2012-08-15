@@ -278,7 +278,7 @@ void NButton::SetText(std::wstring Text)
 {
     if (DisplayText == NULL)
     {
-        DisplayText = new NText("didactgothic",Text);
+        DisplayText = new NText("gui",Text);
         DisplayText->SetMode(1);
         DisplayText->SetSize(GetScale().y/1.3);
         DisplayText->SetParent(this);

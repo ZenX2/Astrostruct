@@ -343,12 +343,20 @@ void NRender::glError()
     }
 }
 
-void NRender::AddCachedTexture(GLuint Texture)
+void NRender::AddCachedTexture(GLuint Texture, GLuint ForceFilter)
 {
-    glBindTexture(GL_TEXTURE_2D,Texture);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, TextureFilter);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, TextureFilter);
-    CachedTextures.push_back(new NCachedTexture("NULL",Texture));
+    if (ForceFilter == 0)
+    {
+        glBindTexture(GL_TEXTURE_2D,Texture);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, TextureFilter);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, TextureFilter);
+        CachedTextures.push_back(new NCachedTexture("NULL",Texture));
+    } else {
+        glBindTexture(GL_TEXTURE_2D,Texture);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, ForceFilter);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, ForceFilter);
+        CachedTextures.push_back(new NCachedTexture("NULL",Texture,true));
+    }
 }
 
 void NRender::AddCachedAnimation(NAnimation* Animation)
@@ -365,6 +373,10 @@ void NRender::SetTextureFilter(GLuint Filter)
     TextureFilter = Filter;
     for (unsigned int i=0;i<CachedTextures.size();i++)
     {
+        if (CachedTextures[i]->ForceFilter)
+        {
+            continue;
+        }
         CachedTextures[i]->SetFilter(TextureFilter);
     }
 }
@@ -411,6 +423,7 @@ NCachedTexture* NRender::GetCachedTexture(std::string Name)
 
 NCachedTexture::NCachedTexture(std::string i_Name)
 {
+    ForceFilter = false;
     IsGood = false;
     ID = 0;
     Width = 0;
@@ -442,6 +455,20 @@ bool NCachedTexture::Good()
 
 NCachedTexture::NCachedTexture(std::string i_Name, GLuint i_ID)
 {
+    ForceFilter = false;
+    IsGood = true;
+    Name = i_Name;
+    ID = i_ID;
+    glBindTexture(GL_TEXTURE_2D,ID);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GetGame()->GetRender()->GetTextureFilter());
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GetGame()->GetRender()->GetTextureFilter());
+    Width = 0;
+    Height = 0;
+}
+
+NCachedTexture::NCachedTexture(std::string i_Name, GLuint i_ID, bool i_ForceFilter)
+{
+    ForceFilter = i_ForceFilter;
     IsGood = true;
     Name = i_Name;
     ID = i_ID;

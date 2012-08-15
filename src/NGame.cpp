@@ -220,6 +220,16 @@ void NGame::Poll()
     //If the window has changed, reset our opengl view matrix and context size.
     if (Width != NewWidth || Height != NewHeight)
     {
+        //Force the width and heigh to have an even number, otherwise text will render bad!
+        if (NewWidth%2 != 0)
+        {
+            NewWidth+=1;
+        }
+        if (NewHeight%2 != 0)
+        {
+            NewHeight+=1;
+        }
+        SetWindowSize(NewWidth,NewHeight);
         Width = NewWidth;
         Height = NewHeight;
         WindowChanged = true;

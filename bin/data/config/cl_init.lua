@@ -15,5 +15,5 @@ TextureFilter = "GL_LINEAR"
 PlayerName = "Naelstrof"
 -- Set the default gamemode here.
 GameMode = "test"
--- Set desired language here, available languages are: English, German, Russian
+-- Set desired language here, available languages are: English, German, Russian,French, Spanish, Portuguese, Polish, and Korean.
 Language = "English"

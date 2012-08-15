@@ -57,3 +57,98 @@ Russian = {
     "глубина",
     "применять"
 }
+
+French = {
+    "Faire une nouvelle carte",
+    "Jouer en ligne",
+    "Jouer",
+    "Quitter",
+    "Ce jeu est en développement très tôt, mais le cadre du moteur est à peu près terminé maintenant, vous pouvez voir beaucoup de lui affichée ici. Appuyez sur un des boutons pour jouer!",
+    "Bienvenue à l'éditeur de carte! Utilisez les touches WASD pour se déplacer, arrowkeys pour changer de niveau, F pour basculer Fullbright, faites un clic gauche pour frayer des choses, faites un clic droit de supprimer les entités, et QE pour changer les tuiles.",
+    "Tuile",
+    "Solide",
+    "Opaque",
+    "Sauver",
+    "Charger",
+    "Dimensions de la carte",
+    "Largeur",
+    "Hauteur",
+    "profondeur",
+    "Appliquer"
+}
+
+Spanish = {
+    "Hacer el nuevo mapa",
+    "Jugar Online",
+    "Jugar",
+    "Dejar de",
+    "Este juego es en el desarrollo muy temprano, pero el marco del motor es más o menos completa ahora, se puede ver una gran cantidad de ella se muestra aquí. Presione uno de los botones para jugar!",
+    "Bienvenido a el editor de mapas! Utilice las teclas WASD para moverse, teclas del cursor para cambiar los niveles, F para alternar Fullbright, click izquierdo para generar cosas, haga clic derecho para borrar las entidades, y QE para cambiar las baldosas.",
+    "Azulejo",
+    "Sólido",
+    "Opaco",
+    "Ahorrar",
+    "Cargar",
+    "Las dimensiones del mapa",
+    "Ancho",
+    "Altura",
+    "Profundidad",
+    "Aplicar"
+}
+
+Portuguese = {
+    "Faça novo mapa",
+    "Jogar on-line",
+    "Jogar",
+    "Desistir",
+    "Este jogo está em desenvolvimento desde muito cedo, mas o quadro motor é praticamente concluída agora, você pode ver um monte de exibi-lo aqui. Pressione um dos botões para jogar!",
+    "Bem-vindo ao editor de mapas! Use as teclas WASD para se mover, arrowkeys para alterar os níveis, F para alternar Fullbright, clique esquerdo para desovar material, clique direito para excluir entidades e QE para mudar as telhas.",
+    "Telha",
+    "Sólido",
+    "Opaco",
+    "Salvar",
+    "Carregar",
+    "Dimensões Mapa",
+    "Largura",
+    "Altura",
+    "Profundidade",
+    "Aplicar"
+}
+
+Polish = {
+    "Dodać nową mapę",
+    "Zagraj online",
+    "Grać",
+    "Zamknij",
+    "Ta gra jest w bardzo wczesnym rozwoju, ale ramy silnik jest prawie zakończona, można zobaczyć wiele z nich wyświetlone tutaj. Naciśnij jeden z przycisków do gry!",
+    "Witamy w edytorze map! Za pomocą klawiszy WASD do poruszania się, arrowkeys zmieniać poziomy, F, aby przełączyć fullbright, lewy przycisk myszy na tarło rzeczy, kliknij prawym przyciskiem myszy, aby usunąć podmiotów, a QE zmienić płytki.",
+    "Dachówka",
+    "Stały",
+    "Nieprzezroczysty",
+    "Zaoszczędzić",
+    "Załadować",
+    "Wymiary mapa",
+    "Szerokość",
+    "Wysokość",
+    "Głębokość",
+    "Zastosować"
+}
+
+Korean = {
+    "새지도 만들기",
+    "온라인 플레이",
+    "놀이",
+    "종료",
+    "이 게임은 매우 일찍 개발이지만, 엔진 프레임 워크가 이제 거의 완료입니다, 당신이 많은 여기에 표시된 볼 수 있습니다. 재생 버튼 중 하나를 눌러!",
+    "지도 편집기에 오신 것을 환영합니다! 이동 WASD 키를 사용하여 수준을 변경하는 arrowkeys, fullbright를 전환하기 위해 F는 물건을 산란하기 위해 클릭 왼쪽, 오른쪽 엔티티를 삭제 클릭하고 QE는 타일을 변경하려면",
+    "타일",
+    "고체",
+    "불투명한",
+    "저장",
+    "로드",
+    "지도 크기",
+    "폭",
+    "고도",
+    "깊이",
+    "신청하기"
+}

@@ -33,6 +33,7 @@ public:
     * @param i_ID The texture id we want to cache.
     */
     NCachedTexture(std::string i_Name, GLuint i_ID);
+    NCachedTexture(std::string i_Name, GLuint i_ID, bool i_ForceFilter);
     ~NCachedTexture();
     GLuint ID;
     std::string Name;
@@ -60,6 +61,7 @@ public:
      * @return False if it failed to load, true if it's a valid texture.
      */
     bool Good();
+    bool ForceFilter;
 private:
     float IsGood;
     int Width, Height;
@@ -158,7 +160,7 @@ public:
     *
     * @param ID The OpenGL texture ID.
     */
-    void AddCachedTexture(GLuint ID);
+    void AddCachedTexture(GLuint ID, GLuint ForceFilter = 0);
     /**
      * @brief Uses lua to load all textures into memory.
      */

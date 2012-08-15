@@ -126,7 +126,7 @@ NTextureAtlas::NTextureAtlas(FT_Face Face, unsigned int i_Size)
     Size = i_Size;
     glActiveTexture(GL_TEXTURE0);
     glGenTextures(1, &Texture);
-    GetGame()->GetRender()->AddCachedTexture(Texture);
+    //Force GL_NEAREST filtering because otherwise text looks really blurry.
     glBindTexture(GL_TEXTURE_2D, Texture);
     unsigned char* Data = new unsigned char[Width*Height];
     for (int i=0;i<Width*Height;i++)
@@ -134,6 +134,7 @@ NTextureAtlas::NTextureAtlas(FT_Face Face, unsigned int i_Size)
         Data[i] = 0;
     }
     glTexImage2D(GL_TEXTURE_2D, 0, GL_ALPHA, Width, Height, 0, GL_ALPHA, GL_UNSIGNED_BYTE, Data);
+    GetGame()->GetRender()->AddCachedTexture(Texture, GL_NEAREST);
     Node = new NTextureNode(glm::vec4(Width,Height,0,0));
     delete[] Data;
 }
@@ -152,6 +153,7 @@ unsigned int NTextureAtlas::GetSize()
     return Size;
 }
 
+//This is where character rendering takes place
 NGlyph* NTextureAtlas::GetGlyph(FT_Face Face, wchar_t ID)
 {
     FT_Set_Pixel_Sizes(Face,0,Size);
@@ -174,6 +176,10 @@ NGlyph* NTextureAtlas::GetGlyph(FT_Face Face, wchar_t ID)
     }
     FT_Load_Char(Face,ID,FT_LOAD_RENDER);
     FT_GlyphSlot Glyph = Face->glyph;
+    if (Glyph->bitmap.width <= 0 && Glyph->bitmap.rows <= 0)
+    {
+        return Glyphs[ID];
+    }
     NTextureNode* Temp = Node->Insert(glm::vec2(Glyph->bitmap.width+2,Glyph->bitmap.rows+2));
     //If we failed to stick the glyph into our texture, make it bigger!
     if (Temp == NULL)
@@ -189,6 +195,13 @@ NGlyph* NTextureAtlas::GetGlyph(FT_Face Face, wchar_t ID)
         glTexImage2D(GL_TEXTURE_2D, 0, GL_ALPHA, Width, Height, 0, GL_ALPHA, GL_UNSIGNED_BYTE, Data);
         delete Node;
         Node = new NTextureNode(glm::vec4(Width,Height,0,0));
+        for (unsigned int i=0;i<Glyphs.size();i++)
+        {
+            if (Glyphs[i] != NULL)
+            {
+                Glyphs[i]->Rendered = false;
+            }
+        }
         return Glyphs[ID];
     }
     glBindTexture(GL_TEXTURE_2D, Texture);
@@ -206,6 +219,8 @@ void NTextureAtlas::UpdateMipmaps()
         return;
     }
     glBindTexture(GL_TEXTURE_2D, Texture);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glGenerateMipmap(GL_TEXTURE_2D);
     Changed = false;
 }
@@ -314,7 +329,7 @@ void NText::GenerateBuffers()
     std::vector<glm::vec2> Word;
     std::vector<glm::vec2> UVWord;
     float PenX = 0;
-    float PenY = 0;
+    float PenY = -Size/2.f;
     if (!Multiline)
     {
         float Offset = 0;
@@ -377,7 +392,7 @@ void NText::GenerateBuffers()
         }
         float X = Glyph->BitmapWidth;
         float Y = Glyph->BitmapHeight;
-        float YOff = -Glyph->BitmapHeight+Glyph->BitmapTop-Size/2.f;
+        float YOff = -Glyph->BitmapHeight+Glyph->BitmapTop;
         float XOff = Glyph->BitmapLeft;
         switch (Mode)
         {
@@ -405,6 +420,11 @@ void NText::GenerateBuffers()
                     PenY -= Size;
             }
         }
+        //Align verticies to pixels, so text renders pixel-perfect :)
+        PenX = round(PenX);
+        PenY = round(PenY);
+        YOff = round(YOff);
+        XOff = round(XOff);
         Verts.push_back(glm::vec2(PenX+XOff,PenY+YOff));
         Verts.push_back(glm::vec2(PenX+XOff+X,PenY+YOff));
         Verts.push_back(glm::vec2(PenX+XOff+X,Y+PenY+YOff));
@@ -421,7 +441,13 @@ void NText::GenerateBuffers()
     Mask.push_back(glm::vec2(W,Size/2.f));
     Mask.push_back(glm::vec2(W,-H+Size));
     Mask.push_back(glm::vec2(0,-H+Size));
-    Changed = false;
+    //Make sure we fit in our border
+    if (PenY-Size < -H+Size && H != 0)
+    {
+        Size--;
+    } else {
+        Changed = false;
+    }
     Width = PenX;
     glBindBuffer(GL_ARRAY_BUFFER,Buffers[0]);
     glBufferData(GL_ARRAY_BUFFER,Verts.size()*sizeof(glm::vec2),&Verts[0],GL_STATIC_DRAW);

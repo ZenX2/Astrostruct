@@ -43,7 +43,7 @@ NText* NTextInput::GetText()
 {
     if (!DisplayText)
     {
-        DisplayText = new NText("cousine",_t(""));
+        DisplayText = new NText("gui",_t(""));
         DisplayText->SetParent(this);
         DisplayText->SetSize(13);
         DisplayText->SetPos(glm::vec3(-GetScale().x/2.f,0,0));
@@ -61,7 +61,7 @@ void NTextInput::SetText(std::wstring Text)
 {
     if (!DisplayText)
     {
-        DisplayText = new NText("cousine",_t(""));
+        DisplayText = new NText("gui",_t(""));
         DisplayText->SetParent(this);
         DisplayText->SetSize(13);
         DisplayText->SetPos(glm::vec3(-GetScale().x/2.f,0,0));
@@ -256,7 +256,7 @@ void NTextInput::Tick(double DT)
 {
     if (!DisplayText)
     {
-        DisplayText = new NText("cousine",_t(""));
+        DisplayText = new NText("gui",_t(""));
         DisplayText->SetParent(this);
         DisplayText->SetSize(13);
     }
