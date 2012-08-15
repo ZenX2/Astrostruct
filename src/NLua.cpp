@@ -330,7 +330,7 @@ bool NLua::DoFolder(std::string Folder)
         //executes all files that has .lua in them and has a at the end.
         if (Files[i].find(".lua")!=std::string::npos && Files[i][Files[i].length()-1] == 'a')
         {
-            GetGame()->GetLog()->Send("LUA",2,std::string("Executing ") + Files[i] + ".");
+            //GetGame()->GetLog()->Send("LUA",2,std::string("Executing ") + Files[i] + ".");
             Result = (DoFile(Files[i]) && Result);
         }
     }

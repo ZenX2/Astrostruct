@@ -77,21 +77,25 @@ void NPauseState::OnEnter()
     QuitButton->SetScale(150,32);
     QuitButton->SetText(GetGame()->GetLua()->Translate(UIQuit));
     QuitButton->SetPos(glm::vec3(0,-48,0));
+    QuitButton->SetShrinkWrap(true);
     QuitButton->SetParent(Window);
     PlayButton = new NButton("button");
     PlayButton->SetScale(150,32);
     PlayButton->SetText(GetGame()->GetLua()->Translate(UIPlay));
     PlayButton->SetPos(glm::vec3(0,-16,0));
+    PlayButton->SetShrinkWrap(true);
     PlayButton->SetParent(Window);
     MultiButton = new NButton("button");
     MultiButton->SetScale(150,32);
     MultiButton->SetText(GetGame()->GetLua()->Translate(UIPlayOnline));
     MultiButton->SetPos(glm::vec3(0,16,0));
+    MultiButton->SetShrinkWrap(true);
     MultiButton->SetParent(Window);
     MapButton = new NButton("button");
     MapButton->SetScale(150,32);
     MapButton->SetText(GetGame()->GetLua()->Translate(UIMakeMap));
     MapButton->SetPos(glm::vec3(0,48,0));
+    MapButton->SetShrinkWrap(true);
     MapButton->SetParent(Window);
     InfoWindow = new NWindow("window");
     InfoWindow->SetScale(128,256);
@@ -486,13 +490,10 @@ void NMapState::Tick(double DT)
     std::vector<NNode*> Nodes = GetGame()->GetScene()->GetNodesByType(NodeEntity);
     if (Nodes.size() != EntityHighlight.size())
     {
-        if (Nodes.size() < EntityHighlight.size())
+        for (unsigned int i=0;i<EntityHighlight.size();i++)
         {
-            for (unsigned int i=EntityHighlight.size()-1;i>Nodes.size()-1;i--)
-            {
-                EntityHighlight[i]->Remove();
-                EntityHighlight[i] = NULL;
-            }
+            EntityHighlight[i]->Remove();
+            EntityHighlight[i] = NULL;
         }
         EntityHighlight.resize(Nodes.size(),NULL);
         EntityText.resize(Nodes.size(),NULL);
@@ -635,14 +636,17 @@ void NMapState::Tick(double DT)
             SaveButton->SetScale(64,32);
             SaveButton->SetText(GetGame()->GetLua()->Translate(UISave));
             SaveButton->SetPos(glm::vec3(0,62,0));
+            SaveButton->SetShrinkWrap(true);
             SaveButton->SetParent(SaveWindow);
             LoadButton = new NButton("button");
             LoadButton->SetScale(64,32);
             LoadButton->SetText(GetGame()->GetLua()->Translate(UILoad));
             LoadButton->SetPos(glm::vec3(0,30,0));
+            LoadButton->SetShrinkWrap(true);
             LoadButton->SetParent(SaveWindow);
             QuitButton = new NButton("button");
             QuitButton->SetScale(64,32);
+            QuitButton->SetShrinkWrap(true);
             QuitButton->SetText(GetGame()->GetLua()->Translate(UIQuit));
             QuitButton->SetPos(glm::vec3(0,-2,0));
             QuitButton->SetParent(SaveWindow);
@@ -707,6 +711,7 @@ void NMapState::Tick(double DT)
             Apply->GetText()->SetSize(14);
             Apply->SetScale(64,16);
             Apply->SetPos(glm::vec3(0,-120,0));
+            Apply->SetShrinkWrap(true);
             Apply->SetParent(SaveWindow);
             NText* TempText = new NText("didactgothic",GetGame()->GetLua()->Translate(UIMapDim));
             TempText->SetMode(1);

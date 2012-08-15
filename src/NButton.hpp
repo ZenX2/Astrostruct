@@ -91,7 +91,10 @@ public:
      * @return True if pressed, false otherwise.
      */
     bool GetToggle();
+    bool GetShrinkWrap();
+    void SetShrinkWrap(bool i_ShrinkWrap);
 private:
+    bool ShrinkWrap;
     bool Toggled;
     unsigned int TextureWidth, TextureHeight;
     bool PressedMemory;

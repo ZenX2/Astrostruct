@@ -37,7 +37,7 @@ void NInput::SetKey(int Key, bool IsDown)
 
 void NInput::SetMouseKey(int Key, bool IsDown)
 {
-    if (Key >= (int)Keys.size())
+    if (Key >= (int)MouseKeys.size())
     {
         MouseKeys.resize(Key+1,false);
         MouseKeyMem.resize(Key+1,false);

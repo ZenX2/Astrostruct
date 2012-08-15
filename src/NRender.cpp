@@ -131,6 +131,10 @@ NRender::NRender()
     {
         return;
     }
+    GetGame()->GetLog()->Send("RENDER",2,"OpenGL");
+    GetGame()->GetLog()->Send("RENDER",2,std::string("\tVendor: ")+(char*)glGetString(GL_VENDOR));
+    GetGame()->GetLog()->Send("RENDER",2,std::string("\tVersion: ")+(char*)glGetString(GL_VERSION));
+    GetGame()->GetLog()->Send("RENDER",2,std::string("\tRenderer: ")+(char*)glGetString(GL_RENDERER));
     glGenBuffers(2,VertexBuffers);
     FrameBuffer = 0;
     FTexture = 0;

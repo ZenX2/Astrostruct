@@ -3,6 +3,7 @@
 //NButton inherits NNode
 NButton::NButton(std::string i_Texture) : NNode(NodeButton)
 {
+    ShrinkWrap = false;
     Toggled = false;
     Toggleable = false;
     BorderSize = 0;
@@ -44,6 +45,14 @@ NButton::~NButton()
     {
         delete Texture;
     }
+}
+bool NButton::GetShrinkWrap()
+{
+    return ShrinkWrap;
+}
+void NButton::SetShrinkWrap(bool i_ShrinkWrap)
+{
+    ShrinkWrap = i_ShrinkWrap;
 }
 
 NText* NButton::GetText()
@@ -215,6 +224,10 @@ void NButton::Tick(double DT)
     if (Texture)
     {
         Texture->Tick(DT);
+    }
+    if (ShrinkWrap && DisplayText)
+    {
+        SetScale(glm::vec3(DisplayText->GetWidth(),GetScale().y,GetScale().z));
     }
     glm::vec2 MP = GetGame()->GetInput()->GetMouse();
     //Check if the mouse intersects with button
