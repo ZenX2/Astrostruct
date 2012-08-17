@@ -136,6 +136,11 @@ NRender::NRender()
     GetGame()->GetLog()->Send("RENDER",2,std::string("\tVersion: ")+(char*)glGetString(GL_VERSION));
     GetGame()->GetLog()->Send("RENDER",2,std::string("\tRenderer: ")+(char*)glGetString(GL_RENDERER));
     GetGame()->GetLog()->Send("RENDER",2,std::string("\tGLSL Version: ")+(char*)glGetString(GL_SHADING_LANGUAGE_VERSION));
+    if (!GLEW_VERSION_2_0)
+    {
+        GetGame()->GetLog()->Send("RENDER",0,"Sorry! You need OpenGL 2.0 or higher to run this; try updating your graphics drivers!");
+        exit(1);
+    }
     glGenBuffers(2,VertexBuffers);
     FrameBuffer = 0;
     FTexture = 0;
