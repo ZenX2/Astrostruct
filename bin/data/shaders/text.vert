@@ -1,11 +1,11 @@
-#version 330
+#version 120
 
-layout(location = 0) in vec2 VertexPosition;
-layout(location = 1) in vec2 UVPosition;
+attribute vec2 VertexPosition;
+attribute vec2 UVPosition;
 
 uniform mat4 MVP;
 
-out vec2 UVCoords;
+varying vec2 UVCoords;
 
 void main()
 {

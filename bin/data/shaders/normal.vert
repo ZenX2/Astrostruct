@@ -1,9 +1,9 @@
-#version 330
+#version 120
 
-layout(location = 0) in vec3 VertexPosition;
+attribute vec3 VertexPosition;
 
 uniform mat4 MVP;
-out float FogDensity;
+varying float FogDensity;
 
 void main()
 {

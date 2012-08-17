@@ -1,6 +1,6 @@
-#version 330
+#version 120
 
-layout(location = 0) in vec2 VertexPosition;
+attribute vec2 VertexPosition;
 
 uniform mat4 MVP;
 

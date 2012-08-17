@@ -1,13 +1,12 @@
-#version 330
+#version 120
 
 uniform vec4 Color;
 
-out vec4 FinalColor;
-in float FogDensity;
+varying float FogDensity;
 
 void main()
 {
 	vec4 FogColor = vec4(0.0,0.0,0.0,1.0)*FogDensity;
 	float AntiFogDensity = 1.0-FogDensity;
-	FinalColor = FogColor+(Color*AntiFogDensity);
+	gl_FragColor = FogColor+(Color*AntiFogDensity);
 }
