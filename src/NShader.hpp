@@ -81,10 +81,14 @@ public:
     * @return An OpenGL uniform location ID.
     */
     GLuint GetUniformLocation(std::string i_Name);
+    GLuint GetVertexAttribute();
+    GLuint GetUVAttribute();
 private:
     GLuint ProgramID;
     std::string Name;
     std::vector<NUniform*> Uniforms;
+    GLuint VertexAttribute;
+    GLuint UVAttribute;
 };
 
 #endif

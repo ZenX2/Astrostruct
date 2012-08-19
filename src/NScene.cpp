@@ -29,7 +29,12 @@ void NScene::Draw(NCamera* View)
     if (!FullBright)
     {
         GetGame()->GetRender()->glPushFramebuffer();
-        glBindFramebuffer(GL_FRAMEBUFFER, GetGame()->GetLightSystem()->GetFramebuffer());
+        if (GLEW_VERSION_3_0)
+        {
+            glBindFramebuffer(GL_FRAMEBUFFER, GetGame()->GetLightSystem()->GetFramebuffer());
+        } else {
+            glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, GetGame()->GetLightSystem()->GetFramebuffer());
+        }
         glClearColor(0,0,0,1);
         glClear(GL_COLOR_BUFFER_BIT);
         for (unsigned int i=0;i<Layers[2].size();i++)

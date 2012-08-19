@@ -89,6 +89,7 @@ public:
      * @brief Regenerates our FBO when the screen changes size for us.
      */
     void CheckFBO();
+    void ExtCheckFBO();
 private:
     NShader* Shader;
     GLuint TextureLoc;

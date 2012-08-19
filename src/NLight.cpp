@@ -179,12 +179,12 @@ void NLight::DrawLight(NCamera* View)
     glm::mat4 MVP = View->GetPerspMatrix()*View->GetPerspViewMatrix()*GetModelMatrix();
     glUniformMatrix4fv(MatrixLoc,1,GL_FALSE,&MVP[0][0]);
     glUniform4fv(ColorLoc,1,&(GetColor()[0]));
-    glEnableVertexAttribArray(0);
+    glEnableVertexAttribArray(Shader->GetVertexAttribute());
     glBindBuffer(GL_ARRAY_BUFFER,Buffers[0]);
-    glVertexAttribPointer(0,2,GL_FLOAT,GL_FALSE,0,NULL);
-    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(Shader->GetVertexAttribute(),2,GL_FLOAT,GL_FALSE,0,NULL);
+    glEnableVertexAttribArray(Shader->GetUVAttribute());
     glBindBuffer(GL_ARRAY_BUFFER,Buffers[1]);
-    glVertexAttribPointer(1,2,GL_FLOAT,GL_FALSE,0,NULL);
+    glVertexAttribPointer(Shader->GetUVAttribute(),2,GL_FLOAT,GL_FALSE,0,NULL);
     
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -193,8 +193,8 @@ void NLight::DrawLight(NCamera* View)
     glDisable(GL_TEXTURE_2D);
     glDisable(GL_BLEND);
 
-    glDisableVertexAttribArray(0);
-    glDisableVertexAttribArray(1);
+    glDisableVertexAttribArray(Shader->GetVertexAttribute());
+    glDisableVertexAttribArray(Shader->GetUVAttribute());
     glUseProgram(0);
 }
 void NLight::DrawShadow(NCamera* View)
@@ -209,51 +209,22 @@ void NLight::DrawShadow(NCamera* View)
     glm::mat4 MVP = View->GetPerspMatrix()*View->GetViewMatrix();
     glUniformMatrix4fv(SMatrixLoc,1,GL_FALSE,&MVP[0][0]);
     glUniform4f(SColorLoc,0,0,0,0);
-    glEnableVertexAttribArray(0);
+    glEnableVertexAttribArray(ShadowShader->GetVertexAttribute());
     glBindBuffer(GL_ARRAY_BUFFER,Buffers[2]);
-    glVertexAttribPointer(0,3,GL_FLOAT,GL_FALSE,0,NULL);
+    glVertexAttribPointer(ShadowShader->GetVertexAttribute(),3,GL_FLOAT,GL_FALSE,0,NULL);
     
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glDrawArrays(GL_QUADS,0,Shadows.size());
     glDisable(GL_BLEND);
 
-    glDisableVertexAttribArray(0);
+    glDisableVertexAttribArray(ShadowShader->GetVertexAttribute());
     glUseProgram(0);
 }
 
 NLightSystem::NLightSystem()
 {
-    glGenFramebuffers(1,&FrameBuffer);
-    glBindFramebuffer(GL_FRAMEBUFFER, FrameBuffer);
-
-    //Texture
-    glGenTextures(1,&FrameBufferTexture);
-    glBindTexture(GL_TEXTURE_2D,FrameBufferTexture);
-    glTexImage2D(GL_TEXTURE_2D, 0,GL_RGB, GetGame()->GetWindowWidth(), GetGame()->GetWindowHeight(), 0,GL_RGB, GL_UNSIGNED_BYTE, 0);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST); //According to the tutorial I'm following, frame buffers require bad filtering.
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glFramebufferTexture(GL_FRAMEBUFFER,GL_COLOR_ATTACHMENT0,FrameBufferTexture,0);
-
-    //Stencil
-    /*glGenTextures(1,&StencilBuffer);
-    glBindTexture(GL_TEXTURE_2D,StencilBuffer);
-    glTexImage2D(GL_TEXTURE_2D, 0,GL_RGB, GetGame()->GetWindowWidth(), GetGame()->GetWindowHeight(), 0,GL_RGB, GL_UNSIGNED_BYTE, 0);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST); //According to the tutorial I'm following, frame buffers require bad filtering.
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glFramebufferTexture(GL_FRAMEBUFFER,GL_STENCIL_ATTACHMENT,StencilBuffer,0);*/
-    glGenRenderbuffers(1,&StencilBuffer);
-    glBindRenderbuffer(GL_RENDERBUFFER,StencilBuffer);
-    glRenderbufferStorage(GL_RENDERBUFFER,GL_DEPTH_STENCIL,GetGame()->GetWindowWidth(),GetGame()->GetWindowHeight());
-    glFramebufferRenderbuffer(GL_FRAMEBUFFER,GL_DEPTH_ATTACHMENT,GL_RENDERBUFFER,StencilBuffer);
-    glFramebufferRenderbuffer(GL_FRAMEBUFFER,GL_STENCIL_ATTACHMENT,GL_RENDERBUFFER,StencilBuffer);
-
-    GetGame()->GetRender()->CheckFramebuffer();
-    glClearColor(1,1,1,1);
-    glClearStencil(0);
-    glClear(GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-    glBindTexture(GL_TEXTURE_2D, 0);
-    glBindFramebuffer(GL_FRAMEBUFFER,0);
+    FrameBuffer = 0;
 
     //Generate screen quad
     Shader = GetGame()->GetRender()->GetShader("flat_colorless");
@@ -280,9 +251,15 @@ NLightSystem::NLightSystem()
 
 void NLightSystem::CheckFBO()
 {
-    if (!GetGame()->GetWindowChanged())
+    if (!GetGame()->GetWindowChanged() && FrameBuffer != 0)
     {
         return;
+    }
+    if (FrameBuffer)
+    {
+        glDeleteFramebuffers(1,&FrameBuffer);
+        glDeleteTextures(1,&FrameBufferTexture);
+        glDeleteRenderbuffers(1,&StencilBuffer);
     }
     glBindFramebuffer(GL_FRAMEBUFFER, FrameBuffer);
     glBindTexture(GL_TEXTURE_2D,FrameBufferTexture);
@@ -295,6 +272,52 @@ void NLightSystem::CheckFBO()
     glFramebufferRenderbuffer(GL_FRAMEBUFFER,GL_DEPTH_ATTACHMENT,GL_RENDERBUFFER,StencilBuffer);
     glFramebufferRenderbuffer(GL_FRAMEBUFFER,GL_STENCIL_ATTACHMENT,GL_RENDERBUFFER,StencilBuffer);
     GetGame()->GetRender()->CheckFramebuffer();
+    glClear(GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+    glBindTexture(GL_TEXTURE_2D, 0);
+    glBindFramebuffer(GL_FRAMEBUFFER,0);
+
+    glClearColor(1,1,1,1);
+    glClearStencil(0);
+    glClear(GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+    glBindTexture(GL_TEXTURE_2D, 0);
+    glBindFramebuffer(GL_FRAMEBUFFER,0);
+}
+
+void NLightSystem::ExtCheckFBO()
+{
+    if (!GetGame()->GetWindowChanged() && FrameBuffer != 0)
+    {
+        return;
+    }
+    //Create a frame buffer that we can render too, then we can apply post effects to it.
+    if (FrameBuffer != 0)
+    {
+        glDeleteFramebuffersEXT(1,&FrameBuffer);
+        glDeleteTextures(1,&FrameBufferTexture);
+        glDeleteRenderbuffers(1,&StencilBuffer);
+    }
+    glGenFramebuffersEXT(1, &FrameBuffer);
+    glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, FrameBuffer);
+
+    //Color
+    glGenTextures(1, &FrameBufferTexture);
+    glBindTexture(GL_TEXTURE_2D,FrameBufferTexture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, GetGame()->GetWindowWidth(), GetGame()->GetWindowHeight(), 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST); //According to the tutorial I'm following, frame buffers require bad filtering.
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+    glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT,GL_COLOR_ATTACHMENT0_EXT,GL_TEXTURE_2D,FrameBufferTexture,0);
+
+    //Stencil
+    glGenRenderbuffersEXT(1, &StencilBuffer);
+    glBindRenderbufferEXT(GL_RENDERBUFFER_EXT,StencilBuffer);
+    glRenderbufferStorageEXT(GL_RENDERBUFFER_EXT,GL_DEPTH_STENCIL_EXT,GetGame()->GetWindowWidth(),GetGame()->GetWindowHeight());
+    glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT,GL_STENCIL_ATTACHMENT_EXT,GL_RENDERBUFFER_EXT,StencilBuffer);
+    glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT,GL_DEPTH_ATTACHMENT_EXT,GL_RENDERBUFFER_EXT,StencilBuffer);
+    GetGame()->GetRender()->CheckFramebuffer();
+
+    glClearColor(1,1,1,1);
+    glClearStencil(0);
     glClear(GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
     glBindTexture(GL_TEXTURE_2D, 0);
     glBindFramebuffer(GL_FRAMEBUFFER,0);
@@ -314,33 +337,15 @@ GLuint NLightSystem::GetFramebuffer()
 
 void NLightSystem::Draw()
 {
-    CheckFBO();
+    if (GLEW_VERSION_3_0)
+    {
+        CheckFBO();
+    } else if (GLEW_EXT_framebuffer_object)
+    {
+        ExtCheckFBO();
+    }
     if (Shader == NULL)
     {
-        glEnableClientState(GL_VERTEX_ARRAY);
-        glBindBuffer(GL_ARRAY_BUFFER,VertexBuffers[0]);
-        glVertexPointer(2,GL_FLOAT,0,NULL);
-
-        glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-        glBindBuffer(GL_ARRAY_BUFFER,VertexBuffers[1]);
-        glTexCoordPointer(2,GL_FLOAT,0,NULL);
-
-        glBindTexture(GL_TEXTURE_2D,FrameBufferTexture);
-
-        glMatrixMode(GL_PROJECTION);
-        glLoadIdentity();
-        glMatrixMode(GL_MODELVIEW);
-        glLoadIdentity();
-
-        glEnable(GL_TEXTURE_2D);
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_DST_COLOR, GL_ZERO);
-        glDrawArrays(GL_QUADS,0,Verts.size());
-        glDisable(GL_TEXTURE_2D);
-        glDisable(GL_BLEND);
-
-        glDisableClientState(GL_VERTEX_ARRAY);
-        glDisableClientState(GL_TEXTURE_COORD_ARRAY);
         return;
     }
     glEnable(GL_TEXTURE_2D);
@@ -348,12 +353,12 @@ void NLightSystem::Draw()
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D,FrameBufferTexture);
     glUniform1i(TextureLoc,0);
-    glEnableVertexAttribArray(0);
+    glEnableVertexAttribArray(Shader->GetVertexAttribute());
     glBindBuffer(GL_ARRAY_BUFFER,VertexBuffers[0]);
-    glVertexAttribPointer(0,2,GL_FLOAT,GL_FALSE,0,NULL);
-    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(Shader->GetVertexAttribute(),2,GL_FLOAT,GL_FALSE,0,NULL);
+    glEnableVertexAttribArray(Shader->GetUVAttribute());
     glBindBuffer(GL_ARRAY_BUFFER,VertexBuffers[1]);
-    glVertexAttribPointer(1,2,GL_FLOAT,GL_FALSE,0,NULL);
+    glVertexAttribPointer(Shader->GetUVAttribute(),2,GL_FLOAT,GL_FALSE,0,NULL);
     
     glEnable(GL_BLEND);
     glBlendFunc(GL_DST_COLOR, GL_ZERO);
@@ -362,8 +367,8 @@ void NLightSystem::Draw()
     glDisable(GL_TEXTURE_2D);
     glDisable(GL_BLEND);
 
-    glDisableVertexAttribArray(0);
-    glDisableVertexAttribArray(1);
+    glDisableVertexAttribArray(Shader->GetVertexAttribute());
+    glDisableVertexAttribArray(Shader->GetUVAttribute());
     glUseProgram(0);
 }
 

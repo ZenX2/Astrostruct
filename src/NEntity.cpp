@@ -345,12 +345,12 @@ void NEntity::Draw(NCamera* View)
     glm::mat4 MVP = View->GetPerspMatrix()*View->GetPerspViewMatrix()*GetModelMatrix();
     glUniformMatrix4fv(MatrixLoc,1,GL_FALSE,&MVP[0][0]);
     glUniform4fv(ColorLoc,1,&(GetColor()[0]));
-    glEnableVertexAttribArray(0);
+    glEnableVertexAttribArray(Shader->GetVertexAttribute());
     glBindBuffer(GL_ARRAY_BUFFER,Buffers[0]);
-    glVertexAttribPointer(0,2,GL_FLOAT,GL_FALSE,0,NULL);
-    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(Shader->GetVertexAttribute(),2,GL_FLOAT,GL_FALSE,0,NULL);
+    glEnableVertexAttribArray(Shader->GetUVAttribute());
     glBindBuffer(GL_ARRAY_BUFFER,Buffers[1]);
-    glVertexAttribPointer(1,2,GL_FLOAT,GL_FALSE,0,NULL);
+    glVertexAttribPointer(Shader->GetUVAttribute(),2,GL_FLOAT,GL_FALSE,0,NULL);
     
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -359,8 +359,8 @@ void NEntity::Draw(NCamera* View)
     glDisable(GL_TEXTURE_2D);
     glDisable(GL_BLEND);
 
-    glDisableVertexAttribArray(0);
-    glDisableVertexAttribArray(1);
+    glDisableVertexAttribArray(Shader->GetVertexAttribute());
+    glDisableVertexAttribArray(Shader->GetUVAttribute());
     glUseProgram(0);
 }
 

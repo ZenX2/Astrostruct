@@ -487,83 +487,35 @@ void NText::Draw(NCamera* View)
 
 void NText::DrawMask(NCamera* View)
 {
-    if (GetColor().w == 0)
+    if (GetColor().w == 0 || MaskShader == NULL)
     {
         return;
     }
     GenerateBuffers();
-    if (MaskShader == NULL)
-    {
-        glEnableClientState(GL_VERTEX_ARRAY);
-        glBindBuffer(GL_ARRAY_BUFFER,Buffers[2]);
-        glVertexPointer(2,GL_FLOAT,0,NULL);
-
-        glMatrixMode(GL_PROJECTION);
-        glLoadMatrixf(&View->GetPerspMatrix()[0][0]);
-        glMatrixMode(GL_MODELVIEW);
-        glm::mat4 MVP = View->GetViewMatrix();
-        glLoadMatrixf(&MVP[0][0]);
-
-        glColor4f(1,1,1,1);
-        glDrawArrays(GL_QUADS,0,Mask.size());
-
-        glDisableClientState(GL_VERTEX_ARRAY);
-        return;
-    }
     glUseProgram(MaskShader->GetID());
     glm::mat4 MVP = View->GetOrthoMatrix()*View->GetViewMatrix()*GetModelMatrix();
     glUniformMatrix4fv(MMatrixLoc,1,GL_FALSE,&MVP[0][0]);
     glUniform4f(MColorLoc,0,0,0,0);
-    glEnableVertexAttribArray(0);
+    glEnableVertexAttribArray(MaskShader->GetVertexAttribute());
     glBindBuffer(GL_ARRAY_BUFFER,Buffers[2]);
-    glVertexAttribPointer(0,2,GL_FLOAT,GL_FALSE,0,NULL);
+    glVertexAttribPointer(MaskShader->GetVertexAttribute(),2,GL_FLOAT,GL_FALSE,0,NULL);
     
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glDrawArrays(GL_QUADS,0,Mask.size());
     glDisable(GL_BLEND);
 
-    glDisableVertexAttribArray(0);
-    glUseProgram(0);
+    glDisableVertexAttribArray(MaskShader->GetVertexAttribute());
+    glUseProgram(MaskShader->GetVertexAttribute());
 }
 
 void NText::DrawText(NCamera* View)
 {
-    if (Face == NULL || GetColor().w == 0)
+    if (Face == NULL || GetColor().w == 0 || Shader == NULL)
     {
         return;
     }
     GenerateBuffers();
-    if (Shader == NULL)
-    {
-        glEnableClientState(GL_VERTEX_ARRAY);
-        glBindBuffer(GL_ARRAY_BUFFER,Buffers[0]);
-        glVertexPointer(2,GL_FLOAT,0,NULL);
-
-        glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-        glBindBuffer(GL_ARRAY_BUFFER,Buffers[1]);
-        glTexCoordPointer(2,GL_FLOAT,0,NULL);
-
-        glEnable(GL_TEXTURE_2D);
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        glBindTexture(GL_TEXTURE_2D,Face->GetTexture(Size));
-
-        glMatrixMode(GL_PROJECTION);
-        glLoadMatrixf(&View->GetOrthoMatrix()[0][0]);
-        glMatrixMode(GL_MODELVIEW);
-        glm::mat4 MVP = View->GetViewMatrix()*GetModelMatrix();
-        glLoadMatrixf(&MVP[0][0]);
-
-        glColor4fv(&(GetColor()[0]));
-        glDrawArrays(GL_QUADS,0,Verts.size());
-        glDisable(GL_TEXTURE_2D);
-        glDisable(GL_BLEND);
-
-        glDisableClientState(GL_VERTEX_ARRAY);
-        glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-        return;
-    }
     glUseProgram(Shader->GetID());
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D,Face->GetTexture(Size));
@@ -577,12 +529,12 @@ void NText::DrawText(NCamera* View)
     }
     glUniformMatrix4fv(MatrixLoc,1,GL_FALSE,&MVP[0][0]);
     glUniform4fv(ColorLoc,1,&(GetColor()[0]));
-    glEnableVertexAttribArray(0);
+    glEnableVertexAttribArray(Shader->GetVertexAttribute());
     glBindBuffer(GL_ARRAY_BUFFER,Buffers[0]);
-    glVertexAttribPointer(0,2,GL_FLOAT,GL_FALSE,0,NULL);
-    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(Shader->GetVertexAttribute(),2,GL_FLOAT,GL_FALSE,0,NULL);
+    glEnableVertexAttribArray(Shader->GetUVAttribute());
     glBindBuffer(GL_ARRAY_BUFFER,Buffers[1]);
-    glVertexAttribPointer(1,2,GL_FLOAT,GL_FALSE,0,NULL);
+    glVertexAttribPointer(Shader->GetUVAttribute(),2,GL_FLOAT,GL_FALSE,0,NULL);
     
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -591,8 +543,8 @@ void NText::DrawText(NCamera* View)
     glDisable(GL_TEXTURE_2D);
     glDisable(GL_BLEND);
 
-    glDisableVertexAttribArray(0);
-    glDisableVertexAttribArray(1);
+    glDisableVertexAttribArray(Shader->GetVertexAttribute());
+    glDisableVertexAttribArray(Shader->GetUVAttribute());
     glUseProgram(0);
 }
 

@@ -450,8 +450,8 @@ void NMap::Draw(NCamera* View)
     glm::mat4 MVP = View->GetPerspMatrix()*View->GetPerspViewMatrix()*GetModelMatrix();
     glUniformMatrix4fv(MatrixLoc,1,GL_FALSE,&MVP[0][0]);
     glUniform4fv(ColorLoc,1,&(GetColor()[0]));
-    glEnableVertexAttribArray(0);
-    glEnableVertexAttribArray(1);
+    glEnableVertexAttribArray(Shader->GetVertexAttribute());
+    glEnableVertexAttribArray(Shader->GetUVAttribute());
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glEnable(GL_TEXTURE_2D);
@@ -463,17 +463,17 @@ void NMap::Draw(NCamera* View)
     for (unsigned int i=Check;i<=ViewingLevel;i++)
     {
         glBindBuffer(GL_ARRAY_BUFFER,Buffers[i][0]);
-        glVertexAttribPointer(0,3,GL_FLOAT,GL_FALSE,0,NULL);
+        glVertexAttribPointer(Shader->GetVertexAttribute(),3,GL_FLOAT,GL_FALSE,0,NULL);
         glBindBuffer(GL_ARRAY_BUFFER,Buffers[i][1]);
-        glVertexAttribPointer(1,2,GL_FLOAT,GL_FALSE,0,NULL);
+        glVertexAttribPointer(Shader->GetUVAttribute(),2,GL_FLOAT,GL_FALSE,0,NULL);
         
         glDrawArrays(GL_QUADS,0,Verts[i].size());
         if (i != ViewingLevel)
         {
             glBindBuffer(GL_ARRAY_BUFFER,Buffers[i][3]);
-            glVertexAttribPointer(0,3,GL_FLOAT,GL_FALSE,0,NULL);
+            glVertexAttribPointer(Shader->GetVertexAttribute(),3,GL_FLOAT,GL_FALSE,0,NULL);
             glBindBuffer(GL_ARRAY_BUFFER,Buffers[i][4]);
-            glVertexAttribPointer(1,2,GL_FLOAT,GL_FALSE,0,NULL);
+            glVertexAttribPointer(Shader->GetUVAttribute(),2,GL_FLOAT,GL_FALSE,0,NULL);
             
             glDrawArrays(GL_QUADS,0,BoxVerts[i].size());
         }
@@ -487,10 +487,10 @@ void NMap::Draw(NCamera* View)
     glUniformMatrix4fv(OutlineMatrixLoc,1,GL_FALSE,&MVP[0][0]);
     glLineWidth(3);
     glBindBuffer(GL_ARRAY_BUFFER,Buffers[ViewingLevel][2]);
-    glVertexAttribPointer(0,3,GL_FLOAT,GL_FALSE,0,NULL);
+    glVertexAttribPointer(OutlineShader->GetVertexAttribute(),3,GL_FLOAT,GL_FALSE,0,NULL);
     
     glDrawArrays(GL_LINES,0,Outline[ViewingLevel].size());
-    glDisableVertexAttribArray(0);
+    glDisableVertexAttribArray(OutlineShader->GetVertexAttribute());
 }
 void NMap::Tick(double DT)
 {

@@ -81,33 +81,81 @@ void NRender::GenerateFramebuffer()
     if (FrameBuffer != 0)
     {
         glDeleteFramebuffers(1,&FrameBuffer);
-        glDeleteTextures(1,&FTexture);
+        glDeleteTextures(1,&FrameBufferTexture);
         glDeleteRenderbuffers(1,&DepthBuffer);
     }
     glGenFramebuffers(1,&FrameBuffer);
     glBindFramebuffer(GL_FRAMEBUFFER, FrameBuffer);
-    glGenTextures(1,&FTexture);
-    glBindTexture(GL_TEXTURE_2D,FTexture);
+    glGenTextures(1,&FrameBufferTexture);
+
+    glBindTexture(GL_TEXTURE_2D,FrameBufferTexture);
     glTexImage2D(GL_TEXTURE_2D, 0,GL_RGB, GetGame()->GetWindowWidth(), GetGame()->GetWindowHeight(), 0,GL_RGB, GL_UNSIGNED_BYTE, 0);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST); //According to the tutorial I'm following, frame buffers require bad filtering.
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glFramebufferTexture(GL_FRAMEBUFFER,GL_COLOR_ATTACHMENT0,FrameBufferTexture,0);
+
     glGenRenderbuffers(1,&DepthBuffer);
     glBindRenderbuffer(GL_RENDERBUFFER,DepthBuffer);
     glRenderbufferStorage(GL_RENDERBUFFER,GL_DEPTH_COMPONENT,GetGame()->GetWindowWidth(),GetGame()->GetWindowHeight());
     glFramebufferRenderbuffer(GL_FRAMEBUFFER,GL_DEPTH_ATTACHMENT,GL_RENDERBUFFER,DepthBuffer);
-    glFramebufferTexture(GL_FRAMEBUFFER,GL_COLOR_ATTACHMENT0,FTexture,0);
-    glGenRenderbuffers(1,&StencilBuffer);
-    glBindRenderbuffer(GL_RENDERBUFFER,StencilBuffer);
-    glRenderbufferStorage(GL_RENDERBUFFER,GL_DEPTH_STENCIL,GetGame()->GetWindowWidth(),GetGame()->GetWindowHeight());
-    glFramebufferRenderbuffer(GL_FRAMEBUFFER,GL_DEPTH_ATTACHMENT,GL_RENDERBUFFER,StencilBuffer);
-    glFramebufferRenderbuffer(GL_FRAMEBUFFER,GL_STENCIL_ATTACHMENT,GL_RENDERBUFFER,StencilBuffer);
-
     CheckFramebuffer();
+
     glClearColor(1,1,1,1);
     glClearStencil(0);
     glClear(GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
     glBindTexture(GL_TEXTURE_2D, 0);
     glBindFramebuffer(GL_FRAMEBUFFER,0);
+    //Now create the vertex buffers to draw the quad to the screen.
+    Verts.clear();
+    UVs.clear();
+    Verts.push_back(glm::vec2(-1,-1));
+    UVs.push_back(glm::vec2(0,0));
+    Verts.push_back(glm::vec2(1,-1));
+    UVs.push_back(glm::vec2(1,0));
+    Verts.push_back(glm::vec2(1,1));
+    UVs.push_back(glm::vec2(1,1));
+    Verts.push_back(glm::vec2(-1,1));
+    UVs.push_back(glm::vec2(0,1));
+    glBindBuffer(GL_ARRAY_BUFFER,VertexBuffers[0]);
+    glBufferData(GL_ARRAY_BUFFER,Verts.size()*sizeof(glm::vec2),&Verts[0],GL_STATIC_DRAW);
+    glBindBuffer(GL_ARRAY_BUFFER,VertexBuffers[1]);
+    glBufferData(GL_ARRAY_BUFFER,UVs.size()*sizeof(glm::vec2),&UVs[0],GL_STATIC_DRAW);
+}
+
+void NRender::ExtGenerateFramebuffer()
+{
+    //Create a frame buffer that we can render too, then we can apply post effects to it.
+    if (FrameBuffer != 0)
+    {
+        glDeleteFramebuffersEXT(1,&FrameBuffer);
+        glDeleteTextures(1,&FrameBufferTexture);
+        //glDeleteRenderbuffers(1,&StencilBuffer);
+        glDeleteRenderbuffers(1,&DepthBuffer);
+    }
+    glGenFramebuffersEXT(1, &FrameBuffer);
+    glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, FrameBuffer);
+
+    //Color
+    glGenTextures(1, &FrameBufferTexture);
+    glBindTexture(GL_TEXTURE_2D,FrameBufferTexture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, GetGame()->GetWindowWidth(), GetGame()->GetWindowHeight(), 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST); //According to the tutorial I'm following, frame buffers require bad filtering.
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+    glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT,GL_COLOR_ATTACHMENT0_EXT,GL_TEXTURE_2D,FrameBufferTexture,0);
+
+    //Depth
+    glGenRenderbuffersEXT(1, &DepthBuffer);
+    glBindRenderbufferEXT(GL_RENDERBUFFER_EXT,DepthBuffer);
+    glRenderbufferStorageEXT(GL_RENDERBUFFER_EXT,GL_DEPTH_COMPONENT,GetGame()->GetWindowWidth(),GetGame()->GetWindowHeight());
+    glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT,GL_DEPTH_ATTACHMENT_EXT,GL_RENDERBUFFER_EXT,DepthBuffer);
+    CheckFramebuffer();
+
+    glClearColor(1,1,1,1);
+    glClearStencil(0);
+    glClear(GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+    glBindTexture(GL_TEXTURE_2D, 0);
+    glBindFramebufferEXT(GL_FRAMEBUFFER_EXT,0);
     //Now create the vertex buffers to draw the quad to the screen.
     Verts.clear();
     UVs.clear();
@@ -143,9 +191,16 @@ NRender::NRender()
     }
     glGenBuffers(2,VertexBuffers);
     FrameBuffer = 0;
-    FTexture = 0;
-    DepthBuffer = 0;
-    GenerateFramebuffer();
+    if (GLEW_VERSION_3_0)
+    {
+        GenerateFramebuffer();
+    } else if (GLEW_EXT_framebuffer_object)
+    {
+        ExtGenerateFramebuffer();
+    } else {
+        GetGame()->GetLog()->Send("RENDER",0,"Sorry! You either need OpenGL 3.0 or the GL_EXT_framebuffer_object extension to play this game!");
+        exit(1);
+    }
     FrameTime = 0;
     LoadShaders();
     PostEffect = GetShader("post");
@@ -184,7 +239,13 @@ void NRender::SetSize(glm::vec2 i_Size)
     }
     Size = i_Size;
     glViewport(0,0,Size.x,Size.y);
-    GenerateFramebuffer();
+    if (GLEW_VERSION_3_0)
+    {
+        GenerateFramebuffer();
+    } else if (GLEW_EXT_framebuffer_object)
+    {
+        ExtGenerateFramebuffer();
+    }
 }
 
 void NRender::SetSize(float Width, float Height)
@@ -256,7 +317,12 @@ void NRender::Draw()
     }
     LastTime = CurTime();
     glClearColor(0,0,0,1);
-    glBindFramebuffer(GL_FRAMEBUFFER,FrameBuffer);
+    if (GLEW_VERSION_3_0)
+    {
+        glBindFramebuffer(GL_FRAMEBUFFER,FrameBuffer);
+    } else {
+        glBindFramebufferEXT(GL_FRAMEBUFFER_EXT,FrameBuffer);
+    }
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
     if (Camera)
@@ -266,56 +332,31 @@ void NRender::Draw()
         Camera = new NCamera();
         GetGame()->GetScene()->Draw(Camera);
     }
-    glBindFramebuffer(GL_FRAMEBUFFER,0);
-    if (PostEffect == NULL)
+    if (GLEW_VERSION_3_0)
     {
-        glEnableClientState(GL_VERTEX_ARRAY);
-        glBindBuffer(GL_ARRAY_BUFFER,VertexBuffers[0]);
-        glVertexPointer(2,GL_FLOAT,0,NULL);
-
-        glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-        glBindBuffer(GL_ARRAY_BUFFER,VertexBuffers[1]);
-        glTexCoordPointer(2,GL_FLOAT,0,NULL);
-
-        glBindTexture(GL_TEXTURE_2D,FTexture);
-
-        glMatrixMode(GL_PROJECTION);
-        glLoadIdentity();
-        glMatrixMode(GL_MODELVIEW);
-        glLoadIdentity();
-
-        glEnable(GL_TEXTURE_2D);
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_DST_COLOR, GL_ZERO);
-        glDrawArrays(GL_QUADS,0,Verts.size());
-        glDisable(GL_TEXTURE_2D);
-        glDisable(GL_BLEND);
-
-        glDisableClientState(GL_VERTEX_ARRAY);
-        glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-        glfwSwapBuffers();
-        glError();
-        return;
+        glBindFramebuffer(GL_FRAMEBUFFER,0);
+    } else {
+        glBindFramebufferEXT(GL_FRAMEBUFFER_EXT,0);
     }
     glEnable(GL_TEXTURE_2D);
     glUseProgram(PostEffect->GetID());
     glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D,FTexture);
+    glBindTexture(GL_TEXTURE_2D,FrameBufferTexture);
     glUniform1i(TextureLoc,0);
     glUniform1f(TimeLoc,(float)CurTime());
-    glEnableVertexAttribArray(0);
+    glEnableVertexAttribArray(PostEffect->GetVertexAttribute());
     glBindBuffer(GL_ARRAY_BUFFER,VertexBuffers[0]);
-    glVertexAttribPointer(0,2,GL_FLOAT,GL_FALSE,0,NULL);
-    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(PostEffect->GetVertexAttribute(),2,GL_FLOAT,GL_FALSE,0,NULL);
+    glEnableVertexAttribArray(PostEffect->GetUVAttribute());
     glBindBuffer(GL_ARRAY_BUFFER,VertexBuffers[1]);
-    glVertexAttribPointer(1,2,GL_FLOAT,GL_FALSE,0,NULL);
-    
+    glVertexAttribPointer(PostEffect->GetUVAttribute(),2,GL_FLOAT,GL_FALSE,0,NULL);
+
     glEnable(GL_TEXTURE_2D);
     glDrawArrays(GL_QUADS,0,Verts.size());
     glDisable(GL_TEXTURE_2D);
 
-    glDisableVertexAttribArray(0);
-    glDisableVertexAttribArray(1);
+    glDisableVertexAttribArray(PostEffect->GetVertexAttribute());
+    glDisableVertexAttribArray(PostEffect->GetUVAttribute());
     glUseProgram(0);
 
     glfwSwapBuffers();
@@ -560,7 +601,12 @@ GLuint NRender::StringToEnum(std::string Name)
 void NRender::glPushFramebuffer()
 {
     GLint CurrentFrameBuffer;
-    glGetIntegerv(GL_FRAMEBUFFER_BINDING,&CurrentFrameBuffer);
+    if (GLEW_VERSION_3_0)
+    {
+        glGetIntegerv(GL_FRAMEBUFFER_BINDING,&CurrentFrameBuffer);
+    } else {
+        glGetIntegerv(GL_FRAMEBUFFER_BINDING_EXT,&CurrentFrameBuffer);
+    }
     FrameBufferMem.push_back(CurrentFrameBuffer);
 }
 void NRender::glPopFramebuffer()
@@ -569,65 +615,131 @@ void NRender::glPopFramebuffer()
     {
         return;
     }
-    glBindFramebuffer(GL_FRAMEBUFFER,FrameBufferMem.back());
+    if (GLEW_VERSION_3_0)
+    {
+        glBindFramebuffer(GL_FRAMEBUFFER,FrameBufferMem.back());
+    } else {
+        glBindFramebufferEXT(GL_FRAMEBUFFER_EXT,FrameBufferMem.back());
+    }
     FrameBufferMem.pop_back();
 }
 
 void NRender::CheckFramebuffer()
 {
-    GLuint Check = glCheckFramebufferStatus(GL_FRAMEBUFFER);
-    if (Check == GL_FRAMEBUFFER_COMPLETE)
+    if (GLEW_VERSION_3_0)
     {
-        return;
-    }
-    std::stringstream Message;
-    switch (Check)
+        GLuint Check = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+        if (Check == GL_FRAMEBUFFER_COMPLETE)
+        {
+            return;
+        }
+        std::stringstream Message;
+        switch (Check)
+        {
+            case GL_FRAMEBUFFER_UNDEFINED:
+            {
+                Message << "GL_FRAMEBUFFER_UNDEFINED";
+                break;
+            }
+            case GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT:
+            {
+                Message << "GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT";
+                break;
+            }
+            case GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT:
+            {
+                Message << "GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT";
+                break;
+            }
+            case GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER:
+            {
+                Message << "GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER";
+                break;
+            }
+            case GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER:
+            {
+                Message << "GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER";
+                break;
+            }
+            case GL_FRAMEBUFFER_INCOMPLETE_LAYER_TARGETS:
+            {
+                Message << "GL_FRAMEBUFFER_INCOMPLETE_LAYER_TARGETS";
+                break;
+            }
+            case GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE:
+            {
+                Message << "GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE";
+                break;
+            }
+            case GL_FRAMEBUFFER_UNSUPPORTED:
+            {
+                Message << "GL_FRAMEBUFFER_UNSUPPORTED";
+                break;
+            }
+            default:
+            {
+                Message << "Unknown framebuffer error!";
+                break;
+            }
+        }
+        GetGame()->GetLog()->Send("RENDER",0,Message.str());
+    } else if (GLEW_EXT_framebuffer_object)
     {
-        case GL_FRAMEBUFFER_UNDEFINED:
+        GLuint Check = glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT);
+        if (Check == GL_FRAMEBUFFER_COMPLETE_EXT)
         {
-            Message << "GL_FRAMEBUFFER_UNDEFINED";
-            break;
+            return;
         }
-        case GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT:
+        std::stringstream Message;
+        switch (Check)
         {
-            Message << "GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT";
-            break;
+            /* Apparently doesn't exist as an extension.
+               case GL_FRAMEBUFFER_UNDEFINED_EXT:
+            {
+                Message << "GL_FRAMEBUFFER_UNDEFINED_EXT";
+                break;
+            }*/
+            case GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT_EXT:
+            {
+                Message << "GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT_EXT";
+                break;
+            }
+            case GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT_EXT:
+            {
+                Message << "GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT_EXT";
+                break;
+            }
+            case GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER_EXT:
+            {
+                Message << "GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER_EXT";
+                break;
+            }
+            case GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER_EXT:
+            {
+                Message << "GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER_EXT";
+                break;
+            }
+            case GL_FRAMEBUFFER_INCOMPLETE_LAYER_TARGETS_EXT:
+            {
+                Message << "GL_FRAMEBUFFER_INCOMPLETE_LAYER_TARGETS_EXT";
+                break;
+            }
+            case GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE_EXT:
+            {
+                Message << "GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE_EXT";
+                break;
+            }
+            case GL_FRAMEBUFFER_UNSUPPORTED_EXT:
+            {
+                Message << "GL_FRAMEBUFFER_UNSUPPORTED_EXT";
+                break;
+            }
+            default:
+            {
+                Message << "Unknown framebuffer error!";
+                break;
+            }
         }
-        case GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT:
-        {
-            Message << "GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT";
-            break;
-        }
-        case GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER:
-        {
-            Message << "GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER";
-            break;
-        }
-        case GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER:
-        {
-            Message << "GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER";
-            break;
-        }
-        case GL_FRAMEBUFFER_INCOMPLETE_LAYER_TARGETS:
-        {
-            Message << "GL_FRAMEBUFFER_INCOMPLETE_LAYER_TARGETS";
-            break;
-        }
-        case GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE:
-        {
-            Message << "GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE";
-            break;
-        }
-        case GL_FRAMEBUFFER_UNSUPPORTED:
-        {
-            Message << "GL_FRAMEBUFFER_UNSUPPORTED";
-            break;
-        }
-        default:
-        {
-            Message << "Unknown frambuffer error!";
-            break;
-        }
+        GetGame()->GetLog()->Send("RENDER",0,Message.str());
     }
-    GetGame()->GetLog()->Send("RENDER",0,Message.str());
 }

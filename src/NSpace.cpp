@@ -60,41 +60,8 @@ void NStar::GenerateBuffers()
 void NStar::Draw(NCamera* View)
 {
     GenerateBuffers();
-    if (Texture == NULL || GetColor().w == 0)
+    if (Texture == NULL || GetColor().w == 0 || Shader == NULL)
     {
-        return;
-    }
-    if (Shader == NULL)
-    {
-        glEnableClientState(GL_VERTEX_ARRAY);
-        glBindBuffer(GL_ARRAY_BUFFER,Buffers[0]);
-        glVertexPointer(2,GL_FLOAT,0,NULL);
-
-        glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-        glBindBuffer(GL_ARRAY_BUFFER,Buffers[1]);
-        glTexCoordPointer(2,GL_FLOAT,0,NULL);
-
-        glEnable(GL_TEXTURE_2D);
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        if (Texture != NULL)
-        {
-            glBindTexture(GL_TEXTURE_2D,Texture->GetID());
-        }
-
-        glMatrixMode(GL_PROJECTION);
-        glLoadMatrixf(&View->GetOrthoMatrix()[0][0]);
-        glMatrixMode(GL_MODELVIEW);
-        glm::mat4 MVP = View->GetViewMatrix()*GetModelMatrix();
-        glLoadMatrixf(&MVP[0][0]);
-
-        glColor4fv(&(GetColor()[0]));
-        glDrawArrays(GL_QUADS,0,Verts.size());
-        glDisable(GL_TEXTURE_2D);
-        glDisable(GL_BLEND);
-
-        glDisableClientState(GL_VERTEX_ARRAY);
-        glDisableClientState(GL_TEXTURE_COORD_ARRAY);
         return;
     }
     glUseProgram(Shader->GetID());
@@ -107,12 +74,12 @@ void NStar::Draw(NCamera* View)
     glm::mat4 MVP = View->GetOrthoMatrix()*View->GetViewMatrix()*GetModelMatrix();
     glUniformMatrix4fv(MatrixLoc,1,GL_FALSE,&MVP[0][0]);
     glUniform4fv(ColorLoc,1,&(GetColor()[0]));
-    glEnableVertexAttribArray(0);
+    glEnableVertexAttribArray(Shader->GetVertexAttribute());
     glBindBuffer(GL_ARRAY_BUFFER,Buffers[0]);
-    glVertexAttribPointer(0,2,GL_FLOAT,GL_FALSE,0,NULL);
-    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(Shader->GetVertexAttribute(),2,GL_FLOAT,GL_FALSE,0,NULL);
+    glEnableVertexAttribArray(Shader->GetUVAttribute());
     glBindBuffer(GL_ARRAY_BUFFER,Buffers[1]);
-    glVertexAttribPointer(1,2,GL_FLOAT,GL_FALSE,0,NULL);
+    glVertexAttribPointer(Shader->GetUVAttribute(),2,GL_FLOAT,GL_FALSE,0,NULL);
     
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -121,8 +88,8 @@ void NStar::Draw(NCamera* View)
     glDisable(GL_TEXTURE_2D);
     glDisable(GL_BLEND);
 
-    glDisableVertexAttribArray(0);
-    glDisableVertexAttribArray(1);
+    glDisableVertexAttribArray(Shader->GetVertexAttribute());
+    glDisableVertexAttribArray(Shader->GetUVAttribute());
     glUseProgram(0);
 }
 

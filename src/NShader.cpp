@@ -3,7 +3,27 @@
 NShader::NShader(std::string i_Name)
 {
     ProgramID = glCreateProgram();
+    VertexAttribute = 0;
+    UVAttribute = 0;
     Name = i_Name;
+}
+
+GLuint NShader::GetUVAttribute()
+{
+    if (UVAttribute == 0)
+    {
+        UVAttribute = glGetAttribLocation(ProgramID,"UVPosition");
+    }
+    return UVAttribute;
+}
+
+GLuint NShader::GetVertexAttribute()
+{
+    if (VertexAttribute == 0)
+    {
+        VertexAttribute = glGetAttribLocation(ProgramID,"VertexPosition");
+    }
+    return VertexAttribute;
 }
 
 NShader::~NShader()
