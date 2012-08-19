@@ -82,6 +82,7 @@ set(source
     src/NWindow.cpp
     src/NSpace.cpp
     src/NEntity.cpp
+    src/NFramebuffer.cpp
     src/NLog.cpp)
 
 # GAME

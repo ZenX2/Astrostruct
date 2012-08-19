@@ -80,7 +80,7 @@ public:
      *
      * @return An OpenGL handle to the FBO.
      */
-    GLuint GetFramebuffer();
+    NFramebuffer* GetFramebuffer();
     /**
      * @brief Draws a textured quad to screen with the FBO.
      */
@@ -96,7 +96,7 @@ private:
     GLuint VertexBuffers[2];
     std::vector<glm::vec2> Verts;
     std::vector<glm::vec2> UVs;
-    GLuint FrameBuffer;
+    NFramebuffer* FrameBuffer;
     GLuint FrameBufferTexture;
     GLuint StencilBuffer;
     std::vector<NLight*> Lights;

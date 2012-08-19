@@ -116,6 +116,7 @@
  *
  */
 #include "NSpace.hpp"
+#include "NFramebuffer.hpp"
 #include "NLight.hpp"
 #include "NMap.hpp"
 #include "NEntity.hpp"

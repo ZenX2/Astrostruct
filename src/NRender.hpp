@@ -207,13 +207,11 @@ public:
 private:
     std::vector<GLuint> FrameBufferMem;
     NShader* PostEffect;
-    void GenerateFramebuffer();
-    void ExtGenerateFramebuffer();
     GLuint TextureLoc,TimeLoc;
     GLuint VertexBuffers[2];
     std::vector<glm::vec2> Verts;
     std::vector<glm::vec2> UVs;
-    GLuint FrameBuffer, FrameBufferTexture, DepthBuffer;
+    NFramebuffer* FrameBuffer;
     void glError();
     glm::vec2 Size;
     double FrameTime;

@@ -224,8 +224,7 @@ void NLight::DrawShadow(NCamera* View)
 
 NLightSystem::NLightSystem()
 {
-    FrameBuffer = 0;
-
+    FrameBuffer = new NFramebuffer(NFramebufferFlags(NColorBuffer | NStencilBuffer), GetGame()->GetWindowWidth(), GetGame()->GetWindowHeight());
     //Generate screen quad
     Shader = GetGame()->GetRender()->GetShader("flat_colorless");
     if (Shader != NULL)
@@ -249,109 +248,20 @@ NLightSystem::NLightSystem()
     glBufferData(GL_ARRAY_BUFFER,UVs.size()*sizeof(glm::vec2),&UVs[0],GL_STATIC_DRAW);
 }
 
-void NLightSystem::CheckFBO()
-{
-    if (!GetGame()->GetWindowChanged() && FrameBuffer != 0)
-    {
-        return;
-    }
-    if (FrameBuffer)
-    {
-        glDeleteFramebuffers(1,&FrameBuffer);
-        glDeleteTextures(1,&FrameBufferTexture);
-        glDeleteRenderbuffers(1,&StencilBuffer);
-    }
-    glGenFramebuffers(1, &FrameBuffer);
-    glBindFramebuffer(GL_FRAMEBUFFER, FrameBuffer);
-
-    //Color
-    glGenTextures(1, &FrameBufferTexture);
-    glBindTexture(GL_TEXTURE_2D,FrameBufferTexture);
-    glTexImage2D(GL_TEXTURE_2D, 0,GL_RGB, GetGame()->GetWindowWidth(), GetGame()->GetWindowHeight(), 0,GL_RGB, GL_UNSIGNED_BYTE, 0);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST); //According to the tutorial I'm following, frame buffers require bad filtering.
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glFramebufferTexture(GL_FRAMEBUFFER,GL_COLOR_ATTACHMENT0,FrameBufferTexture,0);
-
-    //Stencil
-    glGenRenderbuffers(1, &StencilBuffer);
-    glBindRenderbuffer(GL_RENDERBUFFER,StencilBuffer);
-    glRenderbufferStorage(GL_RENDERBUFFER,GL_DEPTH_STENCIL,GetGame()->GetWindowWidth(),GetGame()->GetWindowHeight());
-    glFramebufferRenderbuffer(GL_FRAMEBUFFER,GL_DEPTH_ATTACHMENT,GL_RENDERBUFFER,StencilBuffer);
-    glFramebufferRenderbuffer(GL_FRAMEBUFFER,GL_STENCIL_ATTACHMENT,GL_RENDERBUFFER,StencilBuffer);
-
-    GetGame()->GetRender()->CheckFramebuffer();
-    glClear(GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-    glBindTexture(GL_TEXTURE_2D, 0);
-    glBindFramebuffer(GL_FRAMEBUFFER,0);
-
-    glClearColor(1,1,1,1);
-    glClearStencil(0);
-    glClear(GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-    glBindTexture(GL_TEXTURE_2D, 0);
-    glBindFramebuffer(GL_FRAMEBUFFER,0);
-}
-
-void NLightSystem::ExtCheckFBO()
-{
-    if (!GetGame()->GetWindowChanged() && FrameBuffer != 0)
-    {
-        return;
-    }
-    //Create a frame buffer that we can render too, then we can apply post effects to it.
-    if (FrameBuffer != 0)
-    {
-        glDeleteFramebuffersEXT(1,&FrameBuffer);
-        glDeleteTextures(1,&FrameBufferTexture);
-        glDeleteRenderbuffers(1,&StencilBuffer);
-    }
-    glGenFramebuffersEXT(1, &FrameBuffer);
-    glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, FrameBuffer);
-
-    //Color
-    glGenTextures(1, &FrameBufferTexture);
-    glBindTexture(GL_TEXTURE_2D,FrameBufferTexture);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, GetGame()->GetWindowWidth(), GetGame()->GetWindowHeight(), 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST); //According to the tutorial I'm following, frame buffers require bad filtering.
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-
-    glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT,GL_COLOR_ATTACHMENT0_EXT,GL_TEXTURE_2D,FrameBufferTexture,0);
-
-    //Stencil
-    glGenRenderbuffersEXT(1, &StencilBuffer);
-    glBindRenderbufferEXT(GL_RENDERBUFFER_EXT,StencilBuffer);
-    glRenderbufferStorageEXT(GL_RENDERBUFFER_EXT,GL_DEPTH_STENCIL_EXT,GetGame()->GetWindowWidth(),GetGame()->GetWindowHeight());
-    glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT,GL_STENCIL_ATTACHMENT_EXT,GL_RENDERBUFFER_EXT,StencilBuffer);
-    glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT,GL_DEPTH_ATTACHMENT_EXT,GL_RENDERBUFFER_EXT,StencilBuffer);
-    GetGame()->GetRender()->CheckFramebuffer();
-
-    glClearColor(1,1,1,1);
-    glClearStencil(0);
-    glClear(GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-    glBindTexture(GL_TEXTURE_2D, 0);
-    glBindFramebuffer(GL_FRAMEBUFFER,0);
-}
-
 NLightSystem::~NLightSystem()
 {
-    glDeleteFramebuffers(1,&FrameBuffer);
-    glDeleteTextures(1,&FrameBufferTexture);
-    glDeleteRenderbuffers(1,&StencilBuffer);
+    delete FrameBuffer;
     glDeleteBuffers(2,VertexBuffers);
 }
-GLuint NLightSystem::GetFramebuffer()
+
+NFramebuffer* NLightSystem::GetFramebuffer()
 {
+    FrameBuffer->Resize(GetGame()->GetWindowWidth(),GetGame()->GetWindowHeight());
     return FrameBuffer;
 }
 
 void NLightSystem::Draw()
 {
-    if (GLEW_VERSION_3_0)
-    {
-        CheckFBO();
-    } else if (GLEW_EXT_framebuffer_object)
-    {
-        ExtCheckFBO();
-    }
     if (Shader == NULL)
     {
         return;
@@ -359,7 +269,7 @@ void NLightSystem::Draw()
     glEnable(GL_TEXTURE_2D);
     glUseProgram(Shader->GetID());
     glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D,FrameBufferTexture);
+    glBindTexture(GL_TEXTURE_2D,FrameBuffer->GetTexture());
     glUniform1i(TextureLoc,0);
     glEnableVertexAttribArray(Shader->GetVertexAttribute());
     glBindBuffer(GL_ARRAY_BUFFER,VertexBuffers[0]);
