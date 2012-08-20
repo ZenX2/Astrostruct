@@ -126,7 +126,6 @@ NTextureAtlas::NTextureAtlas(FT_Face Face, unsigned int i_Size)
     Size = i_Size;
     glActiveTexture(GL_TEXTURE0);
     glGenTextures(1, &Texture);
-    //Force GL_NEAREST filtering because otherwise text looks really blurry.
     glBindTexture(GL_TEXTURE_2D, Texture);
     unsigned char* Data = new unsigned char[Width*Height];
     for (int i=0;i<Width*Height;i++)
@@ -134,7 +133,7 @@ NTextureAtlas::NTextureAtlas(FT_Face Face, unsigned int i_Size)
         Data[i] = 0;
     }
     glTexImage2D(GL_TEXTURE_2D, 0, GL_ALPHA, Width, Height, 0, GL_ALPHA, GL_UNSIGNED_BYTE, Data);
-    GetGame()->GetRender()->AddCachedTexture(Texture, GL_NEAREST);
+    GetGame()->GetRender()->AddCachedTexture(Texture);
     Node = new NTextureNode(glm::vec4(Width,Height,0,0));
     delete[] Data;
 }
@@ -219,8 +218,6 @@ void NTextureAtlas::UpdateMipmaps()
         return;
     }
     glBindTexture(GL_TEXTURE_2D, Texture);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glGenerateMipmap(GL_TEXTURE_2D);
     Changed = false;
 }
@@ -285,7 +282,6 @@ NText::NText(std::string i_Face, std::wstring i_Data) : NNode(NodeText)
     }
 }
 
-//FIXME: Can't set texture borders due to mask not having an extra shader, but i didn't want to include it because of decreased performance!
 void NText::SwapView()
 {
     Persp = !Persp;
@@ -298,6 +294,12 @@ void NText::SwapView()
             MatrixLoc = Shader->GetUniformLocation("Model");
             ColorLoc = Shader->GetUniformLocation("Color");
         }
+        MaskShader = GetGame()->GetRender()->GetShader("flat_textureless3D");
+        if (MaskShader != NULL)
+        {
+            MMatrixLoc = Shader->GetUniformLocation("Model");
+            MColorLoc = Shader->GetUniformLocation("Color");
+        }
     } else {
         Shader = GetGame()->GetRender()->GetShader("text");
         if (Shader != NULL)
@@ -305,6 +307,12 @@ void NText::SwapView()
             TextureLoc = Shader->GetUniformLocation("Texture");
             MatrixLoc = Shader->GetUniformLocation("Model");
             ColorLoc = Shader->GetUniformLocation("Color");
+        }
+        MaskShader = GetGame()->GetRender()->GetShader("flat_textureless");
+        if (MaskShader != NULL)
+        {
+            MMatrixLoc = Shader->GetUniformLocation("Model");
+            MColorLoc = Shader->GetUniformLocation("Color");
         }
     }
 }

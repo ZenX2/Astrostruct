@@ -7,5 +7,6 @@ LoadShader("map",               "shaders/map");
 LoadShader("normal",            "shaders/normal");
 LoadShader("post",              "shaders/post");
 LoadShader("flat_textureless",  "shaders/flat_textureless");
+LoadShader("flat_textureless3D","shaders/flat_textureless3d");
 LoadShader("flat_colorless",    "shaders/flat_colorless");
 LoadShader("normal_textureless","shaders/normal_textureless");
