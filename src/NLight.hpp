@@ -59,7 +59,6 @@ private:
     GLuint TextureLoc;
     GLuint STextureLoc;
     GLuint MatrixLoc;
-    GLuint SMatrixLoc;
     GLuint ColorLoc;
     GLuint SColorLoc;
 };

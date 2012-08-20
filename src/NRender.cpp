@@ -5,74 +5,9 @@ void NRender::LoadTextures()
     GetGame()->GetLua()->DoFolder("textures");
 }
 
-bool NRender::LoadShaders()
+void NRender::LoadShaders()
 {
-    int Result = 0;
-    NShader* Shader = new NShader("text");
-    if (!Shader->Load("shaders/text.vert","shaders/text.frag"))
-    {
-        Shaders.push_back(Shader);
-    } else {
-        Result++;
-        delete Shader;
-    }
-    Shader = new NShader("flat");
-    if (!Shader->Load("shaders/flat.vert","shaders/flat.frag"))
-    {
-        Shaders.push_back(Shader);
-    } else {
-        Result++;
-        delete Shader;
-    }
-    Shader = new NShader("map");
-    if (!Shader->Load("shaders/map.vert","shaders/map.frag"))
-    {
-        Shaders.push_back(Shader);
-    } else {
-        Result++;
-        delete Shader;
-    }
-    Shader = new NShader("normal");
-    if (!Shader->Load("shaders/normal.vert","shaders/normal.frag"))
-    {
-        Shaders.push_back(Shader);
-    } else {
-        Result++;
-        delete Shader;
-    }
-    Shader = new NShader("post");
-    if (!Shader->Load("shaders/post.vert","shaders/post.frag"))
-    {
-        Shaders.push_back(Shader);
-    } else {
-        Result++;
-        delete Shader;
-    }
-    Shader = new NShader("flat_textureless");
-    if (!Shader->Load("shaders/flat_textureless.vert","shaders/flat_textureless.frag"))
-    {
-        Shaders.push_back(Shader);
-    } else {
-        Result++;
-        delete Shader;
-    }
-    Shader = new NShader("flat_colorless");
-    if (!Shader->Load("shaders/flat_colorless.vert","shaders/flat_colorless.frag"))
-    {
-        Shaders.push_back(Shader);
-    } else {
-        Result++;
-        delete Shader;
-    }
-    Shader = new NShader("normal_textureless");
-    if (!Shader->Load("shaders/normal_textureless.vert","shaders/normal_textureless.frag"))
-    {
-        Shaders.push_back(Shader);
-    } else {
-        Result++;
-        delete Shader;
-    }
-    return Result;
+    GetGame()->GetLua()->DoFolder("shaders");
 }
 
 NRender::NRender()
@@ -93,13 +28,7 @@ NRender::NRender()
     }
     glGenBuffers(2,VertexBuffers);
     FrameTime = 0;
-    LoadShaders();
-    PostEffect = GetShader("post");
-    if (PostEffect)
-    {
-        TextureLoc = PostEffect->GetUniformLocation("Texture");
-        TimeLoc = PostEffect->GetUniformLocation("Time");
-    }
+    PostEffect = NULL;
     Camera = NULL;
     VSync = false;
     if (GetGame()->GetConfig()->GetBool("VerticalSync"))
@@ -137,6 +66,26 @@ NRender::NRender()
     glBufferData(GL_ARRAY_BUFFER,UVs.size()*sizeof(glm::vec2),&UVs[0],GL_STATIC_DRAW);
 }
 
+void NRender::AddShader(NShader* Shader)
+{
+    if (!Camera)
+    {
+        Camera = new NCamera();
+    }
+    if (Shader->GetUniformLocation("World2D") != -1)
+    {
+        Shaders2D.push_back(Shader);
+        glUseProgram(Shader->GetID());
+        glUniformMatrix4fv(Shader->GetWorldUniform(),1,GL_FALSE,glm::value_ptr(Camera->GetOrthoMatrix()));
+    } else if (Shader->GetUniformLocation("World3D") != -1)
+    {
+        Shaders3D.push_back(Shader);
+        glUseProgram(Shader->GetID());
+        glUniformMatrix4fv(Shader->GetWorldUniform(),1,GL_FALSE,glm::value_ptr(Camera->GetPerspMatrix()));
+    }
+    Shaders.push_back(Shader);
+}
+
 void NRender::SetSize(glm::vec2 i_Size)
 {
     if (Size == i_Size)
@@ -146,6 +95,16 @@ void NRender::SetSize(glm::vec2 i_Size)
     Size = i_Size;
     glViewport(0,0,Size.x,Size.y);
     FrameBuffer->Resize(Size.x,Size.y);
+    for (unsigned int i=0;i<Shaders2D.size();i++)
+    {
+        glUseProgram(Shaders2D[i]->GetID());
+        glUniformMatrix4fv(Shaders2D[i]->GetWorldUniform(),1,GL_FALSE,glm::value_ptr(Camera->GetOrthoMatrix()));
+    }
+    for (unsigned int i=0;i<Shaders3D.size();i++)
+    {
+        glUseProgram(Shaders3D[i]->GetID());
+        glUniformMatrix4fv(Shaders3D[i]->GetWorldUniform(),1,GL_FALSE,glm::value_ptr(Camera->GetPerspMatrix()));
+    }
 }
 
 void NRender::SetSize(float Width, float Height)
@@ -206,6 +165,33 @@ void NRender::Draw()
     {
         return;
     }
+    if (!Camera)
+    {
+        Camera = new NCamera();
+    }
+    if (!PostEffect)
+    {
+        PostEffect = GetShader("post");
+        if (PostEffect)
+        {
+            TextureLoc = PostEffect->GetUniformLocation("Texture");
+            TimeLoc = PostEffect->GetUniformLocation("Time");
+        } else {
+            GetGame()->GetLog()->Send("RENDER",0,"Missing a vital shader: post! Cannot continue!");
+            exit(1);
+        }
+    }
+    //Loop through all the shaders, setting the proper View matricies.
+    for (unsigned int i=0;i<Shaders2D.size();i++)
+    {
+        glUseProgram(Shaders2D[i]->GetID());
+        glUniformMatrix4fv(Shaders2D[i]->GetViewUniform(),1,GL_FALSE,glm::value_ptr(Camera->GetViewMatrix()));
+    }
+    for (unsigned int i=0;i<Shaders3D.size();i++)
+    {
+        glUseProgram(Shaders3D[i]->GetID());
+        glUniformMatrix4fv(Shaders3D[i]->GetViewUniform(),1,GL_FALSE,glm::value_ptr(Camera->GetPerspViewMatrix()));
+    }
     double TimeDiff = CurTime()-LastTime;
     FrameTime = TimeDiff;
     if (MaxFPS != 0)
@@ -218,17 +204,12 @@ void NRender::Draw()
     }
     LastTime = CurTime();
     glClearColor(0,0,0,1);
+    
     FrameBuffer->Bind();
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    
-    if (Camera)
-    {
-        GetGame()->GetScene()->Draw(Camera);
-    } else {
-        Camera = new NCamera();
-        GetGame()->GetScene()->Draw(Camera);
-    }
+    GetGame()->GetScene()->Draw(Camera);
     FrameBuffer->UnBind();
+
     glEnable(GL_TEXTURE_2D);
     glUseProgram(PostEffect->GetID());
     glActiveTexture(GL_TEXTURE0);

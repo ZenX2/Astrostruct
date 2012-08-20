@@ -7,17 +7,16 @@ NLight::NLight(std::string i_Texture) : NNode(NodeLight)
     ScaleMemory = glm::vec3(0,0,0);
     Texture = GetGame()->GetRender()->GetTexture(i_Texture);
     glGenBuffers(3,Buffers);
-    Shader = GetGame()->GetRender()->GetShader("flat");
+    Shader = GetGame()->GetRender()->GetShader("flat3D");
     if (Shader != NULL)
     {
-        MatrixLoc = Shader->GetUniformLocation("MVP");
+        MatrixLoc = Shader->GetUniformLocation("Model");
         TextureLoc = Shader->GetUniformLocation("Texture");
         ColorLoc = Shader->GetUniformLocation("Color");
     }
     ShadowShader = GetGame()->GetRender()->GetShader("normal_textureless");
     if (ShadowShader != NULL)
     {
-        SMatrixLoc = Shader->GetUniformLocation("MVP");
         SColorLoc = Shader->GetUniformLocation("Color");
     }
 }
@@ -176,8 +175,7 @@ void NLight::DrawLight(NCamera* View)
         glBindTexture(GL_TEXTURE_2D,Texture->GetID());
     }
     glUniform1i(TextureLoc,0);
-    glm::mat4 MVP = View->GetPerspMatrix()*View->GetPerspViewMatrix()*GetModelMatrix();
-    glUniformMatrix4fv(MatrixLoc,1,GL_FALSE,&MVP[0][0]);
+    glUniformMatrix4fv(MatrixLoc,1,GL_FALSE,glm::value_ptr(GetModelMatrix()));
     glUniform4fv(ColorLoc,1,&(GetColor()[0]));
     glEnableVertexAttribArray(Shader->GetVertexAttribute());
     glBindBuffer(GL_ARRAY_BUFFER,Buffers[0]);
@@ -206,8 +204,6 @@ void NLight::DrawShadow(NCamera* View)
         return;
     }
     glUseProgram(ShadowShader->GetID());
-    glm::mat4 MVP = View->GetPerspMatrix()*View->GetViewMatrix();
-    glUniformMatrix4fv(SMatrixLoc,1,GL_FALSE,&MVP[0][0]);
     glUniform4f(SColorLoc,0,0,0,0);
     glEnableVertexAttribArray(ShadowShader->GetVertexAttribute());
     glBindBuffer(GL_ARRAY_BUFFER,Buffers[2]);

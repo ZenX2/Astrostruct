@@ -2,13 +2,37 @@
 
 NShader::NShader(std::string i_Name)
 {
+    ViewUniform = -2;
+    WorldUniform = -2;
     ProgramID = glCreateProgram();
     VertexAttribute = 0;
     UVAttribute = 0;
     Name = i_Name;
 }
 
-GLuint NShader::GetUVAttribute()
+GLint NShader::GetWorldUniform()
+{
+    if (WorldUniform == -2)
+    {
+        WorldUniform = glGetUniformLocation(ProgramID,"World2D");
+        if (WorldUniform == -1)
+        {
+            WorldUniform = glGetUniformLocation(ProgramID,"World3D");
+        }
+    }
+    return WorldUniform;
+}
+
+GLint NShader::GetViewUniform()
+{
+    if (ViewUniform == -2)
+    {
+        ViewUniform = glGetUniformLocation(ProgramID,"View");
+    }
+    return ViewUniform;
+}
+
+GLint NShader::GetUVAttribute()
 {
     if (UVAttribute == 0)
     {
@@ -17,7 +41,7 @@ GLuint NShader::GetUVAttribute()
     return UVAttribute;
 }
 
-GLuint NShader::GetVertexAttribute()
+GLint NShader::GetVertexAttribute()
 {
     if (VertexAttribute == 0)
     {
@@ -45,7 +69,7 @@ std::string NShader::GetName()
     return Name;
 }
 
-GLuint NShader::GetUniformLocation(std::string i_Name)
+GLint NShader::GetUniformLocation(std::string i_Name)
 {
     for (unsigned int i=0;i<Uniforms.size();i++)
     {
@@ -55,6 +79,11 @@ GLuint NShader::GetUniformLocation(std::string i_Name)
         }
     }
     NUniform* NewUniform = new NUniform(GetID(), i_Name);
+    if (NewUniform->GetUniformLocation() == -1)
+    {
+        delete NewUniform;
+        return -1;
+    }
     Uniforms.push_back(NewUniform);
     return NewUniform->GetUniformLocation();
 }
@@ -69,7 +98,7 @@ NUniform::~NUniform()
 {
 }
 
-GLuint NUniform::GetUniformLocation()
+GLint NUniform::GetUniformLocation()
 {
     return UniLoc;
 }

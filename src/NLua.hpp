@@ -15,6 +15,7 @@ int LuaGetEntitiesByName(lua_State* L);
 int MapLoad(lua_State* L);
 int MapSave(lua_State* L);
 int OnPanic(lua_State* L);
+int LoadShader(lua_State* L);
 int lua_protcall(lua_State* L, int nargs, int nresults);
 int lua_nloadstring(lua_State* L, const char* s, const char* name);
 /**

@@ -76,10 +76,8 @@ public:
     ~NRender();
     /**
     * @brief Statically loads shaders into memory.
-    *
-    * @return False on failure, true on success.
     */
-    bool LoadShaders();
+    void LoadShaders();
     /**
     * @brief Grabs the desired shader from memory.
     *
@@ -204,6 +202,7 @@ public:
      * @brief Ensures the currently bound frame buffer is valid, currently does nothing when it fails.
      */
     void CheckFramebuffer();
+    void AddShader(NShader* Shader);
 private:
     std::vector<GLuint> FrameBufferMem;
     NShader* PostEffect;
@@ -219,6 +218,8 @@ private:
     GLuint TextureFilter;
     float MaxFPS;
     double LastTime;
+    std::vector<NShader*> Shaders2D;
+    std::vector<NShader*> Shaders3D;
     std::vector<NShader*> Shaders;
     std::vector<NCachedTexture*> CachedTextures;
     std::vector<NTexture*> Textures;

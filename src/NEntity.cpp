@@ -221,11 +221,11 @@ NEntity::NEntity(std::string i_Name) : NNode(NodeEntity)
         SetScale(glm::vec3(W,H,1.f));
     }
     //Load in our shader
-    Shader = GetGame()->GetRender()->GetShader("flat");
+    Shader = GetGame()->GetRender()->GetShader("flat3D");
     if (Shader)
     {
         TextureLoc = Shader->GetUniformLocation("Texture");
-        MatrixLoc = Shader->GetUniformLocation("MVP");
+        MatrixLoc = Shader->GetUniformLocation("Model");
         ColorLoc = Shader->GetUniformLocation("Color");
     }
     //make sure we call our initialization function.
@@ -265,11 +265,11 @@ NEntity::NEntity(std::string i_Name, glm::vec3 i_Position) : NNode(NodeEntity)
     } else {
         SetScale(glm::vec3(W,H,1.f));
     }
-    Shader = GetGame()->GetRender()->GetShader("flat");
+    Shader = GetGame()->GetRender()->GetShader("flat3D");
     if (Shader)
     {
         TextureLoc = Shader->GetUniformLocation("Texture");
-        MatrixLoc = Shader->GetUniformLocation("MVP");
+        MatrixLoc = Shader->GetUniformLocation("Model");
         ColorLoc = Shader->GetUniformLocation("Color");
     }
     SetPos(i_Position);
@@ -342,8 +342,7 @@ void NEntity::Draw(NCamera* View)
         glBindTexture(GL_TEXTURE_2D,Texture->GetID());
     }
     glUniform1i(TextureLoc,0);
-    glm::mat4 MVP = View->GetPerspMatrix()*View->GetPerspViewMatrix()*GetModelMatrix();
-    glUniformMatrix4fv(MatrixLoc,1,GL_FALSE,&MVP[0][0]);
+    glUniformMatrix4fv(MatrixLoc,1,GL_FALSE,glm::value_ptr(GetModelMatrix()));
     glUniform4fv(ColorLoc,1,&(GetColor()[0]));
     glEnableVertexAttribArray(Shader->GetVertexAttribute());
     glBindBuffer(GL_ARRAY_BUFFER,Buffers[0]);

@@ -19,7 +19,7 @@ NButton::NButton(std::string i_Texture) : NNode(NodeButton)
     Shader = GetGame()->GetRender()->GetShader("flat");
     if (Shader != NULL)
     {
-        MatrixLoc = Shader->GetUniformLocation("MVP");
+        MatrixLoc = Shader->GetUniformLocation("Model");
         TextureLoc = Shader->GetUniformLocation("Texture");
         ColorLoc = Shader->GetUniformLocation("Color");
     }
@@ -193,9 +193,7 @@ void NButton::Draw(NCamera* View)
         glBindTexture(GL_TEXTURE_2D,Texture->GetID());
     }
     glUniform1i(TextureLoc,0);
-    //Generate our matrix to send to the GPU.
-    glm::mat4 MVP = View->GetOrthoMatrix()*View->GetViewMatrix()*GetModelMatrix();
-    glUniformMatrix4fv(MatrixLoc,1,GL_FALSE,&MVP[0][0]);
+    glUniformMatrix4fv(MatrixLoc,1,GL_FALSE,glm::value_ptr(GetModelMatrix()));
     glUniform4fv(ColorLoc,1,&(GetColor()[0]));
     glEnableVertexAttribArray(Shader->GetVertexAttribute());
     glBindBuffer(GL_ARRAY_BUFFER,Buffers[0]);

@@ -152,6 +152,37 @@ void NFramebuffer::Resize(unsigned int i_Width, unsigned int i_Height)
     {
         return;
     }
+    if (GLEW_VERSION_3_0)
+    {
+        glDeleteFramebuffers(1,&Framebuffer);
+        if (Flags & NColorBuffer)
+        {
+            glDeleteTextures(1,&Texture);
+        }
+        if (Flags & NDepthBuffer && !(Flags & NStencilBuffer))
+        {
+            glDeleteRenderbuffers(1,&Depth);
+        }
+        if (Flags & NStencilBuffer)
+        {
+            glDeleteRenderbuffers(1,&Stencil);
+        }
+    } else if (GLEW_EXT_framebuffer_object)
+    {
+        glDeleteFramebuffersEXT(1,&Framebuffer);
+        if (Flags & NColorBuffer)
+        {
+            glDeleteTextures(1,&Texture);
+        }
+        if (Flags & NDepthBuffer && !(Flags & NStencilBuffer))
+        {
+            glDeleteRenderbuffersEXT(1,&Depth);
+        }
+        if (Flags & NStencilBuffer)
+        {
+            glDeleteRenderbuffersEXT(1,&Stencil);
+        }
+    }
     Width = i_Width;
     Height = i_Height;
     if (GLEW_VERSION_3_0)
@@ -161,6 +192,7 @@ void NFramebuffer::Resize(unsigned int i_Width, unsigned int i_Height)
 
         if (Flags & NColorBuffer)
         {
+            glGenTextures(1,&Texture);
             glBindTexture(GL_TEXTURE_2D,Texture);
             glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, i_Width, i_Height, 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
@@ -170,6 +202,7 @@ void NFramebuffer::Resize(unsigned int i_Width, unsigned int i_Height)
 
         if (Flags & NDepthBuffer && !(Flags & NStencilBuffer))
         {
+            glGenRenderbuffers(1,&Depth);
             glBindRenderbuffer(GL_RENDERBUFFER,Depth);
             glRenderbufferStorage(GL_RENDERBUFFER,GL_DEPTH_COMPONENT,i_Width,i_Height);
             glFramebufferRenderbuffer(GL_FRAMEBUFFER,GL_DEPTH_ATTACHMENT,GL_RENDERBUFFER,Depth);
@@ -178,6 +211,7 @@ void NFramebuffer::Resize(unsigned int i_Width, unsigned int i_Height)
         //This is the only way I could get a proper stencil buffer, by making a GL_DEPTH_STENCIL attachment to both points.
         if (Flags & NStencilBuffer)
         {
+            glGenRenderbuffers(1, &Stencil);
             glBindRenderbuffer(GL_RENDERBUFFER,Stencil);
             glRenderbufferStorage(GL_RENDERBUFFER,GL_DEPTH_STENCIL,i_Width,i_Height);
             glFramebufferRenderbuffer(GL_FRAMEBUFFER,GL_DEPTH_ATTACHMENT,GL_RENDERBUFFER,Stencil);
@@ -192,6 +226,7 @@ void NFramebuffer::Resize(unsigned int i_Width, unsigned int i_Height)
 
         if (Flags & NColorBuffer)
         {
+            glGenTextures(1,&Texture);
             glBindTexture(GL_TEXTURE_2D,Texture);
             glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, i_Width, i_Height, 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
@@ -201,6 +236,7 @@ void NFramebuffer::Resize(unsigned int i_Width, unsigned int i_Height)
 
         if (Flags & NDepthBuffer && !(Flags & NStencilBuffer))
         {
+            glGenRenderbuffersEXT(1,&Depth);
             glBindRenderbufferEXT(GL_RENDERBUFFER_EXT,Depth);
             glRenderbufferStorageEXT(GL_RENDERBUFFER_EXT,GL_DEPTH_COMPONENT,i_Width,i_Height);
             glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT,GL_DEPTH_ATTACHMENT_EXT,GL_RENDERBUFFER_EXT,Depth);
@@ -209,6 +245,7 @@ void NFramebuffer::Resize(unsigned int i_Width, unsigned int i_Height)
         //This is the only way I could get a proper stencil buffer, by making a GL_DEPTH_STENCIL attachment to both points.
         if (Flags & NStencilBuffer)
         {
+            glGenRenderbuffersEXT(1, &Stencil);
             glBindRenderbufferEXT(GL_RENDERBUFFER_EXT,Stencil);
             glRenderbufferStorageEXT(GL_RENDERBUFFER_EXT,GL_DEPTH_STENCIL_EXT,i_Width,i_Height);
             glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT,GL_DEPTH_ATTACHMENT_EXT,GL_RENDERBUFFER_EXT,Stencil);

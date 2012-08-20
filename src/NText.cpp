@@ -274,20 +274,39 @@ NText::NText(std::string i_Face, std::wstring i_Data) : NNode(NodeText)
     if (Shader != NULL)
     {
         TextureLoc = Shader->GetUniformLocation("Texture");
-        MatrixLoc = Shader->GetUniformLocation("MVP");
+        MatrixLoc = Shader->GetUniformLocation("Model");
         ColorLoc = Shader->GetUniformLocation("Color");
     }
     MaskShader = GetGame()->GetRender()->GetShader("flat_textureless");
     if (MaskShader != NULL)
     {
-        MMatrixLoc = Shader->GetUniformLocation("MVP");
+        MMatrixLoc = Shader->GetUniformLocation("Model");
         MColorLoc = Shader->GetUniformLocation("Color");
     }
 }
 
+//FIXME: Can't set texture borders due to mask not having an extra shader, but i didn't want to include it because of decreased performance!
 void NText::SwapView()
 {
     Persp = !Persp;
+    if (Persp)
+    {
+        Shader = GetGame()->GetRender()->GetShader("text3D");
+        if (Shader != NULL)
+        {
+            TextureLoc = Shader->GetUniformLocation("Texture");
+            MatrixLoc = Shader->GetUniformLocation("Model");
+            ColorLoc = Shader->GetUniformLocation("Color");
+        }
+    } else {
+        Shader = GetGame()->GetRender()->GetShader("text");
+        if (Shader != NULL)
+        {
+            TextureLoc = Shader->GetUniformLocation("Texture");
+            MatrixLoc = Shader->GetUniformLocation("Model");
+            ColorLoc = Shader->GetUniformLocation("Color");
+        }
+    }
 }
 
 void NText::SetBorder(float i_W, float i_H)
@@ -493,8 +512,7 @@ void NText::DrawMask(NCamera* View)
     }
     GenerateBuffers();
     glUseProgram(MaskShader->GetID());
-    glm::mat4 MVP = View->GetOrthoMatrix()*View->GetViewMatrix()*GetModelMatrix();
-    glUniformMatrix4fv(MMatrixLoc,1,GL_FALSE,&MVP[0][0]);
+    glUniformMatrix4fv(MMatrixLoc,1,GL_FALSE,glm::value_ptr(GetModelMatrix()));
     glUniform4f(MColorLoc,0,0,0,0);
     glEnableVertexAttribArray(MaskShader->GetVertexAttribute());
     glBindBuffer(GL_ARRAY_BUFFER,Buffers[2]);
@@ -520,14 +538,7 @@ void NText::DrawText(NCamera* View)
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D,Face->GetTexture(Size));
     glUniform1i(TextureLoc,0);
-    glm::mat4 MVP;
-    if (!Persp)
-    {
-        MVP = View->GetOrthoMatrix()*View->GetViewMatrix()*GetModelMatrix();
-    } else {
-        MVP = View->GetPerspMatrix()*View->GetPerspViewMatrix()*GetModelMatrix();
-    }
-    glUniformMatrix4fv(MatrixLoc,1,GL_FALSE,&MVP[0][0]);
+    glUniformMatrix4fv(MatrixLoc,1,GL_FALSE,glm::value_ptr(GetModelMatrix()));
     glUniform4fv(ColorLoc,1,&(GetColor()[0]));
     glEnableVertexAttribArray(Shader->GetVertexAttribute());
     glBindBuffer(GL_ARRAY_BUFFER,Buffers[0]);

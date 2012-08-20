@@ -3,14 +3,16 @@
 attribute vec3 VertexPosition;
 attribute vec2 UVPosition;
 
-uniform mat4 MVP;
+uniform mat4 Model;
+uniform mat4 View;
+uniform mat4 World3D;
 
 varying vec2 UVCoords;
 varying float FogDensity;
 
 void main()
 {
-	vec4 TranslatedVert = MVP*vec4(VertexPosition,1);
+	vec4 TranslatedVert = (World3D*View*Model)*vec4(VertexPosition,1);
 	float FogStart = 400;
 	float FogEnd = 600;
 	float Distance = TranslatedVert.z;

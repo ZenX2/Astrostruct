@@ -12,6 +12,7 @@ NLua::NLua()
     {
         {"include",Include},
         {"GetEntitiesByName",LuaGetEntitiesByName},
+        {"LoadShader",LoadShader},
         {"help",ConsoleHelp},
         {"quit",Quit},
         {"exit",Quit},
@@ -1216,4 +1217,17 @@ std::wstring NLua::Translate(LanguageElement Foo)
     const char* String = lua_tostring(L,-1);
     lua_pop(L,3);
     return ToMBS(String);
+}
+
+int LoadShader(lua_State* L)
+{
+    NShader* Shader = new NShader(luaL_checkstring(L,1));
+    std::string File = luaL_checkstring(L,2);
+    if (!Shader->Load(File+".vert",File+".frag"))
+    {
+        GetGame()->GetRender()->AddShader(Shader);
+    } else {
+        delete Shader;
+    }
+    return 0;
 }

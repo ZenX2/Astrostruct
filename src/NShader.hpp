@@ -27,7 +27,7 @@ public:
     *
     * @return The uniform location.
     */
-    GLuint GetUniformLocation();
+    GLint GetUniformLocation();
     /**
     * @brief Get the name of the uniform that we tried to grab.
     *
@@ -36,7 +36,7 @@ public:
     std::string GetName();
 private:
     std::string Name;
-    GLuint UniLoc;
+    GLint UniLoc;
 };
 
 /**
@@ -80,15 +80,19 @@ public:
     *
     * @return An OpenGL uniform location ID.
     */
-    GLuint GetUniformLocation(std::string i_Name);
-    GLuint GetVertexAttribute();
-    GLuint GetUVAttribute();
+    GLint GetUniformLocation(std::string i_Name);
+    GLint GetVertexAttribute();
+    GLint GetUVAttribute();
+    GLint GetWorldUniform();
+    GLint GetViewUniform();
 private:
-    GLuint ProgramID;
+    GLint WorldUniform;
+    GLint ViewUniform;
+    GLint ProgramID;
     std::string Name;
     std::vector<NUniform*> Uniforms;
-    GLuint VertexAttribute;
-    GLuint UVAttribute;
+    GLint VertexAttribute;
+    GLint UVAttribute;
 };
 
 #endif

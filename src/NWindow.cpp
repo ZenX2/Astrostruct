@@ -11,7 +11,7 @@ NWindow::NWindow(std::string i_Texture) : NNode(NodeWindow)
     Shader = GetGame()->GetRender()->GetShader("flat");
     if (Shader != NULL)
     {
-        MatrixLoc = Shader->GetUniformLocation("MVP");
+        MatrixLoc = Shader->GetUniformLocation("Model");
         TextureLoc = Shader->GetUniformLocation("Texture");
         ColorLoc = Shader->GetUniformLocation("Color");
     }
@@ -160,14 +160,7 @@ void NWindow::Draw(NCamera* View)
         glBindTexture(GL_TEXTURE_2D,Texture->GetID());
     }
     glUniform1i(TextureLoc,0);
-    glm::mat4 MVP;
-    if (Persp)
-    {
-        MVP = View->GetPerspMatrix()*View->GetPerspViewMatrix()*GetModelMatrix();
-    } else {
-        MVP = View->GetOrthoMatrix()*View->GetViewMatrix()*GetModelMatrix();
-    }
-    glUniformMatrix4fv(MatrixLoc,1,GL_FALSE,&MVP[0][0]);
+    glUniformMatrix4fv(MatrixLoc,1,GL_FALSE,glm::value_ptr(GetModelMatrix()));
     glUniform4fv(ColorLoc,1,&(GetColor()[0]));
     glEnableVertexAttribArray(Shader->GetVertexAttribute());
     glBindBuffer(GL_ARRAY_BUFFER,Buffers[0]);
@@ -214,6 +207,24 @@ void NWindow::Unallocate()
 void NWindow::SwapView()
 {
     Persp = !Persp;
+    if (Persp)
+    {
+        Shader = GetGame()->GetRender()->GetShader("text3D");
+        if (Shader != NULL)
+        {
+            TextureLoc = Shader->GetUniformLocation("Texture");
+            MatrixLoc = Shader->GetUniformLocation("Model");
+            ColorLoc = Shader->GetUniformLocation("Color");
+        }
+    } else {
+        Shader = GetGame()->GetRender()->GetShader("text");
+        if (Shader != NULL)
+        {
+            TextureLoc = Shader->GetUniformLocation("Texture");
+            MatrixLoc = Shader->GetUniformLocation("Model");
+            ColorLoc = Shader->GetUniformLocation("Color");
+        }
+    }
 }
 void NWindow::SetUI(bool i_UI)
 {

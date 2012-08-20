@@ -144,6 +144,8 @@ bool NGame::Init(int i_Width, int i_Height, std::string Title, int argc, char** 
     Scene = new NScene();
     Render = new NRender();
     Render->LoadTextures();
+    Render->LoadShaders();
+    Render->SetSize(Width,Height);
     SoundSystem = new NSoundSystem();
     SoundSystem->LoadSounds();
     TextSystem = new NTextSystem();

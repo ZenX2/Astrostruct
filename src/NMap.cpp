@@ -32,13 +32,13 @@ NMap::NMap(std::string i_TileSet) : NNode(NodeMap)
     if (Shader != NULL)
     {
         TextureLoc = Shader->GetUniformLocation("Texture");
-        MatrixLoc = Shader->GetUniformLocation("MVP");
+        MatrixLoc = Shader->GetUniformLocation("Model");
         ColorLoc = Shader->GetUniformLocation("Color");
     }
     if (OutlineShader != NULL)
     {
         OutlineColorLoc = OutlineShader->GetUniformLocation("Color");
-        OutlineMatrixLoc = OutlineShader->GetUniformLocation("MVP");
+        OutlineMatrixLoc = OutlineShader->GetUniformLocation("Model");
     }
 }
 unsigned int NMap::GetDepth()
@@ -447,8 +447,7 @@ void NMap::Draw(NCamera* View)
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D,Texture->GetID());
     glUniform1i(TextureLoc,0);
-    glm::mat4 MVP = View->GetPerspMatrix()*View->GetPerspViewMatrix()*GetModelMatrix();
-    glUniformMatrix4fv(MatrixLoc,1,GL_FALSE,&MVP[0][0]);
+    glUniformMatrix4fv(MatrixLoc,1,GL_FALSE,glm::value_ptr(GetModelMatrix()));
     glUniform4fv(ColorLoc,1,&(GetColor()[0]));
     glEnableVertexAttribArray(Shader->GetVertexAttribute());
     glEnableVertexAttribArray(Shader->GetUVAttribute());
@@ -484,7 +483,7 @@ void NMap::Draw(NCamera* View)
 
     glUseProgram(OutlineShader->GetID());
     glUniform4f(OutlineColorLoc,0,0,0,1);
-    glUniformMatrix4fv(OutlineMatrixLoc,1,GL_FALSE,&MVP[0][0]);
+    glUniformMatrix4fv(OutlineMatrixLoc,1,GL_FALSE,glm::value_ptr(GetModelMatrix()));
     glLineWidth(3);
     glBindBuffer(GL_ARRAY_BUFFER,Buffers[ViewingLevel][2]);
     glVertexAttribPointer(OutlineShader->GetVertexAttribute(),3,GL_FLOAT,GL_FALSE,0,NULL);
