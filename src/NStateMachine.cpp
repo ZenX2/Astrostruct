@@ -484,6 +484,7 @@ void NMapState::OnExit()
         EntityHighlight[i]->Remove();
     }
     Entities.clear();
+    EntityHighlight.clear();
 }
 void NMapState::Tick(double DT)
 {
@@ -789,7 +790,7 @@ void NMapState::Tick(double DT)
             EntityText[i]->SetColor(glm::vec4(0,0,0,0));
         }
     } else {
-        HWindow->SetColor(glm::vec4(1,1,1,1));
+        HWindow->SetColor(glm::vec4(1,1,0,1));
         for (unsigned int i=0;i<EntityHighlight.size();i++)
         {
             EntityHighlight[i]->SetColor(glm::vec4(0,1,0,1));

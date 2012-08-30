@@ -1,6 +1,6 @@
 /**
  * @file NPhysics.hpp
- * @brief Handles physics calculations, but doesn't do any fancy invisible physics environments. It just lets you check collisions and how to respond to them with 2D boxes and points.
+ * @brief Handles physics calculations.
  * @author Dalton Nell
  * @version 1.0
  * @date 2012-06-13
@@ -47,13 +47,31 @@ glm::vec2 MinimumTranslation(glm::vec4 ABox, glm::vec4 BBox);
  */
 bool Facing(glm::vec2 Point, glm::vec4 Face);
 
+/**
+ * @brief Handles the state of the physics library.
+ */
 class NPhysics
 {
 public:
     NPhysics();
     ~NPhysics();
+    /**
+     * @brief Moves the physics state forward in time.
+     *
+     * @param DT The time passed since last execution.
+     */
     void Step(double DT);
+    /**
+     * @brief Returns a pointer to the world.
+     *
+     * @return A pointer to the world.
+     */
     btDiscreteDynamicsWorld* GetWorld();
+    /**
+     * @brief Gets the broadphase of the physics library.
+     *
+     * @return A pointer to the broadphase.
+     */
     btBroadphaseInterface* GetBroadphase();
 private:
     btBroadphaseInterface* Broadphase;

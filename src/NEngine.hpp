@@ -21,7 +21,7 @@
  * astrostruct is an open-source, multi-platform, multi-player, highly-modifiable, space-like, rogue-like game!
  * It's obviously in very early development; right now all I have is an engine code-base and text rendering, but I have high hopes for it.
  * @subsection install How do I get it?
- * Currently the whole thing is stored on github <a href="https://github.com/naelstrof/Astrostruct">here.</a> But you won't find any binaries there; you'll have to compile it yourself by using autotools.
+ * Currently the whole thing is stored on github <a href="https://github.com/naelstrof/Astrostruct">here.</a> But you won't find any binaries there; you'll have to compile it yourself. Later I might sell the game with a pay-any-price model.
  * @subsection help Can I help with development?
  * Of course! Add me on steam (Naelstrof) or contact me through email (naelstrof@gmail.com) so we can talk.
  * @subsection howdoi I'm looking at your code and I don't even...

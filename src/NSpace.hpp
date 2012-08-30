@@ -1,6 +1,16 @@
+/**
+ * @file NSpace.hpp
+ * @brief Handles objects that scroll in the background in space, like stars and planets.
+ * @author Dalton Nell
+ * @version 1.0
+ * @date 2012-08-20
+ */
 #ifndef NAELSTROF_SPACE
 #define NAELSTROF_SPACE
 
+/**
+ * @brief Twinkle twinkle little star.
+ */
 class NStar : public NNode
 {
 public:

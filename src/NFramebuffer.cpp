@@ -121,6 +121,10 @@ NFramebuffer::~NFramebuffer()
 
 int NFramebuffer::GetTexture()
 {
+    if (!(Flags & NColorBuffer))
+    {
+        return -1;
+    }
     return Texture;
 }
 
