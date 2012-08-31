@@ -171,9 +171,12 @@ public:
      * @return The number of animations.
      */
     unsigned int GetAnimationCount();
+
+    void SetResetOnPlay(bool reset);
 private:
     bool GoodCheck;
     bool IsGood;
+    bool ResetOnPlay;
     double CurrentTime;
     unsigned int PlayingAnimation;
     std::vector<NAnimation*> Animations;

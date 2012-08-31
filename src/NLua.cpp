@@ -155,6 +155,33 @@ NLua::NLua()
     lua_pop(L,1);
     DoFile("gamemodes/entity.lua");
 
+    //StaticCube
+    static const luaL_Reg StaticCubeBaseFunctions[] = {
+        {"StaticCube",CreateStaticCube},
+        {NULL,NULL}
+    };
+    lua_getglobal(L,"_G");
+    luaL_register(L,NULL,StaticCubeBaseFunctions);
+    lua_pop(L,1);
+    luaL_getmetatable(L,"StaticCubeBase");
+    if (lua_isnoneornil(L,-1))
+    {
+        lua_pop(L,1);
+        luaL_newmetatable(L,"StaticCubeBase");
+    }
+    static const luaL_Reg StaticCubeMethods[] = {
+        {"__index",StaticCube__index},
+        {"__newindex",StaticCube__newindex},
+        {"SetSolid",StaticCubeSetSolid},
+        {"IsSolid",StaticCubeIsSolid},
+        {"Remove",StaticCubeRemove},
+        {NULL,NULL}
+    };
+    luaL_register(L,NULL,StaticCubeMethods);
+    lua_pushstring(L,"StaticCube");
+    lua_setfield(L,-2,"__type");
+    lua_pop(L,1);
+
     //Map
     luaL_getmetatable(L,"Map");
     if (lua_isnoneornil(L,-1))
@@ -202,6 +229,8 @@ NLua::NLua()
         {"__newindex", Entity__newindex},
         {"GetPos", EntityGetPos},
         {"SetPos", EntitySetPos},
+        {"PlayAnim", EntityPlayAnim},
+        {"ResetAnimOnPlay", EntityResetAnimOnPlay},
         {NULL,NULL}
     };
     luaL_register(L,NULL,EntityMethods);
@@ -702,6 +731,107 @@ int LightRemove(lua_State* L)
     GetGame()->GetScene()->Remove(Foo);
     return 0;
 }
+
+//StaticCube. Creates a static cube object. Made with doors in mind
+int CreateStaticCube(lua_State* L)
+{
+    NStaticCube* StaticCube = new NStaticCube(luaL_checknumber(L,1), luaL_checknumber(L,2), luaL_checknumber(L,3));
+    lua_pushStaticCube(L,StaticCube);
+    return 1;
+}
+
+int StaticCube__index(lua_State* L)
+{
+    NStaticCube* Foo = lua_toStaticCube(L,1);
+    if (Foo == NULL)
+    {
+        lua_Debug ar1;
+        lua_getstack(L,1,&ar1);
+        lua_getinfo(L,"fl",&ar1);
+        lua_Debug ar2;
+        lua_getinfo(L,">S",&ar2);
+        lua_pushfstring(L, "%s:%d: attempt to index a NULL StaticCube", ar2.short_src, ar1.currentline);
+        return lua_error(L);
+    }
+    lua_getmetatable(L,1);
+    lua_pushvalue(L,2);
+    lua_gettable(L,-2);
+    if (lua_isnil(L,-1))
+    {
+        lua_pop(L,1);
+        return 0;
+    }
+    return 1;
+}
+
+int StaticCube__newindex(lua_State* L)
+{
+    NStaticCube* Foo = lua_toStaticCube(L,1);
+    if (Foo == NULL)
+    {
+        lua_Debug ar1;
+        lua_getstack(L,1,&ar1);
+        lua_getinfo(L,"fl",&ar1);
+        lua_Debug ar2;
+        lua_getinfo(L,">S",&ar2);
+        lua_pushfstring(L, "%s:%d: attempt to index a NULL StaticCube", ar2.short_src, ar1.currentline);
+        return lua_error(L);
+    }
+    /*const char* Field = luaL_checkstring(L,2);
+    lua_getref(L,Foo->LuaReference);
+    lua_pushvalue(L,3);
+    lua_setfield(L,-2,luaL_checkstring(L,2));*/
+    //todo: hook up cube to lua
+    return 0;
+}
+
+NStaticCube* lua_toStaticCube(lua_State* L, int index)
+{
+    NStaticCube** StaticCube = (NStaticCube**)luaL_checkudata(L,index,"StaticCubeBase");
+    return *StaticCube;
+}
+
+NStaticCube* lua_checkStaticCube(lua_State* L, int narg)
+{
+    NStaticCube* Foo = lua_toStaticCube(L,narg);
+    if (Foo == NULL)
+    {
+        luaL_argerror(L,narg,"attempt to index a NULL StaticCube");
+    }
+    return Foo;
+}
+
+int StaticCubeSetSolid(lua_State* L)
+{
+    NStaticCube* Foo = lua_checkStaticCube(L,1);
+    bool Solid = lua_toboolean(L,2);
+    Foo->SetSolid(Solid);
+    return 0;
+}
+
+int StaticCubeIsSolid(lua_State* L)
+{
+    NStaticCube* Foo = lua_checkStaticCube(L,1);
+    lua_pushboolean(L,Foo->IsSolid());
+    return 1;
+}
+
+void lua_pushStaticCube(lua_State* L, NStaticCube* StaticCube)
+{
+    NStaticCube** Pointer = (NStaticCube**)lua_newuserdata(L,sizeof(NStaticCube*));
+    *Pointer = StaticCube;
+    luaL_getmetatable(L,"StaticCubeBase");
+    lua_setmetatable(L,-2);
+}
+
+int StaticCubeRemove(lua_State* L)
+{
+    NStaticCube* Foo = lua_checkStaticCube(L,1);
+    delete Foo;
+    return 0;
+}
+//End StaticCube
+
 int CreateVector(lua_State* L)
 {
     lua_pushVector(L,glm::vec3(luaL_checknumber(L,1),luaL_checknumber(L,2),luaL_checknumber(L,3)));
@@ -1146,6 +1276,22 @@ int EntitySetPos(lua_State* L)
     NEntity* Foo = lua_checkEntity(L,1);
     glm::vec3* Bar = lua_checkVector(L,2);
     Foo->SetPos(*Bar);
+    return 0;
+}
+
+int EntityPlayAnim(lua_State* L)
+{
+    NEntity* Foo = lua_checkEntity(L,1);
+    std::string Bar = luaL_checkstring(L,2);
+    Foo->PlayAnim(Bar);
+    return 0;
+}
+
+int EntityResetAnimOnPlay(lua_State* L)
+{
+    NEntity* Foo = lua_checkEntity(L,1);
+    bool Bar = lua_toboolean(L,2);
+    Foo->ResetAnimOnPlay(Bar);
     return 0;
 }
 

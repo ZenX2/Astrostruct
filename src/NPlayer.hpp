@@ -98,6 +98,9 @@ private:
     GLuint Buffers[2];
     void GenerateBuffers();
     float Speed;
+    float MaxSpeed;
+    float Friction;
+    float Mass;
     std::vector<glm::vec2> Verts;
     std::vector<glm::vec2> UVs;
     float CurrentDirection;

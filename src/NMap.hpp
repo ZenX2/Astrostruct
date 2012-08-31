@@ -313,4 +313,44 @@ private:
     GLuint ColorLoc, MatrixLoc, TextureLoc, OutlineColorLoc, OutlineMatrixLoc;
 };
 
+//ZenX2 time, I don't want to make a new file because cmake
+/**
+ * @brief A single static cubular physics object. Mostly for doors and stuff
+ */
+class NStaticCube
+{
+public:
+    /**
+     * @brief Initializes a tile at the specified position, useful for when you only have a pointer to a tile and need a tile next to it. It does NOT actually set the position of the tile.
+     *
+     * @param x The X position.
+     * @param y The Y position.
+     * @param z The Z position.
+     */
+    NStaticCube(unsigned int x,unsigned int y,unsigned int z);
+    ~NStaticCube();
+    /**
+     * @brief Compares the ID to static numbers to decide if the tile is solid or not, it can be overridden by SetSolid.
+     *
+     * @return True if it's solid, false if it's not.
+     */
+    bool IsSolid();
+    /**
+     * @brief Forcibly changes the cube's solid-ness. Useful for stopping clowns/mimes/assistants
+     *
+     * @param i_Solid True for solid, false for nothingness.
+     */
+    void SetSolid(bool i_Solid);
+    unsigned int X,Y,Z;
+    int LuaReference;
+    int SelfReference;
+private:
+    void GenerateBody();
+    btCollisionShape* Shape;
+    btRigidBody* Body;
+    bool ForceSolid;
+    bool Solid;
+    bool dSolid;
+};
+
 #endif

@@ -103,9 +103,6 @@ private:
     NButton* Button;
 };
 
-/**
- * @brief State that handles sending update messages to clients and accepting connection attempts, etc.
- */
 class NServerState : public NState
 {
 public:
@@ -118,9 +115,6 @@ public:
 private:
 };
 
-/**
- * @brief Handles a client connected to a server.
- */
 class NOnlineState : public NState
 {
 public:
@@ -133,9 +127,6 @@ public:
 private:
 };
 
-/**
- * @brief Handles the map editing state.
- */
 class NMapState : public NState
 {
 public:
@@ -179,5 +170,6 @@ private:
     NText* ChangingText;
     int CurrentTile;
     NWindow* HWindow;
+    std::wstring MapName;
 };
 #endif

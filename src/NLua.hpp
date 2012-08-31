@@ -183,6 +183,16 @@ int LightSetColor(lua_State* L);
 void lua_pushLight(lua_State* L, NLight* Light);
 int LightRemove(lua_State* L);
 
+int CreateStaticCube(lua_State* L);
+int StaticCube__index(lua_State* L);
+int StaticCube__newindex(lua_State* L);
+NStaticCube* lua_checkStaticCube(lua_State* L, int narg);
+NStaticCube* lua_toStaticCube(lua_State* L, int index);
+int StaticCubeSetSolid(lua_State* L);
+int StaticCubeIsSolid(lua_State* L);
+void lua_pushStaticCube(lua_State* L, NStaticCube* StaticCube);
+int StaticCubeRemove(lua_State* L);
+
 int Tile__index(lua_State* L);
 int Tile__newindex(lua_State* L);
 NTile* lua_toTile(lua_State* L, int index);
@@ -210,5 +220,7 @@ NEntity* lua_checkEntity(lua_State* L, int narg);
 void lua_pushEntity(lua_State* L, NEntity* Entity);
 int EntityGetPos(lua_State* L);
 int EntitySetPos(lua_State* L);
+int EntityPlayAnim(lua_State* L);
+int EntityResetAnimOnPlay(lua_State* L);
 
 #endif

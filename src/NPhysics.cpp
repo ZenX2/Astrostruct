@@ -98,6 +98,23 @@ bool Facing(glm::vec2 Point, glm::vec4 Face)
     return false;
 }
 
+bool Facing(glm::vec3 Point, std::vector<glm::vec3> Face)
+{
+    glm::vec3 Center = glm::vec3((Face[0].x+Face[1].x+Face[2].x+Face[3].x)/4.f,(Face[0].y+Face[1].y+Face[2].y+Face[3].y)/4.f,(Face[0].z+Face[1].z+Face[2].z+Face[3].z)/4.f);
+    
+    glm::vec3 Aim = glm::normalize(glm::vec3(Point.x-Center.x,Point.y-Center.y,Point.z-Center.z));
+    glm::vec3 Direction = glm::normalize(glm::cross(Face[0]-Face[1],Face[1]-Face[2]));
+
+    //the angle between the normal of the face and the difference of the point and face
+    double Difference = acos(glm::dot(Aim,Direction)/(glm::length(Aim)*glm::length(Direction)));
+
+    if (Difference < PI/2)
+    {
+        return true;
+    }
+    return false;
+}
+
 void NPhysics::Step(double DT)
 {
     DynamicsWorld->stepSimulation(DT,6);
@@ -110,7 +127,7 @@ NPhysics::NPhysics()
     Dispatcher = new btCollisionDispatcher(CollisionConfig);
     Solver = new btSequentialImpulseConstraintSolver();
     DynamicsWorld = new btDiscreteDynamicsWorld(Dispatcher,Broadphase,Solver,CollisionConfig);
-    DynamicsWorld->setGravity(btVector3(0,0,-30));
+    DynamicsWorld->setGravity(btVector3(0,0,-150));
 }
 
 NPhysics::~NPhysics()

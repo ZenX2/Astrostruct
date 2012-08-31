@@ -229,6 +229,25 @@ NEntity::NEntity(std::string i_Name) : NNode(NodeEntity)
         ColorLoc = Shader->GetUniformLocation("Color");
     }
     //make sure we call our initialization function.
+
+    float TS = GetGame()->GetMap()->GetTileSize();
+    bool drop = GetBool("SnapToTile");
+    glm::vec3 Pos = GetPos();
+    if (drop==true)
+    {
+        SetPos(glm::vec3(floor(Pos.x/TS)*TS,floor(Pos.y/TS)*TS,floor(Pos.z/TS)*TS));
+    }
+
+    float OX = GetFloat("OffsetX");
+    float OY = GetFloat("OffsetY");
+    float OZ = GetFloat("OffsetZ");
+    if (OX == 0 && OY == 0 && OZ == 0)
+    {
+        //no point in trying
+    } else {
+        SetPos(GetPos()+glm::vec3(OX,OY,OZ));
+    }
+
     CallMethod("OnInitialize");
 }
 
@@ -272,7 +291,27 @@ NEntity::NEntity(std::string i_Name, glm::vec3 i_Position) : NNode(NodeEntity)
         MatrixLoc = Shader->GetUniformLocation("Model");
         ColorLoc = Shader->GetUniformLocation("Color");
     }
-    SetPos(i_Position);
+    float TS = GetGame()->GetMap()->GetTileSize();
+    bool drop = GetBool("SnapToTile");
+    if (drop==true)
+    {
+        SetPos(glm::vec3(floor(i_Position.x/TS)*TS,floor(i_Position.y/TS)*TS,floor(i_Position.z/TS)*TS));
+    }
+    else
+    {
+        SetPos(i_Position);
+    }
+
+    float OX = GetFloat("OffsetX");
+    float OY = GetFloat("OffsetY");
+    float OZ = GetFloat("OffsetZ");
+    if (OX == 0 && OY == 0 && OZ == 0)
+    {
+        //no point in trying
+    } else {
+        SetPos(GetPos()+glm::vec3(OX,OY,OZ));
+    }
+
     CallMethod("OnInitialize");
 }
 
@@ -293,7 +332,7 @@ std::string NEntity::GetName()
 
 void NEntity::Tick(double DT)
 {
-    CallMethod("OnTick");
+    CallMethod("OnTick", "f", (float)DT);
     if (!GetGame()->IsServer())
     {
         if (Texture)
@@ -329,6 +368,11 @@ void NEntity::GenerateBuffers()
 
 void NEntity::Draw(NCamera* View)
 {
+    if (GetGame()->GetMap()->GetLevel() != GetGame()->GetMap()->GetLevel(GetRealPos()))
+    {
+        return;
+    }
+
     GenerateBuffers();
     //Make sure we can draw
     if (Texture == NULL || GetColor().w == 0 || Shader == NULL)
@@ -474,4 +518,39 @@ float NEntity::GetFloat(std::string VarName)
     float Number = lua_tonumber(L,-1);
     lua_pop(L,2);
     return Number;
+}
+
+bool NEntity::GetBool(std::string VarName)
+{
+    if (LuaSelf == LUA_NOREF)
+    {
+        return 0;
+    }
+    lua_State* L = GetGame()->GetLua()->GetL();
+    lua_rawgeti(L,LUA_REGISTRYINDEX,LuaSelf);
+    lua_getfield(L,-1,VarName.c_str());
+    if (!lua_isboolean(L,-1))
+    {
+        lua_pop(L,2);
+        return 0;
+    }
+    bool Bool = lua_toboolean(L,-1);
+    lua_pop(L,2);
+    return Bool;
+}
+
+void NEntity::PlayAnim(std::string AnimName)
+{
+    if (Texture)
+    {
+        Texture->Play(AnimName);
+    }
+}
+
+void NEntity::ResetAnimOnPlay(bool reset)
+{
+    if (Texture)
+    {
+        Texture->SetResetOnPlay(reset);
+    }
 }

@@ -1,10 +1,3 @@
-/**
- * @file NEntity.hpp
- * @brief Generic object that is powered by lua.
- * @author Dalton Nell
- * @version 1.0
- * @date 2012-08-20
- */
 #ifndef NAELSTROF_ENTITY
 #define NAELSTROF_ENTITY
 
@@ -125,6 +118,11 @@ public:
      * @return The name of the lua entity.
      */
     std::string GetName();
+
+    bool GetBool(std::string Name);
+
+    void PlayAnim(std::string AnimName);
+    void ResetAnimOnPlay(bool reset);
 private:
     std::string Name;
     int LuaSelf;

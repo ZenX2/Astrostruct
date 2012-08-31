@@ -33,6 +33,7 @@ NTexture::NTexture(std::string i_Name)
     CurrentTime = 0;
     GoodCheck = false;
     IsGood = true;
+    ResetOnPlay = false;
 }
 
 NTexture::NTexture(NTexture* Texture)
@@ -43,10 +44,16 @@ NTexture::NTexture(NTexture* Texture)
     CurrentTime = 0;
     GoodCheck = false;
     IsGood = true;
+    ResetOnPlay = false;
 }
 
 NTexture::~NTexture()
 {
+}
+
+void NTexture::SetResetOnPlay(bool reset)
+{
+    ResetOnPlay = reset;
 }
 
 GLuint NAnimation::GetID(double Time)
@@ -80,6 +87,8 @@ void NTexture::Play(std::string i_Name)
         if (i_Name == Animations[i]->GetName())
         {
             PlayingAnimation = i;
+            if (ResetOnPlay)
+                CurrentTime = 0;
             return;
         }
     }
@@ -156,4 +165,6 @@ void NTexture::Play(unsigned int i_ID)
         PlayingAnimation = Animations.size()-1;
     }
     PlayingAnimation = i_ID;
+    if (ResetOnPlay)
+        CurrentTime = 0;
 }

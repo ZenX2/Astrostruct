@@ -165,7 +165,8 @@ NGameState::~NGameState()
 void NGameState::OnEnter()
 {
     GetGame()->GetScene()->SetFullBright(false);
-    GetGame()->GetMap()->Load("default");
+    std::string Map = GetGame()->GetConfig()->GetString("Map");
+    GetGame()->GetMap()->Load(Map);
     std::string Name = GetGame()->GetConfig()->GetString("PlayerName");
     Player = new NPlayer(ToMBS(Name));
     Player->SetControl();
@@ -209,6 +210,25 @@ void NGameState::Tick(double DT)
     if (Window && Button->OnRelease())
     {
         GetGame()->GetStateMachine()->SetState("Paused");
+    }
+    if (GetGame()->GetInput()->GetMouseKeyChanged(0) && GetGame()->GetInput()->GetMouseKey(0) && !GetGame()->GetInput()->GetMouseHitGUI())
+    {
+        std::vector<NNode*> Entities = GetGame()->GetScene()->GetNodesByType(NodeEntity);
+        glm::vec3 MousePos = GetGame()->GetInput()->GetPerspMouse(.45);
+        float TS = GetGame()->GetMap()->GetTileSize();
+        for (unsigned int i=0;i<Entities.size();i++)
+        {
+            NEntity* Ent = static_cast<NEntity*>(Entities[i]);
+            if (GetGame()->GetMap()->GetLevel() != GetGame()->GetMap()->GetLevel(Ent->GetRealPos()))
+            {
+                continue;
+            }
+            if (Intersects(Ent->GetPos(),glm::vec3(Ent->GetFloat("Width"),Ent->GetFloat("Height"),TS),MousePos) && glm::distance(Ent->GetPos(), Player->GetPos()) < TS*1.5f)
+            {
+                Ent->CallMethod("OnClick", "n", Player);
+                break;
+            }
+        }
     }
 }
 std::string NGameState::GetName()
@@ -352,6 +372,7 @@ std::string NServerState::GetName()
 // --- Map State ---
 NMapState::NMapState()
 {
+    MapName = _t("default");
 }
 NMapState::~NMapState()
 {
@@ -484,7 +505,6 @@ void NMapState::OnExit()
         EntityHighlight[i]->Remove();
     }
     Entities.clear();
-    EntityHighlight.clear();
 }
 void NMapState::Tick(double DT)
 {
@@ -632,7 +652,7 @@ void NMapState::Tick(double DT)
             Input->SetPos(glm::vec3(0,100,0));
             Input->GetText()->SetMultiline(false);
             Input->GetText()->SetSize(15);
-            Input->SetText(_t("MapName"));
+            Input->SetText(MapName);
             Input->SetParent(SaveWindow);
             SaveButton = new NButton("button");
             SaveButton->SetScale(64,32);
@@ -728,11 +748,13 @@ void NMapState::Tick(double DT)
         SaveWindow->SetPos(glm::vec3(Temp.x,Temp.y,0));
         if (SaveButton->OnRelease())
         {
-            GetGame()->GetMap()->Save(ToMBS(Input->GetEnteredText()));
+            MapName = Input->GetEnteredText();
+            GetGame()->GetMap()->Save(ToMBS(MapName));
         }
         if (LoadButton->OnRelease())
         {
-            GetGame()->GetMap()->Load(ToMBS(Input->GetEnteredText()));
+            MapName = Input->GetEnteredText();
+            GetGame()->GetMap()->Load(ToMBS(MapName));
         }
         if (QuitButton->OnRelease())
         {
@@ -741,6 +763,7 @@ void NMapState::Tick(double DT)
         }
         if (Apply->OnRelease())
         {
+            MapName = Input->GetEnteredText();
             GetGame()->GetMap()->Resize(MapDim[0],MapDim[1],MapDim[2]);
         }
         for (unsigned int i=0;i<3;i++)
@@ -790,7 +813,7 @@ void NMapState::Tick(double DT)
             EntityText[i]->SetColor(glm::vec4(0,0,0,0));
         }
     } else {
-        HWindow->SetColor(glm::vec4(1,1,0,1));
+        HWindow->SetColor(glm::vec4(1,1,1,1));
         for (unsigned int i=0;i<EntityHighlight.size();i++)
         {
             EntityHighlight[i]->SetColor(glm::vec4(0,1,0,1));
@@ -877,7 +900,7 @@ void NMapState::Tick(double DT)
         glm::vec3 MousePos = GetGame()->GetInput()->GetPerspMouse(.45);
         for (unsigned int i=0;i<Entities.size();i++)
         {
-            if (Intersects(Entities[i]->GetPos(),glm::vec3(64,64,64),MousePos))
+            if (Intersects(Entities[i]->GetPos(),glm::vec3(96,96,96),MousePos))
             {
                 Entities[i]->Remove();
                 break;

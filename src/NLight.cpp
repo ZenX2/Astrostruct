@@ -132,6 +132,141 @@ void NLight::GenerateShadowBuffers()
             }
         }
     }
+
+    //3d lighting time, honestly the 2d doesn't work when there's any openings between floors.
+    /*for (float x = -Max;x<Max;x+=GetGame()->GetMap()->GetTileSize())
+    {
+        for (float y = -Max;y<Max;y+=GetGame()->GetMap()->GetTileSize())
+        {
+            for (float z = -Max;z<Max;z+=GetGame()->GetMap()->GetTileSize())
+            {
+                //Get the tile object at the current loop position
+                NTile* Tile = GetGame()->GetMap()->GetTile(Pos+glm::vec3(x,y,z));
+                //If the tile doesn't block light or doesn't exist, skip it!
+                if (Tile == NULL || !Tile->IsOpaque())
+                {
+                    continue;
+                }
+                float TS = GetGame()->GetMap()->GetTileSize()/2.f;
+                //Generate points in the eight verts of the tile.
+                glm::vec3 TPos = GetGame()->GetMap()->TilePos(Pos+glm::vec3(x,y,z));
+                glm::vec3 Points[8];
+                Points[0] = TPos+glm::vec3(TS,TS,0);
+                Points[1] = TPos+glm::vec3(TS,-TS,0);
+                Points[2] = TPos+glm::vec3(-TS,-TS,0);
+                Points[3] = TPos+glm::vec3(-TS,TS,0);
+                Points[4] = TPos+glm::vec3(TS,TS,TS*2.f);
+                Points[5] = TPos+glm::vec3(TS,-TS,TS*2.f);
+                Points[6] = TPos+glm::vec3(-TS,-TS,TS*2.f);
+                Points[7] = TPos+glm::vec3(-TS,TS,TS*2.f);
+                std::vector< std::vector<glm::vec3> > Faces;
+                //Generate faces (four points = face, each tile has 6 faces)
+                NTile* CheckTile = GetGame()->GetMap()->GetTile(Tile->X,Tile->Y-1,Tile->Z);
+                if ((CheckTile && !CheckTile->IsOpaque()) || !CheckTile)
+                {
+                    //Faces.push_back(glm::vec4(Points[1].x,Points[1].y,Points[2].x,Points[2].y));
+                    std::vector<glm::vec3> Face;
+                    Face.push_back(Points[1]);
+                    Face.push_back(Points[2]);
+                    Face.push_back(Points[6]);
+                    Face.push_back(Points[5]);
+                    Faces.push_back(Face);
+                }
+                CheckTile = GetGame()->GetMap()->GetTile(Tile->X,Tile->Y+1,Tile->Z);
+                if ((CheckTile && !CheckTile->IsOpaque()) || !CheckTile)
+                {
+                    //Faces.push_back(glm::vec4(Points[3].x,Points[3].y,Points[0].x,Points[0].y));
+                    std::vector<glm::vec3> Face;
+                    Face.push_back(Points[3]);
+                    Face.push_back(Points[0]);
+                    Face.push_back(Points[4]);
+                    Face.push_back(Points[7]);
+                    Faces.push_back(Face);
+                }
+                CheckTile = GetGame()->GetMap()->GetTile(Tile->X-1,Tile->Y,Tile->Z);
+                if ((CheckTile && !CheckTile->IsOpaque()) || !CheckTile)
+                {
+                    //Faces.push_back(glm::vec4(Points[2].x,Points[2].y,Points[3].x,Points[3].y));
+                    std::vector<glm::vec3> Face;
+                    Face.push_back(Points[2]);
+                    Face.push_back(Points[3]);
+                    Face.push_back(Points[7]);
+                    Face.push_back(Points[6]);
+                    Faces.push_back(Face);
+                }
+                CheckTile = GetGame()->GetMap()->GetTile(Tile->X+1,Tile->Y,Tile->Z);
+                if ((CheckTile && !CheckTile->IsOpaque()) || !CheckTile)
+                {
+                    //Faces.push_back(glm::vec4(Points[0].x,Points[0].y,Points[1].x,Points[1].y));
+                    std::vector<glm::vec3> Face;
+                    Face.push_back(Points[0]);
+                    Face.push_back(Points[1]);
+                    Face.push_back(Points[5]);
+                    Face.push_back(Points[4]);
+                    Faces.push_back(Face);
+                }
+                CheckTile = GetGame()->GetMap()->GetTile(Tile->X,Tile->Y,Tile->Z-1);
+                if ((CheckTile && !CheckTile->IsOpaque()) || !CheckTile)
+                {
+                    std::vector<glm::vec3> Face;
+                    Face.push_back(Points[0]);
+                    Face.push_back(Points[1]);
+                    Face.push_back(Points[3]);
+                    Face.push_back(Points[2]);
+                    Faces.push_back(Face);
+                }
+                CheckTile = GetGame()->GetMap()->GetTile(Tile->X,Tile->Y,Tile->Z+1);
+                if ((CheckTile && !CheckTile->IsOpaque()) || !CheckTile)
+                {
+                    std::vector<glm::vec3> Face;
+                    Face.push_back(Points[4]);
+                    Face.push_back(Points[5]);
+                    Face.push_back(Points[7]);
+                    Face.push_back(Points[6]);
+                    Faces.push_back(Face);
+                }
+                for (unsigned int i=0;i<Faces.size();i++)
+                {
+                    //Remove front faces
+                    if (Facing(glm::vec3(Pos.x,Pos.y,Pos.z),Faces[i]))
+                    {
+                        continue;
+                    }
+                    //Generate shadow mesh by extruding back faces.
+                    //float Radians = -atan2(Pos.x-Faces[i].x,Pos.y-Faces[i].y)-PI/2.f;
+                    //float BRadians = -atan2(Pos.x-Faces[i].z,Pos.y-Faces[i].w)-PI/2.f;
+                    glm::vec3 ExtrudeA = glm::normalize(Faces[i][0]-Pos);
+                    glm::vec3 ExtrudeB = glm::normalize(Faces[i][1]-Pos);
+                    Shadows.push_back(Faces[i][0]);
+                    Shadows.push_back(Faces[i][1]);
+                    Shadows.push_back(Faces[i][0]+ExtrudeA*GetScale()); //these go very far away so shadows are long
+                    Shadows.push_back(Faces[i][1]+ExtrudeB*GetScale());
+
+                    glm::vec3 ExtrudeA = glm::normalize(Faces[i][1]-Pos);
+                    glm::vec3 ExtrudeB = glm::normalize(Faces[i][2]-Pos);
+                    Shadows.push_back(Faces[i][1]);
+                    Shadows.push_back(Faces[i][2]);
+                    Shadows.push_back(Faces[i][1]+ExtrudeA*GetScale());
+                    Shadows.push_back(Faces[i][2]+ExtrudeB*GetScale());
+
+                    ExtrudeA = glm::normalize(Faces[i][2]-Pos);
+                    ExtrudeB = glm::normalize(Faces[i][3]-Pos);
+                    Shadows.push_back(Faces[i][2]);
+                    Shadows.push_back(Faces[i][3]);
+                    Shadows.push_back(Faces[i][2]+ExtrudeA*GetScale());
+                    Shadows.push_back(Faces[i][3]+ExtrudeB*GetScale());
+
+                    ExtrudeA = glm::normalize(Faces[i][3]-Pos);
+                    ExtrudeB = glm::normalize(Faces[i][0]-Pos);
+                    Shadows.push_back(Faces[i][3]);
+                    Shadows.push_back(Faces[i][0]);
+                    Shadows.push_back(Faces[i][3]+ExtrudeA*GetScale());
+                    Shadows.push_back(Faces[i][0]+ExtrudeB*GetScale());
+                }
+            }
+        }
+    }*/
+
     glBindBuffer(GL_ARRAY_BUFFER,Buffers[2]);
     glBufferData(GL_ARRAY_BUFFER,Shadows.size()*sizeof(glm::vec3),&Shadows[0],GL_STATIC_DRAW);
     PositionMemory = GetRealPos();

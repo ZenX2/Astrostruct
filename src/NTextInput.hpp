@@ -13,9 +13,6 @@
  * @addtogroup GuiSystem
  * @{*/
 
-/**
- * @brief A text box that can eat keyboard input.
- */
 class NTextInput : public NNode
 {
 public:

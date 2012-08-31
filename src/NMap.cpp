@@ -501,6 +501,21 @@ void NMap::Tick(double DT)
         }
         int Level = round((GetGame()->GetRender()->GetCamera()->GetPos().z-500)/RealTileSize);
         ViewLevel(Level);
+        for (int i=ViewingLevel;i>=0;i--)
+        {
+            for (unsigned int x=0;x<Width;x++)
+            {
+                for (unsigned int y=0;y<Height;y++)
+                {
+                    unsigned int ID = Tiles[x][y][i]->ID;
+                    if (ID == 0)
+                    {
+                        continue;
+                    }
+                    Tiles[x][y][i]->CallMethod("OnTick");
+                }
+            }
+        }
     }
 }
 void NMap::Unallocate()
@@ -1210,4 +1225,80 @@ void NMap::Resize(unsigned int X, unsigned int Y, unsigned int Z)
 std::string NMap::GetGameModeName()
 {
     return Gamemode;
+}
+
+//NStaticCube
+NStaticCube::NStaticCube(unsigned int x, unsigned int y, unsigned int z)
+{
+    Body = NULL;
+    LuaReference = LUA_NOREF;
+    lua_State* L = GetGame()->GetLua()->GetL();
+    lua_newtable(L);
+    SelfReference = luaL_ref(L,LUA_REGISTRYINDEX);
+    dSolid = false;
+    Solid = false;
+    ForceSolid = false;
+    X = x;
+    Y = y;
+    Z = z;
+}
+
+NStaticCube::~NStaticCube()
+{
+    if (Body != NULL)
+    {
+        GetGame()->GetPhysics()->GetWorld()->removeRigidBody(Body);
+        delete Body->getMotionState();
+        delete Body;
+        delete Shape;
+    }
+}
+void NStaticCube::GenerateBody()
+{
+    if (!IsSolid())
+    {
+        float TS = GetGame()->GetMap()->GetTileSize();
+        if (Body != NULL)
+        {
+            GetGame()->GetPhysics()->GetWorld()->removeRigidBody(Body);
+            delete Body->getMotionState();
+            delete Body;
+            delete Shape;
+        }
+        Shape =  new btBoxShape(btVector3(TS/2.f,TS/2.f,1));
+        btDefaultMotionState* StaticMotionState = new btDefaultMotionState(btTransform(btQuaternion(0,0,0,1),btVector3(X*TS+TS/2.f,Y*TS+TS/2.f,Z*TS)));
+        btRigidBody::btRigidBodyConstructionInfo PlaneBody(0,StaticMotionState,Shape,btVector3(0,0,0));
+        Body = new btRigidBody(PlaneBody);
+        GetGame()->GetPhysics()->GetWorld()->addRigidBody(Body);
+        return;
+    }
+    float TS = GetGame()->GetMap()->GetTileSize();
+    if (Body != NULL)
+    {
+        GetGame()->GetPhysics()->GetWorld()->removeRigidBody(Body);
+        delete Body->getMotionState();
+        delete Body;
+        delete Shape;
+    }
+    Shape = new btBoxShape(btVector3(TS/2.f,TS/2.f,TS/2.f));
+    btDefaultMotionState* StaticMotionState = new btDefaultMotionState(btTransform(btQuaternion(0,0,0,1),btVector3(X*TS+TS/2.f,Y*TS+TS/2.f,Z*TS+TS/2.f)));
+    btRigidBody::btRigidBodyConstructionInfo PlaneBody(0,StaticMotionState,Shape,btVector3(0,0,0));
+    Body = new btRigidBody(PlaneBody);
+    GetGame()->GetPhysics()->GetWorld()->addRigidBody(Body);
+}
+
+void NStaticCube::SetSolid(bool i_Solid)
+{
+    ForceSolid = true;
+    Solid = i_Solid;
+    GenerateBody();
+}
+
+bool NStaticCube::IsSolid()
+{
+    if (ForceSolid)
+    {
+        return Solid;
+    }
+    return dSolid;
 }

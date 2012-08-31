@@ -1,5 +1,5 @@
 MapSkin = "grimy"
-MaxTiles = 4
+MaxTiles = 5
 function GAME:OnInitialize()
     print("Running test gamemode!")
 end

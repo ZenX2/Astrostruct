@@ -235,8 +235,11 @@ void NRender::Draw()
     glError();
 }
 
+#define SHOW_GL_ERRORS
+
 void NRender::glError()
 {
+#ifdef SHOW_GL_ERRORS
     unsigned int ErrorCount = 0;
     GLenum Error = glGetError();
     while (Error != GL_NO_ERROR)
@@ -250,7 +253,7 @@ void NRender::glError()
             case GL_OUT_OF_MEMORY:                  ErrorString = "GL_OUT_OF_MEMORY"; break;
             case GL_INVALID_FRAMEBUFFER_OPERATION:  ErrorString = "GL_INVALID_FRAMEBUFFER_OPERATION"; break;
             default:                                ErrorString = "UNKOWN_ERROR"; break;
-        }
+        }  
         GetGame()->GetLog()->Send("RENDER",1,std::string("OpenGL reported an error: ") + ErrorString + ".");
         Error = glGetError();
         ErrorCount++;
@@ -260,6 +263,7 @@ void NRender::glError()
             exit(1);
         }
     }
+#endif
 }
 
 void NRender::AddCachedTexture(GLuint Texture, GLuint ForceFilter)

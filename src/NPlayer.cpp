@@ -1,11 +1,18 @@
 #include "NEngine.hpp"
 
+#define max(a,b) ((a<b)?b:a)
+#define abs(a) (a<0?a*-1:a)
+#define ipn(a) (a/abs(a))
+
 NPlayer::NPlayer(std::wstring i_Name) : NNode(NodePlayer)
 {
     lua_State* L = GetGame()->GetLua()->GetL();
     lua_newtable(L);
     SelfReference = luaL_ref(L,LUA_REGISTRYINDEX);
-    Speed = 4;
+    Speed = 40;
+    MaxSpeed = 200;
+    Friction = 0.80;
+    Mass = 400;
     Changed = true;
     Moving = false;
     CurrentDirection = 0;
@@ -37,9 +44,9 @@ NPlayer::NPlayer(std::wstring i_Name) : NNode(NodePlayer)
     Shape = new btSphereShape(TS/4.f);
     //btCollisionShape* Shape = new btCapsuleShapeZ(TS/4.f,TS/4.f);
     btVector3 FallInertia(0,0,0);
-    Shape->calculateLocalInertia(80,FallInertia);
+    Shape->calculateLocalInertia(Mass,FallInertia);
     btDefaultMotionState* StaticMotionState = new btDefaultMotionState(btTransform(btQuaternion(0,0,0,1),btVector3(0,0,0)));
-    btRigidBody::btRigidBodyConstructionInfo PlaneBody(80,StaticMotionState,Shape,FallInertia);
+    btRigidBody::btRigidBodyConstructionInfo PlaneBody(Mass,StaticMotionState,Shape,FallInertia);
     //PlaneBody.m_friction = 30;
     Body = new btRigidBody(PlaneBody);
     Body->setSleepingThresholds(0,0);
@@ -184,6 +191,7 @@ void NPlayer::Tick(double DT)
             }
         }
     }
+    //Check if a joystick is being used
     if (!Moving)
     {
         float* Pos;
@@ -201,8 +209,16 @@ void NPlayer::Tick(double DT)
     if (Moving)
     {
         btVector3 Vel = Body->getLinearVelocity();
-        Body->setLinearVelocity(btVector3(Vel.x()+sin(CurrentDirection)*Speed,Vel.y()+cos(CurrentDirection)*Speed,Vel.z()));
+        btVector3 NVel = btVector3(Vel.x()+sin(CurrentDirection)*Speed,Vel.y()+cos(CurrentDirection)*Speed,Vel.z());
+        if (abs(NVel.x()) > MaxSpeed) NVel.setX(MaxSpeed * ipn(NVel.x()));
+        if (abs(NVel.y()) > MaxSpeed) NVel.setY(MaxSpeed * ipn(NVel.y()));
+        Body->setLinearVelocity(NVel);
     }
+    
+    //Friction. Makes the player not roll all weird-like
+    btVector3 Vel = Body->getLinearVelocity();
+    Body->setLinearVelocity(btVector3(Vel.x()*Friction,Vel.y()*Friction,Vel.z()));
+    
     //Collisions
     btTransform Trans; 
     Body->getMotionState()->getWorldTransform(Trans);
